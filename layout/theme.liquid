@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+  <html class="no-js{% if template contains "customers" %} customers{% endif %}" lang="{{ request.locale.iso_code }}">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta name="theme-color" content="">
+      <link rel="canonical" href="{{ canonical_url }}">
+      <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  
+      {%- if settings.favicon != blank -%}
+        <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      {%- endif -%}
+  
+      <title>
+        {{ page_title }}
+        {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+        {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+        {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      </title>
+  
+      {% if page_description %}
+        <meta name="description" content="{{ page_description | escape }}">
+      {% endif %}
+  
+      {% render 'meta-tags' %}
+  
+      <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'lazyload.js' | asset_url }}" defer="defer"></script>
+      {%- if request.design_mode -%}
+        <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
+      {{ content_for_header }}
+  
+      {%- liquid
+        assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+      %}
+
+      {{ 'index.css' | asset_url | stylesheet_tag }}
+      {% comment %}
+      {{ 'fonts.css' | asset_url | stylesheet_tag }}
+      {{ 'base.css' | asset_url | stylesheet_tag }}
+      {{ 'product-form.css' | asset_url | stylesheet_tag }}
+      {{ 'typography.css' | asset_url | stylesheet_tag }}
+      {{ 'animations.css' | asset_url | stylesheet_tag }}
+      {% endcomment %}
+
+      {% if template contains "customers" %}
+        {{ 'customers.css' | asset_url | stylesheet_tag }}
+      {% endif %}
+  
+      {{ 'domaine-text-web-light.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+      {{ 'GT-America-Standard-Regular-Italic.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+  
+      <script>
+        document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+        if (Shopify.designMode) {
+          document.documentElement.classList.add('shopify-design-mode');
+        }
+      </script>
+      
+      {% render 'integrations-before-head-closes' %}
+
+      {% style %}
+        :root {
+          /* Colors */
+          /* Spacing */
+          --site-gutters: 20px;
+          --site-margins: 60px;
+          --vertical-spacing-small: clamp(30px, 3vw, 60px);
+          --vertical-spacing: clamp(60px, 6vw, 120px);
+          --vertical-spacing-large: clamp(90px, 9vw, 160px);
+          /* Typography */
+          --main-font: 'America', sans-serif;
+          --secondary-font: 'Domaine', serif;
+          --mono-font: 'America Mono', monospace;
+          --normal: normal;
+          --light: 300;
+          --medium: 600;
+          --bold: 700;
+          /* UI */
+          --base-border-radius: 10px;
+          --screen-height: 100vh; /* Adjust screen height for when there is announcement bar etc. */
+          --button-height: 40px;
+          --header-height: 60px;
+          --sticky-top: calc(var(--site-gutters) + var(--header-height));
+          /* Animations */
+          --md-speed: .3s;
+          --slow-speed: .5s;
+          --fast-speed: .15s;
+        }
+      {% endstyle %}
+    </head>
+
+    <body>
+      <div class="hiddenm">
+        <a href="#MainContent">{{ "accessibility.skip_to_text" | t }}</a>
+      </div>
+  
+      {% render 'integrations-after-body-opens' %}
+  
+      {% comment %} {%- render 'cart-drawer' -%} {% endcomment %}
+  
+      {% section 'announcement-bar' %}
+      {% section 'header' %}
+      {% section 'page-settings' %}
+  
+      <main id="MainContent" class="layout-content" role="main" tabindex="-1">
+        {{ content_for_layout }}
+      </main>
+  
+      {% section 'footer' %}
+      {% section 'menu-panel' %}
+  
+      <script>
+        window.cartItems = [];
+        {%- for item in cart.items -%}
+        window.cartItems.push('{{ item.product_id }}');
+        {%- endfor -%}
+  
+        window.shopUrl = '{{ request.origin }}';
+        window.routes = {
+          cart_add_url: '{{ routes.cart_add_url }}',
+          cart_change_url: '{{ routes.cart_change_url }}',
+          cart_update_url: '{{ routes.cart_update_url }}',
+          cart_url: '{{ routes.cart_url }}',
+          predictive_search_url: '{{ routes.predictive_search_url }}'
+        };
+  
+        window.cartStrings = {
+          error: `{{ 'sections.cart.cart_error' | t }}`,
+          quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+        }
+  
+        window.variantStrings = {
+          addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+          soldOut: `{{ 'products.product.sold_out' | t }}`,
+          unavailable: `{{ 'products.product.unavailable' | t }}`,
+        }
+  
+        window.accessibilityStrings = {
+          imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+          shareSuccess: `{{ 'general.share.success_message' | t }}`,
+          pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
+          playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
+        }
+      </script>
+  
+      {% render 'integrations-before-body-closes' %}
+    
+    </body>
+  </html>
