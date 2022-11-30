@@ -1,7 +1,7 @@
 <div class="px-margin mx-auto py-8 {{ section.settings.background_color }} {{ section.settings.section_margin }}">
   <div class="{{ section.settings.padding }}">
     <div>
-      <div class="{{ section.settings.text_color }} flex flex-col gap-y-6 text-{{ section.settings.content_alignment }} {% if section.settings.content_alignment == 'center' %}items-center{% endif %}">
+      <div class="flex flex-col gap-y-6 text-{{ section.settings.content_alignment }} {% if section.settings.content_alignment == 'center' %}items-center{% endif %}">
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'heading' -%}
@@ -34,7 +34,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.rich-text.name",
+  "name": "Text Section",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -56,30 +56,6 @@
     },
     {
       "type": "select",
-      "id": "text_color",
-      "options": [
-        {
-          "value": "text-text-color",
-          "label": "Black"
-        },
-        {
-          "value": "text-main",
-          "label": "Blue"
-        },
-        {
-          "value": "text-red",
-          "label": "Red"
-        },
-        {
-          "value": "text-green",
-          "label": "Green"
-        }
-      ],
-      "default": "text-main",
-      "label": "Text Color"
-    },
-    {
-      "type": "select",
       "id": "background_color",
       "options": [
         {
@@ -87,12 +63,12 @@
           "label": "Default"
         },
         {
-          "value": "bg-nude-2",
-          "label": "Nude"
+          "value": "bg-light-grey",
+          "label": "Light Grey"
         },
         {
-          "value": "bg-red-3",
-          "label": "Peach"
+          "value": "bg-text-color text-bg-color",
+          "label": "Dark"
         }
       ],
       "default": "default",
@@ -230,16 +206,20 @@
       "limit": 2,
       "settings": [
         {
+          "type": "header",
+          "content": "Button 1"
+        },
+        {
           "type": "text",
           "id": "button_label",
           "default": "Button label",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_1.label",
-          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_1.info"
+          "label": "Button Label",
+          "info": "Leave blank to hide button"
         },
         {
           "type": "url",
           "id": "button_link",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_1.label"
+          "label": "Button 1 URL"
         },
         {
           "type": "select",
@@ -272,15 +252,19 @@
           "label": "Use secondary button style"
         },
         {
+          "type": "header",
+          "content": "Button 2"
+        },
+        {
           "type": "text",
           "id": "button_label_2",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_label_2.label",
-          "info": "t:sections.rich-text.blocks.buttons.settings.button_label_2.info"
+          "label": "Button 2 Label",
+          "info": "Leave blank to hide button"
         },
         {
           "type": "url",
           "id": "button_link_2",
-          "label": "t:sections.rich-text.blocks.buttons.settings.button_link_2.label"
+          "label": "Button 2 URL"
         },
         {
           "type": "select",
@@ -317,7 +301,7 @@
   ],
   "presets": [
     {
-      "name": "t:sections.rich-text.presets.name",
+      "name": "Text Section",
       "blocks": [
         {
           "type": "heading"

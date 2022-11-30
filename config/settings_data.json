@@ -2,7 +2,7 @@
   "current": {
     "favicon": "shopify:\/\/shop_images\/dame-favicon.png",
     "cart_type": "page",
-    "cart_message": "<p>Take 10% off your first order with code: <strong>DAME10<\/strong> Enter code at checkout<\/p>",
+    "cart_message": "<p>Take 10% off your first order with code: <strong>FRIENDFAM10<\/strong> Enter code at checkout<\/p>",
     "show_cart_workshops": false,
     "show_cart_note": false,
     "cart_drawer_collection": "pleasure-care",
@@ -21,7 +21,7 @@
           "announcement-bar-0": {
             "type": "announcement",
             "settings": {
-              "text": "Take 10% off your first order with code DAME10 💕",
+              "text": "Take 10% off your first order with code FRIENDFAM10 💕",
               "text_alignment": "center",
               "color_scheme": "background-1",
               "link": ""

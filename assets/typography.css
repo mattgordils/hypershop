@@ -1,0 +1,236 @@
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, p a {
+	text-decoration: none;
+	border-bottom: 1px solid currentColor;
+}
+
+/* Typography */
+h1, .h1, .h1 p {
+	font-family: var(--secondary-font);
+	font-size: clamp(42px, calc(60vw / 1440 * 100), 60px);
+	line-height: 1.1em;
+	letter-spacing: -.04em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
+
+h2, .h2, .h2 p {
+	font-family: var(--secondary-font);
+	font-size: clamp(32px, calc(42vw / 1440 * 100), 42px);
+	line-height: 1.2em;
+	letter-spacing: -.02em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
+
+h3, .h3, .h3 p {
+	font-family: var(--secondary-font);
+	font-size: 32px;
+	font-size: clamp(24px, calc(32vw / 1440 * 100), 32px);
+	line-height: 1.2em;
+	letter-spacing: -.02em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
+
+h4, .h4, .h4 p {
+	font-family: var(--secondary-font);
+	font-size: clamp(20px, calc(24vw / 1440 * 100), 24px);
+	line-height: 1.2em;
+	letter-spacing: -.02em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
+
+h5, .h5, .h5 p {
+	font-family: var(--secondary-font);
+	font-size: 20px;
+	line-height: 1.2em;
+	letter-spacing: -.02em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
+
+h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
+	font-family: var(--mono-font);
+	font-size: 11px;
+	line-height: 1.2em;
+	letter-spacing: .06em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: uppercase;
+}
+
+p, .body, .body p, .body ul, .body ol {
+	font-family: var(--main-font);
+	font-size: 20px;
+	line-height: 1.5em;
+	letter-spacing: -.01em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+p.small, .body-small, .body-small p,
+ul.small, .body-small, .body-small ul,
+ol.small, .body-small, .body-small ol {
+	font-family: var(--main-font);
+	font-size: 18px;
+	line-height: 1.5em;
+	letter-spacing: -.02em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+p.xsmall, .body-xsmall, .body-xsmall p,
+ul.xsmall, .body-xsmall, .body-xsmall ul,
+ol.xsmall, .body-xsmall, .body-xsmall ol {
+	font-family: var(--main-font);
+	font-size: 14px;
+	line-height: 1.5em;
+	letter-spacing: -.01em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+p.tiny, .body-tiny, .body-tiny p,
+ul.tiny, .body-tiny, .body-tiny ul,
+ol.tiny, .body-tiny, .body-tiny ol {
+	font-family: var(--main-font);
+	font-size: 12px;
+	line-height: 1.4em;
+	letter-spacing: -.01em;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.mono, .mono > p {
+	font-family: var(--mono-font);
+}
+
+strong, b, .bold {
+	font-weight: var(--bold);
+}
+
+a, button, .button, .link {
+	cursor: pointer;
+}
+
+/* Inputs */
+input,
+select {
+	--input-bg: var(--nude);
+	--input-color: var(--text-color);
+	--input-border-weight: 1px;
+	--input-border-color: var(--input-bg);
+	--input-height: var(--button-height);
+	appearance: none;
+	cursor: pointer;
+	height: var(--input-height);
+	font-family: var(--main-font);
+	font-weight: var(--medium);
+	font-size: 11px;
+	text-transform: uppercase;
+	text-align: left;
+	letter-spacing: 0.05em;
+	line-height: 1em;
+	display: block;
+	padding: 0 calc(var(--input-height) * .3);
+	border-radius: var(--base-border-radius);
+	background: var(--input-bg);
+	color: var(--input-color);
+	border: var(--input-border-weight) solid var(--input-border-color);
+	transition: background var(--md-speed) ease-in-out,
+							color var(--md-speed) ease-in-out,
+							border var(--md-speed) ease-in-out,
+							box-shadow var(--md-speed) ease-in-out,
+							transform var(--md-speed) ease-in-out,
+							opacity var(--md-speed) ease-in-out;
+}
+
+select {
+	line-height: calc(var(--input-height) - 1px);
+}
+
+/* Rich Text */
+.rich-text > *:last-child {
+	margin-bottom: 0;
+}
+
+.rich-text figcaption {
+	margin: 1em 0 3em;
+}
+
+.rich-text h1,
+.rich-text h2,
+.rich-text h3 {
+	margin-top: 1em;
+	margin-bottom: .75em;
+}
+
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+}
+
+.rich-text p {
+	margin-bottom: 1em;
+}
+
+.rich-text > *:first-child {
+	margin-top: 0;
+}
+
+.rich-text > *:last-child {
+	margin-bottom: 0;
+}
+
+.rich-text ul,
+.rich-text ol {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.rich-text li {
+	padding-left: 1em;
+	position: relative;
+}
+
+.rich-text ul li:before {
+	content: '';
+	display: block;
+	width: 6px;
+	height: 6px;
+	top: .9em;
+	left: 0;
+	margin-top: -4px;
+	background: var(--main-color);
+	border-radius: 50%;
+	position: absolute;
+}
+
+.rich-text ol {
+	counter-reset: my-awesome-counter;
+}
+
+.rich-text ol li {
+	counter-increment: my-awesome-counter;
+}
+
+.rich-text ol li:before {
+	content: counter(my-awesome-counter);
+	font-family: var(--mono-font);
+	display: block;
+	width: 6px;
+	height: 6px;
+	font-size: 14px;
+	top: .095em;
+	left: 0;
+	color: var(--main-color);
+	position: absolute;
+}

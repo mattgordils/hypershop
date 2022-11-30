@@ -25,7 +25,7 @@
   
       {% render 'meta-tags' %}
   
-      <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'global.bundle.js' | asset_url }}" defer="defer"></script>
       <script src="{{ 'lazyload.js' | asset_url }}" defer="defer"></script>
       {%- if request.design_mode -%}
         <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
@@ -36,7 +36,6 @@
         assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
       %}
 
-      {{ 'index.css' | asset_url | stylesheet_tag }}
       {% comment %}
       {{ 'fonts.css' | asset_url | stylesheet_tag }}
       {{ 'base.css' | asset_url | stylesheet_tag }}
@@ -58,22 +57,36 @@
           document.documentElement.classList.add('shopify-design-mode');
         }
       </script>
-      
+
       {% render 'integrations-before-head-closes' %}
 
       {% style %}
         :root {
           /* Colors */
+          --black: #333333;
+          --white: #ffffff;
+          --main-color: blue;
+          --alert: red;
+          --notify: yellow;
+          --success: green;
+          --bg-color: var(--white);
+            --bg-color-rgb: 255, 255, 255;
+          --text-color: var(--black);
+            --text-color-rgb: 51, 51, 51;
+          --light-text-color: #818181;
+          --light-grey: #eee;
+          --hr-color: rgba(var(--text-color-rgb, .07));
           /* Spacing */
-          --site-gutters: 20px;
-          --site-margins: 60px;
+          --site-gutters: 16px;
+          --site-margins: clamp(16px, 4vw, 100px);
           --vertical-spacing-small: clamp(30px, 3vw, 60px);
           --vertical-spacing: clamp(60px, 6vw, 120px);
           --vertical-spacing-large: clamp(90px, 9vw, 160px);
+          --max-site-width: 1440px;
           /* Typography */
-          --main-font: 'America', sans-serif;
-          --secondary-font: 'Domaine', serif;
-          --mono-font: 'America Mono', monospace;
+          --main-font: sans-serif;
+          --secondary-font: serif;
+          --mono-font: monospace;
           --normal: normal;
           --light: 300;
           --medium: 600;
@@ -90,11 +103,14 @@
           --fast-speed: .15s;
         }
       {% endstyle %}
+      {{ 'index.css' | asset_url | stylesheet_tag }}
+      {{ 'typography.css' | asset_url | stylesheet_tag }}
+      {{ 'buttons.css' | asset_url | stylesheet_tag }}
     </head>
 
     <body>
-      <div class="hiddenm">
-        <a href="#MainContent">{{ "accessibility.skip_to_text" | t }}</a>
+      <div class="hidden">
+        <a href="#MainContent">Skip to content</a>
       </div>
   
       {% render 'integrations-after-body-opens' %}

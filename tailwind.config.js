@@ -10,12 +10,12 @@ module.exports = {
       'current': 'currentColor',
       'transparent': 'transparent',
       'true-black': '#000000',
-      'black': '#333333',
-      'white': '#FFFFFF',
-      'main': '#0029FF',
-      'alert': '#EE3C13',
-      'notify': '#E9F1B3',
-      'success': '#AECB40',
+      'black': 'var(--black)',
+      'white': 'var(--white)',
+      'main': 'var(--main-color)',
+      'alert': 'var(--alert)',
+      'notify': 'var(--notify)',
+      'success': 'var(--success)',
       'bg-color': 'var(--bg-color)',
       'text-color': 'var(--text-color)',
       'light-text-color': 'var(--light-text-color)',
@@ -37,7 +37,7 @@ module.exports = {
       '500': '500ms',
       '700': '700ms',
       '1000': '1000ms'
-    }
+    },
     extend: {
       spacing: {
         'gutter': 'var(--site-gutters)',

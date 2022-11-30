@@ -1,0 +1,68 @@
+.shopify-cleanslate button,
+.shopify-cleanslate *[roll='button'],
+button:not(.unstyled),
+.button {
+	--button-bg: transparent;
+	--button-color: var(--main-color);
+	--button-border-weight: 1px;
+	--button-border-color: var(--main-color);
+	appearance: none;
+	cursor: pointer;
+	min-width: 200px;
+	height: var(--button-height);
+	font-family: var(--main-font);
+	font-weight: var(--medium);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	line-height: 1em;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 calc(var(--button-height) * .5);
+	border-radius: var(--base-border-radius);
+	background: var(--button-bg);
+	color: var(--button-color);
+	border: var(--button-border-weight) solid var(--button-border-color);
+	transition: background var(--md-speed) ease-in-out,
+							color var(--md-speed) ease-in-out,
+							border var(--md-speed) ease-in-out,
+							box-shadow var(--md-speed) ease-in-out,
+							transform var(--md-speed) ease-in-out,
+							opacity var(--md-speed) ease-in-out;
+}
+
+.shopify-cleanslate button:hover,
+.shopify-cleanslate *[roll='button']:hover,
+button:not(.unstyled):hover,
+.button:hover {
+  --button-bg: var(--main-color);
+	--button-color: var(--bg-color);
+	--button-border-weight: 1px;
+	--button-border-color: var(--main-color);
+}
+
+/* Button Sizes */
+button.large, .button.large, input.large {
+	--button-height: 48px;
+	font-size: 12px;
+}
+
+button.small, .button.small, input.small {
+	--button-height: 34px;
+}
+
+button.tiny, .button.tiny, input.tiny {
+	--button-height: 30px;
+}
+
+button.square, .button.square,
+button.circle, .button.circle {
+	min-width: 0;
+	padding: 0;
+	width: var(--button-height);
+}
+
+button.circle, .button.circle {
+	border-radius: 50%;
+}

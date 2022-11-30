@@ -1,0 +1,124 @@
+{%-
+  assign section_product = section.settings.product
+-%}
+
+<div class="{{ section.settings.section_margin }}">
+  <div class="grid grid-cols-1 md:grid-cols-2">
+    <div class="col-span-1 relative">
+      <div>
+        <slider-component
+          id="Slider-main"
+          class="keen-slider h-screen"
+        >
+          {% for product_image in section_product.images %}
+            <div class="keen-slider__slide bg-light-grey h-full">
+              {%- if product_image != blank -%}
+                <img
+                  srcset="{{ product_image | image_url: width: 165 }} 165w,
+                    {{ product_image | image_url: width: 360 }} 360w,
+                    {{ product_image | image_url: width: 533 }} 533w,
+                    {{ product_image | image_url: width: 720 }} 720w,
+                    {{ product_image | image_url: width: 940 }} 940w,
+                    {{ product_image | image_url: width: 1066 }} 1066w,
+                    {{ product_image | image_url: width: 1200 }} 1200w"
+                  src="{{ product_image | image_url: width: 533 }}"
+                  sizes="(min-width: 750px) calc(100vw / 2), 100vw"
+                  alt="{{ product_image.alt | escape }}"
+                  class="transition-all duration-md absolute top-0 left-0 w-full h-full object-cover{% if hover_image != blank %} z-1{% endif %}"
+                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                  width="{{ product_image.width }}"
+                  height="{{ product_image.height }}"
+                  loading="eager"
+                >
+              {%- else -%}
+                {% render 'placeholder-img' with icon: 'img-lg' %}
+              {%- endif -%}
+            </div>
+          {% endfor %}
+        </slider-component>
+      </div>
+      <div class="absolute bottom-margin left-margin right-margin md:bottom-gutter md:left-gutter md:right-gutter flex justify-center">
+        <slider-component
+          class="keen-slider max-w-[500px]"
+          data-thumbnails="Slider-main"
+          data-slider-settings='{
+            "spacing": 10
+          }'
+        >
+          {% for product_image in section_product.images %}
+            <div class="keen-slider__slide bg-light-grey h-full">
+              {%- if product_image != blank -%}
+                <img
+                  srcset="{{ product_image | image_url: width: 165 }} 165w,
+                    {{ product_image | image_url: width: 360, height: 360 }} 360w,
+                    {{ product_image | image_url: width: 500, height: 500 }} 500w"
+                  src="{{ product_image | image_url: width: 533 }}"
+                  sizes="(min-width: 990px) 500px, 300px"
+                  alt="{{ product_image.alt | escape }}"
+                  class="transition-all duration-md"
+                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                  width="{{ product_image.width }}"
+                  height="{{ product_image.height }}"
+                  loading="eager"
+                >
+              {%- else -%}
+                {% render 'placeholder-img' with icon: 'img-lg' %}
+              {%- endif -%}
+            </div>
+          {% endfor %}
+        </slider-component>
+      </div>
+    </div>
+
+    <div class="col-span-1">
+      <div class="px-margin">
+        <h1>{{ section.settings.product.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Details",
+  "tag": "section",
+  "class": "section product-details",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "select",
+      "id": "section_margin",
+      "default": "mb-v-spacing",
+      "label": "Section Margin",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "none",
+          "value": "mb-0"
+        },
+        {
+          "label": "Small",
+          "value": "mb-v-spacing-sm"
+        },
+        {
+          "label": "Medium",
+          "value": "mb-v-spacing"
+        },
+        {
+          "label": "Large",
+          "value": "mb-v-spacing-lg"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details"
+    }
+  ]
+}
+{% endschema %}
