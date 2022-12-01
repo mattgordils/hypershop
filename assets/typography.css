@@ -65,7 +65,7 @@ h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
 	text-transform: uppercase;
 }
 
-p, .body, .body p, .body ul, .body ol {
+p, ul, ol, .body, .body p, .body ul, .body ol {
 	font-family: var(--main-font);
 	font-size: 20px;
 	line-height: 1.5em;
@@ -156,8 +156,20 @@ select {
 }
 
 /* Rich Text */
+.rich-text > *:first-child {
+	margin-top: 0;
+}
+
+.rich-text > *:first-child:empty {
+	display: none;
+}
+
 .rich-text > *:last-child {
 	margin-bottom: 0;
+}
+
+.rich-text > *:last-child:empty {
+	display: none;
 }
 
 .rich-text figcaption {

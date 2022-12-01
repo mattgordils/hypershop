@@ -32,7 +32,18 @@ class SliderComponent extends HTMLElement {
 
     if (this?.thumbnailsFor && this?.sliderMain) {
       slideCount = this.sliderMain.querySelectorAll('.keen-slider__slide').length
-      mainSlider = new KeenSlider('#Slider-main', { loop: loop || false }, [])
+      mainSlider = new KeenSlider(
+        '#Slider-main',
+        {
+          loop: loop || true,
+          initial: 0,
+          mode: mode || 'snap',
+          defaultAnimation: {
+            duration: duration || 750
+          },
+        },
+        [sliderNavigation]
+      )
       plugins = [sliderThumbnails(mainSlider)]
     }
 

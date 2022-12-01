@@ -1,5 +1,5 @@
 export const sliderNavigation = slider => {
-  let wrapper, dots, arrowLeft, arrowRight
+  let wrapper, dots, arrows, arrowLeft, arrowRight
 
   function markup(remove) {
     wrapperMarkup(remove)
@@ -23,13 +23,15 @@ export const sliderNavigation = slider => {
       removeElement(arrowRight)
       return
     }
+    arrows = createDiv("arrows")
     arrowLeft = createDiv("arrow arrow--left")
     arrowLeft.addEventListener("click", () => slider.prev())
     arrowRight = createDiv("arrow arrow--right")
     arrowRight.addEventListener("click", () => slider.next())
 
-    wrapper.appendChild(arrowLeft)
-    wrapper.appendChild(arrowRight)
+    wrapper.appendChild(arrows)
+    arrows.appendChild(arrowLeft)
+    arrows.appendChild(arrowRight)
   }
 
   function wrapperMarkup(remove) {

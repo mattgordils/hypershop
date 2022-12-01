@@ -4,7 +4,7 @@
       "type": "page-settings"
     },
     "main": {
-      "type": "featured-collection-grid"
+      "type": "main-product"
     }
   },
   "order": [

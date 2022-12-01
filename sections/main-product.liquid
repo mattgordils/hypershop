@@ -1,14 +1,23 @@
-{%-
-  assign section_product = section.settings.product
--%}
+{{ 'slider.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'slider.bundle.js' | asset_url }}" defer="defer"></script>
 
+{%-liquid
+  assign section_product = product
+  assign section_height_class = 'lg:aspect-auto lg:h-screen'
+  assign on_pdp = true
+  if product == blank
+    assign on_pdp = false
+    assign section_product = section.settings.product
+    assign section_height_class = 'lg:aspect-square lg:max-h-screen'
+  endif
+-%}
 <div class="{{ section.settings.section_margin }}">
-  <div class="grid grid-cols-1 md:grid-cols-2">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-margin">
     <div class="col-span-1 relative">
       <div>
         <slider-component
           id="Slider-main"
-          class="keen-slider h-screen"
+          class="keen-slider no-dots loop aspect-3/4 {{ section_height_class }}"
         >
           {% for product_image in section_product.images %}
             <div class="keen-slider__slide bg-light-grey h-full">
@@ -22,7 +31,7 @@
                     {{ product_image | image_url: width: 1066 }} 1066w,
                     {{ product_image | image_url: width: 1200 }} 1200w"
                   src="{{ product_image | image_url: width: 533 }}"
-                  sizes="(min-width: 750px) calc(100vw / 2), 100vw"
+                  sizes="(min-width: 1024px) calc(100vw / 1.8), 100vw"
                   alt="{{ product_image.alt | escape }}"
                   class="transition-all duration-md absolute top-0 left-0 w-full h-full object-cover{% if hover_image != blank %} z-1{% endif %}"
                   {% unless lazy_load == false %}loading="lazy"{% endunless %}
@@ -37,7 +46,7 @@
           {% endfor %}
         </slider-component>
       </div>
-      <div class="absolute bottom-margin left-margin right-margin md:bottom-gutter md:left-gutter md:right-gutter flex justify-center">
+      <div class="absolute bottom-margin left-margin right-margin lg:bottom-gutter lg:left-gutter lg:right-gutter flex justify-center">
         <slider-component
           class="keen-slider max-w-[500px]"
           data-thumbnails="Slider-main"
@@ -46,7 +55,7 @@
           }'
         >
           {% for product_image in section_product.images %}
-            <div class="keen-slider__slide bg-light-grey h-full">
+            <div class="keen-slider__slide h-full">
               {%- if product_image != blank -%}
                 <img
                   srcset="{{ product_image | image_url: width: 165 }} 165w,
@@ -71,8 +80,12 @@
     </div>
 
     <div class="col-span-1">
-      <div class="px-margin">
-        <h1>{{ section.settings.product.title }}</h1>
+      <div class="px-margin{% if on_pdp %} lg:mt-header{% endif %}">
+        <h1 class="mb-4 h2">{{ section_product.title }}</h1>
+        {{ section_product.handle }}
+        <div class="body-small rich-text">
+          <p>{{ section_product.description }}</p>
+        </div>
       </div>
     </div>
   </div>

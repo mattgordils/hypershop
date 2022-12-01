@@ -45,6 +45,7 @@ module.exports = {
         'v-spacing-sm': 'var(--vertical-spacing-small)',
         'v-spacing': 'var(--vertical-spacing)',
         'v-spacing-lg': 'var(--vertical-spacing-large)',
+        'header': 'var(--header-height)'
       },
       transitionProperty: {
         'height': 'height',
@@ -72,7 +73,8 @@ module.exports = {
       height: {
         'screen': 'var(--screen-height)',
         'half-screen': 'calc(var(--screen-height) * .5)',
-        'three-q-screen': 'calc(var(--screen-height) * .75)'
+        'three-q-screen': 'calc(var(--screen-height) * .75)',
+        'header': 'var(--header-height)'
       },
       zIndex: {
         '1': '1',
@@ -81,6 +83,12 @@ module.exports = {
         '4': '4',
         '5': '5',
         '6': '6'
+      },
+      aspectRatio: {
+        '4/3': '4 / 3',
+        '3/4': '3 / 4',
+        '3/2': '3 / 2',
+        '2/3': '2 / 3'
       }
     },
   },
