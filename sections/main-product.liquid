@@ -17,7 +17,7 @@
       <div>
         <slider-component
           id="Slider-main"
-          class="keen-slider no-dots loop aspect-3/4 {{ section_height_class }}"
+          class="keen-slider no-dots loop arrows-full aspect-3/4 {{ section_height_class }}"
         >
           {% for product_image in section_product.images %}
             <div class="keen-slider__slide bg-light-grey h-full">
@@ -81,10 +81,11 @@
 
     <div class="col-span-1">
       <div class="px-margin{% if on_pdp %} lg:mt-header{% endif %}">
-        <h1 class="mb-4 h2">{{ section_product.title }}</h1>
-        {{ section_product.handle }}
-        <div class="body-small rich-text">
-          <p>{{ section_product.description }}</p>
+        <div>
+          <h1 class="mb-4 h2">{{ section_product.title }}</h1>
+          <div class="body-small rich-text">
+            <p>{{ section_product.description }}</p>
+          </div>
         </div>
       </div>
     </div>

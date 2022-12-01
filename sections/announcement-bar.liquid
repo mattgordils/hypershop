@@ -9,7 +9,7 @@
   {%- case block.type -%}
     {%- when 'announcement' -%}
       <div class="min-h-[var(--announcement-bar-height)] py-2 px-margin flex items-center justify-center bg-main text-white" role="region" aria-label="{{ 'sections.header.announcement' | t }}" {{ block.shopify_attributes }}>
-        {%- if block.settings.text != blank -%}
+      {%- if block.settings.text != blank -%}
           {%- if block.settings.link != blank -%}
             <a href="{{ block.settings.link }}" class="">
           {%- endif -%}
@@ -31,7 +31,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.announcement-bar.name",
+  "name": "Announcement Bar",
   "max_blocks": 12,
   "blocks": [
     {

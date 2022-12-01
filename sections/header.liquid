@@ -1,15 +1,20 @@
 {% style %}
   header .logo {
     width: 100px;
+    color: var(--header-color);
   }
 
   header .logo svg {
     display: block;
     max-width: 100%;
+    color: inherit;
+  }
+  header .logo svg * {
+    fill: currentcolor
   }
 {% endstyle %}
 
-<header class="h-header -mb-header relative z-1">
+<header class="h-header -mb-header relative z-10">
   <div class="px-margin">
     <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body header-logo">
       <a href="{{ routes.root_url }}" title="Go to homepage">

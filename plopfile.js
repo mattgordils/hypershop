@@ -1,6 +1,6 @@
 module.exports = function (plop) {
 	// section generator
-	plop.setGenerator('section-shopify', {
+	plop.setGenerator('section', {
 		description: 'Create section',
 		prompts: [
 			{
@@ -13,12 +13,12 @@ module.exports = function (plop) {
 			{
 				type: 'add',
 				path: 'sections/{{sectionName}}.liquid',
-				templateFile: 'plop-templates/section.liquid.hbs'
+				templateFile: 'plop-templates/section.liquid'
 			}
 		]
 	})
 	// section generator
-	plop.setGenerator('template-shopify', {
+	plop.setGenerator('template', {
 		description: 'Create template',
 		prompts: [
 			{
@@ -36,8 +36,8 @@ module.exports = function (plop) {
 		]
 	})
 	// section generator
-	plop.setGenerator('template-w-section-shopify', {
-		description: 'Create template',
+	plop.setGenerator('template-w-section', {
+		description: 'Create template with main section',
 		prompts: [
 			{
 				type: 'input',
@@ -46,7 +46,7 @@ module.exports = function (plop) {
 			},
 			{
 				type: 'input',
-				name: 'templateMainName',
+				name: 'sectionName',
 				message: 'Section name please. ie: (main-section)'
 			}
 		],
@@ -58,12 +58,23 @@ module.exports = function (plop) {
 			},
 			{
 				type: 'add',
-				path: 'sections/{{templateMainName}}.liquid',
-				templateFile: 'plop-templates/section.liquid.hbs'
+				path: 'sections/{{sectionName}}.liquid',
+				templateFile: 'plop-templates/section.liquid'
 			}
 		]
 	})
 	plop.setHelper('toLowerCase', str => str.toLowerCase())
+	plop.setHelper('curlyWrap', str => '{{' + str + '}}')
+	plop.setHelper('toTitle', str => {
+		var words = str.split('-');
+
+		for (var i = 0; i < words.length; i++) {
+			var word = words[i]
+			words[i] = word.charAt(0).toUpperCase() + word.slice(1)
+		}
+
+		return words.join(' ')
+	})
 	plop.setHelper('titleCase', str => {
 		if (typeof str === 'undefined') {
 			return ''

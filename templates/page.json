@@ -2,13 +2,9 @@
   "sections": {
     "settings": {
       "type": "page-settings"
-    },
-    "main": {
-      "type": "{{templateMainName}}"
     }
   },
   "order": [
-    "settings",
-    "main"
+    "settings"
   ]
 }

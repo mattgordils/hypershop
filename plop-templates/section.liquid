@@ -1,0 +1,43 @@
+<div class="{{curlyWrap 'section.settings.section_margin'}}">
+  <h1>{{toTitle sectionName}}</h1>
+</div>
+
+{% schema %}
+{
+  "name": "{{toTitle sectionName}}",
+  "tag": "section",
+  "class": "section product-details",
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_margin",
+      "default": "mb-v-spacing",
+      "label": "Section Margin",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "none",
+          "value": "mb-0"
+        },
+        {
+          "label": "Small",
+          "value": "mb-v-spacing-sm"
+        },
+        {
+          "label": "Medium",
+          "value": "mb-v-spacing"
+        },
+        {
+          "label": "Large",
+          "value": "mb-v-spacing-lg"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "{{toTitle sectionName}}"
+    }
+  ]
+}
+{% endschema %}
