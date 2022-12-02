@@ -26,7 +26,6 @@
       {% render 'meta-tags' %}
   
       <script src="{{ 'global.bundle.js' | asset_url }}" defer="defer"></script>
-      <script src="{{ 'lazyload.js' | asset_url }}" defer="defer"></script>
       {%- if request.design_mode -%}
         <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
       {%- endif -%}
@@ -48,8 +47,10 @@
         {{ 'customers.css' | asset_url | stylesheet_tag }}
       {% endif %}
   
+      {% comment %}
       {{ 'domaine-text-web-light.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
       {{ 'GT-America-Standard-Regular-Italic.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+      {% endcomment %}
   
       <script>
         document.documentElement.className = document.documentElement.className.replace('no-js', 'js');

@@ -5,10 +5,14 @@
     },
     "main": {
       "type": "main-product"
+    },
+    "recommendations": {
+      "type": "product-recommendations"
     }
   },
   "order": [
     "settings",
-    "main"
+    "main",
+    "recommendations"
   ]
 }

@@ -18,7 +18,7 @@ h2, .h2, .h2 p {
 	font-family: var(--secondary-font);
 	font-size: clamp(32px, calc(42vw / 1440 * 100), 42px);
 	line-height: 1.2em;
-	letter-spacing: -.02em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
@@ -29,7 +29,7 @@ h3, .h3, .h3 p {
 	font-size: 32px;
 	font-size: clamp(24px, calc(32vw / 1440 * 100), 32px);
 	line-height: 1.2em;
-	letter-spacing: -.02em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
@@ -39,7 +39,7 @@ h4, .h4, .h4 p {
 	font-family: var(--secondary-font);
 	font-size: clamp(20px, calc(24vw / 1440 * 100), 24px);
 	line-height: 1.2em;
-	letter-spacing: -.02em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
@@ -49,7 +49,7 @@ h5, .h5, .h5 p {
 	font-family: var(--secondary-font);
 	font-size: 20px;
 	line-height: 1.2em;
-	letter-spacing: -.02em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
@@ -69,7 +69,7 @@ p, ul, ol, .body, .body p, .body ul, .body ol {
 	font-family: var(--main-font);
 	font-size: 20px;
 	line-height: 1.5em;
-	letter-spacing: -.01em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 }
@@ -80,7 +80,7 @@ ol.small, .body-small, .body-small ol {
 	font-family: var(--main-font);
 	font-size: 18px;
 	line-height: 1.5em;
-	letter-spacing: -.02em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 }
@@ -91,7 +91,7 @@ ol.xsmall, .body-xsmall, .body-xsmall ol {
 	font-family: var(--main-font);
 	font-size: 14px;
 	line-height: 1.5em;
-	letter-spacing: -.01em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 }
@@ -102,7 +102,7 @@ ol.tiny, .body-tiny, .body-tiny ol {
 	font-family: var(--main-font);
 	font-size: 12px;
 	line-height: 1.4em;
-	letter-spacing: -.01em;
+	letter-spacing: 0;
 	font-weight: normal;
 	font-style: normal;
 }
@@ -209,19 +209,19 @@ select {
 }
 
 .rich-text li {
-	padding-left: 1em;
+	padding-left: .75em;
 	position: relative;
 }
 
 .rich-text ul li:before {
 	content: '';
 	display: block;
-	width: 6px;
-	height: 6px;
+	width: 4px;
+	height: 4px;
 	top: .9em;
 	left: 0;
 	margin-top: -4px;
-	background: var(--main-color);
+	background: var(--text-color);
 	border-radius: 50%;
 	position: absolute;
 }
