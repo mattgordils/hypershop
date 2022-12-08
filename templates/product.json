@@ -7,10 +7,14 @@
       }
     },
     "main": {
-      "type": "main-product"
+      "type": "main-product",
+      "settings": {
+      }
     },
     "recommendations": {
-      "type": "product-recommendations"
+      "type": "product-recommendations",
+      "settings": {
+      }
     }
   },
   "order": [
