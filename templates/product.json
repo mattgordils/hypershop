@@ -1,7 +1,10 @@
 {
   "sections": {
     "settings": {
-      "type": "page-settings"
+      "type": "page-settings",
+      "settings": {
+        "header_color": "var(--white)"
+      }
     },
     "main": {
       "type": "main-product"

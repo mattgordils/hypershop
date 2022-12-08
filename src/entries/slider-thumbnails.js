@@ -1,7 +1,5 @@
 export const sliderThumbnails = main => {
-  console.log(main)
   return (slider) => {
-    console.log(slider)
     function removeActive() {
       slider.slides.forEach((slide) => {
         slide.classList.remove("active")

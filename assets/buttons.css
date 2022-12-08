@@ -2,8 +2,8 @@
 .shopify-cleanslate *[roll='button'],
 button:not(.unstyled),
 .button {
-	--button-bg: transparent;
-	--button-color: var(--main-color);
+	--button-bg: var(--main-color);
+	--button-color: var(--text-color);
 	--button-border-weight: 1px;
 	--button-border-color: var(--main-color);
 	appearance: none;
@@ -12,15 +12,15 @@ button:not(.unstyled),
 	height: var(--button-height);
 	font-family: var(--main-font);
 	font-weight: var(--medium);
-	font-size: 11px;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	font-size: 18px;
+	text-transform: none;
+	letter-spacing: -0.01em;
 	line-height: 1em;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0 calc(var(--button-height) * .5);
-	border-radius: var(--base-border-radius);
+	padding: 0 calc(var(--button-height) * .5) 2px;
+	border-radius: var(--button-border-radius);
 	background: var(--button-bg);
 	color: var(--button-color);
 	border: var(--button-border-weight) solid var(--button-border-color);
@@ -36,16 +36,15 @@ button:not(.unstyled),
 .shopify-cleanslate *[roll='button']:hover,
 button:not(.unstyled):hover,
 .button:hover {
-  --button-bg: var(--main-color);
+  --button-bg: var(--text-color);
 	--button-color: var(--bg-color);
 	--button-border-weight: 1px;
-	--button-border-color: var(--main-color);
+	--button-border-color: var(--button-bg);
 }
 
 /* Button Sizes */
 button.large, .button.large, input.large {
 	--button-height: 48px;
-	font-size: 12px;
 }
 
 button.small, .button.small, input.small {

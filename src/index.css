@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+	background: var(--bg-color);
+	color: var(--text-color);
+}
+
 .page-width {
   max-width: calc(var(--max-site-width) + var(--site-margins) * 2);
   margin-left: auto;

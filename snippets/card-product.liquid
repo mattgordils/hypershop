@@ -90,13 +90,13 @@
         {%- endif -%}
       </div>
     </div>
-    <div class="text-center grid gap-y-3 group-hover:text-main pt-5 transition-all duration-md">
+    <div class="text-center grid gap-y-3 pt-5 transition-all duration-md">
       <h3 class="h5" id="title-{{ section_id }}-{{ card_product.id }}">{{ product_title | escape }}</h3>
       {% if product_type != blank %}
         <p class="caption m-0">{{ product_type }}</p>
       {% endif %}
       {% if product_subtitle != blank %}
-        <p class="xsmall m-0 text-light-text-color group-hover:text-main transition-all duration-md">{{ product_subtitle }}</p>
+        <p class="xsmall m-0 text-light-text-color transition-all duration-md">{{ product_subtitle }}</p>
       {% endif %}
     </div>
   </a>
@@ -105,7 +105,7 @@
   {%- if card_product.selected_or_first_available_variant.available == false -%}
     {% assign button_class = 'quick-add__submit button w-full relative' %}
   {%- else -%}
-    {% assign button_class = 'quick-add__submit button w-full relative group-hover:bg-main group-hover:border-main group-hover:text-bg-color' %}
+    {% assign button_class = 'quick-add__submit button w-full relative group-hover:bg-text-color group-hover:border-text-color group-hover:text-bg-color' %}
   {%- endif -%}
 
   <div class="quick-add pt-4 grow-0">
