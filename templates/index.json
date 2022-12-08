@@ -45,7 +45,7 @@
         "image": "shopify:\/\/shop_images\/barista-pours-over-coffee-at-cafe.jpg",
         "video": "",
         "image_overlay_opacity": 0,
-        "section_height": "medium",
+        "section_height": "large",
         "full_width": true,
         "desktop_content_position": "middle-center",
         "desktop_content_alignment": "center",
@@ -61,9 +61,9 @@
       "type": "featured-collection-grid",
       "settings": {
         "title": "",
-        "description": "<p><\/p>",
+        "description": "",
         "show_description": false,
-        "collection": "",
+        "collection": "frontpage",
         "color_scheme": "default",
         "mobile_slider": false,
         "section_margin": "mb-v-spacing"
