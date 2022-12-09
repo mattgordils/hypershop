@@ -40,46 +40,7 @@ class VariantSelects extends HTMLElement {
   }
 
   updateMedia() {
-    if (!this.currentVariant) return;
-    if (!this.currentVariant.featured_media) return;
-
-    if (this.dataset.context === 'card-product') {
-      const $img = $(`#ProductCard-${this.dataset.section}-${this.dataset.productId} img`)
-      $img.attr('src', this.currentVariant.featured_image.src);
-      $img.attr('alt', this.currentVariant.featured_image.alt);
-      $img.attr('srcset', '')
-      //featured_image
-    } else {
-      const mediaGallery = $(`#MediaGallery-${this.dataset.section} .slick-slider`);
-      const mediaThumbnails = $(`#pdpThumbnails`);
-      const mediaGallerySlides = $(`#MediaGallery-${this.dataset.section} .slick-slider .slide`);
-      const mediaId = this.dataset.section + '-' + this.currentVariant.featured_media.id
-
-      $('#selectedOption').text(this.currentVariant.title)
-
-      let sanitizedTitle = this.currentVariant.title.replace(/[^A-Z0-9]+/ig, "-");
-      mediaGallery.attr('data-selected-variant', sanitizedTitle)
-
-      const filterKey = '.variant-' + sanitizedTitle;
-
-      mediaGallery.slick('slickUnfilter')
-      mediaGallery.slick('slickFilter', filterKey).slick('refresh')
-      // .slick('slickGoTo', 0)
-      // mediaGallery.slick('slickGoTo', 0)
-      let newSlideCount = $('#pdpThumbnails .slide.variant-' + sanitizedTitle + ':not(.slick-cloned)').length
-      if (newSlideCount && newSlideCount > 10) {
-        newSlideCount = 10
-      }
-      mediaThumbnails.css({ '--slide-count': newSlideCount });
-      // mediaThumbnails.slick({ slidesToShow: newSlideCount }).slick('refresh');
-
-      const currentSlideIndex = mediaGallery.find(`[data-media-id='${ mediaId }']`).index()
-
-      const modalContent = document.querySelector(`#ProductModal-${this.dataset.section} .product-media-modal__content`);
-      if (!modalContent) return;
-      const newMediaModal = modalContent.querySelector( `[data-media-id="${this.currentVariant.featured_media.id}"]`);
-      modalContent.prepend(newMediaModal);
-    }
+    // TODO
   }
 
   updateURL() {
@@ -90,26 +51,12 @@ class VariantSelects extends HTMLElement {
   updateProductForm() {
     if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
     const currentVariantId = this.currentVariant.id;
-    let productForm = $(this).parent()[0].querySelector('product-form');
+    let productForm = this.parentElement;
     if (this.dataset.context !== 'card-product') {
     } else {
-      productForm = $(this).parent().parent()[0];
+      productForm = this.parentElement;
     }
     productForm.setAttribute('data-current-variant', currentVariantId);
-
-    $('*[class^="variant-checked-"]').each((index, item) => {
-      $(item).prop('checked', false);
-    });
-
-    $('*[class^="variant-show-"]').each((index, item) => {
-      if (item.classList.toString().includes(currentVariantId)) {
-        $(item).removeClass('hidden');
-        $(productForm).addClass('has-preorder');
-      } else {
-        $(item).addClass('hidden');
-        $(productForm).removeClass('has-preorder');
-      }
-    })
   }
 
   updateShareUrl() {
@@ -209,14 +156,14 @@ class VariantRadios extends VariantSelects {
     const fieldsets = Array.from(this.querySelectorAll('fieldset'));
     this.options = fieldsets.map((fieldset) => {
       return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
-    });
+    })
     
     fieldsets.forEach(fieldSet => {
       // Set all radios inactive
       Array.from(fieldSet.querySelectorAll('input')).forEach(el => el.removeAttribute('checked'))
       // Set radios active when value is an active option
       Array.from(fieldSet.querySelectorAll('input')).forEach(el => {
-        if (this.options.includes(el.value)) $(el).attr('checked','checked');
+        if (this.options.includes(el.value)) { el.setAttribute('checked','checked') }
       });
     })
   }

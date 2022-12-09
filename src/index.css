@@ -16,3 +16,11 @@ html {
 *[class*="--hidden"] {
   display: none !important;
 }
+
+/* Chrome, Safari, Edge, Opera */
+quantity-input input::-webkit-outer-spin-button,
+quantity-input input::-webkit-inner-spin-button,
+quantity-input input[type=number] {
+  appearance: none;
+  margin: 0;
+}
