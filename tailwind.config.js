@@ -24,6 +24,7 @@ module.exports = {
     },
     borderRadius: {
       DEFAULT: 'var(--base-border-radius)',
+      'full': '9999px' 
     },
     transitionDuration: {
       DEFAULT: 'var(--md-speed)',

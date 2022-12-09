@@ -10,7 +10,7 @@
   <div>
     {%- if section.settings.title != blank -%}
       <div class="page-width px-margin mx-auto flex justify-between items-center gap-y-12 mb-gutter md:mb-gutter flex-col md:flex-row">
-        <h2 class="h4 sans text-main">{{ section.settings.collection.title }}: {{ section.settings.title | escape }}</h2>
+        <h2 class="h4">{{ section.settings.collection.title }}: {{ section.settings.title | escape }}</h2>
         <a href="{{ section.settings.collection.url }}"
           class="inline-flex button solid md:w-auto w-full"
           aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}"

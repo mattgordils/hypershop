@@ -20,12 +20,17 @@ export const sliderThumbnails = main => {
     slider.on("created", () => {
       addActive(slider.track.details.rel)
       addClickEvents()
-      main.on("animationStarted", (main) => {
-        removeActive()
-        const next = main.animator.targetIdx || 0
-        addActive(main.track.absToRel(next))
-        slider.moveToIdx(Math.min(slider.track.details.maxIdx, next))
-      })
+      console.log('slider created')
+      if (main) {
+        main.on("animationStarted", (main) => {
+          console.log(main)
+          removeActive()
+          const next = main.animator.targetIdx || 0
+          addActive(main.track.absToRel(next))
+          slider.moveToIdx(main.track.absToRel(next))
+          // slider.moveToIdx(Math.min(slider.track.details.maxIdx, next))
+        })
+      }
     })
   }
 }

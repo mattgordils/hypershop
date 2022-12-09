@@ -12,3 +12,7 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
+
+*[class*="--hidden"] {
+  display: none !important;
+}

@@ -32,6 +32,9 @@ class SliderComponent extends HTMLElement {
 
     if (this?.thumbnailsFor && this?.sliderMain) {
       slideCount = this.sliderMain.querySelectorAll('.keen-slider__slide').length
+      if (slideCount > 6) {
+        slideCount = 6
+      }
       mainSlider = new KeenSlider(
         '#Slider-main',
         {
@@ -58,7 +61,7 @@ class SliderComponent extends HTMLElement {
     const slider = new KeenSlider(
       this,
       {
-        loop: loop || false,
+        loop: loop || slideCount === 6 || false,
         initial: 0,
         mode: mode || 'snap',
         drag: this?.thumbnailsFor ? false : true,

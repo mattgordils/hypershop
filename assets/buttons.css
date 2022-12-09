@@ -42,6 +42,13 @@ button:not(.unstyled):hover,
 	--button-border-color: var(--button-bg);
 }
 
+.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+	background: var(--button-bg);
+	color: var(--button-color);
+	border-color: var(--button-border-color);
+	border-width: var(--button-border-weight);
+}
+
 /* Button Sizes */
 button.large, .button.large, input.large {
 	--button-height: 48px;

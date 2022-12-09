@@ -2,7 +2,7 @@
   <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 {%- endunless -%}
 
-<cart-items class="px-margin mt-header-height pt-header-height mx-auto max-w-[800px]{% if cart == empty %} is-empty{% endif %}">
+<cart-items class="px-margin mt-header pt-header mx-auto max-w-[800px]{% if cart == empty %} is-empty{% endif %}">
   <div class="title-wrapper-with-link text-center border-b border-nude-2 pb-4">
     <h1 class="h4 sans text-main">{{ 'sections.cart.title' | t }}</h1>
   </div>

@@ -1,6 +1,19 @@
 {% style %}
+  #shopify-section-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
   header {
     color: var(--header-color);
+    transition: color var(--md-speed) ease-in-out,
+                background var(--md-speed) ease-in-out;
+  }
+
+  header.scrolled {
+    background: var(--bg-color);
+    color: var(--text-color);
   }
 
   header .logo {
@@ -9,7 +22,7 @@
     width: 100px;
     border: none;
     padding: 0;
-    color: var(--header-color);
+    color: currentcolor;
   }
 
   header .logo svg {
@@ -33,3 +46,19 @@
     </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
   </div>
 </header>
+
+{% javascript %}
+  const headerSection = document.getElementById('shopify-section-header');
+  const header = headerSection.querySelector('header');
+  const onScroll = () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (scrollTop > 80) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+  // const onScrollHandler = this.onScroll.bind(this);
+  window.addEventListener('scroll', onScroll, false);
+{% endjavascript %}

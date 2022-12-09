@@ -1,10 +1,22 @@
 {{ 'slider.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'slider.bundle.js' | asset_url }}" defer="defer"></script>
 
+{% style %}
+  variant-radios input ~ label {
+    border-color: transparent;
+  }
+
+  variant-radios input:checked ~ label {
+    border-color: currentcolor;
+  }
+{% endstyle %}
+
 {%-liquid
   assign section_product = product
   assign section_height_class = 'lg:aspect-auto lg:h-screen'
   assign on_pdp = true
+  assign show_dynamic_checkout = true
+  assign product_form_id = 'product-form-' | append: section.id
   if product == blank
     assign on_pdp = false
     assign section_product = section.settings.product
@@ -12,7 +24,7 @@
   endif
 -%}
 <div class="{{ section.settings.section_margin }}">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-margin">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-margin items-center">
     <div class="col-span-1 relative">
       <div>
         <slider-component
@@ -80,12 +92,100 @@
     </div>
 
     <div class="col-span-1">
-      <div class="px-margin{% if on_pdp %} lg:mt-header{% endif %}">
+      <div class="px-margin max-w-[800px] mx-auto {% if on_pdp %} lg:mt-header{% endif %}">
         <div>
           <h1 class="mb-4 h2">{{ section_product.title }}</h1>
           <div class="body-small rich-text">
             <p>{{ section_product.description }}</p>
           </div>
+          
+          <product-form class="product-form">
+            <div class="product-form__error-message-wrapper" role="alert" hidden>
+              <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
+                <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+              </svg>
+              <span class="product-form__error-message"></span>
+            </div>
+
+            <variant-radios class="pdp-swatches" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
+              {%- for option in product.options_with_values -%}
+                <fieldset class="flex product-form__input items-center{% if option.name != 'Color' %} flex-col gap-y-3{% endif %}">
+                  <div class="grow text-left">
+                    <legend class="form__label h6 text-light-text-color">{{ option.name }}: <span id="selectedOption"></span></legend>
+                  </div>
+                  <div class="flex {% if option.name != 'Color' %}flex-wrap gap-2 justify-center{% else %}gap-x-[10px]{% endif %}">
+                    {%- for value in option.values -%}
+                      {% assign color = value | downcase %}
+                      <div>
+                        <input
+                          type="radio" 
+                          class="hidden"
+                          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                          name="{{ option.name }}"
+                          value="{{ value | escape }}"
+                          form="{{ product_form_id }}"
+                          {% if option.selected_value == value %}checked{% endif %}
+                        >
+                        {%- if option.name == 'Color' -%}
+                          <label
+                            for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            class="border swatch w-[20px] h-[20px] block rounded-full"
+                            style="color: {{ value }}"
+                            title="{{ value }}"
+                          >
+                            <div class="swatch w-[14px] h-[14px] m-[2px] block rounded full bg-current"></div>
+                          </label>
+                        {% else %}
+                          <label
+                            for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            class="border h6 whitespace-nowrap rounded-full inline-flex items-center justify-center h-[31px] px-3 transition-all duration-md cursor-pointer bubble-label"
+                            title="{{ value }}"
+                          >
+                            {{ value }}
+                          </label>
+                        {% endif %}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </fieldset>
+              {%- endfor -%}
+              <script type="application/json">
+                {{ product.variants | json }}
+              </script>
+            </variant-radios>
+
+            {%- form 'product', section_product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+              <div class="product-form__buttons grid gap-y-gutter">
+                <button
+                  type="submit"
+                  name="add"
+                  class="button w-full {% if show_dynamic_checkout and section_product.selling_plan_groups == empty %}button--secondary{% else %}button--primary{% endif %}"
+                  {% if section_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+                >
+                    <span>
+                      {%- if section_product.selected_or_first_available_variant.available -%}
+                        {{ 'products.product.add_to_cart' | t }}
+                      {%- else -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- endif -%}
+                    </span>
+                    <div class="loading-overlay__spinner hidden">
+                      <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                      </svg>
+                    </div>
+                </button>
+                {%- if show_dynamic_checkout -%}
+                  {{ form | payment_button }}
+                {%- endif -%}
+              </div>
+            {%- endform -%}
+          </product-form>
+
         </div>
       </div>
     </div>
