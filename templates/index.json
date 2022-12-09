@@ -3,7 +3,7 @@
     "settings": {
       "type": "page-settings",
       "settings": {
-        "header_color": "var(--text-color)"
+        "header_color": "var(--white)"
       }
     },
     "c26610c4-386b-4e94-bdd0-7a9f562a096b": {
@@ -12,27 +12,27 @@
         "template--17193817932089__c26610c4-386b-4e94-bdd0-7a9f562a096b-1670522536ee578de8-0": {
           "type": "heading",
           "settings": {
-            "heading": "Image banner",
+            "heading": "Wide Media",
             "heading_size": "h1"
           }
         },
         "template--17193817932089__c26610c4-386b-4e94-bdd0-7a9f562a096b-1670522536ee578de8-1": {
           "type": "text",
           "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_size": "body",
+            "text": "One or multiple images or videos",
+            "text_size": "body-medium",
             "mobile_hide": false
           }
         },
         "template--17193817932089__c26610c4-386b-4e94-bdd0-7a9f562a096b-1670522536ee578de8-2": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Button label",
-            "button_link_1": "",
+            "button_label_1": "Shop Now",
+            "button_link_1": "shopify:\/\/collections",
             "button_style_secondary_1": false,
-            "button_label_2": "Button label",
+            "button_label_2": "Our Story",
             "button_link_2": "",
-            "button_style_secondary_2": false
+            "button_style_secondary_2": true
           }
         }
       },
@@ -42,7 +42,7 @@
         "template--17193817932089__c26610c4-386b-4e94-bdd0-7a9f562a096b-1670522536ee578de8-2"
       ],
       "settings": {
-        "image": "shopify:\/\/shop_images\/barista-pours-over-coffee-at-cafe.jpg",
+        "image": "shopify:\/\/shop_images\/needle-on-record.jpg",
         "video": "",
         "image_overlay_opacity": 0,
         "section_height": "large",
