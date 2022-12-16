@@ -128,6 +128,7 @@
   
       {% section 'footer' %}
       {% section 'menu-panel' %}
+      {% section 'cart-drawer' %}
   
       <script>
         window.cartItems = [];
@@ -164,6 +165,8 @@
       </script>
   
       {% render 'integrations-before-body-closes' %}
+
+      <event-bus></event-bus>
     
     </body>
   </html>

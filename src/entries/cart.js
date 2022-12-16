@@ -3,6 +3,7 @@ class CartRemoveButton extends HTMLElement {
     super();
     this.addEventListener('click', (event) => {
       event.preventDefault();
+      console.log('jjj')
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
       cartItems.updateQuantity(this.dataset.index, 0);
     });
@@ -20,11 +21,11 @@ class CartItems extends HTMLElement {
     this.currentItemCount = Array.from(this.querySelectorAll('[name="updates[]"]'))
       .reduce((total, quantityInput) => total + parseInt(quantityInput.value), 0);
 
-    // this.debouncedOnChange = debounce((event) => {
-    //   this.onChange(event);
-    // }, 300);
+    this.debouncedOnChange = debounce((event) => {
+      this.onChange(event);
+    }, 300);
 
-    // this.addEventListener('change', this.debouncedOnChange.bind(this));
+    this.addEventListener('change', this.debouncedOnChange.bind(this));
   }
 
   onChange(event) {
@@ -66,13 +67,12 @@ class CartItems extends HTMLElement {
       sections_url: window.location.pathname
     });
 
-    fetch(`${routes.cart_change_url}`, {...fetchConfig(), ...{ body }})
+    fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
       .then((response) => {
         return response.text();
       })
       .then((state) => {
         const parsedState = JSON.parse(state);
-        window.cartItems = (parsedState.items || []).map(i => i.product_id);
         this.classList.toggle('is-empty', parsedState.item_count === 0);
         const cartDrawerWrapper = document.querySelector('cart-drawer');
         const cartFooter = document.getElementById('main-cart-footer');
@@ -81,7 +81,6 @@ class CartItems extends HTMLElement {
         if (cartDrawerWrapper) cartDrawerWrapper.classList.toggle('is-empty', parsedState.item_count === 0);
 
         this.getSectionsToRender().forEach((section => {
-          
           const elementToReplace =
             document.getElementById(section.id).querySelector(section.selector) || document.getElementById(section.id);
           elementToReplace.innerHTML =
@@ -89,7 +88,7 @@ class CartItems extends HTMLElement {
         }));
 
         this.updateLiveRegions(line, parsedState.item_count);
-        const lineItem =  document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);
+        const lineItem = document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);
         if (lineItem && lineItem.querySelector(`[name="${name}"]`)) {
           cartDrawerWrapper ? trapFocus(cartDrawerWrapper, lineItem.querySelector(`[name="${name}"]`)) : lineItem.querySelector(`[name="${name}"]`).focus();
         } else if (parsedState.item_count === 0 && cartDrawerWrapper) {
@@ -102,17 +101,7 @@ class CartItems extends HTMLElement {
         this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
         const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
         errors.textContent = window.cartStrings.error;
-        if (window.cartStrings.error) {
-          document.getElementById('CartDrawer-CartErrors').classList.remove('hidden');
-        } else {
-          document.getElementById('CartDrawer-CartErrors').classList.add('hidden');
-        }
         this.disableLoading();
-      }).finally(() => {
-        $('.slick-slider').not('.slick-initialized').slick();
-        $('#cart-slider').slick('slickFilter', function (_, $el) {
-          return !window.cartItems.includes(`${$el.dataset.productId}`)
-        });
       });
   }
 
@@ -120,11 +109,8 @@ class CartItems extends HTMLElement {
     if (this.currentItemCount === itemCount) {
       const lineItemError = document.getElementById(`Line-item-error-${line}`) || document.getElementById(`CartDrawer-LineItemError-${line}`);
       const quantityElement = document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
-
       lineItemError
         .querySelector('.cart-item__error-text')
-        .classList.remove('hidden')
-        .classList.add('flex')
         .innerHTML = window.cartStrings.quantityError.replace(
           '[quantity]',
           quantityElement.value
@@ -176,7 +162,7 @@ if (!customElements.get('cart-note')) {
 
       this.addEventListener('change', debounce((event) => {
         const body = JSON.stringify({ note: event.target.value });
-        fetch(`${routes.cart_update_url}`, {...fetchConfig(), ...{ body }});
+        fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } });
       }, 300))
     }
   });

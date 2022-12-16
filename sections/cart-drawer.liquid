@@ -1,0 +1,199 @@
+{% comment %} <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script> {% endcomment %}
+
+<modal-component id="cartDrawer" class="drawer {% if cart == empty %}is-empty{% endif %}">
+  <div class="modal-content z-2 bg-bg-color">
+    <div class="drawer__header">
+      <h2 class="drawer__heading">{{ 'sections.cart.title' | t }} (<span id="cartCount">{{ cart.item_count }}</span>)</h2>
+      <button id="closeModal" class="small">Close</button>
+    </div>
+    <cart-drawer-items {% if cart == empty %}class=" is-empty"{% endif %}>
+      <form action="{{ routes.cart_url }}" id="CartDrawer-Form" class="cart__contents cart-drawer__form" method="post">
+        <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
+          {%- if cart != empty -%}
+            {%- for item in cart.items -%}
+              <div>
+                <div>
+                  {% if item.image %}
+                    <a href="{{ item.url }}" class="block">
+                      <img class="cart-item__image"
+                        src="{{ item.image | image_url: width: 300 }}"
+                        alt="{{ item.image.alt | escape }}"
+                        loading="lazy"
+                        width="150"
+                        height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                      >
+                    </a>
+                  {% endif %}
+                </div>
+
+                <div>
+                  {%- if settings.show_vendor -%}
+                    <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
+                  {%- endif -%}
+
+                  <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+
+                  {%- if item.original_price != item.final_price -%}
+                    <div class="cart-item__discounted-prices">
+                      <span class="hidden">
+                        {{ 'products.product.price.regular_price' | t }}
+                      </span>
+                      <s class="cart-item__old-price product-option">
+                        {{- item.original_price | money -}}
+                      </s>
+                      <span class="hidden">
+                        {{ 'products.product.price.sale_price' | t }}
+                      </span>
+                      <strong class="cart-item__final-price product-option">
+                        {{ item.final_price | money }}
+                      </strong>
+                    </div>
+                  {%- else -%}
+                    <div class="product-option">
+                      {{ item.original_price | money }}
+                    </div>
+                  {%- endif -%}
+
+                  {%- if item.product.has_only_default_variant == false or item.properties.size != 0 or item.selling_plan_allocation != nil -%}
+                    <dl>
+                      {%- if item.product.has_only_default_variant == false -%}
+                        {%- for option in item.options_with_values -%}
+                          <div class="product-option flex gap-x-1">
+                            <dt>{{ option.name }}: </dt>
+                            <dd>{{ option.value }}{% unless forloop.last %}, {% endunless %}</dd>
+                          </div>
+                        {%- endfor -%}
+                      {%- endif -%}
+
+                      {%- for property in item.properties -%}
+                        {%- assign property_first_char = property.first | slice: 0 -%}
+                        {%- if property.last != blank and property_first_char != '_' -%}
+                          <div class="product-option">
+                            <dt>{{ property.first }}: </dt>
+                            <dd>
+                              {%- if property.last contains '/uploads/' -%}
+                                <a href="{{ property.last }}" class="link" target="_blank" aria-describedby="a11y-new-window-message">
+                                  {{ property.last | split: '/' | last }}
+                                </a>
+                              {%- else -%}
+                                {{ property.last }}
+                              {%- endif -%}
+                            </dd>
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </dl>
+
+                    <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                  {%- endif -%}
+
+                  <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                    {%- for discount in item.discounts -%}
+                      <li class="discounts__discount">
+                        {%- render 'icon-discount' -%}
+                        {{ discount.title }}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+
+                <div>
+                  <div class="loading-overlay hidden">
+                    <div class="loading-overlay__spinner">
+                      <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div class="cart-item__price-wrapper">
+                    {%- if item.original_line_price != item.final_line_price -%}
+                      <div class="cart-item__discounted-prices">
+                        <span class="hidden">
+                          {{ 'products.product.price.regular_price' | t }}
+                        </span>
+                        <s class="cart-item__old-price price price--end">
+                          {{ item.original_line_price | money }}
+                        </s>
+                        <span class="hidden">
+                          {{ 'products.product.price.sale_price' | t }}
+                        </span>
+                        <span class="price price--end">
+                          {{ item.final_line_price | money }}
+                        </span>
+                      </div>
+                    {%- else -%}
+                      <span class="price price--end">
+                        {{ item.original_line_price | money }}
+                      </span>
+                    {%- endif -%}
+
+                    {%- if item.variant.available and item.unit_price_measurement -%}
+                      <div class="unit-price caption">
+                        <span class="hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                        {{ item.variant.unit_price | money }}
+                        <span aria-hidden="true">/</span>
+                        <span class="hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+                        {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                          {{- item.variant.unit_price_measurement.reference_value -}}
+                        {%- endif -%}
+                        {{ item.variant.unit_price_measurement.reference_unit }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="cart-item__quantity-wrapper">
+                    <quantity-input class="quantity flex items-center">
+                      <button class="circle small" name="minus" type="button">
+                        <span class="hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
+                        {% render 'icon-minus', size: '18px' %}
+                      </button>
+                      <div class="text-center px-1 min-w-[3em] qty-value">{{ item.quantity }}</div>
+                      <button class="circle small" name="plus" type="button">
+                        <span class="hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
+                        {% render 'icon-plus' size: '18px' %}
+                      </button>
+                    </quantity-input>
+
+                    <cart-remove-button id="CartDrawer-Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
+                      <button type="button" class="button button--tertiary" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
+                        Remove
+                      </button>
+                    </cart-remove-button>
+                  </div>
+
+                  <div id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}" class="cart-item__error" role="alert">
+                    <small class="cart-item__error-text"></small>
+                    error
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            Cart is empty
+          {%- endif -%}
+        </div>
+      </form>
+    </cart-drawer-items>
+    <div class="drawer__footer">
+
+      <div class="cart__ctas" {{ block.shopify_attributes }}>
+        <button type="submit" id="CartDrawer-Checkout" class="cart__checkout-button button" name="checkout" form="CartDrawer-Form"{% if cart == empty %} disabled{% endif %}>
+          {{ 'sections.cart.checkout' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="closeModal" class="overlay absolute top-0 left-0 w-full h-full z-1 bg-text-color opacity-50"></div>
+</modal-component>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

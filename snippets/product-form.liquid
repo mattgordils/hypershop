@@ -1,0 +1,83 @@
+{%-liquid
+  assign section_product = section_product
+  assign product_form_id = product_form_id
+  assign section_id = section_id
+  assign show_dynamic_checkout = show_dynamic_checkout
+-%}
+
+<product-form>
+  <variant-radios class="pdp-swatches" data-section="{{ section_id }}" data-url="{{ section_product.url }}" {{ block.shopify_attributes }}>
+    {%- for option in section_product.options_with_values -%}
+      <fieldset class="flex product-form__input items-center{% if option.name != 'Color' %} flex-col gap-y-3{% endif %}">
+        <div class="grow text-left">
+          <legend class="form__label h6 text-light-text-color">{{ option.name }}: <span id="selectedOption"></span></legend>
+        </div>
+        <div class="flex {% if option.name != 'Color' %}flex-wrap gap-2 justify-center{% else %}gap-x-[10px]{% endif %}">
+          {%- for value in option.values -%}
+            {% assign color = value | downcase %}
+            <div>
+              <input
+                type="radio" 
+                class="hidden"
+                id="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
+                name="{{ option.name }}"
+                value="{{ value | escape }}"
+                form="{{ product_form_id }}"
+                {% if option.selected_value == value %}checked{% endif %}
+              >
+              {%- if option.name == 'Color' -%}
+                <label
+                  for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
+                  class="border swatch w-[20px] h-[20px] block rounded-full"
+                  style="color: {{ value }}"
+                  title="{{ value }}"
+                >
+                  <div class="swatch w-[14px] h-[14px] m-[2px] block rounded full bg-current"></div>
+                </label>
+              {% else %}
+                <label
+                  for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
+                  class="border h6 whitespace-nowrap rounded-full inline-flex items-center justify-center h-[31px] px-3 transition-all duration-md cursor-pointer bubble-label"
+                  title="{{ value }}"
+                >
+                  {{ value }}
+                </label>
+              {% endif %}
+            </div>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- endfor -%}
+    <script type="application/json">
+      {{ section_product.variants | json }}
+    </script>
+  </variant-radios>
+
+  {%- form 'product', section_product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+    <input type="hidden" name="id" value="{{ section_product.selected_or_first_available_variant.id }}" disabled>
+    <div class="product-form__buttons grid gap-y-gutter">
+      <button
+        type="submit"
+        name="add"
+        class="button w-full"
+        {% if section_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+      >
+        <span>
+          {%- if section_product.selected_or_first_available_variant.available -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </span>
+        <div class="loading-overlay__spinner hidden">
+          <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </button>
+      {%- if show_dynamic_checkout -%}
+        {{ form | payment_button }}
+      {%- endif -%}
+    </div>
+  {%- endform -%}
+</product-form>

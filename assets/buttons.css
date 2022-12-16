@@ -34,12 +34,17 @@ button:not(.unstyled),
 
 .shopify-cleanslate button:hover,
 .shopify-cleanslate *[roll='button']:hover,
-button:not(.unstyled):hover,
-.button:hover {
+button:not(.unstyled):not([disabled]):hover,
+.button:not([disabled]):hover {
   --button-bg: var(--text-color);
 	--button-color: var(--bg-color);
 	--button-border-weight: 1px;
 	--button-border-color: var(--button-bg);
+}
+
+button:not(.unstyled)[disabled] {
+  opacity: .5;
+	cursor: not-allowed;
 }
 
 .shopify-payment-button__button--unbranded:hover:not([disabled]) {

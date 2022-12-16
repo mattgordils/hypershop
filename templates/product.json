@@ -3,7 +3,7 @@
     "settings": {
       "type": "page-settings",
       "settings": {
-        "header_color": "var(--white)"
+        "header_color": "var(--text-color)"
       }
     },
     "main": {
