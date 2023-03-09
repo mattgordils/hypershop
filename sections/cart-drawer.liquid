@@ -146,19 +146,19 @@
                 <div>
                   <div class="cart-item__quantity-wrapper">
                     <quantity-input class="quantity flex items-center">
-                      <button class="circle small" name="minus" type="button">
+                      <button class="circle tiny" name="minus" type="button">
                         <span class="hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
-                        {% render 'icon-minus', size: '18px' %}
+                        {% render 'icon-minus', size: '16px' %}
                       </button>
                       <div class="text-center px-1 min-w-[3em] qty-value">{{ item.quantity }}</div>
-                      <button class="circle small" name="plus" type="button">
+                      <button class="circle tiny" name="plus" type="button">
                         <span class="hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
-                        {% render 'icon-plus' size: '18px' %}
+                        {% render 'icon-plus' size: '16px' %}
                       </button>
                     </quantity-input>
 
                     <cart-remove-button id="CartDrawer-Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
-                      <button type="button" class="button button--tertiary" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
+                      <button type="button" class="button tiny" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
                         Remove
                       </button>
                     </cart-remove-button>
@@ -180,7 +180,7 @@
     <div class="drawer__footer">
 
       <div class="cart__ctas" {{ block.shopify_attributes }}>
-        <button type="submit" id="CartDrawer-Checkout" class="cart__checkout-button button" name="checkout" form="CartDrawer-Form"{% if cart == empty %} disabled{% endif %}>
+        <button type="submit" id="CartDrawer-Checkout" class="w-full large button" name="checkout" form="CartDrawer-Form"{% if cart == empty %} disabled{% endif %}>
           {{ 'sections.cart.checkout' | t }}
         </button>
       </div>

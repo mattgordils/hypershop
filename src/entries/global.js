@@ -1,5 +1,13 @@
 import './modal.js'
 
+function debounce(fn, wait) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
 // Set Up Event Bus
 class EventBus extends HTMLElement {
   constructor() {
@@ -95,7 +103,9 @@ window.EventBus.subscribe("updateCart", cart => {
     .then(res => {
       const currentCartDrawer = document.querySelector('#shopify-section-cart-drawer')
       currentCartDrawer.outerHTML = res['cart-drawer']
-      window.EventBus.publish("setModal", "cartDrawer")
+      setTimeout(() => {
+        window.EventBus.publish("setModal", "cartDrawer")
+      }, 100)
     })
   
   document.querySelectorAll('#cartCount').forEach((item) => {
@@ -287,7 +297,6 @@ class QuantityInput extends HTMLElement {
     const previousValue = this.input.html;
 
     if (event.target.name === 'plus') {
-      console.log(this.input.html)
       this.input.html = parseInt(this.input.html) + 1
     } else {
       this.input.html = parseInt(this.input.html) - 1
@@ -382,9 +391,6 @@ if (!customElements.get('product-form')) {
             }
 
             let uniqueLineItems = [...new Set(window.cartItems)]
-
-            console.log(window)
-            console.log(response)
 
             fetch(`/cart.js`, config)
               .then(response => response.json())

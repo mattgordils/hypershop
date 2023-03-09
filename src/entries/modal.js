@@ -23,7 +23,6 @@ class ModalTrigger extends HTMLElement {
     this.modalId = this.dataset.modalId
 
     this.addEventListener('click', event => {
-      console.log('this', this.dataset.modalId)
       this.openModal()
     })
   }

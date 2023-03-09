@@ -15,7 +15,7 @@
   \******************************/
 /***/ (() => {
 
-eval("class Modal extends HTMLElement {\n  constructor() {\n    super();\n    this.closeButtons = this.querySelectorAll('#closeModal');\n    this.closeButtons.forEach(item => {\n      item.addEventListener('click', event => {\n        this.closeModal();\n      });\n    });\n  }\n  closeModal() {\n    window.EventBus.publish(\"setModal\", false);\n  }\n}\ncustomElements.define('modal-component', Modal);\nclass ModalTrigger extends HTMLElement {\n  constructor() {\n    super();\n    this.modalId = this.dataset.modalId;\n    this.addEventListener('click', event => {\n      console.log('this', this.dataset.modalId);\n      this.openModal();\n    });\n  }\n  openModal() {\n    window.EventBus.publish(\"setModal\", this.modalId);\n  }\n}\ncustomElements.define('modal-trigger', ModalTrigger);\n\n//# sourceURL=webpack://hypershop/./src/entries/modal.js?");
+eval("class Modal extends HTMLElement {\n  constructor() {\n    super();\n    this.closeButtons = this.querySelectorAll('#closeModal');\n    this.closeButtons.forEach(item => {\n      item.addEventListener('click', event => {\n        this.closeModal();\n      });\n    });\n  }\n  closeModal() {\n    window.EventBus.publish(\"setModal\", false);\n  }\n}\ncustomElements.define('modal-component', Modal);\nclass ModalTrigger extends HTMLElement {\n  constructor() {\n    super();\n    this.modalId = this.dataset.modalId;\n    this.addEventListener('click', event => {\n      this.openModal();\n    });\n  }\n  openModal() {\n    window.EventBus.publish(\"setModal\", this.modalId);\n  }\n}\ncustomElements.define('modal-trigger', ModalTrigger);\n\n//# sourceURL=webpack://hypershop/./src/entries/modal.js?");
 
 /***/ })
 
