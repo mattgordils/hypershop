@@ -1,31 +1,34 @@
-<div class="px-margin mx-auto max-w-[800px]{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
   <div>
-    <div class="cart__footer w-full pt-0">
+    <div class="cart__footer">
       {%- if settings.show_cart_note -%}
         <cart-note class="cart__note field">
           <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
-          <textarea class="text-area field__input" name="note" form="cart" id="Cart-note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+          <textarea
+            class="text-area field__input"
+            name="note"
+            form="cart"
+            id="Cart-note"
+            placeholder="{{ 'sections.cart.note' | t }}"
+          >{{ cart.note }}</textarea>
         </cart-note>
       {%- endif -%}
 
-      <div class="cart__blocks w-full">
+      <div class="cart__blocks">
         {% for block in section.blocks %}
           {%- case block.type -%}
             {%- when '@app' -%}
               {% render block %}
             {%- when 'subtotal' -%}
               <div class="js-contents" {{ block.shopify_attributes }}>
-                <div class="totals flex items-baseline justify-between pt-5">
-                  <h2 class="totals__subtotal h6 text-light-text-color">{{ 'sections.cart.subtotal' | t }}</h2>
-                  <p class="saso-cart-original-total totals__subtotal-value h6 text-light-text-color">{{ cart.original_total_price | money }}</p>
-                </div>
-                <div class="totals flex items-baseline justify-between">
-                  <h2 class="totals__subtotal h6 text-light-text-color">Discount</h2>
-                  <p class="totals__subtotal-value h6 text-blue">-{{ cart.original_total_price | minus: cart.total_price | money }}</p>
-                </div>
-                <div class="totals flex items-baseline justify-between">
-                  <h2 class="totals__subtotal h6 text-light-text-color">Estimated Total</h2>
-                  <p class="saso-cart-total totals__subtotal-value h6">{{ cart.total_price | money_with_currency }}</p>
+                <div class="totals">
+                  <h2 class="totals__subtotal">{{ 'sections.cart.subtotal' | t }}</h2>
+                  <p class="totals__subtotal-value">{{ cart.total_price | money_with_currency }}</p>
                 </div>
 
                 <div>
@@ -42,7 +45,7 @@
                   {%- endif -%}
                 </div>
 
-                <small class="body-tiny text-light-text-color">
+                <small class="tax-note caption-large rte">
                   {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
                     {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
                   {%- elsif cart.taxes_included -%}
@@ -62,11 +65,25 @@
                   </button>
                 </noscript>
 
-                <button type="submit" id="checkout" class="solid max-w-full w-full cart__checkout-button button" name="checkout"{% if cart == empty %} disabled{% endif %} form="cart">
-                  Proceed to Checkout
+                <button
+                  type="submit"
+                  id="checkout"
+                  class="cart__checkout-button button"
+                  name="checkout"
+                  {% if cart == empty %}
+                    disabled
+                  {% endif %}
+                  form="cart"
+                >
+                  {{ 'sections.cart.checkout' | t }}
                 </button>
               </div>
 
+              {%- if additional_checkout_buttons -%}
+                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                  {{ content_for_additional_checkout_buttons }}
+                </div>
+              {%- endif -%}
           {%- endcase -%}
         {% endfor %}
 
@@ -77,13 +94,13 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     function isIE() {
       const ua = window.navigator.userAgent;
       const msie = ua.indexOf('MSIE ');
       const trident = ua.indexOf('Trident/');
 
-      return (msie > 0 || trident > 0);
+      return msie > 0 || trident > 0;
     }
 
     if (!isIE()) return;
@@ -91,7 +108,7 @@
     cartSubmitInput.setAttribute('name', 'checkout');
     cartSubmitInput.setAttribute('type', 'hidden');
     document.querySelector('#cart').appendChild(cartSubmitInput);
-    document.querySelector('#checkout').addEventListener('click', function(event) {
+    document.querySelector('#checkout').addEventListener('click', function (event) {
       document.querySelector('#cart').submit();
     });
   });

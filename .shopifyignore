@@ -1,5 +1,2 @@
 package.json
 package-lock.json
-tsconfig.json
-plop-templates/*
-node_modules/*
