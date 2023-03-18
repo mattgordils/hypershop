@@ -15,7 +15,11 @@
         <div class="flex {% if option.name != 'Color' %}flex-wrap gap-2 justify-center{% else %}gap-x-[10px]{% endif %}">
           {%- for value in option.values -%}
             {% assign color = value | downcase %}
-            <div>
+        <p class="line-item-property__field">
+  <label for="student-name">Student Name</label>
+  <input id="student-name" type="text" name="properties[Student Name]">
+</p>    
+          <div>
               <input
                 type="radio" 
                 class="hidden"
