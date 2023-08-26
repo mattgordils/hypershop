@@ -1,5 +1,6 @@
 {
   "current": {
+    "checkout_logo_image": "shopify:\/\/shop_images\/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
     "sections": {
