@@ -1,5 +1,7 @@
 {
   "current": {
+    "checkout_accent_color": "#b19981",
+    "checkout_button_color": "#482225",
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
