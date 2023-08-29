@@ -27,7 +27,7 @@
         <span class="font-base-sans">{{ item.price | times: item.quantity | money }}</span>
       </div>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between items-center">
       {% render 'quantity_adjust' with item: item %}
       <cart-remove-item>
         <button class="cart-remove-item body-small hover:!text-error button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>

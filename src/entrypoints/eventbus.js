@@ -1,5 +1,3 @@
-console.log('eventbus')
-
 // Set Up Event Bus
 class EventBus extends HTMLElement {
   constructor() {

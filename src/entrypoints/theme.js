@@ -24,15 +24,23 @@ const refreshCart = (fullRefresh = false) => {
     .then(res => res.json())
     .then(res => {
       const currentCartDrawer = document.querySelector('#shopify-section-cart #cartContent')
+      const currentCartHeader = document.querySelector('#shopify-section-cart #cartHeader')
 
       var el = document.createElement( 'div' );
       el.innerHTML = res['cart']
-      const newCartCount = el.querySelector('#cartCount')
-      const oldCartCount = document.querySelector('#shopify-section-cart #cartCount')
-      if (fullRefresh || (newCartCount !== oldCartCount)) {
+      const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
+      const oldCartCount = document.querySelector('#shopify-section-cart #cartHeader').dataset.cartCount
+
+      if (newCartCount == 0 || oldCartCount == 0) {
+        fullRefresh = true
+      }
+
+      if (fullRefresh || true) {
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
+        const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
+        currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
         // Update Cart Pieces
         const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
@@ -50,10 +58,9 @@ const refreshCart = (fullRefresh = false) => {
       // }
 
       // Update Cart Counts Globally
-      const cartCount = el.querySelector('#cartCount')
       const cartCountItems = document.querySelectorAll('#cartCount')
       cartCountItems.forEach(item => {
-        item.innerHTML = cartCount.innerHTML
+        item.innerHTML = newCartCount
       });
     })
 }
@@ -166,6 +173,23 @@ if (!customElements.get("email-capture")) {
   );
 }
 
+const arraysEqual = (a, b) => {
+  if (a === b) return true;
+  // console.log('arry eq', a, b)
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // // If you don't care about the order of the elements inside
+  // // the array, you should sort both arrays here.
+  // // Please note that calling sort on an array will modify that array.
+  // // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
 if (!customElements.get("add-to-cart-form")) {
   customElements.define(
     "add-to-cart-form",
@@ -174,7 +198,36 @@ if (!customElements.get("add-to-cart-form")) {
         super();
         this.addButton = this.querySelector(".add-to-cart-btn");
         this.addButton.addEventListener("click", (event) => {
-          const variantId = parseInt(this.querySelector("select").value);
+          
+          // TODO: parse variant id from selected options
+          const productOptions = this.querySelectorAll('variant-radios input, variant-selects')
+          
+          console.log('json variants: ')
+          const variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
+          
+          console.log(variantData)
+
+          // Get variant ID from selection
+          const getVariantId = selected => {
+            const currentVariant = variantData.find((variant) => {
+              console.log(variant.options, selected)
+              return arraysEqual(variant.options, selected)
+            });
+            return currentVariant.id
+          }
+
+          let selectedOptions = []
+          productOptions.forEach(option => {
+            if (option.querySelector('select')) {
+              const selectElement = option.querySelector('select')
+              selectedOptions.push(selectElement.value)
+            } else if (option.checked) {
+              selectedOptions.push(option.value)
+            }
+          })
+
+          const variantId = getVariantId(selectedOptions)
+          //
           let formData = {
             items: [
               {
@@ -193,12 +246,7 @@ if (!customElements.get("add-to-cart-form")) {
             .then((data) => {
               refreshCart();
             })
-            .then(() => {
-              setTimeout(() => {
-                console.log('open')
-                openModal("cartDrawer");
-              }, 500)
-            })
+            .then(() => { openModal("cartDrawer") })
             .catch((error) => {
               console.error("Error:", error);
             });

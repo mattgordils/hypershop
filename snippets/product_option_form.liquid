@@ -1,6 +1,56 @@
+<script src="{{ 'variantSelects.js' | asset_url }}" defer></script>
+
+{%-liquid
+  assign section_id = 'hkqjadghl'
+-%}
+
 <add-to-cart-form>
   <div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col text-center items-center">
     {% if product.available %}
+        {%- for option in product.options_with_values -%}
+          {%- if option.name == 'Color' -%}
+            <variant-selects
+              data-section="{{ section.id }}"
+              data-url="{{ product.url }}"
+              {{ block.shopify_attributes }}
+            >
+              <select name="{{ option.name }}" id="{{ section.id }}">
+                {%- for value in option.values -%}
+                  <option value="{{ value }}">{{ value }}</option>
+                {%- endfor -%}
+              </select>
+            </variant-selects>
+          {%- else -%}
+            <variant-radios 
+              data-section="{{ section.id }}"
+              data-url="{{ product.url }}"
+              {{ block.shopify_attributes }}
+            >
+              <fieldset class="block my-10">
+                <legend class="form__label h4">{{ option.name }}</legend>
+                {%- for value in option.values -%}
+                  <input
+                    type="radio" 
+                    id="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
+                    name="{{ option.name }}"
+                    value="{{ value | escape }}"
+                    form="{{ product_form_id }}"
+                    {% if option.selected_value == value %}checked{% endif %}
+                  >
+                  <label for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}" class="inline-block">
+                    {{ value }}
+                  </label>
+                {%- endfor -%}
+              </fieldset>
+            </variant-radios>
+          {%- endif -%}
+        {%- endfor -%}
+        <script type="application/json">
+          {{ product.variants | json }}
+        </script>
+
+      <hr>
+
       <div class="pr-[8px] flex bg-white">
         <select
           name="id"
@@ -25,7 +75,7 @@
           {% endfor %}
         </select>
       </div>
-      {% render 'add_to_cart_button' with text: "Add to Cart", class: "refresh-trigger add-to-cart-btn" %}
+      {% render 'add_to_cart_button' with text: "Add to Cart", class: "add-to-cart-btn" %}
 
       {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
         {{ form | payment_button }}
