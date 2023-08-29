@@ -1,0 +1,38 @@
+<add-to-cart-form>
+  <div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col text-center items-center">
+    {% if product.available %}
+      <div class="pr-[8px] flex bg-white">
+        <select
+          name="id"
+          class="pb-[7px] pt-[5px] pr-[20px] pl-[10px] webkit-none bg-blue border border-solid border-light_gray focus:outline-none bg-white"
+        >
+          {% for variant in product.variants %}
+            {% assign isFirstAvailable = false %}
+            {% if product.first_available_variant == variant %}
+              {% assign isFirstAvailable = true %}
+            {% endif %}
+            <option
+              value="{{ variant.id }}"
+              {% if isFirstAvailable %}
+                selected
+              {% endif %}
+              {% unless variant.available %}
+                disabled
+              {% endunless %}
+            >
+              {{ variant.option1 }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% render 'add_to_cart_button' with text: "Add to Cart", class: "refresh-trigger add-to-cart-btn" %}
+
+      {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        {{ form | payment_button }}
+      {%- endform -%}
+      
+    {% else %}
+      {% render 'sold_out_button' with text: "Sold Out", type: "submit", form: "add-to-cart-form", value: "Submit" %}
+    {% endif %}
+  </div>
+</add-to-cart-form>

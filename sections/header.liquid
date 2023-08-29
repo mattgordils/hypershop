@@ -1,71 +1,81 @@
-{% style %}
-  #shopify-section-header {
-    position: sticky;
-    top: 0;
-    z-index: 4;
-  }
+<script src="{{ 'nav.js' | asset_url }}" defer="defer"></script>
 
-  header {
-    color: var(--header-color);
-    transition: color var(--md-speed) ease-in-out,
-                background var(--md-speed) ease-in-out;
-  }
+<div class="header duration-[300ms] page-header w-full grid gap-4 grid-cols-3 fixed top-0 z-5 p-3 pb-5 lg:p-5 text-{{ header_color }} font-wide">
+  <div class="col-span-1 hamburger-home-black">
+    {% render 'hamburger_black' %}
+  </div>
 
-  header.scrolled {
-    background: var(--bg-color);
-    color: var(--text-color);
-  }
+  {% comment %}
+    Desktop Nav
+  {% endcomment %}
+  <div class="hidden lg:flex col-span-1 justify-center items-center z-5">
+  </div>
+  <div class="hidden lg:flex col-span-1 desktop-header-links-black">
+    {% render 'desktop_header_links' with header_color: header_color %}
+  </div>
 
-  header .logo {
-    display: inline-block;
-    vertical-align: top;
-    width: 100px;
-    border: none;
-    padding: 0;
-    color: currentcolor;
-  }
-
-  header .logo svg {
-    display: block;
-    max-width: 100%;
-    color: inherit;
-  }
-  header .logo svg * {
-    fill: currentcolor
-  }
-{% endstyle %}
-
-<header class="h-header -mb-header relative z-10">
-  <div class="px-margin">
-    <div class="flex justify-between items-center">
-      <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body header-logo">
-        <a class="logo" href="{{ routes.root_url }}" title="Go to homepage">
-          <div>
-            {% render 'logo' %}
-          </div>
-        </a>
-      </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
-      <modal-trigger data-modal-id="cartDrawer">
-        <div class="w-8 h-8 rounded-full color-bg-color body-small leading-1em flex items-center justify-center {% if cart.item_count > 0 %}bg-main text-black{% else %}bg-text-color{% endif %}">
-          <span id="cartCount">{{ cart.item_count }}</span>
+  {% comment %}
+   Mobile Nav
+  {% endcomment %}
+    <div class="lg:hidden col-span-2 justify-end flex space-x-4">
+      {% for link in linklists.mobile-menu.links %}
+        <div class="flex justify-center items-center">
+          <a href="{{ link.url }}">
+            {{ link.title }}
+          </a>
         </div>
-      </modal-trigger>
+      {% endfor %}
+      {% render 'cart_thumbnail' %}
     </div>
   </div>
-</header>
 
-{% javascript %}
-  const headerSection = document.getElementById('shopify-section-header');
-  const header = headerSection.querySelector('header');
-  const onScroll = () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+{% comment %}
+  Nav Open
+{% endcomment %}
+<div class="nav-open opacity-0 pointer-events-none transition-all duration-300 nav bg-black absolute inset-0 flex flex-col justify-between lg:justify-start z-3">
+  <div class="z-3 mt-5">
+    <div class="toggleX lg:absolute lg:top-5 lg:left-5 ml-[22px] mb-[15px] lg:mb-0 lg:ml-0 cursor-pointer">
+      {% render 'close_paper' %}
+    </div>
+  </div>
+</div>
 
-    if (scrollTop > 80) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+{% schema %}
+{
+  "name": "header",
+  "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "image_picker",
+        "id": "nav-logo-top",
+        "label": "Nav Logo (top)"
+      },
+      {
+        "type": "image_picker",
+        "id": "nav-logo-bottom",
+        "label": "Nav Logo (bottom)"
+      }
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+                {
+                    "type": "header",
+                    "content": "Content"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "logo",
+                    "label": "Logo"
+                }
+      ]
     }
-  }
-  // const onScrollHandler = this.onScroll.bind(this);
-  window.addEventListener('scroll', onScroll, false);
-{% endjavascript %}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,77 @@
+<script src="{{ 'ageGate.js' | asset_url }}" defer="defer"></script>
+
+<div class="hidden agegate js-ageGate bg-cover absolute inset-0 z-20 flex" data-cookie="{{ section.settings.expiration }}">
+    <div class="z-20 bg-off_white lg:h-1/2 lg:w-1/2 m-auto justify-center items-center border border-burgundy border-solid absolute lg:top-1/4 lg:left-1/4">
+        <div class="flex justify-center items-center h-screen lg:h-full text-burgundy text-center">
+            <div class="m-auto fit-content flex-col flex lg:mx-10 p-4 lg:p-0">
+                <div class="font-expanded text-sans-14">
+                    {{ section.settings.question-text | upcase }}
+                </div>
+                <div class="flex space-between text-sans-24 underline m-auto my-8 font-expanded">
+                    <button class="js-ageYes mr-10">
+                        <p class="h1">YES</p>
+                    </button>
+                    <a href="{{ section.settings.url }}" target="_blank">
+                        <p class="h1">NO</p>
+                    </a>
+                </div>
+                <div class="font-letter text-sans-12">
+                    {{ section.settings.fine-print-text}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="agegate__overlay"></div>
+
+{% schema %}
+{
+    "name": "Age Gate",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Settings"
+        },
+        {
+            "type": "range",
+            "id": "expiration",
+            "label": "Cookie Expiration",
+            "info": "After the user has closed the age gate, choose the length of time to wait before displaying it again.",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 2,
+            "unit": "day"
+        },
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "url",
+            "id": "url",
+            "label": "Redirect URL",
+            "info": "If the user is underage, choose where to redirect them to."
+        },
+        {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Logo",
+            "info": "Logo to show above the age gate content."
+        },
+        {
+            "type": "text",
+            "id": "question-text",
+            "label": "Question Text",
+            "info": "Age gate question"
+        },
+        {
+            "type": "text",
+            "id": "fine-print-text",
+            "label": "Fine Print Text",
+            "info": "Text to show below y/n"
+        }
+    ]
+}
+{% endschema %}

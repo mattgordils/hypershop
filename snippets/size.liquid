@@ -1,0 +1,13 @@
+{% if item.product.options_by_name['size'] != null %}
+    {% assign option_number = item.product.options_by_name['size'].position %}
+    {% case option_number %}
+        {% when option_number == 1 %}
+            {{ item.variant.option1 }}
+        {% when option_number == 2 %}
+            {{ item.variant.option2 }}
+        {% when option_number == 3 %}
+            {{ item.variant.option3 }}
+        {% when option_number == 4 %}
+            {{ item.variant.option4 }}
+    {% endcase %}
+{% endif %}

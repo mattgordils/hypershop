@@ -1,0 +1,116 @@
+// TODO: NEST STYLES
+
+.button,
+button.shopify-payment-button__button {
+  --button-height: 40px;
+  --button-bg: var(--text-color);
+  --button-color: var(--bg-color);
+  --button-border: var(--button-bg);
+  --button-hover-bg: var(--main-color);
+  --button-hover-color: var(--bg-color);
+  --button-hover-border: var(--button-hover-bg);
+  --button-h-padding: 1.2em;
+  /* Button typography */
+  font-family: var(--main-font);
+  font-size: 16px;
+  line-height: 1.5em;
+  letter-spacing: 0;
+  font-weight: normal;
+  font-style: normal;
+  /* Button typography */
+  height: var(--button-height);
+  padding: 0 var(--button-h-padding);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--button-bg);
+  border: 1px solid;
+  border-color: var(--button-border);
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+  color: var(--button-color);
+  &.disabled,
+  &[disabled] {
+    opacity: .5;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+  &:not(.disabled):hover,
+  &:not([disabled]):hover {
+    background: var(--button-hover-bg);
+    color: var(--button-hover-color);
+    border-color: var(--button-hover-border);
+  }
+  &:not([class*="transition"]) {
+    transition: background var(--md-speed) ease-in-out,
+                border var(--md-speed) ease-in-out,
+                color var(--md-speed) ease-in-out;
+  }
+  &.hollow {
+    --button-bg: transparent;
+    --button-color: var(--text-color);
+    --button-border: var(--text-color);
+    --button-hover-bg: var(--main-color);
+    --button-hover-color: var(--bg-color);
+    --button-hover-border: var(--main-color);
+  }
+
+  /* Button Themes */
+  &.transparent {
+    --button-bg: transparent;
+    --button-color: currentcolor;
+    --button-border: transparent;
+    --button-hover-bg: transparent;
+    --button-hover-color: currentcolor;
+    --button-hover-border: transparent;
+  }
+
+  /* Button Sizes */
+  &.large {
+    --button-height: 70px;
+    font-family: var(--main-font);
+		font-size: 20px;
+		line-height: 1.5em;
+		letter-spacing: 0;
+		font-weight: normal;
+		font-style: normal;
+  }
+  &.small {
+    --button-height: 30px;
+  }
+  &.tiny {
+    --button-height: 26px;
+  }
+
+  /* Adjustments */
+  &.unpadd {
+    margin: -12px calc(var(--button-h-padding) * -1);
+    &.circle,
+    &.square {
+      margin: -12px;
+      &.tiny {
+        margin: -8px;
+      }
+    }
+  }
+
+  /* Button Shapes */
+  &.square,
+  &.circle {
+    width: var(--button-height);
+    padding: 0;
+    .button-label {
+      display: none;
+    }
+  }
+
+  &.circle {
+    --button-border-radius: 50%;
+  }
+
+  svg {
+    * {
+      fill: currentColor;
+    }
+  }
+}

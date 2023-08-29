@@ -1,0 +1,13 @@
+{%-liquid
+  assign icon_size = 18
+  assign icon_text = 'close'
+  if size
+      assign icon_size = size
+  endif
+
+  if icon
+      assign icon_text = icon
+  endif
+-%}
+
+<div class="icon material-icon" style="font-size: {{ icon_size }}px">{{ icon_text }}</div>

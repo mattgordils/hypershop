@@ -1,0 +1,7 @@
+<div class="grid grid-cols-4 gap-x-gutter gap-y-v-space-sm">
+  {% for product in collection.products %}
+    <div>
+      {% render 'product_card' with product: product %}
+    </div>
+  {% endfor %}
+</div>

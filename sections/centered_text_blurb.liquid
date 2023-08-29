@@ -1,0 +1,19 @@
+<div class="w-2/3 m-auto text-center font-wide text-sans-24">
+    {{ section.settings.text }}
+</div>
+{% schema %}
+{
+    "name": "Centered Text Blurb",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+        }
+    ]
+}
+{% endschema %}

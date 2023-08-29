@@ -1,0 +1,43 @@
+<div class="py-[17px] mt-[16px] marquee-container text-{{section.settings.color}} font-wide">
+    <div class="marquee">
+        <div class="marquee-words">
+            <span class="mr-[30px] lg:mr-[115px]">{{ section.settings.text | upcase }}</span>
+            <span class="mr-[30px] lg:mr-[115px]">{{ section.settings.text | upcase }}</span>
+            <span class="mr-[30px] lg:mr-[115px]">{{ section.settings.text | upcase }}</span>
+            <span class="mr-[30px] lg:mr-[115px]">{{ section.settings.text | upcase }}</span>
+            <span class="mr-[30px] lg:mr-[115px]">{{ section.settings.text | upcase }}</span>
+        </div>
+    </div>
+  </div>
+{% schema %}
+{
+  "name": "marquee",
+  "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+          "type": "radio",
+          "id": "color",
+          "label": "Color",
+          "options": [
+              {
+              "value": "black",
+              "label": "Black"
+              },
+              {
+              "value": "burgundy",
+              "label": "Burgundy"
+              }
+          ],
+          "default": "black"
+      }
+  ]
+}
+{% endschema %}

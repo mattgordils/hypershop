@@ -1,0 +1,22 @@
+<div id="cartUpdate" class="px-gutter border-t pt-gutter">
+  <div class="hidden lg:block lg:col-span-2"></div>
+  <div class="flex flex-col lg:col-span-10">
+    <div class="flex justify-between font-xl-sans">
+      <div>Total</div>
+      <div>
+        {{ cart.total_price | money_with_currency }}
+      </div>
+    </div>
+    <div class="pt-2 font-sm-serif text-gray body-small text-light-text-color">
+      {{ section.settings['text-footer'] }}
+    </div>
+  </div>
+</div>
+<div class="w-full bg-orange font-xl-sans p-gutter lg:flex lg:justify-between">
+  <form class="cart__drawer-total w-full" method="post" action="/cart">
+    <button type="submit" class="button large w-full pt-[15px] lg:pt-0 lg:font-2xl-sans">
+      {{ section.settings['text-checkout'] }}
+    </button>
+    <input type="hidden" name="checkout" value="Checkout">
+  </form>
+</div>

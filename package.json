@@ -1,51 +1,49 @@
 {
-  "name": "hypershop",
-  "version": "1.0.0",
-  "description": "an Online Store 2.0 theme using Tailwind CSS",
-  "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production run-s build:*",
-    "build:css": "postcss src/index.css -o assets/index.css",
-    "build:js": "npx webpack",
-    "watch:css": "postcss src/index.css -o assets/index.css --watch",
-    "watch:js": "npx webpack --watch",
-    "start": "npm run dev",
-    "dev": "run-p watch:*",
-    "shopify": "shopify theme serve"
-  },
-  "keywords": [
-    "Shopify Theme",
-    "Online Store 2.0"
-  ],
-  "author": "@mattgordils",
-  "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/node": "^7.16.8",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/preset-typescript": "^7.16.7",
-    "autoprefixer": "^10.4.4",
-    "babel-loader": "^8.2.5",
-    "chalk": "^4.1.2",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.0.0",
-    "git-clone": "^0.2.0",
-    "glob": "^8.0.1",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.12",
-    "postcss-cli": "^9.1.0",
-    "postcss-minify": "^1.1.0",
-    "source-map-loader": "^3.0.1",
-    "tailwindcss": "^3.0.24",
-    "typescript": "^4.6.3",
-    "webpack": "^5.72.0",
-    "webpack-cli": "^4.9.2"
-  },
-  "dependencies": {
-    "keen-slider": "^6.8.5"
-  }
+	"name": "shopify-starter",
+	"version": "1.0.0",
+	"scripts": {
+		"start": "npm-run-all --parallel webpack:watch theme:dev",
+		"build": "NODE_ENV=production yarn webpack:build",
+		"clean": "rm -rf assets",
+		"// WEBPACK //": "",
+		"webpack:watch": "webpack watch",
+		"webpack:build": "webpack build",
+		"// THEME //": "",
+		"theme:dev": "shopify theme dev",
+		"theme:push:all": "yarn build && shopify theme push",
+		"theme:push:theme": "yarn build && shopify theme push -x 'templates/*.json' -x 'config/settings_schema.json'",
+		"theme:pull:all": "shopify theme pull --nodelete",
+		"theme:pull:data": "shopify theme pull --nodelete -x 'assets/*' -x 'layout/*' -x 'locales/*' -x 'sections/*' -x 'snippets/*' -x 'templates/*.liquid' -x 'config/settings_schema.json' "
+	},
+	"author": "https://www.gardener.nyc",
+	"license": "MIT",
+	"homepage": "https://github.com/gardener-nyc/shopify-starter",
+	"devDependencies": {
+		"babel-eslint": "^10.0.3",
+		"eslint": "^6.5.1",
+		"eslint-plugin-react": "^7.16.0",
+		"prettier": "^2.1.2",
+		"webpack-cli": "^4.9.1"
+	},
+	"dependencies": {
+		"autoprefixer": "^10.4.2",
+		"color": "^4.2.0",
+		"copy-webpack-plugin": "^10.2.0",
+		"css-loader": "^6.5.1",
+		"css-minimizer-webpack-plugin": "^3.3.1",
+		"esbuild-loader": "^2.18.0",
+		"jquery": "^3.6.0",
+		"js-cookie": "^3.0.1",
+		"lodash": "^4.17.21",
+		"mini-css-extract-plugin": "^2.4.7",
+		"npm-run-all": "^4.1.5",
+		"postcss": "^8.4.5",
+		"postcss-loader": "^6.2.1",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"sass": "^1.48.0",
+		"sass-loader": "^12.4.0",
+		"tailwindcss": "^3.0.13",
+		"webpack": "^5.66.0"
+	}
 }

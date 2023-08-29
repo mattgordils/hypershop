@@ -1,0 +1,128 @@
+//
+// === Tailwind ===
+//
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+//
+// === Config, Functions, Reset ===
+//
+
+@import "./global/mixins";
+@import "./global/reset";
+
+//
+// === Globals ===
+//
+
+@import "./global/fonts";
+@import "./global/typography";
+@import "./global/themes";
+
+//
+// === Comments ===
+//
+
+@import "./components/link";
+@import '../styles/components/rich-text';
+@import '../styles/components/scroll-entrance';
+@import '../styles/components/button';
+@import '../styles/components/cart';
+@import '../styles/components/modal';
+
+@layer base {
+  :root {
+    /* Grid */
+    --site-gutters: 20px;
+    --site-margins: 60px;
+    --vertical-spacing: 100px;
+    --vertical-spacing-small: 60px;
+    /* Brand Colors */
+    --dark-color: #000;
+    --light-color: #fff;
+    /* Base Colors */
+    --bg-color: #fff;
+      --bg-color-rgb: 255, 255, 255;
+    --text-color: #000;
+      --text-color-rgb: 0, 0, 0;
+    --main-color: blue;
+    --light-text-color: rgba(var(--text-color-rgb), .5);
+    --light-grey: #f2f2f2;
+    --hr-color: rgba(var(--text-color-rgb), .15);
+    --error: red;
+    --success: green;
+    --alert: yellow;
+    /* Typography */
+    --main-font: 'Brown', sans-serif;
+    --secondary-font: 'Souvenir', serif;
+    --mono-font: monospace;
+    --normal: normal;
+    --light: 300;
+    --medium: 600;
+    --bold: 700;
+    /* Transition Speeds */
+    --md-speed: .3s;
+    --fast-speed: .15s;
+    --slow-speed: .6s;
+    --stagger-time: .05s;
+    /* UI Sizes */
+    --vh: 1vh;
+    --site-max-width: 100%;
+    --narrow-width: 800px;
+    --screen-height: calc(var(--1vh) * 100);
+    --button-height: 42px;
+    --base-border-radius: 10px;
+    --button-border-radius: var(--base-border-radius);
+    --header-banner-height: 0px;
+    --header-height: 60px;
+    --full-header-height: calc(var(--header-height) + var(--header-banner-height));
+    --header-height-expanded: 120px;
+    --sticky-top: calc(var(--site-gutters) + var(--header-height));
+  }
+}
+
+/* Global */
+html {
+	background: var(--bg-color);
+	color: var(--text-color);
+	font-family: var(--main-font);
+	font-display: block;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--main-font);
+}
+
+input, textarea, select, button {
+	-webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  color: var(--text-color);
+  background: var(--bg-color);
+  &.fixed {
+    width: 100%;
+  }
+}
+
+.main-header .logo-wrapper svg * {
+  fill: currentcolor;
+}
+
+svg *:not([fill = 'none']) {
+  fill: currentcolor;
+}
+
+.grid.reverse {
+  direction: rtl;
+}
+
+.grid.reverse > * {
+  direction: initial;
+}

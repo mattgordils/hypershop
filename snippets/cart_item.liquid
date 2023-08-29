@@ -1,0 +1,37 @@
+{% capture size %}
+    {% render 'size' with item: item %}
+{% endcapture %}
+
+<div class="flex gap-x-gutter border-b pb-gutter pt-gutter">
+  <div class="w-24">
+    <div class="aspect-square relative w-full">
+      {% render 'image' with 
+        src: item.product.featured_image,
+        image_position: 'cover',
+        loading: 'eager',
+        sizes: 200,
+        width: 100,
+        height: 100
+      %}
+    </div>
+  </div>
+  <div id="cartUpdate" class="grow basis-0 col-span-4 flex flex-col">
+    <div class="flex justify-between grow">
+      <a href="{{ item.url }}">
+        {{ item.product.title }}
+        <div class="body-small">
+          {{ size }}
+        </div>
+      </a>
+      <div class="shrink-0">
+        <span class="font-base-sans">{{ item.price | times: item.quantity | money }}</span>
+      </div>
+    </div>
+    <div class="flex justify-between">
+      {% render 'quantity_adjust' with item: item %}
+      <cart-remove-item>
+        <button class="cart-remove-item body-small hover:!text-error button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
+      </cart-remove-item>
+    </div>
+  </div>
+</div>

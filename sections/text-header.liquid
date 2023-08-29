@@ -1,0 +1,35 @@
+<div class="font-wide text-sans-18 text-center">
+    {% for block in section.blocks %}
+        <div class="my-10">
+            {{ block.settings.content | upcase }}
+        </div>
+    {% endfor %}
+</div>
+{% schema %}
+{
+	"name": "text-header",
+	"settings": [],
+    "presets": [{
+        "name": "Header Text",
+        "category": "Text"
+    }],
+    "templates": ["page"],
+    "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+            {
+            "type": "header",
+            "content": "Content"
+            },
+            {
+            "type": "text",
+            "id": "content",
+            "label": "Content"
+            }
+        ]
+    }
+    ]
+}
+{% endschema %}

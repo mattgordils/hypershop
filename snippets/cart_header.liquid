@@ -1,0 +1,12 @@
+<div class="w-full flex justify-between">
+    {% if cart.item_count < 1 %}
+        <p>Your Cart</p>
+    {% else %}
+        <p>Cart (<span id="cartCount">{{ cart.item_count }}</span>)</p>
+    {% endif %}
+    <div>
+        <button id="closeModal" class="cart-close button circle unpadd transparent">
+            <div class="icon material-icon">close</div>
+        </button>
+    </div>
+</div>

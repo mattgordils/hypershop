@@ -1,37 +1,55 @@
 {
   "current": {
     "sections": {
-      "announcement-bar": {
-        "type": "announcement-bar",
-        "blocks": {
-          "announcement-bar-0": {
-            "type": "announcement",
-            "settings": {
-              "text": "Welcome Hypershop. Fast shops from Studio Hyperlink",
-              "text_alignment": "center",
-              "color_scheme": "bg-main text-text-color",
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "announcement-bar-0"
-        ],
-        "settings": {
-        }
-      },
       "header": {
         "type": "header",
         "settings": {
         }
       },
+      "age-gate": {
+        "type": "age-gate",
+        "settings": {
+          "expiration": 2,
+          "url": "",
+          "logo": "shopify:\/\/shop_images\/Vector.png",
+          "question-text": "Are you of legal purchase age for alcohol?",
+          "fine-print-text": "YOU MUST BE OF LEGAL DRINKING AGE IN YOUR RESPECTIVE COUNTRY FOR ENTRY. BY ENTERING YOU ACCEPT OUR TERMS AND CONDITIONS AND OUR PRIVACY AND COOKIE POLICY. WE ENCOURAGE DRINKING RESPONSIBLY."
+        }
+      },
       "footer": {
         "type": "footer",
         "settings": {
+          "text": "sign up for newsletter",
+          "secondary-logo": "shopify:\/\/shop_images\/Vector.png",
+          "text-confirm": "thank you!"
         }
       },
-      "menu-panel": {
-        "type": "menu-panel",
+      "email-capture": {
+        "type": "email-capture",
+        "settings": {
+          "expiration": 2,
+          "text-main": "SUBSCRIBE TO THE NEWSLETTER",
+          "text-above": "STAY UP TO DATE WITH EVENTS & HAPPENINGS",
+          "placeholder-text": "Email",
+          "text-below": "",
+          "text-confirm": "thank you!"
+        }
+      },
+      "cart": {
+        "type": "cart",
+        "settings": {
+          "text-footer": "free shipping on orders over $100 within the U.S.",
+          "text-checkout": "continue to checkout"
+        }
+      },
+      "centered_text_blurb": {
+        "type": "centered_text_blurb",
+        "settings": {
+          "text": "Centered text blurb"
+        }
+      },
+      "loading": {
+        "type": "loading",
         "settings": {
         }
       }

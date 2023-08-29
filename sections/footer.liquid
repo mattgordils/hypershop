@@ -1,1 +1,106 @@
-<footer>The footer</footer>
+<div class="pt-[5px] lg:pt-10 z-20 lg:px-[16px] lg:pb-[21px] footer">
+    <div class="flex flex-col lg:h-[477px] border-t border-solid border-black mx-[10px] lg:mx-0 pb-5">
+        <div class="flex m-auto min-w-[100px] w-full lg:w-1/4 grow flex-col">
+            <div class="flex flex-col grow w-full my-[112px] lg:my-0">
+                    <div class="m-auto w-[40px]">
+                    {% render 'alright_loading' %}
+                    </div>
+                </div>
+
+                {% comment %} sign up input group {% endcomment %}
+                <div class="flex flex-col grow items-center justify-center font-wide w-full mb-[72px]">
+                    <div class="mb-6 lg:mb-8 w-full lg:text-center">
+                        {{ section.settings.text | upcase }}
+                    </div>
+                    {% form 'customer', class: 'w-full' %}
+                        <div class="border-b border-solid pb-1 bg-transparent font-expanded w-full flex">
+                            <input 
+                                type="email" 
+                                id="email-footer-input" 
+                                name="contact[email]" 
+                                class="bg-transparent grow placeholder:text-{{color}} placeholder:opacity-20" 
+                                placeholder="EMAIL" />
+                            <input class="cursor-pointer" type="submit" value="SUBMIT" />
+                        </div>
+                        {% if form.posted_successfully? %}
+                            <div class="font-expanded w-full items-center justify-center mt-3 transition-all opacity-50">
+                                {{ section.settings.text-confirm | upcase }}
+                            </div>
+                        {% else  %}
+                            {{ form.errors | default_errors }}
+                        {% endif %}
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+
+        {% comment %} tiny links {% endcomment %}
+        <div class="flex justify-between mx-[10px] mb-[11px]">
+            <div class="lg:grid lg:grid-cols-12 grow flex-col lg:flex-row gap-4 min-h-[60px] font-expanded text-sans-12 leading-[1.1]">
+                <div class="col-span-2 pb-5 lg:pb-0">
+                    {% for link in linklists.footer-menu-1.links %}
+                        <a href="{{ link.url }}" class="block">
+                            {{ link.title | upcase }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="col-span-2 pb-5 lg:pb-0">
+                    {% for link in linklists.footer-menu-2.links %}
+                        <a href="{{ link.url }}" class="block">
+                            {{ link.title | upcase }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="col-span-2 pb-5 lg:pb-0">
+                    {% for link in linklists.footer-menu-3.links %}
+                        <a href="{{ link.url }}" class="block">
+                            {{ link.title | upcase }}
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="col-span-6 lg:justify-end lg:content-end flex">
+                    <div class="flex flex-col">
+                        {% for link in linklists.footer-menu-4.links %}
+                            <a href="{{ link.url }}">
+                                {{ link.title | upcase }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "footer",
+  "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "image_picker",
+        "id": "header-logo",
+        "label": "Logo"
+      },
+      {
+        "type": "text",
+        "id": "text",
+        "label": "Sign Up Text"
+      },
+      {
+        "type": "image_picker",
+        "id": "secondary-logo",
+        "label": "Secondary Logo"
+      },
+        {
+            "type": "text",
+            "id": "text-confirm",
+            "label": "Confirmation Text",
+            "info": "Text that appears after a successful subscription"
+        }
+  ]
+}
+{% endschema %}
