@@ -1,12 +1,15 @@
-{% capture size %}
-    {% render 'size' with item: item %}
-{% endcapture %}
+{%-liquid
+  assign image = item.product.featured_image
+  if item.image
+    assign image = item.image
+  endif
+-%}
 
 <div id="cartLineItem" class="flex gap-x-gutter border-b pb-gutter pt-gutter">
   <div class="w-24">
     <div class="aspect-square relative w-full">
       {% render 'image' with 
-        src: item.product.featured_image,
+        src: image,
         image_position: 'cover',
         loading: 'eager',
         sizes: 200,
@@ -20,7 +23,7 @@
       <a href="{{ item.url }}">
         {{ item.product.title }}
         <div class="body-small">
-          {{ size }}
+          {{ item.variant.title }}
         </div>
       </a>
       <div class="shrink-0">

@@ -1,9 +1,8 @@
 import "../styles/main.scss";
 import Cookies from "js-cookie";
-import './eventbus'
-import './modal'
-import { closeModal, openModal } from "./modal";
-import { refreshCart } from "./cart"
+import './modal';
+import { openModal } from "./modal";
+import { refreshCart } from "./cart";
 
 // Utils?
 function isMobileOrTablet() {
@@ -145,6 +144,28 @@ if (!customElements.get("email-capture")) {
   );
 }
 
+// Get variant ID from selection
+export const getVariant = (selected, variantData) => {
+  const currentVariant = variantData.find((variant) => {
+    return arraysEqual(variant.options, selected)
+  });
+  return currentVariant
+}
+
+// Get currently selected options
+export const getSelectedOptions = productOptions => {
+  const selectedOptions = []
+  productOptions.forEach(option => {
+    if (option.querySelector('select')) {
+      const selectElement = option.querySelector('select')
+      selectedOptions.push(selectElement.value)
+    } else if (option.checked) {
+      selectedOptions.push(option.value)
+    }
+  })
+  return selectedOptions
+}
+
 if (!customElements.get("add-to-cart-form")) {
   customElements.define(
     "add-to-cart-form",
@@ -157,35 +178,11 @@ if (!customElements.get("add-to-cart-form")) {
         }
         this.addButton.addEventListener("click", (event) => {
           
-          // TODO: parse variant id from selected options
           const productOptions = this.querySelectorAll('variant-radios input, variant-selects')
-          
-          console.log('json variants: ')
           const variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
+          const selectedOptions = getSelectedOptions(productOptions)
+          const variantId = getVariant(selectedOptions, variantData).id
           
-          console.log(variantData)
-
-          // Get variant ID from selection
-          const getVariantId = selected => {
-            const currentVariant = variantData.find((variant) => {
-              console.log(variant.options, selected)
-              return arraysEqual(variant.options, selected)
-            });
-            return currentVariant.id
-          }
-
-          let selectedOptions = []
-          productOptions.forEach(option => {
-            if (option.querySelector('select')) {
-              const selectElement = option.querySelector('select')
-              selectedOptions.push(selectElement.value)
-            } else if (option.checked) {
-              selectedOptions.push(option.value)
-            }
-          })
-
-          const variantId = getVariantId(selectedOptions)
-          //
           let formData = {
             items: [
               {

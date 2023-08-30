@@ -1,67 +1,85 @@
 <script src="{{ 'variantSelects.js' | asset_url }}" defer></script>
 
+{% comment %}
+If context is "PDP", changing the
+variant will update imagery and url
+{% endcomment %}
+
 {%-liquid
+  assign form_context = 'quick-add'
+  if context
+    assign form_context = context
+  endif
+
   assign section_id = 'hkqjadghl'
   assign form_product = product
 -%}
 
 <add-to-cart-form>
-  <div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col">
-    {% if product.available %}
-        {%- for option in product.options_with_values -%}
-          {%- if option.name == 'Color' -%}
-            <variant-selects
-              data-section="{{ section.id }}"
-              data-url="{{ product.url }}"
-              {{ block.shopify_attributes }}
-            >
-              <select name="{{ option.name }}" id="{{ section.id }}">
-                {%- for value in option.values -%}
-                  <option value="{{ value }}">{{ value }}</option>
-                {%- endfor -%}
-              </select>
-            </variant-selects>
-          {%- else -%}
-            <variant-radios 
-              data-section="{{ section.id }}"
-              data-url="{{ product.url }}"
-              {{ block.shopify_attributes }}
-            >
-              <fieldset class="block my-10">
-                <legend class="form__label h4">{{ option.name }}</legend>
-                {%- for value in option.values -%}
-                  <input
-                    type="radio" 
-                    id="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
-                    name="{{ option.name }}"
-                    value="{{ value | escape }}"
-                    form="{{ product_form_id }}"
-                    {% if option.selected_value == value %}checked{% endif %}
-                  >
-                  <label for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}" class="inline-block">
-                    {{ value }}
-                  </label>
-                {%- endfor -%}
-              </fieldset>
-            </variant-radios>
-          {%- endif -%}
-        {%- endfor -%}
-        <script type="application/json">
-          {{ product.variants | json }}
-        </script>
+  <div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col" data-url="{{ product.url }}">
 
-      {% render 'add_to_cart_button' with text: "Add to Cart", class: "w-full" %}
-
-      {%- if showBuyNow -%}
-        {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-          <div class="mt-2">
-            {{ form | payment_button }}
-          </div>
-        {%- endform -%}
+    {%- for option in product.options_with_values -%}
+      {%- if option.name == 'Color' -%}
+        <variant-selects
+          data-context="{{ context }}"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          {{ block.shopify_attributes }}
+        >
+          <select
+            name="{{ option.name }}"
+            id="{{ section.id }}"
+            {% if option.values.size < 2 %}class="hidden"{% endif %}
+          >
+            {%- for value in option.values -%}
+              <option value="{{ value }}">{{ value }}</option>
+            {%- endfor -%}
+          </select>
+        </variant-selects>
+      {%- else -%}
+        <variant-radios
+          data-context="{{ context }}"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          {{ block.shopify_attributes }}
+        >
+          <fieldset class="block{% if option.values.size < 2 %} hidden{% endif %}">
+            <legend class="form__label h4">{{ option.name }}</legend>
+            {%- for value in option.values -%}
+              <input
+                type="radio" 
+                id="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
+                name="{{ option.name }}"
+                value="{{ value | escape }}"
+                form="{{ product_form_id }}"
+                {% if option.selected_value == value %}checked{% endif %}
+              >
+              <label for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}" class="inline-block">
+                {{ value }}
+              </label>
+            {%- endfor -%}
+          </fieldset>
+        </variant-radios>
       {%- endif -%}
-      
+    {%- endfor -%}
+
+    <script type="application/json">
+      {{ product.variants | json }}
+    </script>
+
+    {% if product.available %}
+      {% render 'add_to_cart_button' with text: "Add to Cart", class: "w-full" %}
     {% else %}
       {% render 'sold_out_button' with text: "Sold Out", type: "submit", form: "add-to-cart-form", value: "Submit" %}
     {% endif %}
+
+    {%- if showBuyNow -%}
+      {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        <div class="mt-2">
+          {{ form | payment_button }}
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+      
   </div>
 </add-to-cart-form>

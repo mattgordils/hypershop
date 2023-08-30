@@ -1,18 +1,20 @@
-import { eventBus } from './eventbus'
+const eventbus = window?.EventBus || document.querySelector('event-bus')
 
 export const closeModal = id => {
   let body = document.querySelector("body");
   body.setAttribute("data-state-cart", "closed");
-  eventBus.publish("setModal", false)
+  eventbus.publish("setModal", "false")
 }
 
 export const openModal = id => {
+  console.log(eventbus)
   if (id) {
+    console.log(id)
     if (id === 'cartDrawer') {
       let body = document.querySelector("body");
       body.setAttribute("data-state-cart", "open");
     }
-    eventBus.publish("setModal", id)
+    eventbus?.publish("setModal", id)
   }
 }
 
@@ -39,7 +41,6 @@ class ModalTrigger extends HTMLElement {
 
     this.addEventListener('click', event => {
       const modalId = this.dataset.modalId
-      console.log(event)
       if (modalId) {
         openModal(modalId)
       } else {
@@ -54,7 +55,7 @@ if (!customElements.get('modal-trigger')) {
 }
 
 // MODALS
-eventBus.subscribe("setModal", id => {
+eventbus?.subscribe("setModal", id => {
   if (id && document.querySelector('modal-component#' + id)) {
     if (document.querySelector('modal-component#' + id).classList.contains('open')) {
       document.querySelector('modal-component#' + id).classList.remove('open')

@@ -1,80 +1,35 @@
-import Cookies from "js-cookie";
-import $ from "jquery";
+import { openModal, closeModal } from "./modal";
+import dayjs from "dayjs"
 
-const EL_GATE = ".js-ageGate";
-const EL_YES = ".js-ageYes";
-const COOKIE = "user_age";
+if (!customElements.get("age-gate")) {
+  customElements.define(
+    "age-gate",
+    class AgeGate extends HTMLElement {
+      constructor() {
+        super();
+        //
+        this.ageYes = this.querySelector('#ageYes')
+        this.ageYes.addEventListener('click', this.setCookie)
+        this.openAgegate();
+      }
 
-let expiration;
+      openAgegate() {
+        console.log('openAgegate')
+        const ageTimestamp = localStorage.getItem('legalAgeTimestamp')
+        const tokenAge = dayjs(Date()).diff(dayjs(ageTimestamp), 'second', true)
+        console.log('tokenAge: ', tokenAge);
+        if (!ageTimestamp || tokenAge > 10) {
+          localStorage.removeItem('legalAgeTimestamp')
+          openModal('ageGate')
+        } else {
+          console.log('Youre of age!')
+        }
+      }
 
-function preventScroll(e) {
-  e.preventDefault();
-  e.stopPropagation();
-
-  return false;
+      setCookie() {
+        localStorage.setItem('legalAgeTimestamp', new Date());
+        closeModal();
+      }
+    }
+  );
 }
-
-function showAgeGate() {
-  document.querySelector(EL_GATE).classList.remove("hidden");
-  let body = document.querySelector("body");
-  body.classList.add = "fixed";
-  body.setAttribute("data-state-age-gate", "open");
-  bind();
-}
-
-function hideAgeGate() {
-  document.querySelector(EL_GATE).classList.add("hidden");
-  let body = document.querySelector("body");
-  body.classList.remove = "fixed";
-  body.setAttribute("data-state-age-gate", "closed");
-}
-
-function setCookie() {
-  Cookies.set(COOKIE, true, { expires: expiration });
-  hideAgeGate();
-}
-
-function bind() {
-  const elGate = document.querySelector(EL_GATE);
-  expiration = Number(elGate.getAttribute("data-cookie"));
-
-  const elYes = elGate.querySelector(EL_YES);
-  elYes.removeEventListener("click", setCookie);
-  elYes.addEventListener("click", setCookie);
-}
-
-function showInCustomizer(ev) {
-  const { target } = ev;
-  const elGate = document.querySelector(EL_GATE).parentNode;
-
-  if (target == elGate) {
-    document.querySelector(EL_GATE).classList.remove("hidden");
-  }
-}
-
-function hideInCustomizer(ev) {
-  const { target } = ev;
-  const elGate = document.querySelector(EL_GATE).parentNode;
-
-  if (target == elGate) {
-    document.querySelector(EL_GATE).classList.add("hidden");
-  }
-}
-
-function bindCustomizer() {
-  document.removeEventListener("shopify:section:select", showInCustomizer);
-  document.addEventListener("shopify:section:select", showInCustomizer);
-
-  document.removeEventListener("shopify:section:deselect", hideInCustomizer);
-  document.addEventListener("shopify:section:deselect", hideInCustomizer);
-}
-
-function init() {
-  const hasCookie = Cookies.get(COOKIE) == "true";
-  hasCookie ? null : showAgeGate();
-
-  window.clearAge = () => Cookies.remove(COOKIE);
-  bindCustomizer();
-}
-
-init();

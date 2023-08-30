@@ -19,14 +19,12 @@ export const refreshCart = (fullRefresh = false) => {
       }
 
       if (fullRefresh) {
-        console.log('Full Refresh')
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
         const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
         currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
-        console.log('Cursed Refresh (a half refresh)')
         // Update Cart Pieces
         const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
         const updatedItems = el.querySelectorAll('#shopify-section-cart #cartUpdate')

@@ -26,11 +26,11 @@
 //
 
 @import "./components/link";
-@import '../styles/components/rich-text';
-@import '../styles/components/scroll-entrance';
-@import '../styles/components/button';
-@import '../styles/components/cart';
-@import '../styles/components/modal';
+@import './components/rich-text';
+@import './components/scroll-entrance';
+@import './components/button';
+@import './components/cart';
+@import './components/modal';
 
 @layer base {
   :root {

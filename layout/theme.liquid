@@ -11,7 +11,7 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
     {% endif %}
 
-    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'global.css' | asset_url | stylesheet_tag }}
 
     <title>
       {{ page_title }}
@@ -22,6 +22,8 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
+    {{ 'eventbus.js' | asset_url | script_tag }}
+    
     {{ content_for_header }}
   </head>
 
@@ -31,7 +33,7 @@
     {% section 'age-gate' %}
     {% section 'email-capture' %}
     {% section 'email_subscribe_success' %}
-    <div class="min-h-[80vh] pt-[50px]">
+    <div>
       {{ content_for_layout }}
     </div>
     <modal-trigger data-modal-id='cartDrawer'>Open Cart</modal-trigger>

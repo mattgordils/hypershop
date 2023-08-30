@@ -1,25 +1,40 @@
+import { getSelectedOptions, getVariant } from './global'
+
 class VariantSelects extends HTMLElement {
   constructor() {
     super();
     this.addEventListener('change', this.onVariantChange);
+    this.parent = this.closest('div');
+    this.variantData = [];
+    this.context = this.dataset.context
+    this.setMasterId();
     this.setOptionAvailability();
+    if (this.context === 'PDP') {
+      // Update content for PDP
+      this.updateURL();
+      // this.updateMedia();
+      // this.updateShareUrl();
+    }
   }
 
   onVariantChange(event) {
 
     this.updateOptions();
-    this.toggleAddButton(true, '', false);
-    this.updatePickupAvailability();
-    this.removeErrorMessage();
+    // this.toggleAddButton(true, '', false); TODO
+    // this.updatePickupAvailability(); TODO?
+    // this.removeErrorMessage(); TODO?
+    this.setMasterId();
 
     if (!this.currentVariant) {
-      this.toggleAddButton(true, '', true);
-      this.setUnavailable();
+      // this.toggleAddButton(true, '', true); TODO
+      // this.setUnavailable();
     } else {
       // this.updateMedia();
       // this.updateProductForm();
-      if (this.dataset.context !== 'card-product') {
-        // this.updateURL();
+      if (this.context === 'PDP') {
+        // Update content for PDP
+        this.updateURL();
+        // this.updateMedia();
         // this.updateShareUrl();
       }
       this.updateVariantInput();
@@ -33,9 +48,7 @@ class VariantSelects extends HTMLElement {
 
   // Disable unavailabile options
   setOptionAvailability = () => {
-    const parent = this.closest('div')
-    const variantData = JSON.parse(parent.querySelector('[type="application/json"]').textContent)
-    const variants = variantData
+    const variants = this.variantData
     const checkAvailability = value => {
       const selectedVariant = variants && variants.find(({ options }) => (
         options.find(x => x === value)
@@ -48,24 +61,28 @@ class VariantSelects extends HTMLElement {
     options.forEach(option => {
       if(!checkAvailability(option.value)) {
         option.setAttribute('disabled', true)
-        console.log(option.value)
       }
     })
   }
 
-  updateMasterId() {
-    this.currentVariant = this.getVariantData().find((variant) => {
-      return !variant.options.map((option, index) => {
-        return this.options[index] === option;
-      }).includes(false);
-    });
+  setMasterId() {
+    this.variantData = JSON.parse(this.parent.querySelector('[type="application/json"]').textContent)
+    const productOptions = this.parent.querySelectorAll('variant-radios input, variant-selects')
+    const selectedOptions = getSelectedOptions(productOptions)
+    const currentVariant = getVariant(selectedOptions, this.variantData)
+    this.currentVariant = currentVariant
+  }
+
+  updateURL() {
+    const productUrl = this.parent.dataset.url
+    if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
+    window.history.replaceState({ }, '', `${productUrl}?variant=${this.currentVariant.id}`);
   }
 
   // TODO: Functions for variant changes when necessary
   // updateMedia() {}
-  // updateURL() {}
-  // updateProductForm() {} // Not sure what this one does
   // updateShareUrl() {}
+  // Function to enable and disable buy now button?
 
   updateVariantInput() {
     const productForms = document.querySelectorAll(`#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}, #quick-add-${this.dataset.productId}, #quick-add-slide-${this.dataset.productId}`);

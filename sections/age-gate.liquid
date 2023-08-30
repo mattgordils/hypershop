@@ -1,29 +1,34 @@
 <script src="{{ 'ageGate.js' | asset_url }}" defer="defer"></script>
 
-<div class="hidden agegate js-ageGate bg-cover absolute inset-0 z-20 flex" data-cookie="{{ section.settings.expiration }}">
-    <div class="z-20 bg-off_white lg:h-1/2 lg:w-1/2 m-auto justify-center items-center border border-burgundy border-solid absolute lg:top-1/4 lg:left-1/4">
+<modal-component id="ageGate">
+    <age-gate
+        id="js-ageGate"
+        class="modal-content agegate bg-bg lg:h-1/2 lg:w-1/2 m-auto justify-center items-center border"
+        data-cookie="{{ section.settings.expiration }}"
+    >
         <div class="flex justify-center items-center h-screen lg:h-full text-burgundy text-center">
-            <div class="m-auto fit-content flex-col flex lg:mx-10 p-4 lg:p-0">
-                <div class="font-expanded text-sans-14">
+            <div class="m-auto flex-col flex gap-y-gutter p-margin">
+                <div class="h6">
                     {{ section.settings.question-text | upcase }}
                 </div>
-                <div class="flex space-between text-sans-24 underline m-auto my-8 font-expanded">
-                    <button class="js-ageYes mr-10">
-                        <p class="h1">YES</p>
+                <div class="flex gap-x-10 justify-center">
+                    <button id="ageYes" class="h1 animate-underline">
+                        YES
                     </button>
-                    <a href="{{ section.settings.url }}" target="_blank">
-                        <p class="h1">NO</p>
+                    <a class="h1 animate-underline" href="{{ section.settings.url }}" target="_blank">
+                        NO
                     </a>
                 </div>
-                <div class="font-letter text-sans-12">
+                <div class="body-small">
                     {{ section.settings.fine-print-text}}
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </age-gate>
 
-<div class="agegate__overlay"></div>
+    <div class="overlay bg-text-color opacity-20"></div>
+</modal-component>
+
 
 {% schema %}
 {
