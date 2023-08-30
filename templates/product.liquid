@@ -1,8 +1,22 @@
-<div class="flex flex-col text-center">
-  <div>
-    {{ product.title }}
+<div class="grid md:grid-cols-2 gap-y-margin">
+  <div class="aspect-square bg-light-grey">
+    {%- for image in product.images -%}
+      {% render 'image' with src: image %}
+    {%- endfor -%}
   </div>
-  <div>
-    {% render 'product_option_form' %}
+
+  <div class="px-margin">
+    <div class="grid gap-y-v-space-sm sticky top-sticky-top">
+      <div>
+        <h1>{{ product.title }}</h1>
+        <p class="body-large">{{ product.price | money }}</p>
+      </div>
+      <div>
+        {% render 'product_option_form' with
+          product: product,
+          showBuyNow: true
+        %}
+      </div>
+    </div>
   </div>
 </div>

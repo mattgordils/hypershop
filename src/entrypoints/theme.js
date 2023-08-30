@@ -19,7 +19,6 @@ function isMobileOrTablet() {
 }
 
 const refreshCart = (fullRefresh = false) => {
-  console.log('refreshCart')
   fetch(window.Shopify.routes.root + "?sections=cart")
     .then(res => res.json())
     .then(res => {
@@ -28,20 +27,25 @@ const refreshCart = (fullRefresh = false) => {
 
       var el = document.createElement( 'div' );
       el.innerHTML = res['cart']
-      const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
       const oldCartCount = document.querySelector('#shopify-section-cart #cartHeader').dataset.cartCount
+      const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
 
-      if (newCartCount == 0 || oldCartCount == 0) {
+      const oldlineCount = document.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
+      const newlineCount = el.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
+
+      if (newCartCount == 0 || oldCartCount == 0 || (oldlineCount !== newlineCount)) {
         fullRefresh = true
       }
 
-      if (fullRefresh || true) {
+      if (fullRefresh) {
+        console.log('Full Refresh')
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
         const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
         currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
+        console.log('Cursed Refresh (a half refresh)')
         // Update Cart Pieces
         const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
         const updatedItems = el.querySelectorAll('#shopify-section-cart #cartUpdate')

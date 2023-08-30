@@ -2,7 +2,11 @@
 
 <div class="header duration-[300ms] page-header w-full grid gap-4 grid-cols-3 fixed top-0 z-5 p-3 pb-5 lg:p-5 text-{{ header_color }} font-wide">
   <div class="col-span-1 hamburger-home-black">
-    {% render 'hamburger_black' %}
+    <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
+      <a href="{{ routes.root_url }}" title="Go to homepage">
+        {{ shop.name }} Logo
+      </a>
+    </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
   </div>
 
   {% comment %}
@@ -29,16 +33,6 @@
     </div>
   </div>
 
-{% comment %}
-  Nav Open
-{% endcomment %}
-<div class="nav-open opacity-0 pointer-events-none transition-all duration-300 nav bg-black absolute inset-0 flex flex-col justify-between lg:justify-start z-3">
-  <div class="z-3 mt-5">
-    <div class="toggleX lg:absolute lg:top-5 lg:left-5 ml-[22px] mb-[15px] lg:mb-0 lg:ml-0 cursor-pointer">
-      {% render 'close_paper' %}
-    </div>
-  </div>
-</div>
 
 {% schema %}
 {

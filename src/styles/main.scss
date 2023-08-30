@@ -36,7 +36,7 @@
   :root {
     /* Grid */
     --site-gutters: 20px;
-    --site-margins: 60px;
+    --site-margins: clamp(calc(16 * 1px), calc((50 * 1vw) / 1440 * 100), calc(60 * 1px));
     --vertical-spacing: 100px;
     --vertical-spacing-small: 60px;
     /* Brand Colors */
