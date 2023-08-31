@@ -1,25 +1,30 @@
 <script src="{{ 'nav.js' | asset_url }}" defer="defer"></script>
 
 <style>
-    #shopify-section-header {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
+  #shopify-section-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .scrolled header {
+    background: var(--bg-color);
+  }
 </style>
 
-<div class="h-v-space-sm w-full flex px-margin items-center justify-between">
-  <div class="shrink-0">
-    <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
-      <a href="{{ routes.root_url }}" title="Go to homepage">
-        {{ shop.name }} Logo
-      </a>
-    </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
-  </div>
-  <div class="shrink-0">
-    {% render 'desktop_header_links' with header_color: header_color %}
-  </div>
-</div>
+<sticky-header>
+  <header class="transition-all h-v-space-sm w-full flex px-margin items-center justify-between">
+    <div class="shrink-0">
+      <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
+        <a href="{{ routes.root_url }}" title="Go to homepage">
+          {{ shop.name }} Logo
+        </a>
+      </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
+    </div>
+    <div class="shrink-0">
+      {% render 'desktop_header_links' with header_color: header_color %}
+    </div>
+  </header>
+</sticky-header>
 
 
 {% schema %}

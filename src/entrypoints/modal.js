@@ -2,9 +2,7 @@ import EventBus from './eventbus';
 window.EventBus = new EventBus;
 
 const setModalState = (event) => {
-  console.log('eventbus event', event.detail)
   const activeModal = document.querySelector('modal-component#' + event.detail)
-  console.log('activeModal',activeModal)
   if (activeModal) {
     if (activeModal.classList.contains('open')) {
       activeModal.classList.remove('open')
@@ -37,7 +35,6 @@ export const closeModal = id => {
 
 export const openModal = id => {
   if (id) {
-    console.log(id)
     if (id === 'cartDrawer') {
       let body = document.querySelector("body");
       body.setAttribute("data-state-cart", "open");
