@@ -21,8 +21,6 @@
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
-
-    {{ 'eventbus.js' | asset_url | script_tag }}
     
     {{ content_for_header }}
   </head>

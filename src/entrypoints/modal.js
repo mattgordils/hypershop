@@ -1,20 +1,48 @@
-const eventbus = window?.EventBus || document.querySelector('event-bus')
+import EventBus from './eventbus';
+window.EventBus = new EventBus;
+
+const setModalState = (event) => {
+  console.log('eventbus event', event.detail)
+  const activeModal = document.querySelector('modal-component#' + event.detail)
+  console.log('activeModal',activeModal)
+  if (activeModal) {
+    if (activeModal.classList.contains('open')) {
+      activeModal.classList.remove('open')
+      setTimeout(() => {
+        activeModal.classList.remove('animating')
+      }, 500)
+    } else {
+      activeModal.classList.add('open', 'animating')
+      activeModal.classList.add('animating')
+    }
+  } else {
+    const modals = document.querySelectorAll('modal-component');
+    modals.forEach(modal => {
+      modal.classList.remove('open')
+      modal.classList.add('animating')
+      setTimeout(() => {
+        modal.classList.remove('animating')
+      }, 500)
+    })
+  }
+}
+
+window.EventBus.addEventListener('setModal', setModalState)
 
 export const closeModal = id => {
   let body = document.querySelector("body");
   body.setAttribute("data-state-cart", "closed");
-  eventbus.publish("setModal", "false")
+  window.EventBus.dispatchEvent("setModal", "false")
 }
 
 export const openModal = id => {
-  console.log(eventbus)
   if (id) {
     console.log(id)
     if (id === 'cartDrawer') {
       let body = document.querySelector("body");
       body.setAttribute("data-state-cart", "open");
     }
-    eventbus?.publish("setModal", id)
+    window.EventBus.dispatchEvent("setModal", id)
   }
 }
 
@@ -22,7 +50,6 @@ class Modal extends HTMLElement {
   constructor() {
     super();
     this.closeButtons = this.querySelectorAll('#closeModal')
-    
     this.closeButtons.forEach(item => {
       item.addEventListener('click', event => {
         closeModal()
@@ -53,27 +80,3 @@ class ModalTrigger extends HTMLElement {
 if (!customElements.get('modal-trigger')) {
   customElements.define('modal-trigger', ModalTrigger);
 }
-
-// MODALS
-eventbus?.subscribe("setModal", id => {
-  if (id && document.querySelector('modal-component#' + id)) {
-    if (document.querySelector('modal-component#' + id).classList.contains('open')) {
-      document.querySelector('modal-component#' + id).classList.remove('open')
-      setTimeout(() => {
-        document.querySelector('modal-component#' + id).classList.remove('animating')
-      }, 500)
-    } else {
-      document.querySelector('modal-component#' + id).classList.add('open', 'animating')
-      document.querySelector('modal-component#' + id).classList.add('animating')
-    }
-  } else {
-    const modals = document.querySelectorAll('modal-component');
-    modals.forEach(modal => {
-      modal.classList.remove('open')
-      modal.classList.add('animating')
-      setTimeout(() => {
-        modal.classList.remove('animating')
-      }, 500)
-    })
-  }
-});
