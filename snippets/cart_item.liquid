@@ -5,8 +5,8 @@
   endif
 -%}
 
-<div id="cartLineItem" class="flex gap-x-gutter border-b pb-gutter pt-gutter">
-  <div class="w-24">
+<div id="cartLineItem" class="{% if index != 0 %}border-t {% endif %}flex gap-x-gutter pb-gutter pt-gutter">  
+<div class="w-24">
     <div class="aspect-square relative w-full">
       {% render 'image' with 
         src: image,
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div id="cartUpdate" class="grow basis-0 col-span-4 flex flex-col">
-    <div class="flex justify-between grow">
+    <div class="flex justify-between grow gap-x-gutter">
       <a href="{{ item.url }}">
         {{ item.product.title }}
         <div class="body-small">

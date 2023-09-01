@@ -63,7 +63,7 @@ if (!customElements.get('sticky-header')) {
   customElements.define('sticky-header', StickyHeader);
 }
 
-window.addEventListener("scroll", updateScrollDirection); // add event listener
+// window.addEventListener("scroll", updateScrollDirection); // add event listener
 
 function maybeOpenCart() {
   const urlParams = new URLSearchParams(window.location.search);

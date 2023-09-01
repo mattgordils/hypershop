@@ -1,8 +1,26 @@
-// example
-//
-// @font-face {
-//     font-family: 'Highway Gothic';
-//     src: url('/assets/HWYGOTH.TTF') format('truetype');
-//     font-style: normal;
-//     font-weight: 400;
-//  }
+@font-face {
+  font-family: 'Souvenir';
+  src:  url('../../assets/SouvenirStd-Light.woff') format('woff'),
+        url('../../assets/SouvenirStd-Light.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Souvenir';
+  src:  url('../../assets/brown-regular.woff') format('woff'),
+        url('../../assets/brown-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  src:  url('../../assets/material-icons-regular.woff') format('woff'),
+        url('../../assets/material-icons-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

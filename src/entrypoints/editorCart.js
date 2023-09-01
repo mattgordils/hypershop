@@ -1,9 +1,6 @@
-import { eventBus } from './eventbus';
 import { closeModal, openModal } from './modal'
 
 function hideInEditor(ev) {
-  console.log('hide')
-  console.log(eventBus)
   const { target } = ev;
   console.log(target)
   if (target.id !== "shopify-section-cart") {
@@ -14,8 +11,6 @@ function hideInEditor(ev) {
 }
 
 function showInEditor(ev) {
-  console.log('show')
-  console.log(eventBus)
   const { target } = ev;
   console.log(target)
   if (target.id === "shopify-section-cart") {
