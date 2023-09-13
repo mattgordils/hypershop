@@ -10,15 +10,16 @@ if (!customElements.get("age-gate")) {
         //
         this.ageYes = this.querySelector('#ageYes')
         this.ageYes.addEventListener('click', this.setCookie)
+        this.expirationLimit = this.dataset.expire
         this.openAgegate();
       }
 
       openAgegate() {
-        console.log('openAgegate')
+        const expirationLimit = this.expirationLimit || 2
         const ageTimestamp = localStorage.getItem('legalAgeTimestamp')
-        const tokenAge = dayjs(Date()).diff(dayjs(ageTimestamp), 'second', true)
-        console.log('tokenAge: ', tokenAge);
-        if (!ageTimestamp || tokenAge > 10) {
+        const tokenAge = dayjs(Date()).diff(dayjs(ageTimestamp), 'day', true)
+        console.log('tokenAge: ', tokenAge)
+        if (!ageTimestamp || tokenAge > expirationLimit) {
           localStorage.removeItem('legalAgeTimestamp')
           openModal('ageGate')
         } else {

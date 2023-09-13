@@ -1,0 +1,196 @@
+<div class="grid md:grid-cols-2 gap-y-margin">
+  <div class="aspect-square bg-light-grey">
+    {%- for image in product.images -%}
+      {% render 'image' with src: image %}
+    {%- endfor -%}
+  </div>
+
+  <div class="px-margin">
+    <div class="grid gap-y-v-space-sm sticky top-sticky-top">
+      <div>
+        <h1>{{ product.title }}</h1>
+        <p class="body-large">{{ product.price | money }}</p>
+      </div>
+      <div>
+        {% liquid
+          render 'product_option_form' with
+          product: product,
+          showBuyNow: true,
+          context: 'PDP'
+        %}
+
+        {%- if section.blocks != blank -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when '@app' -%}
+                {% render block %}
+            {%- endcase -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product",
+  "blocks": [
+    {
+			"type": "@app"
+		},
+    {
+			"type": "text",
+			"name": "t:sections.main-product.blocks.text.name",
+			"settings": [
+				{
+					"type": "text",
+					"id": "text",
+					"default": "Text block",
+					"label": "t:sections.main-product.blocks.text.settings.text.label"
+				},
+				{
+					"type": "select",
+					"id": "text_style",
+					"options": [
+						{
+							"value": "body",
+							"label": "t:sections.main-product.blocks.text.settings.text_style.options__1.label"
+						},
+						{
+							"value": "subtitle",
+							"label": "t:sections.main-product.blocks.text.settings.text_style.options__2.label"
+						},
+						{
+							"value": "uppercase",
+							"label": "t:sections.main-product.blocks.text.settings.text_style.options__3.label"
+						}
+					],
+					"default": "body",
+					"label": "t:sections.main-product.blocks.text.settings.text_style.label"
+				}
+			]
+		},
+		{
+			"type": "title",
+			"name": "t:sections.main-product.blocks.title.name",
+			"limit": 1
+		},
+		{
+			"type": "quantity_selector",
+			"name": "t:sections.main-product.blocks.quantity_selector.name",
+			"limit": 1
+		},
+		{
+			"type": "price",
+			"name": "t:sections.main-product.blocks.price.name",
+			"limit": 1
+		},
+		{
+			"type": "type",
+			"name": "Product Type",
+			"limit": 1
+		},
+		{
+			"type": "variant_picker",
+			"name": "t:sections.main-product.blocks.variant_picker.name",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "select",
+					"id": "picker_type",
+					"options": [
+						{
+							"value": "dropdown",
+							"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+						},
+						{
+							"value": "button",
+							"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+						},
+						{
+							"value": "swatch",
+							"label": "Swatch"
+						}
+					],
+					"default": "button",
+					"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.label"
+				}
+			]
+		},
+		{
+			"type": "buy_buttons",
+			"name": "t:sections.main-product.blocks.buy_buttons.name",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "checkbox",
+					"id": "show_dynamic_checkout",
+					"default": true,
+					"label": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+					"info": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info"
+				},
+				{
+					"type": "text",
+					"id": "text",
+					"label": "Text",
+					"info": "ie: Shipping and returns policy"
+				}
+			]
+		},
+		{
+			"type": "description",
+			"name": "t:sections.main-product.blocks.description.name",
+			"limit": 1
+		},
+		{
+			"type": "custom_liquid",
+			"name": "t:sections.main-product.blocks.custom_liquid.name",
+			"settings": [
+				{
+					"type": "liquid",
+					"id": "custom_liquid",
+					"label": "t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.label",
+					"info": "t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.info"
+				}
+			]
+		},
+		{
+			"type": "collapsible_tab",
+			"name": "t:sections.main-product.blocks.collapsible_tab.name",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"default": "Collapsible row",
+					"info": "t:sections.main-product.blocks.collapsible_tab.settings.heading.info",
+					"label": "t:sections.main-product.blocks.collapsible_tab.settings.heading.label"
+				},
+				{
+					"type": "richtext",
+					"id": "content",
+					"label": "t:sections.main-product.blocks.collapsible_tab.settings.content.label"
+				},
+				{
+					"type": "page",
+					"id": "page",
+					"label": "t:sections.main-product.blocks.collapsible_tab.settings.page.label"
+				}
+			]
+		},
+		{
+			"type": "rating",
+			"name": "t:sections.main-product.blocks.rating.name",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "paragraph",
+					"content": "t:sections.main-product.blocks.rating.settings.paragraph.content"
+				}
+			]
+		}
+  ],
+  "settings": []
+}
+{% endschema %}
+

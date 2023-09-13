@@ -1,23 +1,77 @@
-<div class="grid md:grid-cols-2 gap-y-margin">
-  <div class="aspect-square bg-light-grey">
-    {%- for image in product.images -%}
-      {% render 'image' with src: image %}
-    {%- endfor -%}
-  </div>
-
-  <div class="px-margin">
-    <div class="grid gap-y-v-space-sm sticky top-sticky-top">
-      <div>
-        <h1>{{ product.title }}</h1>
-        <p class="body-large">{{ product.price | money }}</p>
-      </div>
-      <div>
-        {% render 'product_option_form' with
-          product: product,
-          showBuyNow: true,
-          context: 'PDP'
-        %}
-      </div>
-    </div>
-  </div>
-</div>
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+          }
+        },
+        "3feddf47-d8d0-45c3-8064-3a4b43830589": {
+          "type": "type",
+          "settings": {
+          }
+        },
+        "ac573539-5ec6-41d1-899c-2b628c481983": {
+          "type": "shopify:\/\/apps\/recharge-subscriptions\/blocks\/subscription-widget\/371eed76-0b44-4869-9813-730372ea378e",
+          "settings": {
+            "product": "{{product}}"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "swatch"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "text": "60 Day Returns + Discreet Shipping"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "3feddf47-d8d0-45c3-8064-3a4b43830589",
+        "ac573539-5ec6-41d1-899c-2b628c481983",
+        "description",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "gallery_layout": "stacked",
+        "media_size": "large",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You may also like...",
+        "section_margin": "mb-vertical-spacing"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
