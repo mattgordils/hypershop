@@ -188,8 +188,8 @@
 .w-6{
   width: 1.5rem;
 }
-.w-\[50px\]{
-  width: 50px;
+.w-\[80px\]{
+  width: 80px;
 }
 .w-fit{
   width: -webkit-fit-content;
@@ -198,12 +198,6 @@
 }
 .w-\[3em\]{
   width: 3em;
-}
-.w-\[100px\]{
-  width: 100px;
-}
-.w-\[80px\]{
-  width: 80px;
 }
 .max-w-full{
   max-width: 100%;
@@ -967,7 +961,6 @@ select {
     background-size: 0% 1px;
     transition: background-size var(--slow-speed);
   }
-.active .animate-underline,
 .animate-underline:hover,
 .group:hover .animate-underline {
     background-size: 100% 1px;
@@ -997,7 +990,7 @@ select {
   }
 :root {
     /* Grid */
-    --site-gutters: clamp(calc(8 * 1px), calc((20 * 1vw) / 1440 * 100), calc(20 * 1px));
+    --site-gutters: 20px;
     --site-margins: clamp(calc(16 * 1px), calc((50 * 1vw) / 1440 * 100), calc(60 * 1px));
     --vertical-spacing: 100px;
     --vertical-spacing-small: 60px;
