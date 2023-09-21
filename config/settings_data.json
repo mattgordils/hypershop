@@ -4,6 +4,7 @@
       "header": {
         "type": "header",
         "settings": {
+          "menu": "main-menu"
         }
       },
       "age-gate": {
@@ -19,8 +20,10 @@
       "footer": {
         "type": "footer",
         "settings": {
+          "link_list_1": "main-menu",
+          "link_list_2": "main-menu",
+          "link_list_3": "main-menu",
           "text": "sign up for newsletter",
-          "secondary-logo": "shopify:\/\/shop_images\/Vector.png",
           "text-confirm": "thank you!"
         }
       },
@@ -38,8 +41,9 @@
       "cart": {
         "type": "cart",
         "settings": {
-          "text-footer": "free shipping on orders over $100 within the U.S.",
-          "text-checkout": "continue to checkout"
+          "text_footer": "Free shipping on orders over $100",
+          "upsell_collection": "frontpage",
+          "text_checkout": "Checkout"
         }
       },
       "centered_text_blurb": {
