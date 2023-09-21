@@ -58,13 +58,13 @@
                       <div>
                         <input
                           type="radio" 
-                          id="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}"
-                          name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
+                          id="{{ section_id }}-{{ product.id }}-{{ forloop.index0 }}"
+                          name="{{ option.name }}-{{ section_id }}-{{ product.id }}"
                           value="{{ value | escape }}"
                           form="{{ product_form_id }}"
                           {% if option.selected_value == value %}checked{% endif %}
                         >
-                        <label for="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}" class="body-small">
+                          <label for="{{ section_id }}-{{ product.id }}-{{ forloop.index0 }}" class="body-small">
                           {{ value }}
                         </label>
                       </div>
