@@ -1,0 +1,98 @@
+<div>
+  <div class="relative">
+    <div class="media relative z-1">
+      {% render 'image' with src: section.settings.image %}
+    </div>
+    <div class="text-bg overlay-content absolute z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin">
+      <div class="grid gap-gutter w-full">
+        <div>
+          {% render 'text_lockup' with blocks: section.blocks, alignment: 'center' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+	"name": "Wide Media",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image"
+		}
+	],
+	"blocks": [
+		{
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Headline",
+          "label": "Headline Text"
+        }
+      ]
+    },
+		{
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+		{
+      "type": "buttons",
+      "name": "Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "default": "Shop Now",
+          "label": "Button 1 Label"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "Button 1 Link"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "Button 2 Label"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "Button 2 Link"
+        }
+      ]
+    }
+	],
+	"presets": [
+    {
+      "name": "Wide Media",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+				{
+          "type": "text"
+        },
+				{
+          "type": "buttons"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
