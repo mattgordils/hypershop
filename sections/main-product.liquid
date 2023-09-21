@@ -1,4 +1,4 @@
-<div class="grid md:grid-cols-2 gap-y-margin">
+<div class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
   <div class="aspect-square bg-light-grey">
     {%- for image in product.images -%}
       {% render 'image' with src: image %}
@@ -7,23 +7,61 @@
 
   <div class="px-margin">
     <div class="grid gap-y-v-space-sm sticky top-sticky-top">
-      <div>
-        <h1>{{ product.title }}</h1>
-        <p class="body-large">{{ product.price | money }}</p>
-      </div>
-      <div>
-        {% liquid
-          render 'product_option_form' with
-          product: product,
-          showBuyNow: true,
-          context: 'PDP'
-        %}
-
+      <div class='grid gap-y-gutter'>
         {%- if section.blocks != blank -%}
           {%- for block in section.blocks -%}
             {%- case block.type -%}
-              {%- when '@app' -%}
-                {% render block %}
+							{%- when 'type' -%}
+								<div {{ block.shopify_attributes }}>
+									<p class='h6'>{{ product.type }}</p>
+								</div>
+							{%- when 'title' -%}
+								<div {{ block.shopify_attributes }}>
+									<h1>{{ product.title }}</h1>
+								</div>
+							{%- when 'text' -%}
+								<div {{ block.shopify_attributes }}>
+									<p>{{ block.text }}</p>
+								</div>
+							{%- when 'quantity_selector' -%}
+								<div {{ block.shopify_attributes }}>
+									TODO: QTY
+								</div>
+							{%- when 'price' -%}
+								<div {{ block.shopify_attributes }}>
+								<p class="body-large">{{ product.price | money }}</p>
+								</div>
+							{%- when 'variant_picker' -%}
+								<div {{ block.shopify_attributes }}>
+									{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
+								</div>
+							{%- when 'buy_buttons' -%}
+								<div {{ block.shopify_attributes }}>
+									BUY BUTTONS SEPERATE
+								</div>
+							{%- when 'description' -%}
+								<div {{ block.shopify_attributes }}>
+									<div class="rich-text body-small">
+										{{ product.description }}
+									</div>
+								</div>
+							{%- when 'custom_liquid' -%}
+								<div {{ block.shopify_attributes }}>
+									{{ block.custom_liquid }}
+								</div>
+							{%- when 'collapsible_tab' -%}
+								<div {{ block.shopify_attributes }}>
+									{{ block.title }}
+									{{ block.text }}
+								</div>
+							{%- when 'rating' -%}
+								<div {{ block.shopify_attributes }}>
+									RATING
+								</div>
+							{%- when '@app' -%}
+								<div {{ block.shopify_attributes }}>
+									{% render block %}
+								</div>
             {%- endcase -%}
           {%- endfor -%}
         {%- endif -%}
@@ -41,49 +79,49 @@
 		},
     {
 			"type": "text",
-			"name": "t:sections.main-product.blocks.text.name",
+			"name": "Text Section",
 			"settings": [
 				{
 					"type": "text",
 					"id": "text",
 					"default": "Text block",
-					"label": "t:sections.main-product.blocks.text.settings.text.label"
+					"label": "Text"
 				},
 				{
 					"type": "select",
 					"id": "text_style",
+					"default": "body",
+					"label": "Text Style",
 					"options": [
 						{
 							"value": "body",
-							"label": "t:sections.main-product.blocks.text.settings.text_style.options__1.label"
+							"label": "Text"
 						},
 						{
-							"value": "subtitle",
-							"label": "t:sections.main-product.blocks.text.settings.text_style.options__2.label"
+							"value": "headline",
+							"label": "Subtitle"
 						},
 						{
 							"value": "uppercase",
-							"label": "t:sections.main-product.blocks.text.settings.text_style.options__3.label"
+							"label": "Uppercase"
 						}
-					],
-					"default": "body",
-					"label": "t:sections.main-product.blocks.text.settings.text_style.label"
+					]
 				}
 			]
 		},
 		{
 			"type": "title",
-			"name": "t:sections.main-product.blocks.title.name",
+			"name": "Title",
 			"limit": 1
 		},
 		{
 			"type": "quantity_selector",
-			"name": "t:sections.main-product.blocks.quantity_selector.name",
+			"name": "Quantity Selector",
 			"limit": 1
 		},
 		{
 			"type": "price",
-			"name": "t:sections.main-product.blocks.price.name",
+			"name": "Price",
 			"limit": 1
 		},
 		{
@@ -93,42 +131,41 @@
 		},
 		{
 			"type": "variant_picker",
-			"name": "t:sections.main-product.blocks.variant_picker.name",
+			"name": "Variant Picker",
 			"limit": 1,
 			"settings": [
 				{
 					"type": "select",
 					"id": "picker_type",
+					"label": "Picker Type",
+					"default": "button",
 					"options": [
 						{
 							"value": "dropdown",
-							"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+							"label": "Dropdown"
 						},
 						{
 							"value": "button",
-							"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+							"label": "Button"
 						},
 						{
 							"value": "swatch",
 							"label": "Swatch"
 						}
-					],
-					"default": "button",
-					"label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.label"
+					]
 				}
 			]
 		},
 		{
 			"type": "buy_buttons",
-			"name": "t:sections.main-product.blocks.buy_buttons.name",
+			"name": "Buy Buttons",
 			"limit": 1,
 			"settings": [
 				{
 					"type": "checkbox",
 					"id": "show_dynamic_checkout",
 					"default": true,
-					"label": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
-					"info": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info"
+					"label": "Show Dynamic Checkout Buttons"
 				},
 				{
 					"type": "text",
@@ -140,57 +177,77 @@
 		},
 		{
 			"type": "description",
-			"name": "t:sections.main-product.blocks.description.name",
+			"name": "Description",
 			"limit": 1
 		},
 		{
 			"type": "custom_liquid",
-			"name": "t:sections.main-product.blocks.custom_liquid.name",
+			"name": "Custom Liquid",
 			"settings": [
 				{
 					"type": "liquid",
 					"id": "custom_liquid",
-					"label": "t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.label",
-					"info": "t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.info"
+					"label": "Liquid Code",
+					"info": "Use at your own risk"
 				}
 			]
 		},
 		{
 			"type": "collapsible_tab",
-			"name": "t:sections.main-product.blocks.collapsible_tab.name",
+			"name": "Collapsible Tab",
 			"settings": [
 				{
 					"type": "text",
 					"id": "heading",
 					"default": "Collapsible row",
-					"info": "t:sections.main-product.blocks.collapsible_tab.settings.heading.info",
-					"label": "t:sections.main-product.blocks.collapsible_tab.settings.heading.label"
+					"label": "Row Title"
 				},
 				{
 					"type": "richtext",
 					"id": "content",
-					"label": "t:sections.main-product.blocks.collapsible_tab.settings.content.label"
-				},
-				{
-					"type": "page",
-					"id": "page",
-					"label": "t:sections.main-product.blocks.collapsible_tab.settings.page.label"
+					"label": "Text"
 				}
 			]
 		},
 		{
 			"type": "rating",
-			"name": "t:sections.main-product.blocks.rating.name",
+			"name": "Rating",
 			"limit": 1,
 			"settings": [
 				{
 					"type": "paragraph",
-					"content": "t:sections.main-product.blocks.rating.settings.paragraph.content"
+					"content": "Paragraph text"
 				}
 			]
 		}
   ],
-  "settings": []
+  "settings": [
+		{
+      "type": "select",
+      "id": "section_margin",
+      "default": "mb-v-space",
+      "label": "Section Margin",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "none",
+          "value": "mb-0"
+        },
+        {
+          "label": "Small",
+          "value": "mb-12 md:mb-margin"
+        },
+        {
+          "label": "Medium",
+          "value": "mb-v-space-sm"
+        },
+        {
+          "label": "Large",
+          "value": "mb-v-space"
+        }
+      ]
+    }
+	]
 }
 {% endschema %}
 

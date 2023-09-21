@@ -2,7 +2,7 @@
 
 <modal-component id="cartDrawer" class="cart-container drawer">
   <div
-    class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] bg-bg"
+    class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] bg-bg z-1"
   >
     <div class="flex flex-col bg-off_white font-wide h-full">
       <div class="shrink-0 pt-gutter px-gutter">
@@ -31,7 +31,9 @@
               {%- endcase -%}
             {%- endfor -%}
           {%- endif -%}
-          
+
+          {% render 'cart_upsell' with products: section.settings.upsell_collection.products %}
+
         </div>
         {% if cart.item_count > 0 %}
           <div class="cart-footer w-full shrink-0">
@@ -60,12 +62,17 @@
     },
     {
       "type": "text",
-      "id": "text-footer",
+      "id": "text_footer",
       "label": "Footer Text"
     },
     {
+      "type": "collection",
+      "id": "upsell_collection",
+      "label": "Cart Upsell Collection"
+    },
+    {
       "type": "text",
-      "id": "text-checkout",
+      "id": "text_checkout",
       "label": "Checkout Link Text"
     }
   ]

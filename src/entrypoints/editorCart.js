@@ -1,26 +1,35 @@
 import { closeModal, openModal } from './modal'
 
-function hideInEditor(ev) {
-  const { target } = ev;
-  console.log(target)
-  if (target.id !== "shopify-section-cart") {
-    openModal('cartDrawer')
-  } else {
-    closeModal('cartDrawer')
-  }
-}
-
 function showInEditor(ev) {
   const { target } = ev;
-  console.log(target)
-  if (target.id === "shopify-section-cart") {
-    openModal('cartDrawer')
-  } else {
-    closeModal('cartDrawer')
+  console.log('EVNT: ',ev.type);
+
+  if (ev.type === 'shopify:section:select') {
+    console.log('select: ', target.id);
+    if (target.id === 'shopify-section-cart') {
+      openModal('cartDrawer')
+    }
   }
+
+  if (ev.type === 'shopify:section:deselect') {
+    console.log('deselet: ', target.id);
+    if (target.id === 'shopify-section-cart') {
+      closeModal()
+    }
+  }
+
+  return
+
+  // console.log('target: ',target)
+  // if (target.id === "shopify-section-cart") {
+  //   openModal('cartDrawer')
+  // } else {
+  //   closeModal()
+  // }
 }
 
-document.removeEventListener("shopify:section:deselect", hideInEditor);
-document.addEventListener("shopify:section:deselect", hideInEditor);
-document.removeEventListener("shopify:section:load", showInEditor);
+document.addEventListener("shopify:section:select", showInEditor);
+document.addEventListener("shopify:section:deselect", showInEditor);
 document.addEventListener("shopify:section:load", showInEditor);
+
+// document.removeEventListener("shopify:section:load", showInEditor);

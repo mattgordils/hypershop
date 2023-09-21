@@ -11,8 +11,12 @@ variant will update imagery and url
     assign form_context = context
   endif
 
-  assign section_id = 'hkqjadghl'
+  assign section_id = section.id
   assign form_product = product
+
+  if section_context
+    assign section_id = section.id | append: '-' | append: section_context
+  endif
 -%}
 
 <add-to-cart-form>
@@ -43,20 +47,22 @@ variant will update imagery and url
           data-url="{{ product.url }}"
           {{ block.shopify_attributes }}
         >
-          <fieldset class="block{% if option.values.size < 2 %} hidden{% endif %}">
-            <legend class="form__label h4">{{ option.name }}</legend>
+          <fieldset class="{% if option.values.size < 2 %}!hidden{% endif %}">
+            <legend class="form__label h6">{{ option.name }}</legend>
             {%- for value in option.values -%}
-              <input
-                type="radio" 
-                id="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}"
-                name="{{ option.name }}"
-                value="{{ value | escape }}"
-                form="{{ product_form_id }}"
-                {% if option.selected_value == value %}checked{% endif %}
-              >
-              <label for="{{ section_id }}-{{ option.position }}-{{ forloop.index0 }}" class="inline-block">
-                {{ value }}
-              </label>
+              <div>
+                <input
+                  type="radio" 
+                  id="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}"
+                  name="{{ option.name }}"
+                  value="{{ value | escape }}"
+                  form="{{ product_form_id }}"
+                  {% if option.selected_value == value %}checked{% endif %}
+                >
+                <label for="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}" class="body-small">
+                  {{ value }}
+                </label>
+              </div>
             {%- endfor -%}
           </fieldset>
         </variant-radios>

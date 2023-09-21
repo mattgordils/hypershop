@@ -27,14 +27,17 @@
 
   <body class="transition-all duration-500" data-state-age-gate="closed" data-state-email-capture="closed">
     {% section 'header' %}
-    {% comment %} {% section 'loading' %} {% endcomment %}
+    
+    {% comment %}
     {% section 'age-gate' %}
     {% section 'email-capture' %}
     {% section 'email_subscribe_success' %}
+    {% endcomment %}
+    
     <div>
       {{ content_for_layout }}
     </div>
-    <modal-trigger data-modal-id='cartDrawer'>Open Cart</modal-trigger>
+
     {% section 'cart' %}
     {% section 'footer' %}
 

@@ -1,0 +1,35 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="flex flex-col gap-y-gutter">
+  <div class="flex gap-x-gutter">
+    <div href="{{ product.url }}" class="aspect-square relative w-[50px] shrink-0 grow-0">
+      {% render 'image' with
+        src: product.featured_image,
+        image_position: 'cover',
+        sizes: '300px',
+        notlazy: notlazy,
+        alt: product.title
+      %}
+    </div>
+    <div class="text-left grow">
+      <div class="body">
+        {{ product.title }}
+      </div>
+      <div class="body-small">
+        {{ product.price | money }}
+      </div>
+    </div>
+    <add-to-cart-form data-variant-id="{{ current_variant.id }}" class="shrink-0 grow-0">
+      <div id="add-to-cart-form" class="add-to-cart-form" data-url="{{ product.url }}">
+        {% if product.available %}
+          {% render 'add_to_cart_button' with text: "Add to Cart", icon: 'add' class: "circle" %}
+        {% else %}
+          {% render 'sold_out_button' with text: "Sold Out", type: "submit", form: "add-to-cart-form", value: "Submit", icon: 'add' class: "circle" %}
+        {% endif %}
+      </div>
+    </add-to-cart-form>
+  </div>
+
+  {% comment %} {%- render 'product_option_form' with product: product, section_context: 'cart-upsell' -%} {% endcomment %}
+  {% comment %} <a href="{{ product.url }}" href="">Details</a> {% endcomment %}
+</div>

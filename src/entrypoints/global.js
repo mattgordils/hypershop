@@ -177,11 +177,17 @@ if (!customElements.get("add-to-cart-form")) {
           return undefined
         }
         this.addButton.addEventListener("click", (event) => {
-          
           const productOptions = this.querySelectorAll('variant-radios input, variant-selects')
-          const variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
           const selectedOptions = getSelectedOptions(productOptions)
-          const variantId = getVariant(selectedOptions, variantData).id
+
+          let variantId = ''
+          let variantData = ''
+          if (this?.dataset?.variantId) {
+            variantId = this.dataset.variantId
+          } else {
+            variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
+            variantId = getVariant(selectedOptions, variantData).id
+          }
           
           let formData = {
             items: [

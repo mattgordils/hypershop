@@ -18,12 +18,9 @@ if (!customElements.get("age-gate")) {
         const expirationLimit = this.expirationLimit || 2
         const ageTimestamp = localStorage.getItem('legalAgeTimestamp')
         const tokenAge = dayjs(Date()).diff(dayjs(ageTimestamp), 'day', true)
-        console.log('tokenAge: ', tokenAge)
         if (!ageTimestamp || tokenAge > expirationLimit) {
           localStorage.removeItem('legalAgeTimestamp')
           openModal('ageGate')
-        } else {
-          console.log('Youre of age!')
         }
       }
 
