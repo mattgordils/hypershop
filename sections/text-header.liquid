@@ -5,31 +5,26 @@
         </div>
     {% endfor %}
 </div>
+
 {% schema %}
 {
-	"name": "text-header",
+	"name": "Text Section",
 	"settings": [],
-    "presets": [{
-        "name": "Header Text",
-        "category": "Text"
-    }],
-    "templates": ["page"],
-    "blocks": [
-    {
-      "type": "text",
-      "name": "Text",
-      "settings": [
-            {
-            "type": "header",
-            "content": "Content"
-            },
-            {
-            "type": "text",
-            "id": "content",
-            "label": "Content"
-            }
-        ]
-    }
-    ]
+	"presets": [{
+		"name": "Text Section",
+		"category": "Text",
+		"blocks": [
+			{
+				"type": "title"
+			}
+		]
+	}],
+	"blocks": [
+		{
+			"type": "title",
+			"name": "Headline",
+			"default": "Headline"
+		}
+	]
 }
 {% endschema %}
