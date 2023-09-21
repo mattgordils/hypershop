@@ -32,7 +32,7 @@
             {%- endfor -%}
           {%- endif -%}
 
-          {% render 'cart_upsell' with products: section.settings.upsell_collection.products %}
+          {% render 'cart_upsell' with product_list: section.settings.upsell_collection.products %}
 
         </div>
         {% if cart.item_count > 0 %}

@@ -18,7 +18,7 @@
         <a
           href="{{ routes.root_url }}"
           title="Go to {{ shop.name }} homepage"
-          class='w-[40px] block border-0'
+          class='w-[120px] md:w-[160px] block border-0'
         >
           {% render 'logo' %}
         </a>
@@ -29,9 +29,11 @@
         {%- for link in section.settings.menu.links -%}
           {% assign is_store_active = false %}
           <div class="flex justify-center items-center">
-            <div {% if link.active or is_store_active %} class="border-b border-current"  {% else %} class="border-b border-transparent" {% endif %}>
-                <a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
-                  {{ link.title }}
+            <div {% if link.active or is_store_active %} class="border-b border-transparent active"  {% else %} class="border-b border-transparent" {% endif %}>
+                <a href="{{ link.url }}" class="body-small md:body group" {% if link.active %}aria-current="page"{% endif %}>
+                  <span class="animate-underline inline-block">
+                    {{ link.title }}
+                  </span>
                 </a>
             </div>
           </div>

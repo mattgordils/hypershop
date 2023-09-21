@@ -14,21 +14,17 @@ export const refreshCart = (fullRefresh = false) => {
       const oldlineCount = document.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
       const newlineCount = el.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
 
-      console.log(el)
-
       if (newCartCount == 0 || oldCartCount == 0 || (oldlineCount !== newlineCount)) {
         fullRefresh = true
       }
 
       if (fullRefresh) {
-        console.log('FULL REFRESH')
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
         const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
         currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
-        console.log('HALF REFRESH')
         // Update Cart Pieces
         const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
         const updatedItems = el.querySelectorAll('#shopify-section-cart #cartUpdate')

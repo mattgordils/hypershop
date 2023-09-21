@@ -5,6 +5,7 @@ class VariantSelects extends HTMLElement {
     super();
     this.addEventListener('change', this.onVariantChange);
     this.parent = this.closest('div');
+    this.parentCard = this.closest('.product-card');
     this.variantData = [];
     this.context = this.dataset.context
     this.setMasterId();
@@ -25,7 +26,7 @@ class VariantSelects extends HTMLElement {
     // this.removeErrorMessage(); TODO?
     this.setMasterId();
 
-    if (!this.currentVariant) {
+    if (!this.currentVariant.id) {
       // this.toggleAddButton(true, '', true); TODO
       // this.setUnavailable();
     } else {
@@ -36,6 +37,9 @@ class VariantSelects extends HTMLElement {
         this.updateURL();
         // this.updateMedia();
         // this.updateShareUrl();
+      }
+      if (this.parentCard) {
+        this.updateCardMedia()
       }
       this.updateVariantInput();
       // this.renderProductInfo();
@@ -61,16 +65,19 @@ class VariantSelects extends HTMLElement {
     options.forEach(option => {
       if(!checkAvailability(option.value)) {
         option.setAttribute('disabled', true)
+        option.checked = false
       }
     })
   }
 
-  setMasterId() {
+  setMasterId(event) {
     this.variantData = JSON.parse(this.parent.querySelector('[type="application/json"]').textContent)
     const productOptions = this.parent.querySelectorAll('variant-radios input, variant-selects')
     const selectedOptions = getSelectedOptions(productOptions)
     const currentVariant = getVariant(selectedOptions, this.variantData)
     this.currentVariant = currentVariant
+
+    console.log(currentVariant)
   }
 
   updateURL() {
@@ -83,6 +90,14 @@ class VariantSelects extends HTMLElement {
   // updateMedia() {}
   // updateShareUrl() {}
   // Function to enable and disable buy now button?
+
+  updateCardMedia() {
+    console.log('updateCardMedia')
+    const newFeaturedImage = this.currentVariant.featured_image.src
+    const cardImage = this.parentCard.querySelector('#cardImage')
+    cardImage.src = newFeaturedImage
+    cardImage.srcset = newFeaturedImage
+  }
 
   updateVariantInput() {
     const productForms = document.querySelectorAll(`#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}, #quick-add-${this.dataset.productId}, #quick-add-slide-${this.dataset.productId}`);

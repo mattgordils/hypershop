@@ -5,11 +5,8 @@ const setModalState = (event) => {
   const activeModal = document.querySelector('modal-component#' + event.detail)
   if (activeModal) {
     if (activeModal.classList.contains('open')) {
+      // Do nothing if modal is already open
       return
-      // activeModal.classList.remove('open')
-      // setTimeout(() => {
-      //   activeModal.classList.remove('animating')
-      // }, 500)
     } else {
       activeModal.classList.add('open', 'animating')
       activeModal.classList.add('animating')
@@ -37,7 +34,6 @@ export const closeModal = id => {
 export const openModal = id => {
   if (id) {
     if (id === 'cartDrawer') {
-      console.log('OPEN CART')
       let body = document.querySelector("body");
       body.setAttribute("data-state-cart", "open");
     }

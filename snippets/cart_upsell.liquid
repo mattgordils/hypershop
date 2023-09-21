@@ -1,9 +1,9 @@
-{%- if products.size > 0 -%}
+{%- if product_list.size > 0 -%}
   <div class="cart-upsell grid gap-y-gutter pb-gutter">
     <div>
       <h6>You may also like</h6>
     </div>
-    {% for product in products %}
+    {% for product in product_list %}
       {% assign in_cart = false %}
       {% for item in cart.items %}
         {% if item.product.id == product.id  %}

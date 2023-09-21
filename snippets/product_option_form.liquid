@@ -28,6 +28,7 @@ variant will update imagery and url
           data-context="{{ context }}"
           data-section="{{ section.id }}"
           data-url="{{ product.url }}"
+          data-selected="{{ value | escape }}"
           {{ block.shopify_attributes }}
         >
           <select
@@ -36,7 +37,7 @@ variant will update imagery and url
             {% if option.values.size < 2 %}class="hidden"{% endif %}
           >
             {%- for value in option.values -%}
-              <option value="{{ value }}">{{ value }}</option>
+              <option value="{{ value | escape }}">{{ value }}</option>
             {%- endfor -%}
           </select>
         </variant-selects>
@@ -48,13 +49,13 @@ variant will update imagery and url
           {{ block.shopify_attributes }}
         >
           <fieldset class="{% if option.values.size < 2 %}!hidden{% endif %}">
-            <legend class="form__label h6">{{ option.name }}</legend>
+            <legend class="h6">{{ option.name }}</legend>
             {%- for value in option.values -%}
               <div>
                 <input
                   type="radio" 
                   id="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}"
-                  name="{{ option.name }}"
+                  name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
                   value="{{ value | escape }}"
                   form="{{ product_form_id }}"
                   {% if option.selected_value == value %}checked{% endif %}

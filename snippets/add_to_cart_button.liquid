@@ -4,8 +4,11 @@
   title="{{ text }}"
 >
   {% if class contains 'circle' or class contains 'sqaure' %}
-    {% render 'icon-material' with icon: 'add' %}
+    {% render 'icon-material' with icon: icon %}
   {% else %}
-    {% render 'icon-material' with icon: 'add' %}{{ text }}
+    {% if icon != blank %}
+      {% render 'icon-material' with icon: icon %}
+    {% endif %}
+    {{ text }}
   {% endif %}
 </button>

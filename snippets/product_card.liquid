@@ -1,7 +1,8 @@
-<div class="flex flex-col gap-y-gutter cursor-pointer">
+<div class="product-card flex flex-col gap-y-gutter cursor-pointer">
   <a href="{{ product.url }}" class="aspect-3/4 relative">
     {% render 'image' with
       src: product.featured_image,
+      id: 'cardImage',
       image_position: 'cover',
       sizes: '600px',
       notlazy: notlazy,

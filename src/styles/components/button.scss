@@ -114,3 +114,7 @@ button.shopify-payment-button__button {
     }
   }
 }
+
+.shopify-payment-button__button--hidden {
+  display: none !important;
+}
