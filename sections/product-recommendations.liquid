@@ -1,28 +1,45 @@
-{%-liquid
-  assign products_to_show = 4
--%}
-
-<div class="{{ section.settings.section_margin }}">
-  <div class="page-width px-margin mx-auto mb-v-spacing-sm">
-    <h2 class="h3">{{ section.settings.heading | escape }}</h2>
-  </div>
-  <div class="page-width px-margin mx-auto">
-    <product-recommendations class="product-recommendations" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ products_to_show }}&intent=related">
-      {% if recommendations.performed and recommendations.products_count > 0 %}
-        <ul class="grid grid-cols-4 gap-x-gutter" role="list">
+<div class="px-margin overflow-hidden {{ section.settings.section_margin }}">
+  <product-recommendations class="product-recommendations" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading | escape }}</h2>
+      <ul class="hidden lg:grid grid-cols-4 gap-x-gutter" role="list">
+        {%- if recommendations.products.size > 0 -%}
           {% for recommendation in recommendations.products %}
-            <li class="grid-item">
-              {% render 'card-product',
-                card_product: recommendation,
-                show_vendor: section.settings.show_vendor,
-                show_rating: section.settings.show_rating
-              %}
+            <li>
+              {% render 'product_card', card_product: recommendation, section_id: section.id %}
             </li>
           {% endfor %}
+        {% else %}
+          {% for recommendation in (1..4) %}
+            <li>
+              {% render 'product_card', card_product: recommendation, section_id: section.id %}
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+
+      <div class="w-full lg:hidden">
+        <ul
+          class="slick-slider recommendations progress-dots slide-gap slick-visible-overflow"
+          role="list"
+        >
+          {%- if recommendations.products.size > 0 -%}
+            {% for recommendation in recommendations.products %}
+              <li>
+                {% render 'product_card', card_product: recommendation, section_id: section.id %}
+              </li>
+            {% endfor %}
+          {% else %}
+            {% for recommendation in (1..4) %}
+              <li>
+                {% render 'product_card', card_product: recommendation, section_id: section.id %}
+              </li>
+            {% endfor %}
+          {% endif %}
         </ul>
-      {% endif %}
-    </product-recommendations>
-  </div>
+      </div>
+    {% endif %}
+  </product-recommendations>
 </div>
 
 {% javascript %}
@@ -43,10 +60,14 @@
 
             if (recommendations && recommendations.innerHTML.trim().length) {
               this.innerHTML = recommendations.innerHTML;
+              if(window.lazyload) window.lazyload();
             }
 
-            if (html.querySelector('.grid-item')) {
+            if (html.querySelector('.slick-slider.recommendations')) {
               this.classList.add('product-recommendations--loaded');
+              $('.slick-slider.recommendations').slick().on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+                $(this).css({ '--progress': nextSlide });
+              });
             }
           })
           .catch(e => {
@@ -54,7 +75,7 @@
           });
       }
 
-      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '-200px 0px 200px 0px'}).observe(this);
+      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 1000px 0px'}).observe(this);
     }
   }
 
@@ -69,31 +90,18 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.product-recommendations.settings.paragraph__1.content"
+      "content": "Uses the Shopify generated recommended products"
     },
     {
       "type": "text",
       "id": "heading",
-      "default": "You may also like",
-      "label": "t:sections.product-recommendations.settings.heading.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "default": false,
-      "label": "t:sections.product-recommendations.settings.show_vendor.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "default": false,
-      "label": "t:sections.product-recommendations.settings.show_rating.label",
-      "info": "t:sections.product-recommendations.settings.show_rating.info"
+      "default": "Shop Similar",
+      "label": "Headline"
     },
     {
       "type": "select",
       "id": "section_margin",
-      "default": "mb-v-spacing",
+      "default": "mb-v-space",
       "label": "Section Margin",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
@@ -103,15 +111,15 @@
         },
         {
           "label": "Small",
-          "value": "mb-v-spacing-sm"
+          "value": "mb-12 md:mb-margin"
         },
         {
           "label": "Medium",
-          "value": "mb-v-spacing"
+          "value": "mb-v-space-sm"
         },
         {
           "label": "Large",
-          "value": "mb-v-spacing-lg"
+          "value": "mb-v-space"
         }
       ]
     }

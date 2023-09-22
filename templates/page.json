@@ -1,10 +1,11 @@
 {
   "sections": {
-    "settings": {
-      "type": "page-settings"
+    "default": {
+      "type": "centered_text_blurb",
+      "settings": {
+
+      }
     }
   },
-  "order": [
-    "settings"
-  ]
+  "order": ["default"]
 }

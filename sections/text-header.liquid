@@ -1,0 +1,30 @@
+<div class="font-wide text-sans-18 text-center">
+    {% for block in section.blocks %}
+        <div class="my-10">
+            {{ block.settings.content }}
+        </div>
+    {% endfor %}
+</div>
+
+{% schema %}
+{
+	"name": "Text Section",
+	"settings": [],
+	"presets": [{
+		"name": "Text Section",
+		"category": "Text",
+		"blocks": [
+			{
+				"type": "title"
+			}
+		]
+	}],
+	"blocks": [
+		{
+			"type": "title",
+			"name": "Headline",
+			"default": "Headline"
+		}
+	]
+}
+{% endschema %}

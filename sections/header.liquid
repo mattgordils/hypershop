@@ -1,71 +1,82 @@
-{% style %}
+<script src="{{ 'nav.js' | asset_url }}" defer="defer"></script>
+
+<style>
   #shopify-section-header {
     position: sticky;
     top: 0;
-    z-index: 4;
+    z-index: 5;
   }
-
-  header {
-    color: var(--header-color);
-    transition: color var(--md-speed) ease-in-out,
-                background var(--md-speed) ease-in-out;
-  }
-
-  header.scrolled {
+  .scrolled header {
     background: var(--bg-color);
-    color: var(--text-color);
   }
+</style>
 
-  header .logo {
-    display: inline-block;
-    vertical-align: top;
-    width: 100px;
-    border: none;
-    padding: 0;
-    color: currentcolor;
-  }
-
-  header .logo svg {
-    display: block;
-    max-width: 100%;
-    color: inherit;
-  }
-  header .logo svg * {
-    fill: currentcolor
-  }
-{% endstyle %}
-
-<header class="h-header -mb-header relative z-10">
-  <div class="px-margin">
-    <div class="flex justify-between items-center">
-      <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body header-logo">
-        <a class="logo" href="{{ routes.root_url }}" title="Go to homepage">
-          <div>
-            {% render 'logo' %}
-          </div>
+<sticky-header>
+  <header class="transition-all h-v-space-sm w-full flex px-margin items-center justify-between">
+    <div class="shrink-0">
+      <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
+        <a
+          href="{{ routes.root_url }}"
+          title="Go to {{ shop.name }} homepage"
+          class='w-[120px] md:w-[160px] block border-0'
+        >
+          {% render 'logo' %}
         </a>
       </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
-      <modal-trigger data-modal-id="cartDrawer">
-        <div class="w-8 h-8 rounded-full color-bg-color body-small leading-1em flex items-center justify-center {% if cart.item_count > 0 %}bg-main text-black{% else %}bg-text-color{% endif %}">
-          <span id="cartCount">{{ cart.item_count }}</span>
-        </div>
-      </modal-trigger>
     </div>
-  </div>
-</header>
+    <div class="shrink-0 grow">
+      <div class="flex space-x-gutter justify-end w-full">
+        {%- for link in section.settings.menu.links -%}
+          {% assign is_store_active = false %}
+          <div class="flex justify-center items-center">
+            <div {% if link.active or is_store_active %} class="border-b border-transparent active"  {% else %} class="border-b border-transparent" {% endif %}>
+                <a href="{{ link.url }}" class="body-small md:body group" {% if link.active %}aria-current="page"{% endif %}>
+                  <span class="animate-underline inline-block">
+                    {{ link.title }}
+                  </span>
+                </a>
+            </div>
+          </div>
+        {% endfor %}
+        {% render 'cart_thumbnail' %}
+      </div>
+    </div>
+  </header>
+</sticky-header>
 
-{% javascript %}
-  const headerSection = document.getElementById('shopify-section-header');
-  const header = headerSection.querySelector('header');
-  const onScroll = () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    if (scrollTop > 80) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Navigation Menu"
     }
-  }
-  // const onScrollHandler = this.onScroll.bind(this);
-  window.addEventListener('scroll', onScroll, false);
-{% endjavascript %}
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+                {
+                    "type": "header",
+                    "content": "Content"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "logo",
+                    "label": "Logo"
+                }
+      ]
+    }
+  ]
+}
+{% endschema %}

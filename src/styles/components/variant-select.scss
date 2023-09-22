@@ -1,0 +1,43 @@
+variant-radios {
+  fieldset {
+    display: flex;
+    > div {
+      input {
+        display: none;
+        ~ label {
+          padding: .5em;
+          height: 30px;
+          min-width: 30px;
+          border: 1px solid transparent;
+          border-radius: 100px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          line-height: 1em;
+          cursor: pointer;
+          transition: border var(--md-speed) ease-in-out,
+                      color var(--md-speed) ease-in-out,
+                      opacity var(--md-speed) ease-in-out;
+        }
+        &:not([disabled='true']) {
+          ~ label:hover {
+            border-color: var(--hr-color);
+          }
+        }
+        &[disabled='true'] ~ label {
+          cursor: not-allowed;
+          color: var(--light-text-color);
+        }
+        &:checked {
+          ~ label {
+            border-color: currentColor;
+            &:hover {
+              border-color: currentColor;
+            }
+          }
+        }
+      }
+    }
+  }
+}

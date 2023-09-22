@@ -1,0 +1,23 @@
+<div class="product-card flex flex-col gap-y-gutter cursor-pointer">
+  <a href="{{ product.url }}" class="aspect-3/4 relative">
+    {% render 'image' with
+      src: product.featured_image,
+      id: 'cardImage',
+      image_position: 'cover',
+      sizes: '600px',
+      notlazy: notlazy,
+      alt: product.title
+    %}
+  </a>
+  <a href="{{ product.url }}">
+    <div class="text-center">
+      <div class="body">
+        {{ product.title }}
+      </div>
+      <div class="body-small">
+        {{ product.price | money }}
+      </div>
+    </div>
+  </a>
+  {% render 'product_option_form' with product: product %}
+</div>

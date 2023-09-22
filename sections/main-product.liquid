@@ -1,112 +1,70 @@
-{{ 'slider.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'slider.bundle.js' | asset_url }}" defer="defer"></script>
+<div class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
+  <div class="aspect-square bg-light-grey">
+    {%- for image in product.images -%}
+      {% render 'image' with src: image %}
+    {%- endfor -%}
+  </div>
 
-{% style %}
-  variant-radios input ~ label {
-    border-color: transparent;
-  }
-
-  variant-radios input:checked ~ label {
-    border-color: currentcolor;
-  }
-{% endstyle %}
-
-{%-liquid
-  assign section_product = product
-  assign section_height_class = 'lg:aspect-auto lg:h-screen'
-  assign on_pdp = true
-  assign show_dynamic_checkout = true
-  assign product_form_id = 'product-form-' | append: section.id
-  if product == blank
-    assign on_pdp = false
-    assign section_product = section.settings.product
-    assign section_height_class = 'lg:aspect-square lg:max-h-screen'
-  endif
--%}
-<div class="{{ section.settings.section_margin }}">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-margin items-center">
-    <div class="col-span-1 relative">
-      <div>
-        <slider-component
-          id="Slider-main"
-          class="keen-slider no-dots loop arrows-full aspect-3/4 {{ section_height_class }}"
-        >
-          {% for product_image in section_product.images %}
-            <div class="keen-slider__slide bg-light-grey h-full">
-              {%- if product_image != blank -%}
-                <img
-                  srcset="{{ product_image | image_url: width: 165 }} 165w,
-                    {{ product_image | image_url: width: 360 }} 360w,
-                    {{ product_image | image_url: width: 533 }} 533w,
-                    {{ product_image | image_url: width: 720 }} 720w,
-                    {{ product_image | image_url: width: 940 }} 940w,
-                    {{ product_image | image_url: width: 1066 }} 1066w,
-                    {{ product_image | image_url: width: 1200 }} 1200w"
-                  src="{{ product_image | image_url: width: 533 }}"
-                  sizes="(min-width: 1024px) calc(100vw / 1.8), 100vw"
-                  alt="{{ product_image.alt | escape }}"
-                  class="transition-all duration-md absolute top-0 left-0 w-full h-full object-cover{% if hover_image != blank %} z-1{% endif %}"
-                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
-                  width="{{ product_image.width }}"
-                  height="{{ product_image.height }}"
-                  loading="eager"
-                >
-              {%- else -%}
-                {% render 'placeholder-img' with icon: 'img-lg' %}
-              {%- endif -%}
-            </div>
-          {% endfor %}
-        </slider-component>
-      </div>
-      <div class="absolute bottom-margin left-margin right-margin lg:bottom-gutter lg:left-gutter lg:right-gutter flex justify-center">
-        <slider-component
-          class="keen-slider max-w-[500px]"
-          data-thumbnails="Slider-main"
-          data-slider-settings='{
-            "spacing": 10
-          }'
-        >
-          {% for product_image in section_product.images %}
-            <div class="keen-slider__slide h-full">
-              {%- if product_image != blank -%}
-                <img
-                  srcset="{{ product_image | image_url: width: 165 }} 165w,
-                    {{ product_image | image_url: width: 360, height: 360 }} 360w,
-                    {{ product_image | image_url: width: 500, height: 500 }} 500w"
-                  src="{{ product_image | image_url: width: 533 }}"
-                  sizes="(min-width: 990px) 500px, 300px"
-                  alt="{{ product_image.alt | escape }}"
-                  class="transition-all duration-md"
-                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
-                  width="{{ product_image.width }}"
-                  height="{{ product_image.height }}"
-                  loading="eager"
-                >
-              {%- else -%}
-                {% render 'placeholder-img' with icon: 'img-lg' %}
-              {%- endif -%}
-            </div>
-          {% endfor %}
-        </slider-component>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <div class="px-margin max-w-[800px] mx-auto {% if on_pdp %} lg:mt-header{% endif %}">
-        <div>
-          <h1 class="mb-4 h2">{{ section_product.title }}</h1>
-          <div class="body-small rich-text">
-            <p>{{ section_product.description }}</p>
-          </div>
-          
-          {% render 'product-form' with 
-            section_product: section_product,
-            product_form_id: product_form_id,
-            section_id: section.id,
-            show_dynamic_checkout: show_dynamic_checkout
-          %}
-
-        </div>
+  <div class="px-margin">
+    <div class="grid gap-y-v-space-sm sticky top-sticky-top">
+      <div class='grid gap-y-gutter'>
+        {%- if section.blocks != blank -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+							{%- when 'type' -%}
+								<div {{ block.shopify_attributes }}>
+									<p class='h6'>{{ product.type }}</p>
+								</div>
+							{%- when 'title' -%}
+								<div {{ block.shopify_attributes }}>
+									<h1>{{ product.title }}</h1>
+								</div>
+							{%- when 'text' -%}
+								<div {{ block.shopify_attributes }}>
+									<p>{{ block.text }}</p>
+								</div>
+							{%- when 'quantity_selector' -%}
+								<div {{ block.shopify_attributes }}>
+									TODO: QTY
+								</div>
+							{%- when 'price' -%}
+								<div {{ block.shopify_attributes }}>
+									<p class="body-large">{{ product.price | money }}</p>
+								</div>
+							{%- when 'variant_picker' -%}
+								<div {{ block.shopify_attributes }}>
+									{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
+								</div>
+							{%- when 'buy_buttons' -%}
+								<div {{ block.shopify_attributes }}>
+									BUY BUTTONS SEPERATE
+								</div>
+							{%- when 'description' -%}
+								<div {{ block.shopify_attributes }}>
+									<div class="rich-text body-small">
+										{{ product.description }}
+									</div>
+								</div>
+							{%- when 'custom_liquid' -%}
+								<div {{ block.shopify_attributes }}>
+									{{ block.custom_liquid }}
+								</div>
+							{%- when 'collapsible_tab' -%}
+								<div {{ block.shopify_attributes }}>
+									{{ block.title }}
+									{{ block.text }}
+								</div>
+							{%- when 'rating' -%}
+								<div {{ block.shopify_attributes }}>
+									RATING
+								</div>
+							{%- when '@app' -%}
+								<div {{ block.shopify_attributes }}>
+									{% render block %}
+								</div>
+            {%- endcase -%}
+          {%- endfor -%}
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -114,19 +72,160 @@
 
 {% schema %}
 {
-  "name": "Product Details",
-  "tag": "section",
-  "class": "section product-details",
+  "name": "Product",
+  "blocks": [
+    {
+			"type": "@app"
+		},
+    {
+			"type": "text",
+			"name": "Text Section",
+			"settings": [
+				{
+					"type": "text",
+					"id": "text",
+					"default": "Text block",
+					"label": "Text"
+				},
+				{
+					"type": "select",
+					"id": "text_style",
+					"default": "body",
+					"label": "Text Style",
+					"options": [
+						{
+							"value": "body",
+							"label": "Text"
+						},
+						{
+							"value": "headline",
+							"label": "Subtitle"
+						},
+						{
+							"value": "uppercase",
+							"label": "Uppercase"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "title",
+			"name": "Title",
+			"limit": 1
+		},
+		{
+			"type": "quantity_selector",
+			"name": "Quantity Selector",
+			"limit": 1
+		},
+		{
+			"type": "price",
+			"name": "Price",
+			"limit": 1
+		},
+		{
+			"type": "type",
+			"name": "Product Type",
+			"limit": 1
+		},
+		{
+			"type": "variant_picker",
+			"name": "Variant Picker",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "select",
+					"id": "picker_type",
+					"label": "Picker Type",
+					"default": "button",
+					"options": [
+						{
+							"value": "dropdown",
+							"label": "Dropdown"
+						},
+						{
+							"value": "button",
+							"label": "Button"
+						},
+						{
+							"value": "swatch",
+							"label": "Swatch"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "buy_buttons",
+			"name": "Buy Buttons",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "checkbox",
+					"id": "show_dynamic_checkout",
+					"default": true,
+					"label": "Show Dynamic Checkout Buttons"
+				},
+				{
+					"type": "text",
+					"id": "text",
+					"label": "Text",
+					"info": "ie: Shipping and returns policy"
+				}
+			]
+		},
+		{
+			"type": "description",
+			"name": "Description",
+			"limit": 1
+		},
+		{
+			"type": "custom_liquid",
+			"name": "Custom Liquid",
+			"settings": [
+				{
+					"type": "liquid",
+					"id": "custom_liquid",
+					"label": "Liquid Code",
+					"info": "Use at your own risk"
+				}
+			]
+		},
+		{
+			"type": "collapsible_tab",
+			"name": "Collapsible Tab",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"default": "Collapsible row",
+					"label": "Row Title"
+				},
+				{
+					"type": "richtext",
+					"id": "content",
+					"label": "Text"
+				}
+			]
+		},
+		{
+			"type": "rating",
+			"name": "Rating",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "paragraph",
+					"content": "Paragraph text"
+				}
+			]
+		}
+  ],
   "settings": [
-    {
-      "type": "product",
-      "id": "product",
-      "label": "Product"
-    },
-    {
+		{
       "type": "select",
       "id": "section_margin",
-      "default": "mb-v-spacing",
+      "default": "mb-v-space",
       "label": "Section Margin",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
@@ -136,23 +235,19 @@
         },
         {
           "label": "Small",
-          "value": "mb-v-spacing-sm"
+          "value": "mb-12 md:mb-margin"
         },
         {
           "label": "Medium",
-          "value": "mb-v-spacing"
+          "value": "mb-v-space-sm"
         },
         {
           "label": "Large",
-          "value": "mb-v-spacing-lg"
+          "value": "mb-v-space"
         }
       ]
     }
-  ],
-  "presets": [
-    {
-      "name": "Product Details"
-    }
-  ]
+	]
 }
 {% endschema %}
+

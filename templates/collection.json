@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "product-grid",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

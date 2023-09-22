@@ -1,0 +1,14 @@
+<div class="w-full flex justify-between items-center border-b pb-gutter">
+    <div id="cartHeader" data-cart-count="{{ cart.item_count }}">
+        {% if cart.item_count < 1 %}
+            <p class="h5">Your Cart</p>
+        {% else %}
+            <p class="h5">Cart (<span id="cartCount">{{ cart.item_count }}</span>)</p>
+        {% endif %}
+    </div>
+    <div class="flex items-center justify-end">
+        <button id="closeModal" class="cart-close button circle unpadd transparent">
+            <div class="icon material-icon">close</div>
+        </button>
+    </div>
+</div>

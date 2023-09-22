@@ -1,0 +1,22 @@
+
+{%-liquid
+  assign text = 'Sold Out'
+  if product.available
+    assign text = 'Add to Cart'
+  endif
+-%}
+<button
+  type="submit"
+  class="button add-to-cart-btn {{ class }}"
+  title="{{ text }}"
+  {% if product.available %}{% else %}disabled{% endif %}
+>
+  {% if class contains 'circle' or class contains 'sqaure' %}
+    {% render 'icon-material' with icon: icon %}
+  {% else %}
+    {% if icon != blank %}
+      {% render 'icon-material' with icon: icon %}
+    {% endif %}
+    {{ text }}
+  {% endif %}
+</button>

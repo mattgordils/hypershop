@@ -1,0 +1,9 @@
+<div class="custom-grid custom-margin">
+  {% for collection in collections %}
+    <div class="text-center">
+      <a href="{{ collection.url }}">
+        {{ collection.title }}
+      </a>
+    </div>
+  {% endfor %}
+</div>

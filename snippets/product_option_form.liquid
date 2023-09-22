@@ -1,0 +1,91 @@
+<script src="{{ 'variantSelects.js' | asset_url }}" defer></script>
+
+{% comment %}
+If context is "PDP", changing the
+variant will update imagery and url
+{% endcomment %}
+
+{%-liquid
+  assign form_context = 'quick-add'
+  if context
+    assign form_context = context
+  endif
+
+  assign section_id = section.id
+  assign form_product = product
+
+  if section_context
+    assign section_id = section.id | append: '-' | append: section_context
+  endif
+-%}
+
+<add-to-cart-form>
+  <div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col" data-url="{{ product.url }}">
+
+    {%- for option in product.options_with_values -%}
+      {%- if option.name == 'Color' -%}
+        <variant-selects
+          data-context="{{ context }}"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          data-selected="{{ value | escape }}"
+          {{ block.shopify_attributes }}
+        >
+          <select
+            name="{{ option.name }}"
+            id="{{ section.id }}"
+            {% if option.values.size < 2 %}class="hidden"{% endif %}
+          >
+            {%- for value in option.values -%}
+              <option value="{{ value | escape }}">{{ value }}</option>
+            {%- endfor -%}
+          </select>
+        </variant-selects>
+      {%- else -%}
+        <variant-radios
+          data-context="{{ context }}"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          {{ block.shopify_attributes }}
+        >
+          <fieldset class="{% if option.values.size < 2 %}!hidden{% endif %}">
+            <legend class="h6">{{ option.name }}</legend>
+            {%- for value in option.values -%}
+              <div>
+                <input
+                  type="radio" 
+                  id="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}"
+                  name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
+                  value="{{ value | escape }}"
+                  form="{{ product_form_id }}"
+                  {% if option.selected_value == value %}checked{% endif %}
+                >
+                <label for="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}" class="body-small">
+                  {{ value }}
+                </label>
+              </div>
+            {%- endfor -%}
+          </fieldset>
+        </variant-radios>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <script type="application/json">
+      {{ product.variants | json }}
+    </script>
+
+    {% render 'add_to_cart_button' with
+      class: "w-full",
+      product: product
+    %}
+
+    {%- if showBuyNow -%}
+      {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        <div class="mt-2">
+          {{ form | payment_button }}
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+      
+  </div>
+</add-to-cart-form>

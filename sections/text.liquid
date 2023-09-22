@@ -1,0 +1,58 @@
+<div class="p-2 lg:w-full">
+    <div class="lg:w-1/2 lg:m-auto text-{{ section.settings.text-alignment }}">
+        {% for block in section.blocks %}
+            <div class="mb-8">
+                {{ block.settings.content }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% schema %}
+{
+	"name": "Text",
+	"settings": [
+        {
+        "type": "radio",
+        "id": "text-alignment",
+        "label": "Text Align",
+        "options": [
+            {
+            "value": "left",
+            "label": "Left"
+            },
+            {
+            "value": "right",
+            "label": "Right"
+            },
+            {
+            "value": "center",
+            "label": "center"
+            }
+        ],
+        "default": "left"
+        }
+    ],
+    "presets": [{
+        "name": "Text",
+        "category": "Text"
+    }],
+    "templates": ["page"],
+    "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+            {
+            "type": "header",
+            "content": "Content"
+            },
+            {
+            "type": "text",
+            "id": "content",
+            "label": "Content"
+            }
+        ]
+    }
+    ]
+}
+{% endschema %}

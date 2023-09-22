@@ -1,0 +1,20 @@
+/* THEMES */
+.theme-default {
+  /* color: var(--text-color);
+  background: var(--bg-color); */
+}
+
+*[class*="theme-"] {
+  color: var(--text-color);
+	background: var(--bg-color);
+}
+
+.theme-light-grey {
+  --text-color: var(--dark-color);
+  --bg-color: var(--light-grey);
+}
+
+.theme-dark {
+  --text-color: var(--light-color);
+  --bg-color: var(--dark-color);
+}

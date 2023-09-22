@@ -1,0 +1,52 @@
+{%-liquid
+    assign objectFit = 'object-cover'
+    if image_position != blank
+        assign objectFit = 'object' | append: '-' | append: image_position
+    endif
+
+    assign imageSizes = '100vw'
+    if sizes
+        assign imageSizes = sizes | append: 'px'
+    endif
+    
+    assign altText = ''
+    if alt
+        assign altText = alt
+    endif
+
+    assign imageLoading = 'lazy'
+    if loading
+        assign imageLoading = loading
+    endif
+
+    assign ImgWidth = src.width
+    if width
+        assign ImgWidth = width
+    endif
+
+    assign ImgHeight = src.height
+    if height
+        assign ImgHeight = height
+    endif
+-%}
+
+<script>
+    function revealImage(event) {
+        event.target.classList.remove('opacity-0')
+    }
+</script>
+
+<img 
+    class="opacity-0 transition-opacity duration-slow {{ objectFit }} shrink-0 {% if image_position == 'cover' %}absolute top-0 left-0 w-full h-full{% else %}w-full h-auto{% endif %}" 
+    id="{{ id }}"
+    src="{{ src | image_url: width: '480x' }}"
+    width="{{ ImgWidth }}"
+    height="{{ ImgHeight }}"
+    sizes="{{ imageSizes }}"
+    srcset="{% if src.width > 640 %}{{ src.src | img_url: '640x' }} 640w,{% endif %}
+            {% if src.width > 720 %},{{ src.src | img_url: '720x' }} 720w,{% endif %}
+            {% if src.width > 900 %},{{ src.src | img_url: '900x' }} 900w,{% endif %}"
+    loading="{{ imageLoading }}"
+    alt="{{ altText }}"
+    onLoad="revealImage(event)"
+>

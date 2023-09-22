@@ -1,0 +1,22 @@
+{%- if product_list.size > 0 -%}
+  <div class="cart-upsell grid gap-y-gutter pb-gutter">
+    <div>
+      <h6>You may also like</h6>
+    </div>
+    {% for product in product_list %}
+      {% assign in_cart = false %}
+      {% for item in cart.items %}
+        {% if item.product.id == product.id  %}
+          {% assign in_cart = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% if in_cart != true and product.available %}
+        <div>
+          {% render 'product_card_mini' with product: product %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{%- endif -%}
