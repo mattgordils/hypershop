@@ -1,9 +1,16 @@
+{%-liquid
+  assign hasMedia = false
+  if section.settings.image != blank
+    assign hasMedia = true
+  endif
+-%}
+
 <div>
-  <div class="relative">
+  <div class="relative bg-light-grey">
     <div class="media relative z-1">
       {% render 'image' with src: section.settings.image %}
     </div>
-    <div class="text-bg overlay-content absolute z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin">
+    <div class="{% if hasMedia %}absolute{% else %}static{% endif %} text-bg overlay-content z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin pb-margin pt-margin">
       <div class="grid gap-gutter w-full">
         <div>
           {% render 'text_lockup' with blocks: section.blocks, alignment: 'center' %}
@@ -55,6 +62,10 @@
       "limit": 1,
       "settings": [
         {
+          "type": "header",
+          "content": "Button 1"
+        },
+        {
           "type": "text",
           "id": "button_label_1",
           "default": "Shop Now",
@@ -64,6 +75,10 @@
           "type": "url",
           "id": "button_link_1",
           "label": "Button 1 Link"
+        },
+        {
+          "type": "header",
+          "content": "Button 2"
         },
         {
           "type": "text",

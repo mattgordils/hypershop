@@ -19,18 +19,22 @@
           </div>
         {%- when 'buttons' -%}
           <div class="flex flex-wrap gap-gutter pt-3 {{ section_alignment }}" {{ block.shopify_attributes }}>
-            <div>
-              {% render 'button' with
-                label: block.settings.button_label_1,
-                to: block.settings.button_link_1
-              %}
-            </div>
-            <div>
-              {% render 'button' with
-                label: block.settings.button_label_2,
-                to: block.settings.button_link_2
-              %}
-            </div>
+            {% if block.settings.button_label_1 != blank %}
+              <div>
+                {% render 'button' with
+                  label: block.settings.button_label_1,
+                  to: block.settings.button_link_1
+                %}
+              </div>
+            {% endif %}
+            {% if block.settings.button_label_2 != blank %}
+              <div>
+                {% render 'button' with
+                  label: block.settings.button_label_2,
+                  to: block.settings.button_link_2
+                %}
+              </div>
+            {% endif %}
           </div>
       {%- endcase -%}
     {%- endfor -%}

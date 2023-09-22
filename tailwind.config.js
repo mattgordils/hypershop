@@ -45,6 +45,7 @@ module.exports = {
         'v-space': 'var(--vertical-spacing)',
         'half-v-space': 'calc(var(--vertical-spacing) / 2)',
         'v-space-sm': 'var(--vertical-spacing-small)',
+        'header-banner-height': 'var(--header-banner-height)',
         'header-height': 'var(--header-height)',
         'sticky-top': 'var(--sticky-top)',
         'full-header-height': 'var(--full-header-height)',

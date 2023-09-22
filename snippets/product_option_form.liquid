@@ -74,11 +74,10 @@ variant will update imagery and url
       {{ product.variants | json }}
     </script>
 
-    {% if product.available %}
-      {% render 'add_to_cart_button' with text: "Add to Cart", class: "w-full" %}
-    {% else %}
-      {% render 'sold_out_button' with text: "Sold Out", type: "submit", form: "add-to-cart-form", value: "Submit" %}
-    {% endif %}
+    {% render 'add_to_cart_button' with
+      class: "w-full",
+      product: product
+    %}
 
     {%- if showBuyNow -%}
       {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}

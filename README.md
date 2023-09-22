@@ -49,6 +49,3 @@ $ yarn theme:push:theme
 ```
 $ yarn theme:pull:data
 ```
-## Credits
-
-An Alright Studio Shopify theme starter template built on Ian Gardener's Shopify Starter: https://github.com/gardener-nyc/shopify-starter
