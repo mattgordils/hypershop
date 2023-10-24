@@ -24,6 +24,9 @@ module.exports = {
 		path: outputDir,
 		filename: '[name].js',
 	},
+	watchOptions: {
+		followSymlinks: true
+	},
 	optimization: {
 		minimizer: ['...', new CssMinimizerPlugin()],
 	},
@@ -39,7 +42,7 @@ module.exports = {
 			},
 			{
 				test: /\.s[ac]ss$/i,
-				include: srcDir,
+				include: [srcDir],
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',

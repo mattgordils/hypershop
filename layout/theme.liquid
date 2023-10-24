@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
@@ -15,12 +16,16 @@
 
     <title>
       {{ page_title }}
-      {% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
+
+    {% render 'meta_tags' %}
     
     {{ content_for_header }}
   </head>
@@ -30,7 +35,7 @@
     {% section 'header' %}
     
     {% comment %}
-    {% section 'age-gate' %}
+    {% section 'age_gate' %}
     {% endcomment %}
     
     <div>
@@ -42,6 +47,10 @@
 
     {{ 'global.js' | asset_url | script_tag }}
     {{ 'cart.js' | asset_url | script_tag }}
+
+    {%- if request.design_mode -%}
+      {{ 'shopify-editor.js' | asset_url | script_tag }}
+    {%- endif -%}
 
   </body>
 </html>

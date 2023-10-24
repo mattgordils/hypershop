@@ -6,10 +6,10 @@
     title="{{ label }}"
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon-material' with icon: icon %}
+      {% render 'icon_material' with icon: icon %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon-material' with icon: icon %}
+        {% render 'icon_material' with icon: icon %}
       {% endif %}
       {{ label }}
     {% endif %}

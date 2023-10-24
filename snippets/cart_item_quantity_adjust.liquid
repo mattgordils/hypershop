@@ -1,0 +1,35 @@
+{% assign new_quantity_up = item.quantity | plus: 1 %}
+{% assign new_quantity_down = item.quantity | minus: 1 %}
+
+<div class="w-fit flex font-base-mono lg:h-full">
+  <cart-quantity-adjust class="flex items-center">
+    <button
+      class="button unpadd transparent circle tiny quantity-change quantity-down"
+      title="{%- if item.quantity > 1 -%}Decrease quantity{%- else -%}Remove item{%- endif -%}"
+      data-product-id="{{ item.id }}"
+      data-new-quantity="{{ new_quantity_down }}"
+      style="--button-color: var(--light-text-color); --button-hover-color: {%- if item.quantity > 1 -%}var(--text-color){%- else -%}var(--error){%- endif -%};"
+    >
+      {% if item.quantity > 1 %}
+        {% render 'icon_material' with icon: 'remove' %}
+      {% else %}
+        {% render 'icon_material' with icon: 'close' %}
+      {% endif %}
+    </button>
+    <div class="w-[3em] leading-none pt-[.15em] text-center flex justify-center items-center quantity-current transition-all">
+      {{ item.quantity }}
+    </div>
+    <button
+      class="button unpadd transparent circle tiny quantity-change quantity-up"
+      title="Increase quantity"
+      data-product-id="{{ item.id }}"
+      data-new-quantity="{{ new_quantity_up }}"
+      style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
+      {% if item.variant.inventory_quantity < item.quantity %}
+        disabled
+      {% endif %}
+    >
+      {% render 'icon_material' with icon: 'add' %}
+    </button>
+  </cart-quantity-adjust>
+</div>

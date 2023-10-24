@@ -6,24 +6,25 @@
 -%}
 
 {%- if blocks != blank -%}
-  <div class="flex flex-col gap-y-2 {{ section_alignment }}">
+  <in-view class="flex flex-col {% if v_spacing != blank %}{{ v_spacing }}{% else %}gap-y-6{% endif %} {{ section_alignment }}">
     {%- for block in blocks -%}
       {%- case block.type -%}
         {%- when 'heading' -%}
           <div {{ block.shopify_attributes }}>
-            <h3>{{ block.settings.text }}</h3>
+            <h3 {% if headline_class != blank %}class="{{ section_alignment }} {{ headline_class }}"{% endif %}>{{ block.settings.text }}</h3>
           </div>
         {%- when 'text' -%}
-          <div {{ block.shopify_attributes }}>
+          <div {{ block.shopify_attributes }} {% if body_class != blank %}class="{{ section_alignment }} {{ body_class }}"{% endif %}>
             <div>{{ block.settings.text }}</div>
           </div>
         {%- when 'buttons' -%}
-          <div class="flex flex-wrap gap-gutter pt-3 {{ section_alignment }}" {{ block.shopify_attributes }}>
+          <div class="flex flex-wrap gap-gutter {{ section_alignment }}" {{ block.shopify_attributes }}>
             {% if block.settings.button_label_1 != blank %}
               <div>
                 {% render 'button' with
                   label: block.settings.button_label_1,
-                  to: block.settings.button_link_1
+                  to: block.settings.button_link_1,
+                  class: button_class
                 %}
               </div>
             {% endif %}
@@ -31,12 +32,13 @@
               <div>
                 {% render 'button' with
                   label: block.settings.button_label_2,
-                  to: block.settings.button_link_2
+                  to: block.settings.button_link_2,
+                  class: button_class
                 %}
               </div>
             {% endif %}
           </div>
       {%- endcase -%}
     {%- endfor -%}
-  </div>
+  </in-view>
 {%- endif -%}

@@ -10,8 +10,8 @@
           "menu": "main-menu"
         }
       },
-      "age-gate": {
-        "type": "age-gate",
+      "age_gate": {
+        "type": "age_gate",
         "settings": {
           "expiration": 2,
           "url": "",

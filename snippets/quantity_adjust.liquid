@@ -1,35 +1,31 @@
-{% assign new_quantity_up = item.quantity | plus: 1 %}
-{% assign new_quantity_down = item.quantity | minus: 1 %}
-
 <div class="w-fit flex font-base-mono lg:h-full">
-  <cart-quantity-adjust class="flex items-center">
+  <pdp-qty-input
+    class="flex items-center"
+    data-increment="2"
+    data-min-count="1"
+    data-max-count="4"
+  >
     <button
+      id="qtyDown"
       class="button unpadd transparent circle tiny quantity-change quantity-down"
-      title="{%- if item.quantity > 1 -%}Decrease quantity{%- else -%}Remove item{%- endif -%}"
-      data-product-id="{{ item.id }}"
-      data-new-quantity="{{ new_quantity_down }}"
-      style="--button-color: var(--light-text-color); --button-hover-color: {%- if item.quantity > 1 -%}var(--text-color){%- else -%}var(--error){%- endif -%};"
+      title="Decrease quantity"
+      style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
     >
-      {% if item.quantity > 1 %}
-        {% render 'icon-material' with icon: 'remove' %}
-      {% else %}
-        {% render 'icon-material' with icon: 'close' %}
-      {% endif %}
+      {% render 'icon_material' with icon: 'remove' %}
     </button>
-    <div class="w-[3em] leading-none pt-[.15em] text-center flex justify-center items-center quantity-current transition-all">
-      {{ item.quantity }}
-    </div>
+    <input
+      type="number"
+      value="1"
+      data-input="qty"
+      class="qty-input pointer-events-none !px-0 !bg-transparent !text-center !border-none grow w-[3em]"
+    />
     <button
+      id="qtyUp"
       class="button unpadd transparent circle tiny quantity-change quantity-up"
       title="Increase quantity"
-      data-product-id="{{ item.id }}"
-      data-new-quantity="{{ new_quantity_up }}"
       style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
-      {% if item.variant.inventory_quantity < item.quantity %}
-        disabled
-      {% endif %}
     >
-      {% render 'icon-material' with icon: 'add' %}
+      {% render 'icon_material' with icon: 'add' %}
     </button>
-  </cart-quantity-adjust>
+  </pdp-qty-input>
 </div>

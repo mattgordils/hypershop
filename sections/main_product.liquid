@@ -1,3 +1,5 @@
+<script src="{{ 'pdp.js' | asset_url }}" defer></script>
+
 <div class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
   <div class="aspect-square bg-light-grey">
     {%- for image in product.images -%}
@@ -8,63 +10,66 @@
   <div class="px-margin">
     <div class="grid gap-y-v-space-sm sticky top-sticky-top">
       <div class='grid gap-y-gutter'>
-        {%- if section.blocks != blank -%}
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-							{%- when 'type' -%}
-								<div {{ block.shopify_attributes }}>
-									<p class='h6'>{{ product.type }}</p>
-								</div>
-							{%- when 'title' -%}
-								<div {{ block.shopify_attributes }}>
-									<h1>{{ product.title }}</h1>
-								</div>
-							{%- when 'text' -%}
-								<div {{ block.shopify_attributes }}>
-									<p>{{ block.text }}</p>
-								</div>
-							{%- when 'quantity_selector' -%}
-								<div {{ block.shopify_attributes }}>
-									TODO: QTY
-								</div>
-							{%- when 'price' -%}
-								<div {{ block.shopify_attributes }}>
-									<p class="body-large">{{ product.price | money }}</p>
-								</div>
-							{%- when 'variant_picker' -%}
-								<div {{ block.shopify_attributes }}>
-									{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
-								</div>
-							{%- when 'buy_buttons' -%}
-								<div {{ block.shopify_attributes }}>
-									BUY BUTTONS SEPERATE
-								</div>
-							{%- when 'description' -%}
-								<div {{ block.shopify_attributes }}>
-									<div class="rich-text body-small">
-										{{ product.description }}
+				<add-to-cart-form>
+					{%- if section.blocks != blank -%}
+						{%- for block in section.blocks -%}
+							{%- case block.type -%}
+								{%- when 'type' -%}
+									<div {{ block.shopify_attributes }}>
+										<p class='h6'>{{ product.type }}</p>
 									</div>
-								</div>
-							{%- when 'custom_liquid' -%}
-								<div {{ block.shopify_attributes }}>
-									{{ block.custom_liquid }}
-								</div>
-							{%- when 'collapsible_tab' -%}
-								<div {{ block.shopify_attributes }}>
-									{{ block.title }}
-									{{ block.text }}
-								</div>
-							{%- when 'rating' -%}
-								<div {{ block.shopify_attributes }}>
-									RATING
-								</div>
-							{%- when '@app' -%}
-								<div {{ block.shopify_attributes }}>
-									{% render block %}
-								</div>
-            {%- endcase -%}
-          {%- endfor -%}
-        {%- endif -%}
+								{%- when 'title' -%}
+									<div {{ block.shopify_attributes }}>
+										<h1>{{ product.title }}</h1>
+									</div>
+								{%- when 'text' -%}
+									<div {{ block.shopify_attributes }}>
+										<p>{{ block.text }}</p>
+									</div>
+								{%- when 'quantity_selector' -%}
+									<div {{ block.shopify_attributes }}>
+										TODO: QTY
+										{% render 'quantity_adjust' with item: item %}
+									</div>
+								{%- when 'price' -%}
+									<div {{ block.shopify_attributes }}>
+										<p class="body-large">{{ product.price | money }}</p>
+									</div>
+								{%- when 'variant_picker' -%}
+									<div {{ block.shopify_attributes }}>
+										{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
+									</div>
+								{%- when 'buy_buttons' -%}
+									<div {{ block.shopify_attributes }}>
+										BUY BUTTONS SEPERATE
+									</div>
+								{%- when 'description' -%}
+									<div {{ block.shopify_attributes }}>
+										<div class="rich-text body-small">
+											{{ product.description }}
+										</div>
+									</div>
+								{%- when 'custom_liquid' -%}
+									<div {{ block.shopify_attributes }}>
+										{{ block.custom_liquid }}
+									</div>
+								{%- when 'collapsible_tab' -%}
+									<div {{ block.shopify_attributes }}>
+										{{ block.title }}
+										{{ block.text }}
+									</div>
+								{%- when 'rating' -%}
+									<div {{ block.shopify_attributes }}>
+										RATING
+									</div>
+								{%- when '@app' -%}
+									<div {{ block.shopify_attributes }}>
+										{% render block %}
+									</div>
+							{%- endcase -%}
+						{%- endfor -%}
+					{%- endif -%}
+				</add-to-cart-form>
       </div>
     </div>
   </div>

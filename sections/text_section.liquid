@@ -1,0 +1,92 @@
+<div class="font-wide text-sans-18 text-center">
+    {% render 'text_lockup' with
+			blocks: section.blocks,
+			alignment: 'center'
+		%}
+</div>
+
+{% schema %}
+{
+	"name": "Text Section",
+	"settings": [],
+	"presets": [{
+		"name": "Text Section",
+		"category": "Text",
+		"blocks": [
+			{
+				"type": "heading",
+				"name": "Heading",
+				"limit": 1,
+				"settings": [
+					{
+						"type": "text",
+						"id": "text",
+						"label": "Headline Text",
+						"default": "Headline"
+					}
+				]
+			},
+			{
+				"type": "text",
+				"name": "Text",
+				"limit": 1,
+				"settings": [
+					{
+						"type": "richtext",
+						"id": "text",
+						"label": "Text",
+						"default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. An hoc usque quaque, aliter in vita? Nihil enim iam habes, quod ad corpus referas; Quid ergo hoc loco intellegit honestum.</p>"
+					}
+				]
+			},
+			{
+				"type": "buttons",
+				"name": "Buttons",
+				"limit": 1,
+				"settings": [
+					{
+						"type": "header",
+						"content": "Button 1"
+					},
+					{
+						"type": "text",
+						"id": "button_label_1",
+						"default": "Shop Now",
+						"label": "Button 1 Label"
+					},
+					{
+						"type": "url",
+						"id": "button_link_1",
+						"label": "Button 1 Link"
+					},
+					{
+						"type": "header",
+						"content": "Button 2"
+					},
+					{
+						"type": "text",
+						"id": "button_label_2",
+						"label": "Button 2 Label"
+					},
+					{
+						"type": "url",
+						"id": "button_link_2",
+						"label": "Button 2 Link"
+					}
+				]
+			}
+		]
+	}],
+	"blocks": [
+		{
+			"type": "heading"
+		},
+		{
+			"type": "text"
+		},
+		{
+			"type": "buttons"
+		},
+	]
+}
+{% endschema %}

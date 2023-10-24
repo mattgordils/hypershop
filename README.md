@@ -24,8 +24,9 @@ $ shopify login --store shopify-store
 
 3. Start the Shopify dev server.
 
+In package.json add --store=your-shopify-store-name
 ```
-$ yarn theme:start
+npm start
 ```
 
 4. Start the dev server in another terminal process.

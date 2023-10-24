@@ -3,6 +3,10 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+@mixin responsiveType($important: false) {
+	font-size: clamp(calc(var(--mobile-font-size) * 1px), calc((var(--desktop-font-size) * 1vw) / 1440 * 100), calc(var(--xl-font-size) * 1px)) #{if($important, '!important', '')};
+}
+
 @mixin multiLineEllipsis($line-height, $lines-to-show) {
 	display: block; /* Fallback for non-webkit */
 	max-height: $line-height * $lines-to-show; /* Fallback for non-webkit */

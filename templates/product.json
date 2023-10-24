@@ -1,7 +1,7 @@
 {
   "sections": {
     "main": {
-      "type": "main-product",
+      "type": "main_product",
       "blocks": {
         "title": {
           "type": "title"
@@ -29,8 +29,8 @@
       "settings": {
       }
     },
-    "product-recommendations": {
-      "type": "product-recommendations",
+    "product_recommendations": {
+      "type": "product_recommendations",
       "blocks": {
       },
       "block_order": [
@@ -43,6 +43,6 @@
   },
   "order": [
     "main",
-    "product-recommendations"
+    "product_recommendations"
   ]
 }

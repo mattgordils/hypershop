@@ -64,6 +64,7 @@ if (!customElements.get("add-to-cart-form")) {
       constructor() {
         super();
         this.addButton = this.querySelector(".add-to-cart-btn");
+        this.qtyInput = this.querySelector("input[data-input='qty']");
         if (!this.addButton) {
           return undefined
         }
@@ -84,7 +85,7 @@ if (!customElements.get("add-to-cart-form")) {
             items: [
               {
                 id: variantId,
-                quantity: 1,
+                quantity: this.qtyInput?.value || 1
               },
             ],
           };
