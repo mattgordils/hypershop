@@ -10,13 +10,17 @@
     {%- for block in blocks -%}
       {%- case block.type -%}
         {%- when 'heading' -%}
-          <div {{ block.shopify_attributes }}>
-            <h3 {% if headline_class != blank %}class="{{ section_alignment }} {{ headline_class }}"{% endif %}>{{ block.settings.text }}</h3>
-          </div>
+          {% if block.settings.text != blank %}
+            <div {{ block.shopify_attributes }}>
+              <h3 {% if headline_class != blank %}class="{{ section_alignment }} {{ headline_class }}"{% endif %}>{{ block.settings.text }}</h3>
+            </div>
+          {% endif %}
         {%- when 'text' -%}
-          <div {{ block.shopify_attributes }} {% if body_class != blank %}class="{{ section_alignment }} {{ body_class }}"{% endif %}>
-            <div>{{ block.settings.text }}</div>
-          </div>
+          {% if block.settings.text != blank %}
+            <div {{ block.shopify_attributes }} {% if body_class != blank %}class="{{ section_alignment }} {{ body_class }}"{% endif %}>
+              <div>{{ block.settings.text }}</div>
+            </div>
+          {% endif %}
         {%- when 'buttons' -%}
           <div class="flex flex-wrap gap-gutter {{ section_alignment }}" {{ block.shopify_attributes }}>
             {% if block.settings.button_label_1 != blank %}

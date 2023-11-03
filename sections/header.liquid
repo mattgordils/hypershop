@@ -1,12 +1,19 @@
-<script src="{{ 'nav.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'nav.js' | asset_url }}"></script>
 
 <style>
   #shopify-section-header {
     position: sticky;
     top: 0;
     z-index: 5;
+    margin-bottom: var(--header-offset);
   }
-  .scrolled header {
+  
+  header {
+    color: var(--header-color);
+  }
+
+  #shopify-section-header.scrolled header {
+    color: var(--text-color);
     background: var(--bg-color);
   }
 </style>

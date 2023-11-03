@@ -41,6 +41,7 @@ class StickyHeader extends HTMLElement {
   }
 
   onScroll() {
+    console.log('scroll')
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
     // let scrollDirection = "down"

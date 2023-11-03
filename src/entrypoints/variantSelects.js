@@ -76,8 +76,6 @@ class VariantSelects extends HTMLElement {
     const selectedOptions = getSelectedOptions(productOptions)
     const currentVariant = getVariant(selectedOptions, this.variantData)
     this.currentVariant = currentVariant
-
-    console.log(currentVariant)
   }
 
   updateURL() {

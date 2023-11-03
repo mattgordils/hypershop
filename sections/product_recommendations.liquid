@@ -65,9 +65,6 @@
 
             if (html.querySelector('.slick-slider.recommendations')) {
               this.classList.add('product-recommendations--loaded');
-              $('.slick-slider.recommendations').slick().on('beforeChange', function(event, slick, currentSlide, nextSlide) {
-                $(this).css({ '--progress': nextSlide });
-              });
             }
           })
           .catch(e => {

@@ -45,11 +45,14 @@ module.exports = {
         'v-space': 'var(--vertical-spacing)',
         'half-v-space': 'calc(var(--vertical-spacing) / 2)',
         'v-space-sm': 'var(--vertical-spacing-small)',
+        'v-space-lg': 'var(--vertical-spacing-large)',
         'header-banner-height': 'var(--header-banner-height)',
         'header-height': 'var(--header-height)',
         'sticky-top': 'var(--sticky-top)',
         'full-header-height': 'var(--full-header-height)',
-        'screen-height': 'calc(100 * var(--vh))'
+        'screen-height': 'calc(100 * var(--vh))',
+        'screen-small': '50vh',
+        'screen-medium': '75vh',
       },
       maxWidth: {
         'site-max-w': 'var(--site-max-width)',

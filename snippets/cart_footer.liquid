@@ -1,4 +1,4 @@
-<div id="cartUpdate" class="mx-gutter border-t pt-gutter">
+<div id="cartUpdate" class="mx-[var(--cart-padding)] border-t pt-gutter">
   <div class="hidden lg:block lg:col-span-2"></div>
   <div class="flex flex-col lg:col-span-10">
     <div class="flex justify-between font-xl-sans">
@@ -12,7 +12,7 @@
     </div>
   </div>
 </div>
-<div class="w-full bg-orange font-xl-sans p-gutter lg:flex lg:justify-between">
+<div class="w-full bg-orange font-xl-sans p-[var(--cart-padding)] lg:flex lg:justify-between">
   <form class="cart__drawer-total w-full" method="post" action="/cart">
     <button type="submit" class="button large w-full pt-[15px] lg:pt-0 lg:font-2xl-sans">
       {{ section.settings['text_checkout'] }}

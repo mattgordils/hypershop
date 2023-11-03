@@ -1,0 +1,35 @@
+accordion-list {
+  display: block;
+}
+
+collapsible-item {
+  display: block;
+  --delay-out: 0ms;
+  --delay-in: 0ms;
+  --speed: var(--md-speed);
+
+  div[data-collapsible="content"] {
+    display: grid;
+    grid-template-rows: 0fr;
+    contain: paint;
+    transition: grid-template-rows var(--speed) var(--delay-out) ease-in-out;
+
+    &[aria-hidden="false"] {
+      grid-template-rows: 1fr;
+      transition: grid-template-rows var(--speed) var(--delay-in) ease-in-out;
+    }
+
+    & > div {
+      min-height: 0;
+      transition: visibility var(--speed) var(--delay-out) ease-in-out,
+                  opacity var(--speed) var(--delay-out) ease-in-out;
+      visibility: hidden;
+    }
+
+    &[aria-hidden="false"] > div {
+      visibility: visible;
+      transition: visibility var(--speed) var(--delay-in) ease-in-out,
+                  opacity var(--speed) var(--delay-in) ease-in-out;
+    }
+  }
+}

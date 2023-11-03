@@ -7,16 +7,18 @@
 -%}
 <button
   type="submit"
-  class="button add-to-cart-btn {{ class }}"
+  class="button theme-product add-to-cart-btn {{ class }}"
   title="{{ text }}"
   {% if product.available %}{% else %}disabled{% endif %}
 >
-  {% if class contains 'circle' or class contains 'sqaure' %}
-    {% render 'icon_material' with icon: icon %}
-  {% else %}
-    {% if icon != blank %}
+  <span class="button-content">
+    {% if class contains 'circle' or class contains 'sqaure' %}
       {% render 'icon_material' with icon: icon %}
+    {% else %}
+      {% if icon != blank %}
+        {% render 'icon_material' with icon: icon %}
+      {% endif %}
+      {{ text }}
     {% endif %}
-    {{ text }}
-  {% endif %}
+  </span>
 </button>

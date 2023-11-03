@@ -1,0 +1,38 @@
+{% style %}
+	:root {
+		--header-color: {{ section.settings.header_color }};
+    --header-offset: {% if section.settings.header_overlap %}calc(var(--full-header-height) * -1){% else %}0{% endif %};
+	}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Page Settings",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "header_color",
+      "label": "Header Color",
+      "default": "var(--text-color)",
+      "options": [
+        {
+          "value": "var(--text-color)",
+          "label": "Dark"
+        },
+        {
+          "value": "var(--bg-color)",
+          "label": "Light"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "header_overlap",
+      "label": "Header Overlap",
+      "info": "Overlap header on first section"
+    }
+  ]
+}
+{% endschema %}

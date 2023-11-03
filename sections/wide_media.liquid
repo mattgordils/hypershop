@@ -5,12 +5,12 @@
   endif
 -%}
 
-<div>
-  <div class="relative bg-light-grey">
-    <div class="media relative z-1">
-      {% render 'image' with src: section.settings.image %}
+<div class="{{ section.settings.section_spacing }} {{ section.settings.section_height }}">
+  <div class="relative bg-light-grey h-full">
+    <div class="media relative z-1 h-full">
+      {% render 'image' with src: section.settings.image, image_position: 'cover' %}
     </div>
-    <div class="{% if hasMedia %}absolute{% else %}static{% endif %} text-bg overlay-content z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin pb-margin pt-margin">
+    <div class="{% if hasMedia %}absolute{% else %}static{% endif %} min-h-full text-bg overlay-content z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin pb-margin pt-margin">
       <div class="grid gap-gutter w-full">
         <div>
           {% render 'text_lockup' with blocks: section.blocks, alignment: 'center' %}
@@ -28,7 +28,56 @@
 			"type": "image_picker",
 			"id": "image",
 			"label": "Image"
-		}
+		},
+    {
+      "type": "select",
+      "id": "section_height",
+      "default": "h-screen-medium",
+      "label": "Section Height",
+      "options": [
+        {
+          "label": "Auto",
+          "value": "auto-height"
+        },
+        {
+          "label": "Small",
+          "value": "h-screen-small"
+        },
+        {
+          "label": "Medium",
+          "value": "h-screen-medium"
+        },
+        {
+          "label": "Full Height",
+          "value": "h-screen-height"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "mb-v-space",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "None",
+          "value": "mb-0"
+        },
+        {
+          "label": "Small",
+          "value": "mb-v-space-sm"
+        },
+        {
+          "label": "Medium",
+          "value": "mb-v-space"
+        },
+        {
+          "label": "Large",
+          "value": "mb-v-space-lg"
+        }
+      ]
+    }
 	],
 	"blocks": [
 		{

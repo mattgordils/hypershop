@@ -28,7 +28,6 @@
 									</div>
 								{%- when 'quantity_selector' -%}
 									<div {{ block.shopify_attributes }}>
-										TODO: QTY
 										{% render 'quantity_adjust' with item: item %}
 									</div>
 								{%- when 'price' -%}
@@ -69,6 +68,73 @@
 							{%- endcase -%}
 						{%- endfor -%}
 					{%- endif -%}
+
+					<input
+						type="text"
+						name="property_child_name"
+						data-title="Child Name"
+					/>
+
+					<select name="property_start_date" data-title="Start Date">
+						<option value="10/10/23">Oct 10</option>
+						<option value="10/17/23">Oct 17</option>
+						<option value="10/24/23">Oct 24</option>
+					</select>
+
+					<fieldset name="property_start_date_2" data-title="Start Date 2">
+						<div>
+              <input
+                type="radio" 
+                id="10/10/23"
+                value="10/10/23"
+              >
+              <label for="10/10/23">Oct 10</label>
+            </div>
+						<div>
+              <input
+                type="radio" 
+                id="10/17/23"
+                value="10/17/23"
+              >
+              <label for="10/17/23">Oct 17</label>
+            </div>
+						<div>
+              <input
+                type="radio" 
+                id="10/24/23"
+                value="10/24/23"
+              >
+              <label for="10/24/23">Oct 24</label>
+            </div>
+					</fieldset>
+
+					<fieldset class='mt-4' name="property_start_date_3" data-title="Start Date 3">
+						<div>
+              <input
+                type="checkbox" 
+                id="start10/10/23"
+                value="start10/10/23"
+              >
+              <label for="start10/10/23">Oct 10</label>
+            </div>
+						<div>
+              <input
+                type="checkbox" 
+                id="start10/17/23"
+                value="start10/17/23"
+              >
+              <label for="start10/17/23">Oct 17</label>
+            </div>
+						<div>
+              <input
+                type="checkbox" 
+                id="start10/24/23"
+                value="start10/24/23"
+              >
+              <label for="start10/24/23">Oct 24</label>
+            </div>
+					</fieldset>
+
 				</add-to-cart-form>
       </div>
     </div>

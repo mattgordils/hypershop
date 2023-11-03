@@ -1,0 +1,48 @@
+.animated-icon {
+  // Default is menu
+  --icon-gap: 2px;
+  row-gap: var(--icon-gap);
+  .piece-2 {
+    transform-origin: 0% 50%;
+  }
+  &[data-icon="close"] {
+    // transform: rotate(135deg);
+    .piece-1 {
+      transform:  translateY(calc(var(--icon-gap) + var(--icon-weight))) rotate(45deg);
+    }
+    .piece-2 {
+      transform: scaleX(0);
+    }
+    .piece-3 {
+      transform:  translateY(calc((var(--icon-gap) + var(--icon-weight)) * -1)) rotate(-45deg);
+    }
+  }
+  &[data-icon="plus"],
+  &[data-icon="add"] {
+    transform: rotate(135deg);
+    .piece-1 {
+      transform:  translateY(calc(var(--icon-gap) + var(--icon-weight))) rotate(45deg);
+    }
+    .piece-2 {
+      transform: scaleX(0);
+    }
+    .piece-3 {
+      transform:  translateY(calc((var(--icon-gap) + var(--icon-weight)) * -1)) rotate(-45deg);
+    }
+  }
+  &[data-icon="minus"] {
+    .piece-1 {
+      transform:  translateY(calc(var(--icon-gap) + var(--icon-weight)));
+    }
+    .piece-2 {
+      transform: scaleX(0);
+    }
+    .piece-3 {
+      transform:  translateY(calc((var(--icon-gap) + var(--icon-weight)) * -1));
+    }
+  }
+  &[data-icon="menu"] {
+    // transform: rotate(180deg);
+    // row-gap: 2px;
+  }
+}

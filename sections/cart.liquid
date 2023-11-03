@@ -3,11 +3,11 @@
     class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] bg-bg z-1"
   >
     <div class="flex flex-col bg-off_white h-full">
-      <div class="shrink-0 pt-gutter px-gutter">
+      <div class="shrink-0 pt-gutter px-[var(--cart-padding)]">
         {% render 'cart_header' %}
       </div>
       <div id="cartContent" class="h-full flex flex-col shrink">
-        <div class="flex flex-col px-gutter justify-between grow overflow-y-auto overflow-x-hidden max-h-[100%] shrink">
+        <div class="flex flex-col px-[var(--cart-padding)] justify-between grow overflow-y-auto overflow-x-hidden max-h-[100%] shrink">
           {% if cart.item_count < 1 %}
             <div class="flex pb-20 flex-col gap-gutter justify-center items-center h-full text-center">
               <p class="h3">Your cart is empty</p>

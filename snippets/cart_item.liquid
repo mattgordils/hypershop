@@ -24,6 +24,10 @@
         {{ item.product.title }}
         <div class="body-small">
           {{ item.variant.title }}
+          {%- for property in item.properties -%}
+            <span class="block text-light-text-color">{{ property[0] }}: {{ property[1] }}
+            </span>
+          {%- endfor -%}
         </div>
       </a>
       <div class="shrink-0">

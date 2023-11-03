@@ -1,6 +1,6 @@
 {% if section.settings.text != blank %}
   <style>:root { --header-banner-height: 30px; }</style>
-  <{% if section.settings.link %}a href="{{ section.settings.link }}"{% else %}div{% endif %} class="theme-dark body-small flex items-center justify-center py-1 h-header-banner-height notification-banner px-margin text-center">
+  <{% if section.settings.link %}a href="{{ section.settings.link }}"{% else %}div{% endif %} class="theme-dark body-small flex items-center justify-center py-1 h-header-banner-height notification-banner px-margin text-center relative z-5">
     <div class="pb-[.1em]">{{ section.settings.text }}</div>
   </{% if section.settings.link %}a{% else %}div{% endif %}>
 {% endif %}

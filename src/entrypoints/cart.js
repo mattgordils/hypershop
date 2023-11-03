@@ -1,12 +1,12 @@
 // Refresh Cart
 export const refreshCart = (fullRefresh = false) => {
-  fetch(window.Shopify.routes.root + "?sections=cart")
-    const cartDrawer = document.querySelector('#shopify-section-cart #cartContent')
-    if (!cartDrawer) {
-      // Don't run if no cart drawer section is found
-      return false
-    }
+  const cartDrawer = document.querySelector('#shopify-section-cart #cartContent')
+  if (!cartDrawer) {
+    // Don't run if no cart drawer section is found
+    return false
+  }
 
+  fetch(window.Shopify.routes.root + "?sections=cart")
     .then(res => res.json())
     .then(res => {
       const currentCartDrawer = document.querySelector('#shopify-section-cart #cartContent')

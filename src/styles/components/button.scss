@@ -55,6 +55,10 @@ button.shopify-payment-button__button {
     --button-hover-border: var(--main-color);
   }
 
+  .button-content {
+    display: flex;
+  }
+
   /* Button Themes */
   &.transparent {
     --button-bg: transparent;

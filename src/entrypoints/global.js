@@ -1,7 +1,11 @@
 import "../styles/main.scss";
-import './modal';
 import { openModal } from "./modal";
 import { refreshCart } from "./cart";
+
+// Components
+import './modal';
+import './collapsible';
+import './inView';
 
 // Utils?
 function isMobileOrTablet() {
@@ -68,9 +72,46 @@ if (!customElements.get("add-to-cart-form")) {
         if (!this.addButton) {
           return undefined
         }
+        
         this.addButton.addEventListener("click", (event) => {
+          event.preventDefault();
           const productOptions = this.querySelectorAll('variant-radios input, variant-selects')
           const selectedOptions = getSelectedOptions(productOptions)
+
+          const subscription = this.querySelector('.rc-widget .rc-selling-plans select.rc-selling-plans-dropdown__select')
+          const propertiesInputs = this.querySelectorAll('[name^="property_"]')
+
+          console.log('propertiesInputs: ',propertiesInputs)
+          
+          let properties = {}
+          if (propertiesInputs?.length > 0) {
+            propertiesInputs.forEach(prop => {
+              let title = ''
+              let value = false
+              if (prop?.dataset?.title) {
+                title = prop.dataset.title
+              }
+
+              if (prop.type === 'fieldset') {
+                const checkedItems = prop.querySelectorAll('input')
+                const checkedValues = []
+                checkedItems.forEach(item => {
+                  if (item.checked) {
+                    checkedValues.push(item.value)
+                  }
+                })
+                value = checkedValues.join(', ')
+              } else {
+                value = prop.dataset.value || prop.value
+              }
+              
+              if (value) {
+                properties[title] = value
+              }
+            })
+          }
+
+          console.log('properties: ',properties)
 
           let variantId = ''
           let variantData = ''
@@ -80,29 +121,34 @@ if (!customElements.get("add-to-cart-form")) {
             variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
             variantId = getVariant(selectedOptions, variantData).id
           }
-          
+
           let formData = {
             items: [
               {
                 id: variantId,
-                quantity: this.qtyInput?.value || 1
-              },
-            ],
-          };
+                selling_plan: subscription?.value || null,
+                quantity: this.qtyInput?.value || 1,
+                properties: properties
+              }
+            ]
+          }
+
           fetch(window.Shopify.routes.root + "cart/add.js", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formData)
           })
-            .then((data) => {
-              refreshCart();
-            })
-            .then(() => { openModal("cartDrawer") })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
+          .then(data => {
+            console.log(data)
+            refreshCart();
+          })
+          .then(() => { openModal("cartDrawer") })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
         });
       }
     }
