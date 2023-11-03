@@ -36,6 +36,8 @@ function sectionEditor(ev) {
   const { target } = ev;
   const section = document.querySelector('#' + target.id)
 
+  console.log(ev)
+
   // Cart Drawer
   if (ev.type === 'shopify:section:select') {
     // Open Section Modal On Select
@@ -43,7 +45,7 @@ function sectionEditor(ev) {
     // Refresh Slideshows On Select
     refreshSlideshow(section)
     // Make Sure in-view items transition in
-    setInview()
+    setInview(section)
   }
 
   if (ev.type === 'shopify:section:deselect') {
@@ -52,14 +54,14 @@ function sectionEditor(ev) {
     // Refresh Slideshows On Select
     refreshSlideshow(section)
     // Make Sure in-view items transition in
-    setInview()
+    setInview(section)
   }
 
   if (ev.type === 'shopify:section:load') {
     // Refresh Slideshows On Select
     refreshSlideshow(section)
     // Make Sure in-view items transition in
-    setInview()
+    setInview(section)
   }
 
   return

@@ -12,13 +12,13 @@
         {%- when 'heading' -%}
           {% if block.settings.text != blank %}
             <div {{ block.shopify_attributes }}>
-              <h3 {% if headline_class != blank %}class="{{ section_alignment }} {{ headline_class }}"{% endif %}>{{ block.settings.text }}</h3>
+              <{{block.settings.size}} class="{{ section_alignment }} {{ headline_class }}">{{ block.settings.text }}</{{block.settings.size}}>
             </div>
           {% endif %}
         {%- when 'text' -%}
           {% if block.settings.text != blank %}
-            <div {{ block.shopify_attributes }} {% if body_class != blank %}class="{{ section_alignment }} {{ body_class }}"{% endif %}>
-              <div>{{ block.settings.text }}</div>
+            <div {{ block.shopify_attributes }} class="{{ block.settings.size }} {{ section_alignment }} {{ body_class }}">
+              <p>{{ block.settings.text }}</p>
             </div>
           {% endif %}
         {%- when 'buttons' -%}

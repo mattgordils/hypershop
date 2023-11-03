@@ -1,19 +1,27 @@
 {%-liquid
   assign hasMedia = false
+  assign height_auto = false
+  assign media_position = 'cover'
   if section.settings.image != blank
     assign hasMedia = true
   endif
+
+  if section.settings.section_height == 'auto-height'
+  assign height_auto = true
+  assign media_position = 'unset'
+  endif
 -%}
 
-<div class="{{ section.settings.section_spacing }} {{ section.settings.section_height }}">
+<div class="{{ section.settings.section_spacing }}">
   <div class="relative bg-light-grey h-full">
-    <div class="media relative z-1 h-full">
-      {% render 'image' with src: section.settings.image, image_position: 'cover' %}
+    <div class="media z-1 {% if height_auto %}relative{% else %}absolute top-0 left-0 w-full h-full{% endif %}">
+      <div class="absolute top-0 left-0 w-full h-full bg-true-black z-1" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.00 }}"></div>
+      {% render 'image' with src: section.settings.image, image_position: media_position %}
     </div>
-    <div class="{% if hasMedia %}absolute{% else %}static{% endif %} min-h-full text-bg overlay-content z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin pb-margin pt-margin">
-      <div class="grid gap-gutter w-full">
+    <div class="{% if height_auto %}absolute top-0 left-0 w-full h-full{% else %}{{ section.settings.section_height }} relative{% endif %} text-bg overlay-content z-2 flex {{ section.settings.h_alignment }} {{ section.settings.v_alignment }} px-margin pb-margin pt-margin">
+      <div class="grid gap-gutter w-full md:w-1/2 lg:w-1/3">
         <div>
-          {% render 'text_lockup' with blocks: section.blocks, alignment: 'center' %}
+          {% render 'text_lockup' with blocks: section.blocks, alignment: section.settings.text_alignment %}
         </div>
       </div>
     </div>
@@ -29,6 +37,79 @@
 			"id": "image",
 			"label": "Image"
 		},
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "Overlay Opacity",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Alignment"
+    },
+    {
+      "type": "select",
+      "id": "h_alignment",
+      "default": "justify-center",
+      "label": "Horizontal Alignment",
+      "options": [
+        {
+          "label": "Left",
+          "value": "justify-start"
+        },
+        {
+          "label": "Center",
+          "value": "justify-center"
+        },
+        {
+          "label": "Right",
+          "value": "justify-end"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "v_alignment",
+      "default": "items-center",
+      "label": "Vertical Alignment",
+      "options": [
+        {
+          "label": "Top",
+          "value": "items-start"
+        },
+        {
+          "label": "Center",
+          "value": "items-center"
+        },
+        {
+          "label": "Bottom",
+          "value": "items-end"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "default": "center",
+      "label": "Vertical Alignment",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
     {
       "type": "select",
       "id": "section_height",
@@ -86,11 +167,35 @@
       "limit": 1,
       "settings": [
         {
-          "type": "text",
+          "type": "inline_richtext",
           "id": "text",
           "default": "Headline",
           "label": "Headline Text"
-        }
+        },
+				{
+					"type": "select",
+					"id": "size",
+					"default": "h3",
+					"label": "Headline Size",
+					"options": [
+						{
+							"label": "H1",
+							"value": "h1"
+						},
+						{
+							"label": "H2",
+							"value": "h2"
+						},
+						{
+							"label": "H3",
+							"value": "h3"
+						},
+						{
+							"label": "H4",
+							"value": "h4"
+						}
+					]
+				}
       ]
     },
 		{
@@ -99,10 +204,34 @@
       "limit": 1,
       "settings": [
         {
-          "type": "richtext",
+          "type": "inline_richtext",
           "id": "text",
           "label": "Text"
-        }
+        },
+				{
+					"type": "select",
+					"id": "size",
+					"default": "",
+					"label": "Text Size",
+					"options": [
+						{
+							"label": "Small",
+							"value": "body-small"
+						},
+						{
+							"label": "Normal",
+							"value": ""
+						},
+						{
+							"label": "Medium",
+							"value": "body-medium"
+						},
+						{
+							"label": "Large",
+							"value": "body-large"
+						}
+					]
+				}
       ]
     },
 		{

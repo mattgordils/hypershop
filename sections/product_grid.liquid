@@ -5,26 +5,7 @@
   endif
 -%}
 
-<div class="px-margin grid gap-x-gutter gap-y-margin items-center mb-v-space {% if section_collection.featured_image %}md:grid-cols-2{% else %}my-v-space{% endif %}">
-  <div class="text-center">
-    <div class="md:max-w-[90%] mx-auto">
-      <h1>{{ section_collection.title }}</h1>
-      <p class="body-large">{{ section_collection.description }}</p>
-    </div>
-  </div>
-  {% if section_collection.featured_image %}
-    <div>
-      <div class="aspect-3/2 relative">
-        {% render 'image' with
-          src: section_collection.featured_image,
-          image_position: 'cover'
-        %}
-      </div>
-    </div>
-  {% endif %}
-</div>
-
-<div class="px-margin {{ section.settings.section_margin }}">
+<div class="px-margin {{ section.settings.section_spacing }}">
   <div class="max-w-site-max-w mx-auto">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
       {% for product in section_collection.products %}
@@ -47,30 +28,35 @@
     },
 		{
       "type": "select",
-      "id": "section_margin",
+      "id": "section_spacing",
       "default": "mb-v-space",
-      "label": "Section Margin",
+      "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
-          "label": "none",
+          "label": "None",
           "value": "mb-0"
         },
         {
           "label": "Small",
-          "value": "mb-12 md:mb-margin"
-        },
-        {
-          "label": "Medium",
           "value": "mb-v-space-sm"
         },
         {
-          "label": "Large",
+          "label": "Medium",
           "value": "mb-v-space"
+        },
+        {
+          "label": "Large",
+          "value": "mb-v-space-lg"
         }
       ]
     }
-	]
+	],
+  "presets": [
+    {
+      "name": "Product Grid"
+    }
+  ]
 }
 {% endschema %}
 
