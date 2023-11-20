@@ -27,6 +27,23 @@ function isMobileOrTablet() {
   return false;
 }
 
+export const docReady = fn => {
+  // see if DOM is already available
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+      // call on next available tick
+      setTimeout(fn, 1)
+  } else {
+      document.addEventListener("DOMContentLoaded", fn)
+  }
+}
+
+docReady(() => {
+  const windowHeight = window.innerHeight
+  if (isMobileOrTablet()) {
+    document.body.style.setProperty('--vh', `${windowHeight * 0.01}px`)
+  }
+})
+
 const arraysEqual = (a, b) => {
   if (a === b) return true;
   // console.log('arry eq', a, b)

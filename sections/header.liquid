@@ -35,7 +35,7 @@
       <div class="flex space-x-gutter justify-end w-full">
         {%- for link in section.settings.menu.links -%}
           {% assign is_store_active = false %}
-          <div class="flex justify-center items-center">
+          <div class="hidden md:flex justify-center items-center">
             <div {% if link.active or is_store_active %} class="border-b border-transparent active"  {% else %} class="border-b border-transparent" {% endif %}>
                 <a href="{{ link.url }}" class="body-small md:body group" {% if link.active %}aria-current="page"{% endif %}>
                   <span class="animate-underline inline-block">
@@ -45,6 +45,12 @@
             </div>
           </div>
         {% endfor %}
+
+        <modal-trigger
+          data-modal-id="menuPanel"
+          class="md:hidden"
+        >Menu</modal-trigger>
+
         {% render 'cart_thumbnail' %}
       </div>
     </div>

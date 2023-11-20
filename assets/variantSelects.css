@@ -773,6 +773,9 @@ input[type=number]::-webkit-inner-spin-button {
 .z-2 {
   z-index: 2;
 }
+.z-\[9\] {
+  z-index: 9;
+}
 .col-span-2 {
   grid-column: span 2 / span 2;
 }
@@ -900,6 +903,12 @@ input[type=number]::-webkit-inner-spin-button {
 .w-\[80px\] {
   width: 80px;
 }
+.w-1 {
+  width: 0.25rem;
+}
+.w-\[82px\] {
+  width: 82px;
+}
 .max-w-full {
   max-width: 100%;
 }
@@ -969,6 +978,9 @@ input[type=number]::-webkit-inner-spin-button {
 .gap-gutter {
   gap: var(--site-gutters);
 }
+.gap-v-space-sm {
+  gap: var(--vertical-spacing-small);
+}
 .gap-x-gutter {
   -moz-column-gap: var(--site-gutters);
        column-gap: var(--site-gutters);
@@ -992,6 +1004,9 @@ input[type=number]::-webkit-inner-spin-button {
 .gap-y-v-space-sm {
   row-gap: var(--vertical-spacing-small);
 }
+.gap-y-4 {
+  row-gap: 1rem;
+}
 .gap-y-2 {
   row-gap: 0.5rem;
 }
@@ -1001,9 +1016,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .gap-y-6 {
   row-gap: 1.5rem;
-}
-.gap-y-4 {
-  row-gap: 1rem;
 }
 .space-x-gutter > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -1098,6 +1110,10 @@ input[type=number]::-webkit-inner-spin-button {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
+.py-\[\.25em\] {
+  padding-top: .25em;
+  padding-bottom: .25em;
+}
 .pt-v-space-sm {
   padding-top: var(--vertical-spacing-small);
 }
@@ -1137,6 +1153,12 @@ input[type=number]::-webkit-inner-spin-button {
 .pt-\[\.15em\] {
   padding-top: .15em;
 }
+.pr-margin {
+  padding-right: var(--site-margins);
+}
+.pl-margin {
+  padding-left: var(--site-margins);
+}
 .text-left {
   text-align: left;
 }
@@ -1169,6 +1191,9 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .opacity-0 {
   opacity: 0;
+}
+.\!opacity-100 {
+  opacity: 1 !important;
 }
 .transition-all {
   transition-property: all;
@@ -1970,6 +1995,10 @@ svg *:not([fill=none]) {
     grid-column-start: 2;
   }
 
+  .sm\:hidden {
+    display: none;
+  }
+
   .sm\:grid-cols-12 {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
@@ -2027,6 +2056,14 @@ svg *:not([fill=none]) {
 
   .md\:mb-margin {
     margin-bottom: var(--site-margins);
+  }
+
+  .md\:flex {
+    display: flex;
+  }
+
+  .md\:hidden {
+    display: none;
   }
 
   .md\:w-\[30vw\] {

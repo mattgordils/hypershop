@@ -27,16 +27,11 @@ window.EventBus.addEventListener('setModal', setModalState)
 
 export const closeModal = id => {
   let body = document.querySelector("body");
-  body.setAttribute("data-state-cart", "closed");
   window.EventBus.dispatchEvent("setModal", "false")
 }
 
 export const openModal = id => {
   if (id) {
-    if (id === 'cartDrawer') {
-      let body = document.querySelector("body");
-      body.setAttribute("data-state-cart", "open");
-    }
     window.EventBus.dispatchEvent("setModal", id)
   }
 }
@@ -44,12 +39,6 @@ export const openModal = id => {
 class Modal extends HTMLElement {
   constructor() {
     super();
-    this.closeButtons = this.querySelectorAll('#closeModal')
-    this.closeButtons.forEach(item => {
-      item.addEventListener('click', event => {
-        closeModal()
-      })
-    })
   }
 }
 

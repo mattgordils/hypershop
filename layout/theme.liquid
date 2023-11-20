@@ -28,9 +28,13 @@
     {% render 'meta_tags' %}
     
     {{ content_for_header }}
+
+    {% render 'integrations_before_head_close' %}
   </head>
 
   <body {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
+    {% render 'integrations_after_body_open' %}
+    
     {% section 'notification_banner' %}
     {% section 'header' %}
     
@@ -51,6 +55,10 @@
     {%- if request.design_mode -%}
       {{ 'shopify-editor.js' | asset_url | script_tag }}
     {%- endif -%}
+
+    {% section 'menu_panel' %}
+
+    {% render 'integrations_before_body_close' %}
 
   </body>
 </html>
