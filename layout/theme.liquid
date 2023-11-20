@@ -30,7 +30,7 @@
     {{ content_for_header }}
   </head>
 
-  <body class="transition-all duration-500" data-state-age-gate="closed" data-state-email-capture="closed">
+  <body {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
     {% section 'notification_banner' %}
     {% section 'header' %}
     

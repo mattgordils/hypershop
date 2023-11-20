@@ -7,6 +7,11 @@ import './modal';
 import './collapsible';
 import './inView';
 
+// Console Signature
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('\n╔    ╗  Site by STUDIO HYPERLINK\n║ ╠╣ ║  www.studiohyper.link\n╚    ╝  Hot Bagels, Hotter Websites\n ');
+})
+
 // Utils?
 function isMobileOrTablet() {
   const ua = navigator.userAgent;

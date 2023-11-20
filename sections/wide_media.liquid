@@ -12,6 +12,12 @@
   endif
 -%}
 
+<div style="aspect-ratio: {{ section.settings.video.aspect_ratio | divided_by: 1.0 }}" class="w-full max-w-[600px] border">
+  <video src="{{ section.settings.video }}" poster="{{ section.settings.video.preview_image.src }}" autoplay muted playsinline class="w-full"></video>
+
+  {{ section.settings.video | json }}
+</div>
+
 <div class="{{ section.settings.section_spacing }}">
   <div class="relative bg-light-grey h-full">
     <div class="media z-1 {% if height_auto %}relative{% else %}absolute top-0 left-0 w-full h-full{% endif %}">
@@ -36,6 +42,11 @@
 			"type": "image_picker",
 			"id": "image",
 			"label": "Image"
+		},
+    {
+			"type": "video",
+			"id": "video",
+			"label": "Video"
 		},
     {
       "type": "range",
