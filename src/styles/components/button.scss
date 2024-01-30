@@ -1,7 +1,8 @@
 // TODO: NEST STYLES
 
 .button,
-button.shopify-payment-button__button {
+button.shopify-payment-button__button,
+.shopify-cleanslate [role='button'] {
   --button-height: 40px;
   --button-bg: var(--text-color);
   --button-color: var(--bg-color);
@@ -30,7 +31,8 @@ button.shopify-payment-button__button {
   cursor: pointer;
   color: var(--button-color);
   &.disabled,
-  &[disabled] {
+  &[disabled],
+  &[aria-disabled] {
     opacity: .5;
     cursor: not-allowed !important;
     pointer-events: none !important;

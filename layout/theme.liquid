@@ -32,7 +32,7 @@
     {% render 'integrations_before_head_close' %}
   </head>
 
-  <body {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
+  <body data-barba="wrapper" {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
     {% render 'integrations_after_body_open' %}
     
     {% section 'notification_banner' %}
@@ -42,12 +42,16 @@
     {% section 'age_gate' %}
     {% endcomment %}
     
-    <div>
-      {{ content_for_layout }}
-    </div>
+    <main data-barba="container" data-barba-namespace="home">
+      <div>
+        {{ content_for_layout }}
+      </div>
+    </main>
 
     {% section 'cart' %}
     {% section 'footer' %}
+
+    <div class="page-transition-overlay"></div>
 
     {{ 'global.js' | asset_url | script_tag }}
     {{ 'cart.js' | asset_url | script_tag }}

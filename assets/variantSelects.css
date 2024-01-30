@@ -743,6 +743,39 @@ input[type=number]::-webkit-inner-spin-button {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+
+  .container {
+    max-width: 1536px;
+  }
+}
 .pointer-events-none {
   pointer-events: none;
 }
@@ -767,14 +800,14 @@ input[type=number]::-webkit-inner-spin-button {
 .z-1 {
   z-index: 1;
 }
+.z-\[9\] {
+  z-index: 9;
+}
 .z-5 {
   z-index: 5;
 }
 .z-2 {
   z-index: 2;
-}
-.z-\[9\] {
-  z-index: 9;
 }
 .col-span-2 {
   grid-column: span 2 / span 2;
@@ -883,6 +916,12 @@ input[type=number]::-webkit-inner-spin-button {
 .w-\[120px\] {
   width: 120px;
 }
+.w-1 {
+  width: 0.25rem;
+}
+.w-\[82px\] {
+  width: 82px;
+}
 .w-24 {
   width: 6rem;
 }
@@ -902,12 +941,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .w-\[80px\] {
   width: 80px;
-}
-.w-1 {
-  width: 0.25rem;
-}
-.w-\[82px\] {
-  width: 82px;
 }
 .max-w-full {
   max-width: 100%;
@@ -1106,13 +1139,13 @@ input[type=number]::-webkit-inner-spin-button {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
-.\!px-0 {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
 .py-\[\.25em\] {
   padding-top: .25em;
   padding-bottom: .25em;
+}
+.\!px-0 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 .pt-v-space-sm {
   padding-top: var(--vertical-spacing-small);
@@ -1135,14 +1168,20 @@ input[type=number]::-webkit-inner-spin-button {
 .pt-2 {
   padding-top: 0.5rem;
 }
-.pb-\[\.1em\] {
-  padding-bottom: .1em;
+.pr-margin {
+  padding-right: var(--site-margins);
+}
+.pl-margin {
+  padding-left: var(--site-margins);
+}
+.pt-margin {
+  padding-top: var(--site-margins);
 }
 .pb-margin {
   padding-bottom: var(--site-margins);
 }
-.pt-margin {
-  padding-top: var(--site-margins);
+.pb-\[\.1em\] {
+  padding-bottom: .1em;
 }
 .pt-\[15px\] {
   padding-top: 15px;
@@ -1152,12 +1191,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .pt-\[\.15em\] {
   padding-top: .15em;
-}
-.pr-margin {
-  padding-right: var(--site-margins);
-}
-.pl-margin {
-  padding-left: var(--site-margins);
 }
 .text-left {
   text-align: left;
@@ -1189,14 +1222,19 @@ input[type=number]::-webkit-inner-spin-button {
 .opacity-50 {
   opacity: 0.5;
 }
-.opacity-0 {
-  opacity: 0;
-}
 .\!opacity-100 {
   opacity: 1 !important;
 }
+.opacity-0 {
+  opacity: 0;
+}
 .transition-all {
   transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--md-speed);
+}
+.transition-opacity {
+  transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: var(--md-speed);
 }
@@ -1204,11 +1242,6 @@ input[type=number]::-webkit-inner-spin-button {
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: var(--md-speed);
-}
-.transition-opacity {
-  transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: var(--md-speed);
 }
@@ -1500,7 +1533,8 @@ parallax-view .parallax-item {
 }
 
 .button,
-button.shopify-payment-button__button {
+button.shopify-payment-button__button,
+.shopify-cleanslate [role=button] {
   --button-height: 40px;
   --button-bg: var(--text-color);
   --button-color: var(--bg-color);
@@ -1533,26 +1567,34 @@ button.shopify-payment-button__button {
   /* Adjustments */
   /* Button Shapes */
 }
-.button.disabled, .button[disabled],
+.button.disabled, .button[disabled], .button[aria-disabled],
 button.shopify-payment-button__button.disabled,
-button.shopify-payment-button__button[disabled] {
+button.shopify-payment-button__button[disabled],
+button.shopify-payment-button__button[aria-disabled],
+.shopify-cleanslate [role=button].disabled,
+.shopify-cleanslate [role=button][disabled],
+.shopify-cleanslate [role=button][aria-disabled] {
   opacity: 0.5;
   cursor: not-allowed !important;
   pointer-events: none !important;
 }
 .button:not(.disabled):hover, .button:not([disabled]):hover,
 button.shopify-payment-button__button:not(.disabled):hover,
-button.shopify-payment-button__button:not([disabled]):hover {
+button.shopify-payment-button__button:not([disabled]):hover,
+.shopify-cleanslate [role=button]:not(.disabled):hover,
+.shopify-cleanslate [role=button]:not([disabled]):hover {
   background: var(--button-hover-bg);
   color: var(--button-hover-color);
   border-color: var(--button-hover-border);
 }
 .button:not([class*=transition]),
-button.shopify-payment-button__button:not([class*=transition]) {
+button.shopify-payment-button__button:not([class*=transition]),
+.shopify-cleanslate [role=button]:not([class*=transition]) {
   transition: background var(--md-speed) ease-in-out, border var(--md-speed) ease-in-out, color var(--md-speed) ease-in-out;
 }
 .button.hollow,
-button.shopify-payment-button__button.hollow {
+button.shopify-payment-button__button.hollow,
+.shopify-cleanslate [role=button].hollow {
   --button-bg: transparent;
   --button-color: var(--text-color);
   --button-border: var(--text-color);
@@ -1561,11 +1603,13 @@ button.shopify-payment-button__button.hollow {
   --button-hover-border: var(--main-color);
 }
 .button .button-content,
-button.shopify-payment-button__button .button-content {
+button.shopify-payment-button__button .button-content,
+.shopify-cleanslate [role=button] .button-content {
   display: flex;
 }
 .button.transparent,
-button.shopify-payment-button__button.transparent {
+button.shopify-payment-button__button.transparent,
+.shopify-cleanslate [role=button].transparent {
   --button-bg: transparent;
   --button-color: currentcolor;
   --button-border: transparent;
@@ -1574,7 +1618,8 @@ button.shopify-payment-button__button.transparent {
   --button-hover-border: transparent;
 }
 .button.large,
-button.shopify-payment-button__button.large {
+button.shopify-payment-button__button.large,
+.shopify-cleanslate [role=button].large {
   --button-height: 70px;
   font-family: var(--main-font);
   font-size: 20px;
@@ -1584,44 +1629,57 @@ button.shopify-payment-button__button.large {
   font-style: normal;
 }
 .button.small,
-button.shopify-payment-button__button.small {
+button.shopify-payment-button__button.small,
+.shopify-cleanslate [role=button].small {
   --button-height: 30px;
 }
 .button.tiny,
-button.shopify-payment-button__button.tiny {
+button.shopify-payment-button__button.tiny,
+.shopify-cleanslate [role=button].tiny {
   --button-height: 26px;
 }
 .button.unpadd,
-button.shopify-payment-button__button.unpadd {
+button.shopify-payment-button__button.unpadd,
+.shopify-cleanslate [role=button].unpadd {
   margin: -12px calc(var(--button-h-padding) * -1);
 }
 .button.unpadd.circle, .button.unpadd.square,
 button.shopify-payment-button__button.unpadd.circle,
-button.shopify-payment-button__button.unpadd.square {
+button.shopify-payment-button__button.unpadd.square,
+.shopify-cleanslate [role=button].unpadd.circle,
+.shopify-cleanslate [role=button].unpadd.square {
   margin: -12px;
 }
 .button.unpadd.circle.tiny, .button.unpadd.square.tiny,
 button.shopify-payment-button__button.unpadd.circle.tiny,
-button.shopify-payment-button__button.unpadd.square.tiny {
+button.shopify-payment-button__button.unpadd.square.tiny,
+.shopify-cleanslate [role=button].unpadd.circle.tiny,
+.shopify-cleanslate [role=button].unpadd.square.tiny {
   margin: -8px;
 }
 .button.square, .button.circle,
 button.shopify-payment-button__button.square,
-button.shopify-payment-button__button.circle {
+button.shopify-payment-button__button.circle,
+.shopify-cleanslate [role=button].square,
+.shopify-cleanslate [role=button].circle {
   width: var(--button-height);
   padding: 0;
 }
 .button.square .button-label, .button.circle .button-label,
 button.shopify-payment-button__button.square .button-label,
-button.shopify-payment-button__button.circle .button-label {
+button.shopify-payment-button__button.circle .button-label,
+.shopify-cleanslate [role=button].square .button-label,
+.shopify-cleanslate [role=button].circle .button-label {
   display: none;
 }
 .button.circle,
-button.shopify-payment-button__button.circle {
+button.shopify-payment-button__button.circle,
+.shopify-cleanslate [role=button].circle {
   --button-border-radius: 50%;
 }
 .button svg *,
-button.shopify-payment-button__button svg * {
+button.shopify-payment-button__button svg *,
+.shopify-cleanslate [role=button] svg * {
   fill: currentColor;
 }
 
@@ -1993,10 +2051,6 @@ svg *:not([fill=none]) {
 
   .sm\:col-start-2 {
     grid-column-start: 2;
-  }
-
-  .sm\:hidden {
-    display: none;
   }
 
   .sm\:grid-cols-12 {
