@@ -1,6 +1,7 @@
 # Shopify Starter Theme
 
 A Shopify starter with age gating, email prompts and some other utilites.
+- if the theme is not updating locally, you need the `preview_theme_id` added to the end of the localhost. ie: `http://127.0.0.1:9292?preview_theme_id=[THEME_ID]`
 
 ## Dependencies
 

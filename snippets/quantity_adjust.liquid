@@ -3,7 +3,11 @@
     class="flex items-center"
     data-increment="1"
     data-min-count="1"
-    data-max-count="9999"
+    {% if item.inventory_policy != 'continue' %}
+      data-max-count="{{ item.inventory_quantity }}"
+    {% else %}
+      data-max-count="9999"
+    {% endif %}
   >
     <button
       id="qtyDown"

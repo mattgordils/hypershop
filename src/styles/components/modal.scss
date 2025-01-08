@@ -23,6 +23,7 @@ modal-component {
   }
 
   .overlay {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -33,6 +34,7 @@ modal-component {
 
   .modal-content {
     z-index: 2;
+    position: relative;
   }
 
   .overlay,
@@ -50,9 +52,21 @@ modal-component {
     transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  &.drawer:not(.open) .modal-content {
-    opacity: 1 !important;
-    transform: translate3d(100%, 0, 0);
+  &.drawer:not(.open) {
+    .modal-content {
+      opacity: 1 !important;
+      transform: translate3d(100%, 0, 0);
+    }
+    &.from-left {
+      .modal-content {
+        transform: translate3d(-100%, 0, 0);
+      }
+    }
+    &.from-bottom {
+      .modal-content {
+        transform: translate3d(0, 100%, 0);
+      }
+    }
   }
 }
 

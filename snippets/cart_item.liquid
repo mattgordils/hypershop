@@ -5,7 +5,7 @@
   endif
 -%}
 
-<div id="cartLineItem" class="{% if index != 0 %}border-t {% endif %}flex gap-x-gutter pb-gutter pt-gutter">  
+<div id="cartLineItem" class="flex gap-x-gutter pb-gutter pt-gutter">  
   <div class="w-24">
     <div class="aspect-square relative w-full">
       {% render 'image' with 
@@ -31,14 +31,28 @@
         </div>
       </a>
       <div class="shrink-0">
-        <span class="font-base-sans">{{ item.price | times: item.quantity | money }}</span>
+        <div>
+          {% render 'product_price' with
+            item: item.variant,
+            times: item.quantity
+          %}
+        </div>
+        {% if qty == false %}
+          <cart-remove-item>
+            <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
+          </cart-remove-item>
+        {% endif %}
       </div>
     </div>
-    <div class="flex justify-between items-center">
-      {% render 'cart_item_quantity_adjust' with item: item %}
-      <cart-remove-item>
-        <button class="cart-remove-item body-small hover:!text-error button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
-      </cart-remove-item>
-    </div>
+    {% if qty != false %}
+      <div class="flex justify-between items-center">
+        <div>
+          {% render 'cart_item_quantity_adjust' with item: item %}
+        </div>
+        <cart-remove-item>
+          <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
+        </cart-remove-item>
+      </div>
+    {% endif %}
   </div>
 </div>

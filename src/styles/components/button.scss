@@ -46,7 +46,8 @@ button.shopify-payment-button__button,
   &:not([class*="transition"]) {
     transition: background var(--md-speed) ease-in-out,
                 border var(--md-speed) ease-in-out,
-                color var(--md-speed) ease-in-out;
+                color var(--md-speed) ease-in-out,
+                opacity var(--md-speed) ease-in-out;
   }
   &.hollow {
     --button-bg: transparent;

@@ -6,9 +6,12 @@ class VariantSelects extends HTMLElement {
     this.addEventListener('change', this.onVariantChange);
     this.parent = this.closest('div');
     this.parentCard = this.closest('.product-card');
+    this.pdpForm = this.closest('add-to-cart-form')
     this.variantData = [];
     this.context = this.dataset.context
+    this.addToCartButton = this.parent.querySelector('.button.add-to-cart-btn')
     this.setMasterId();
+    this.setAddToCardEnabled();
     this.setOptionAvailability();
     if (this.context === 'PDP') {
       // Update content for PDP
@@ -25,6 +28,7 @@ class VariantSelects extends HTMLElement {
     // this.updatePickupAvailability(); TODO?
     // this.removeErrorMessage(); TODO?
     this.setMasterId();
+    this.setAddToCardEnabled();
 
     if (!this.currentVariant.id) {
       // this.toggleAddButton(true, '', true); TODO
@@ -35,6 +39,7 @@ class VariantSelects extends HTMLElement {
       if (this.context === 'PDP') {
         // Update content for PDP
         this.updateURL();
+        this.updateSection();
         // this.updateMedia();
         // this.updateShareUrl();
       }
@@ -46,7 +51,7 @@ class VariantSelects extends HTMLElement {
     }
   }
 
-  updateOptions() {
+  updateOptions = () => {
     this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
   }
 
@@ -61,7 +66,7 @@ class VariantSelects extends HTMLElement {
     }
 
     // For each option, check and set availability
-    const options = this.querySelectorAll('option, input[type=radio]')
+    const options = this.querySelectorAll('option, input[type=radio], input[type=checkbox]')
     options.forEach(option => {
       if(!checkAvailability(option.value)) {
         option.setAttribute('disabled', true)
@@ -70,7 +75,20 @@ class VariantSelects extends HTMLElement {
     })
   }
 
-  setMasterId(event) {
+  setAddToCardEnabled = () => {
+    const options = this.querySelectorAll('option, input[type=radio], input[type=checkbox]');
+    const productOptions = Array.from(options)
+    if (options && options.length > 0) {
+      const checkedOptions = productOptions.filter(option => option.checked)[0];
+      if (checkedOptions) {
+        this.addToCartButton.disabled = false
+      } else {
+        this.addToCartButton.disabled = true
+      }
+    }
+  }
+
+  setMasterId = () => {
     this.variantData = JSON.parse(this.parent.querySelector('[type="application/json"]').textContent)
     const productOptions = this.parent.querySelectorAll('variant-radios input, variant-selects')
     const selectedOptions = getSelectedOptions(productOptions)
@@ -78,10 +96,40 @@ class VariantSelects extends HTMLElement {
     this.currentVariant = currentVariant
   }
 
-  updateURL() {
+  updateURL = () => {
     const productUrl = this.parent.dataset.url
     if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
     window.history.replaceState({ }, '', `${productUrl}?variant=${this.currentVariant.id}`);
+  }
+
+  updateSection() {
+    const sectionToUpdate = this.closest('.shopify-section').id
+    const prevSection = document.querySelector('#mainPDP')
+
+    if (sectionToUpdate && this.currentVariant.id !== this.initialVariant) {
+      const sectionId = sectionToUpdate.split('shopify-section-')[1]
+      const contextUrl = (window.location.pathname + '?variant=' + this.currentVariant.id)
+
+      fetch(contextUrl + "&sections=" + sectionId)
+        .then(res => res.json())
+        .then(res => {
+          var el = document.createElement( 'div' )
+          el.innerHTML = res[sectionId]
+
+          // const prevSection = document.querySelector('#mainPDP')
+          const nextSection = el.querySelector('#mainPDP')
+
+          if (this.refreshSection) {
+            prevSection.outerHTML = nextSection.outerHTML
+          } else {
+            const oldPdpPrice = this.pdpForm.querySelector('#productPrice')
+            const newPdpPrice = el.querySelector('#productPrice')
+            oldPdpPrice.innerHTML = newPdpPrice.innerHTML
+          }
+
+          return
+        })
+    }
   }
 
   // TODO: Functions for variant changes when necessary
@@ -89,15 +137,23 @@ class VariantSelects extends HTMLElement {
   // updateShareUrl() {}
   // Function to enable and disable buy now button?
 
-  updateCardMedia() {
-    console.log('updateCardMedia')
-    const newFeaturedImage = this.currentVariant.featured_image.src
-    const cardImage = this.parentCard.querySelector('#cardImage')
-    cardImage.src = newFeaturedImage
-    cardImage.srcset = newFeaturedImage
+  updateCardMedia = () => {
+    const newFeaturedImage = this?.currentVariant?.featured_image?.src
+    if (newFeaturedImage) {
+      // Update image based on variant selections
+      const cardImage = this.parentCard.querySelector('#cardImage')
+      cardImage.src = newFeaturedImage
+      cardImage.srcset = newFeaturedImage
+    }
+
+    const cardPrice = this.parentCard.querySelector('#cardPrice')
+    if (cardPrice) {
+      // Update price based on variant selections
+      cardPrice.innerHTML = '$' + (this.currentVariant.price / 100).toFixed(2);
+    }
   }
 
-  updateVariantInput() {
+  updateVariantInput = () => {
     const productForms = document.querySelectorAll(`#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}, #quick-add-${this.dataset.productId}, #quick-add-slide-${this.dataset.productId}`);
     productForms.forEach((productForm) => {
       const input = productForm.querySelector('input[name="id"]');

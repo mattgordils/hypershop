@@ -16,7 +16,7 @@
         {{ product.title }}
       </div>
       <div class="body-small">
-        {{ product.price | money }}
+        {% render 'product_price' with item: product.first_available_variant %}
       </div>
     </div>
   </a>

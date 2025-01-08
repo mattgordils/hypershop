@@ -6,3 +6,9 @@ body[data-state-cart="open"] {}
     --cart-padding: var(--site-margins);
   }
 }
+
+.cart-items {
+  #cartLineItem:not(:first-of-type) {
+    border-top: 2px solid;
+  }
+}

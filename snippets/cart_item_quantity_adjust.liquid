@@ -25,7 +25,7 @@
       data-product-id="{{ item.id }}"
       data-new-quantity="{{ new_quantity_up }}"
       style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
-      {% if item.variant.inventory_quantity < item.quantity %}
+      {% if item.variant.inventory_quantity <= item.quantity and item.variant.inventory_policy != 'continue' %}
         disabled
       {% endif %}
     >

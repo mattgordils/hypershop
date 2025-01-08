@@ -23,7 +23,7 @@
             {{ product.title }}
           </div>
           <div class="body-small">
-            {{ product.price | money }}
+            {% render 'product_price' with item: product.first_available_variant %}
           </div>
 
           <div id="add-to-cart-form" class="add-to-cart-form" data-url="{{ product.url }}">

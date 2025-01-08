@@ -1,0 +1,18 @@
+{%-liquid
+  if times == blank
+    assign times = 1
+  endif
+
+  assign show_compare_price = false
+  if item.compare_at_price != blank and item.compare_at_price > item.price
+    assign show_compare_price = true
+  endif
+-%}
+
+<div id="productPrice" class={{ classname }}>
+  {% if show_compare_price %}
+    <s class="text-error">{{ item.compare_at_price | times: times | money }}</s> {{ item.price | times: times | money }}
+  {% else %}
+    {{ item.price | times: times | money }}
+  {% endif %}
+</div>
