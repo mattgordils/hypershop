@@ -12,10 +12,7 @@
 	/* Typography */
 
 	h1, .h1, .h1 p {
-		--mobile-font-size: 36;
-		--desktop-font-size: 60;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 36px, 60px, 70px);
 		font-family: var(--secondary-font);
 		line-height: 1em;
 		letter-spacing: -.04em;
@@ -25,10 +22,7 @@
 	}
 
 	h2, .h2, .h2 p {
-		--mobile-font-size: 42;
-		--desktop-font-size: 42;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 42px, 42px, 42px);
 		font-family: var(--secondary-font);
 		line-height: 1.2em;
 		letter-spacing: -.02em;
@@ -41,7 +35,7 @@
 		--mobile-font-size: 32;
 		--desktop-font-size: 32;
 		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 32px, 32px, 32px);
 		font-family: var(--secondary-font);
 		line-height: 1.2em;
 		letter-spacing: -.02em;
@@ -51,10 +45,7 @@
 	}
 
 	h4, .h4, .h4 p {
-		--mobile-font-size: 24;
-		--desktop-font-size: 24;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 24px, 24px, 24px);
 		font-family: var(--secondary-font);
 		line-height: 1.2em;
 		letter-spacing: -.02em;
@@ -64,10 +55,7 @@
 	}
 
 	h5, .h5, .h5 p {
-		--mobile-font-size: 20;
-		--desktop-font-size: 20;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 20px, 20px, 20px);
 		font-family: var(--secondary-font);
 		line-height: 1em;
 		letter-spacing: -.02em;
@@ -77,10 +65,7 @@
 	}
 
 	h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
-		--mobile-font-size: 11;
-		--desktop-font-size: 11;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 11px, 11px, 11px);
 		font-family: var(--mono-font);
 		line-height: 1.2em;
 		letter-spacing: .06em;
@@ -93,10 +78,8 @@
 	p.tiny, .body-tiny, .body-tiny p,
 	ul.tiny, .body-tiny, .body-tiny ul,
 	ol.tiny, .body-tiny, .body-tiny ol {
-		--mobile-font-size: 12;
-		--desktop-font-size: 12;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
 		font-family: var(--main-font);
+		@include responsiveValue(font-size, 12px, 12px, 12px);
 		line-height: 1.5em;
 		letter-spacing: 0;
 		font-weight: normal;
@@ -106,9 +89,7 @@
 	p.small, .body-small, .body-small p,
 	ul.small, .body-small, .body-small ul,
 	ol.small, .body-small, .body-small ol {
-		--mobile-font-size: 14;
-		--desktop-font-size: 14;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
+		@include responsiveValue(font-size, 14px, 14px, 14px);
 		font-family: var(--main-font);
 		line-height: 1.5em;
 		letter-spacing: 0;
@@ -117,10 +98,7 @@
 	}
 
 	p, .body, .body p, .body ul, .body ol {
-		--mobile-font-size: 16;
-		--desktop-font-size: 16;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
-		@include responsiveType;
+		@include responsiveValue(font-size, 16px, 16px, 16px);
 		font-family: var(--main-font);
 		line-height: 1.5em;
 		letter-spacing: 0;
@@ -131,9 +109,7 @@
 	p.medium, .body-medium, .body-medium p,
 	ul.medium, .body-medium, .body-medium ul,
 	ol.medium, .body-medium, .body-medium ol {
-		--mobile-font-size: 18;
-		--desktop-font-size: 18;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
+		@include responsiveValue(font-size, 18px, 18px, 18px);
 		font-family: var(--main-font);
 		line-height: 1.5em;
 		letter-spacing: 0;
@@ -144,9 +120,7 @@
 	p.large, .body-large, .body-large p,
 	ul.large, .body-large, .body-large ul,
 	ol.large, .body-large, .body-large ol {
-		--mobile-font-size: 20;
-		--desktop-font-size: 20;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
+		@include responsiveValue(font-size, 20px, 20px, 20px);
 		font-family: var(--main-font);
 		line-height: 1.5em;
 		letter-spacing: 0;

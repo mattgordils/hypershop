@@ -3,8 +3,23 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-@mixin responsiveType($important: false) {
-	font-size: clamp(calc(var(--mobile-font-size) * 1px), calc((var(--desktop-font-size) * 1vw) / 1440 * 100), calc(var(--xl-font-size) * 1px)) #{if($important, '!important', '')};
+@function between($from, $to, $fromWidth, $toWidth) {
+  $slope: ($to - $from) / ($toWidth - $fromWidth);
+  $base: $from - $slope * $fromWidth;
+
+  @return calc(#{$base} + #{100vw * $slope});
+}
+
+@mixin responsiveValue($property: font-size, $small: 10px, $medium: 10px, $large: 10px) {
+	#{$property}: between($small, $medium, 400px, 1440);
+
+	@media (min-width: 1440px) {
+		#{$property}: between($medium, $large, 1440px, 2400px);
+	}
+
+	@media (min-width: 2400px) {
+		#{$property}: $large;
+	}
 }
 
 @function map($num, $start, $end) {

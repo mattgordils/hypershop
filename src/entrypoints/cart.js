@@ -27,9 +27,9 @@ export const refreshCart = (fullRefresh = false) => {
       if (fullRefresh) {
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
-        const cartHeader = el.querySelector('#cartHeader')
+        // const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
-        currentCartHeader.outerHTML = cartHeader.outerHTML
+        // currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
         // Update Cart Pieces
         const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
@@ -67,7 +67,22 @@ if (!customElements.get("cart-remove-item")) {
             updates: {
               [event.currentTarget.dataset.itemId]: 0,
             },
-          };
+          }
+
+          if (event.currentTarget.dataset.itemId.includes(', ')) {
+            const variantIds = event?.currentTarget?.dataset?.itemId.split(', ')?.filter(item => item !== '')
+            const updatesObj = {}
+            if (variantIds.length > 0) {
+              variantIds.forEach(id => {
+                updatesObj[id] = 0
+              })
+            }
+
+            formData = {
+              updates: updatesObj
+            }
+          }
+          
           fetch(window.Shopify.routes.root + "cart/update.js", {
             method: "POST",
             headers: {

@@ -1,6 +1,6 @@
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
-<div id="mainPDP" class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
+<div id="mainPDP" class="flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
   <div class="aspect-square bg-light-grey">
     {%- for image in product.images -%}
       {% render 'image' with src: image %}
@@ -167,7 +167,7 @@
 					"label": "Text Style",
 					"options": [
 						{
-							"value": "body-medium",
+							"value": "body",
 							"label": "Text"
 						},
 						{
