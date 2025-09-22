@@ -1,10 +1,12 @@
+@use "sass:math";
+
 @mixin font-smoothing() {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
 @function between($from, $to, $fromWidth, $toWidth) {
-  $slope: ($to - $from) / ($toWidth - $fromWidth);
+  $slope: math.div($to - $from, $toWidth - $fromWidth);
   $base: $from - $slope * $fromWidth;
 
   @return calc(#{$base} + #{100vw * $slope});

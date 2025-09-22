@@ -19,6 +19,7 @@ const entrypoints = fs.readdirSync(entrypointsDir).reduce(
 
 module.exports = {
 	mode: isProduction ? 'production' : 'development',
+	devtool: isProduction ? false : 'eval-source-map',
 	entry: entrypoints,
 	output: {
 		path: outputDir,
@@ -37,7 +38,7 @@ module.exports = {
 				loader: 'esbuild-loader',
 				options: {
 					loader: 'jsx',
-					target: 'es2015',
+					target: 'es2021',
 				},
 			},
 			{

@@ -7,12 +7,15 @@
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preload" href="{{ 'global.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ 'global.css' | asset_url }}"></noscript>
 
     {% if settings.favicon != blank %}
       <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
     {% endif %}
 
-    {{ 'global.css' | asset_url | stylesheet_tag }}
 
     <title>
       {{ page_title }}
@@ -26,7 +29,8 @@
     {% endif %}
 
     {% render 'meta_tags' %}
-    
+    {% render 'structured_data' %}
+
     {{ content_for_header }}
 
     {% render 'fonts' %}
@@ -35,6 +39,10 @@
   </head>
 
   <body data-barba="wrapper" {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
+    <!-- Skip Links for Accessibility -->
+    <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
+    <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#footer">Skip to footer</a>
+
     {% render 'integrations_after_body_open' %}
     
     {% section 'notification_banner' %}
@@ -44,7 +52,7 @@
     {% section 'age_gate' %}
     {% endcomment %}
     
-    <main data-barba="container" data-barba-namespace="home">
+    <main id="main-content" data-barba="container" data-barba-namespace="home" role="main">
       <div>
         {{ content_for_layout }}
       </div>
