@@ -50,6 +50,7 @@
       ],
       "name": "Wide Media",
       "settings": {
+        "media_type": "image",
         "image": "shopify://shop_images/needle-on-record.jpg",
         "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4",
         "overlay_opacity": 0,
@@ -102,7 +103,7 @@
       "type": "product_grid",
       "name": "Product Grid",
       "settings": {
-        "collection": "another-collection",
+        "collection": "frontpage",
         "section_spacing": "mb-v-space"
       }
     },
