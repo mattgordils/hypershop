@@ -1,0 +1,21 @@
+<p>{{ block.settings.text }}</p>
+
+{% schema %}
+{
+  "name": "Text",
+  "class": "text",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Promo text"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Text"
+    }
+  ]
+}
+{% endschema %}
