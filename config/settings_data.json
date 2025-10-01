@@ -1,11 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
-    "checkout_logo_image": "shopify:\/\/shop_images\/test-logo.png",
+    "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
     "sections": {
       "header": {
         "type": "header",
+        "blocks": {
+          "image_tLXnEa": {
+            "type": "image",
+            "settings": {
+              "logo": "shopify://shop_images/Yony5f73548769f1f15f7354876a09d.191545425f7354876a09d_3d6988f8-990d-4db8-8f12-90233275d4cb.jpg"
+            }
+          }
+        },
+        "block_order": [
+          "image_tLXnEa"
+        ],
         "settings": {
           "menu": "main-menu"
         }
@@ -15,7 +35,7 @@
         "settings": {
           "expiration": 2,
           "url": "",
-          "logo": "shopify:\/\/shop_images\/Vector.png",
+          "logo": "shopify://shop_images/Vector.png",
           "question-text": "Are you of legal purchase age for alcohol?",
           "fine-print-text": "YOU MUST BE OF LEGAL DRINKING AGE IN YOUR RESPECTIVE COUNTRY FOR ENTRY. BY ENTERING YOU ACCEPT OUR TERMS AND CONDITIONS AND OUR PRIVACY AND COOKIE POLICY. WE ENCOURAGE DRINKING RESPONSIBLY."
         }
@@ -30,17 +50,6 @@
           "text-confirm": "thank you!"
         }
       },
-      "email-capture": {
-        "type": "email-capture",
-        "settings": {
-          "expiration": 2,
-          "text-main": "SUBSCRIBE TO THE NEWSLETTER",
-          "text-above": "STAY UP TO DATE WITH EVENTS & HAPPENINGS",
-          "placeholder-text": "Email",
-          "text-below": "",
-          "text-confirm": "thank you!"
-        }
-      },
       "cart": {
         "type": "cart",
         "settings": {
@@ -49,20 +58,21 @@
           "text_checkout": "Checkout"
         }
       },
-      "centered_text_blurb": {
-        "type": "centered_text_blurb",
+      "notification_banner": {
+        "type": "notification_banner",
         "settings": {
-          "text": "Centered text blurb"
+          "text": "Deals, Deals, Deals!",
+          "link": ""
         }
       },
-      "loading": {
-        "type": "loading",
+      "menu_panel": {
+        "type": "menu_panel",
         "settings": {
+          "menu": "main-menu",
+          "secondary_menu": "main-menu"
         }
       }
     },
-    "content_for_index": [
-
-    ]
+    "content_for_index": []
   }
 }

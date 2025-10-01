@@ -11,10 +11,223 @@
   "sections": {
     "settings": {
       "type": "page_settings",
-      "settings": {}
+      "settings": {
+        "header_color": "var(--text-color)",
+        "header_overlap": false
+      }
+    },
+    "wide_media_cwqYYx": {
+      "type": "wide_media",
+      "blocks": {
+        "heading_Px3M4t": {
+          "type": "heading",
+          "settings": {
+            "text": "Headline",
+            "size": "h3"
+          }
+        },
+        "text_HKnQGT": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "size": ""
+          }
+        },
+        "buttons_gxmjUf": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop Now",
+            "button_link_1": "",
+            "button_label_2": "",
+            "button_link_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_Px3M4t",
+        "text_HKnQGT",
+        "buttons_gxmjUf"
+      ],
+      "name": "Wide Media",
+      "settings": {
+        "image": "shopify://shop_images/needle-on-record.jpg",
+        "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4",
+        "overlay_opacity": 0,
+        "h_alignment": "justify-center",
+        "v_alignment": "items-center",
+        "text_alignment": "center",
+        "section_height": "h-screen-height",
+        "section_spacing": "mb-v-space"
+      }
+    },
+    "text_section_7NkykN": {
+      "type": "text_section",
+      "blocks": {
+        "heading_Axqgqa": {
+          "type": "heading",
+          "settings": {
+            "text": "Headline",
+            "size": "h3"
+          }
+        },
+        "text_DgcgfQ": {
+          "type": "text",
+          "settings": {
+            "text": "Some text",
+            "size": ""
+          }
+        },
+        "buttons_QbgnnR": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop Now",
+            "button_link_1": "",
+            "button_label_2": "",
+            "button_link_2": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_Axqgqa",
+        "text_DgcgfQ",
+        "buttons_QbgnnR"
+      ],
+      "name": "Text Section",
+      "settings": {
+        "section_spacing": "mb-v-space",
+        "alignment": "center"
+      }
+    },
+    "product_grid_QwgTtj": {
+      "type": "product_grid",
+      "name": "Product Grid",
+      "settings": {
+        "collection": "another-collection",
+        "section_spacing": "mb-v-space"
+      }
+    },
+    "accordion_6z8g69": {
+      "type": "accordion",
+      "blocks": {
+        "row_HyEyic": {
+          "type": "row",
+          "settings": {
+            "title": "Who is Jack Agro?",
+            "text": "<p>Jack Agro is the strongest, handsomest man who has ever lived.</p>"
+          }
+        },
+        "row_zcUMtK": {
+          "type": "row",
+          "settings": {
+            "title": "Is Jack Agro answering these questions?",
+            "text": "<p>Ha! No. Jack’s too busy to take the time to answer these questions. It’s me. Seth, Jack’s intern.</p>"
+          }
+        },
+        "row_rdjQJr": {
+          "type": "row",
+          "settings": {
+            "title": "Where's my order Jack?",
+            "text": "<p>I don’t want to be rude but I just want remind you that this is Seth, Jack’s intern, not<br/>Jack. Jack’s too busy to be answering questions. You can click here (TODO?) for order tracking.</p>"
+          }
+        },
+        "row_C4H3kb": {
+          "type": "row",
+          "settings": {
+            "title": "Why is it called power jerky?",
+            "text": "<p>Back in the 1800s, when the American West was being settled, meat was salted, cut into long, thick strips, dried in the sun, and carried in saddlebags until needed for a snack or meal. It was called charqui, a Spanish word meaning dried meat. This was eventually Americanized into “jerky”. And we called AGRO “power jerky” because it has all the protein power of beef jerky but with fewer health and environmental issues.</p>"
+          }
+        },
+        "row_jNKPY8": {
+          "type": "row",
+          "settings": {
+            "title": "How much protein is in every serving of Agro Power Jerky?",
+            "text": "<p>10 grams. And 25g per bag.</p>"
+          }
+        },
+        "row_eBg6QU": {
+          "type": "row",
+          "settings": {
+            "title": "What kind of magic is this? Where did all the cholesterol and sodium go?",
+            "text": "<p>Because AGRO is made from plants not animals, it doesn’t have any cholesterol and doesn’t require all the salt to preserve it.</p>"
+          }
+        },
+        "row_pXbE9q": {
+          "type": "row",
+          "settings": {
+            "title": "What does the 100% happiness guarantee mean?",
+            "text": "<p>GETAGRO.com customers: If you don’t 100% love your jerky, we’ll give you a refund on your first order (up to 4 bags). Refunds are eligible within 6 months of the order date.</p>"
+          }
+        },
+        "row_iAJmRc": {
+          "type": "row",
+          "settings": {
+            "title": "Where does the caffeine in Energy Bolt come from?",
+            "text": "<p>Coffee beans.</p>"
+          }
+        },
+        "row_knnbWK": {
+          "type": "row",
+          "settings": {
+            "title": "Do you have any samples?",
+            "text": "<p>As a small company, we can’t send out any samples at the moment. However, we do offer a 100% happiness guarantee in case you don’t love it. So give it a shot, and let us know what you think!</p>"
+          }
+        },
+        "row_AXcqjQ": {
+          "type": "row",
+          "settings": {
+            "title": "Can I update my shipping address, edit, or cancel my order once I place it?",
+            "text": "<p>Orders typically ship out the same day at AGRO but we’ll do everything we can to catch your order. Please email us at <a href=\"mailto:hello@getagro.com\" title=\"mailto:hello@getagro.com\">hello@getagro.com</a> with your order number and we’ll do our best to work some magic for you.</p>"
+          }
+        },
+        "row_hH7J6E": {
+          "type": "row",
+          "settings": {
+            "title": "Can Agro be shipped outside the U.S.?",
+            "text": "<p>Right now AGRO can only be shipped within the US. We will eventually figure out how<br/>to ship things internationally, but we’re a small team and right now we’re 100% focused<br/>on the US.</p>"
+          }
+        },
+        "row_iXJaPW": {
+          "type": "row",
+          "settings": {
+            "title": "Will Agro ever be available at retail stores?",
+            "text": "<p>Yes. We are starting to work on it. If you work with a store that wants to offer AGRO to your customers, please email us at <a href=\"mailto:sales@GetAGRO.com\" title=\"mailto:sales@GetAGRO.com\">sales@GetAGRO.com</a>.</p>"
+          }
+        },
+        "row_ffAABd": {
+          "type": "row",
+          "settings": {
+            "title": "My order arrived but it's damaged. What do I do?",
+            "text": "<p>We’re so sorry to hear that! Please email us at <a href=\"mailto:hello@getagro.co\" title=\"mailto:hello@getagro.co\">hello@getagro.co</a> and let us know which flavors were damaged so we can get this sorted out right away.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "row_HyEyic",
+        "row_zcUMtK",
+        "row_rdjQJr",
+        "row_C4H3kb",
+        "row_jNKPY8",
+        "row_eBg6QU",
+        "row_pXbE9q",
+        "row_iAJmRc",
+        "row_knnbWK",
+        "row_AXcqjQ",
+        "row_hH7J6E",
+        "row_iXJaPW",
+        "row_ffAABd"
+      ],
+      "name": "Accordion",
+      "settings": {
+        "title": "FAQs",
+        "section_spacing": "mb-v-space"
+      }
     }
   },
   "order": [
-    "settings"
+    "settings",
+    "wide_media_cwqYYx",
+    "text_section_7NkykN",
+    "product_grid_QwgTtj",
+    "accordion_6z8g69"
   ]
 }
