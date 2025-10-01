@@ -5,38 +5,40 @@
 		assign max_width = max_size
 	endif
 
-	assign objectFit = 'object-cover'
-	if image_position != blank
-		assign objectFit = 'object' | append: '-' | append: image_position
+	if layout != blank
+		assign object_fit = 'object-' | append: layout
 	endif
 
 	if image_position == 'contain'
-		assign objectFit = 'object-contain'
+		assign object_fit = 'object-contain'
 	endif
 
-	assign imageSizes = '100vw'
-	if sizes
-		assign imageSizes = sizes
-	endif
+	assign image_sizes = sizes | default: '100vw'
 	
 	assign alt_text = ''
 	if alt
 		assign alt_text = alt | strip_html
 	endif
 
-	assign imageLoading = 'lazy'
-	if loading
-		assign imageLoading = loading
-	endif
+	assign image_loading = loading | default: 'lazy'
 
-	assign ImgWidth = src.width
+	assign image_width = src.width
 	if width
-		assign ImgWidth = width
+		assign image_width = width
 	endif
 
-	assign ImgHeight = src.height
+	assign image_height = src.height
 	if height
-		assign ImgHeight = height
+		assign image_height = height
+	endif
+
+	assign image_class = class
+	if image_loading == 'lazy'
+		assign image_class = image_class | append: ' opacity-0 transition-opacity duration-slow'
+	endif
+
+	if layout == 'cover' or layout == 'contain'
+		assign image_class = image_class | append: ' ' | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
 	endif
 -%}
 
@@ -48,12 +50,12 @@
 
 {% if image != blank %}
 	<img 
-		class="{{ classname }} {% if imageLoading == 'lazy' %}opacity-0 transition-opacity duration-slow {% endif %} {{ objectFit }} shrink-0 {% if image_position == 'cover' or image_position == 'contain' %}absolute top-0 left-0 w-full h-full{% else %}w-full h-auto{% endif %}" 
+		class="{{ image_class }}"
 		id="{{ id }}"
 		src="{{ image | asset_img_url: '480x' | split: '?' | first }}"
-		width="{{ ImgWidth }}"
-		height="{{ ImgHeight }}"
-		sizes="{{ imageSizes }}"
+		width="{{ image_width }}"
+		height="{{ image_height }}"
+		sizes="{{ image_sizes }}"
 		srcset="{{ image | asset_img_url: '640x' | split: '?' | first }} 640w,
 						{{ image | asset_img_url: '720x' | split: '?' | first }} 720w,
 						{{ image | asset_img_url: '900x' | split: '?' | first }} 900w,
@@ -62,20 +64,20 @@
 						{{ image | asset_img_url: '1800x' | split: '?' | first }} 1800w,
 						{{ image | asset_img_url: '2000x' | split: '?' | first }} 2000w,
 						{{ image | asset_img_url: '2400x' | split: '?' | first }} 2400w"
-		loading="{{ imageLoading }}"
+		loading="{{ image_loading }}"
 		alt="{{ alt_text }}"
-		{%- if imageLoading == 'lazy' -%}
+		
 		onLoad="revealImage(event)"
-		{%- endif -%}
+		
 	>
 {% else %}
 	<img 
-		class="{{ classname }} {% if imageLoading == 'lazy' %}opacity-0 transition-opacity duration-slow {% endif %} {{ objectFit }} shrink-0 {% if image_position == 'cover' or image_position == 'contain' %}absolute top-0 left-0 w-full h-full{% else %}w-full h-auto{% endif %}" 
+		class="{{ image_class }}"
 		id="{{ id }}"
 		src="{{ src | image_url: width: '480x' }}"
-		width="{{ ImgWidth }}"
-		height="{{ ImgHeight }}"
-		sizes="{{ imageSizes }}"
+		width="{{ image_width }}"
+		height="{{ image_height }}"
+		sizes="{{ image_sizes }}"
 		srcset="{% if src.width > 640 and max_width >= 640 %}{{ src.src | img_url: '640x' }} 640w,{% endif %}
 						{% if src.width > 720 and max_width >= 720 %},{{ src.src | img_url: '720x' }} 720w,{% endif %}
 						{% if src.width > 900 and max_width >= 900 %},{{ src.src | img_url: '900x' }} 900w,{% endif %}
@@ -84,10 +86,10 @@
 						{% if src.width > 1800 and max_width >= 1800 %},{{ src.src | img_url: '1800x' }} 1800w,{% endif %}
 						{% if src.width > 2000 and max_width >= 2000 %},{{ src.src | img_url: '2000x' }} 2000w,{% endif %}
 						{% if src.width > 2400 and max_width >= 2400 %},{{ src.src | img_url: '2400x' }} 2400w,{% endif %}"
-		loading="{{ imageLoading }}"
+		loading="{{ image_loading }}"
 		alt="{{ alt_text }}"
-		{%- if imageLoading == 'lazy' -%}
+		
 		onLoad="revealImage(event)"
-		{%- endif -%}
+		
 	>
 {% endif %}

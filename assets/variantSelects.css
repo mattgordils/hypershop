@@ -1107,9 +1107,6 @@ input[type=number]::-webkit-inner-spin-button {
 .h-\[var\(--icon-weight\)\] {
   height: var(--icon-weight);
 }
-.h-auto {
-  height: auto;
-}
 .h-full {
   height: 100%;
 }
@@ -1167,9 +1164,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .max-w-\[24em\] {
   max-width: 24em;
-}
-.max-w-\[600px\] {
-  max-width: 600px;
 }
 .max-w-full {
   max-width: 100%;
@@ -1344,10 +1338,6 @@ input[type=number]::-webkit-inner-spin-button {
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
-}
-.object-cover {
-  -o-object-fit: cover;
-     object-fit: cover;
 }
 .p-\[var\(--cart-padding\)\] {
   padding: var(--cart-padding);

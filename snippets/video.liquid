@@ -1,0 +1,28 @@
+{%-liquid
+	if layout != blank
+		assign object_fit = 'object-' | append: layout
+	endif
+
+	assign video_width = width | default: 1200
+	assign video_poster_width = video_width | append: 'x'
+	assign video_autoplay = autoplay | default: true
+	assign video_loop = loop | default: true
+	assign video_muted = muted | default: true
+	assign video_controls = controls | default: false
+
+	assign video_class = class
+	if layout == 'cover' or layout == 'contain'
+		assign video_class = video_class | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
+	endif
+-%}
+
+{% comment %} section.settings.video.aspect_ratio {% endcomment %}
+
+{{ src | video_tag:
+	image_size: video_poster_width,
+	autoplay: video_autoplay,
+	loop: video_loop,
+	muted: video_muted,
+	controls: video_controls,
+	class: video_class
+}}
