@@ -1,16 +1,27 @@
-<div class="product-card flex flex-col gap-y-gutter cursor-pointer">
-  <a href="{{ product.url }}" class="aspect-3/4 relative">
+<div class="product-card flex flex-col cursor-pointer group">
+  <a href="{{ product.url }}" class="aspect-3/4 relative" title="View {{ product.title }}">
     {% render 'image' with
       src: product.featured_image,
       id: 'cardImage',
       layout: 'cover',
       sizes: '640px',
       max_size: 640
-      notlazy: notlazy,
-      alt: product.title
+      loading: 'eager',
+      alt: product.title,
+      class: 'z-1'
     %}
+    <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition duration-slow">
+      {% render 'image' with
+        src: product.images[2],
+        id: 'cardImage',
+        layout: 'cover',
+        sizes: '640px',
+        max_size: 640,
+        alt: product.title
+      %}
+    </div>
   </a>
-  <a href="{{ product.url }}">
+  <a href="{{ product.url }}" title="View {{ product.title }}" class="pt-gutter">
     <div class="text-center">
       <div class="body">
         {{ product.title }}

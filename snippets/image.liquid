@@ -9,10 +9,6 @@
 		assign object_fit = 'object-' | append: layout
 	endif
 
-	if image_position == 'contain'
-		assign object_fit = 'object-contain'
-	endif
-
 	assign image_sizes = sizes | default: '100vw'
 	
 	assign alt_text = ''

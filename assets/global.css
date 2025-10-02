@@ -1339,6 +1339,10 @@ input[type=number]::-webkit-inner-spin-button {
   -o-object-fit: contain;
      object-fit: contain;
 }
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
 .p-\[var\(--cart-padding\)\] {
   padding: var(--cart-padding);
 }
@@ -2346,6 +2350,10 @@ svg *:not([fill=none]) {
 
 .focus\:text-bg:focus {
   color: var(--bg-color);
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
 }
 
 @media (min-width: 640px) {
