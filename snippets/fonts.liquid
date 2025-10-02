@@ -1,9 +1,17 @@
+{% comment %} Font file variables {% endcomment %}
+{% assign souvenir_woff2 = 'SouvenirStd-Light.woff2' %}
+{% assign brown_woff2 = 'brown-regular.woff2' %}
+{% assign material_icons_woff2 = 'material-icons-regular.woff2' %}
+
+{{ souvenir_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+{{ brown_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+{{ material_icons_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+
 <style>
-  {% comment %} Add Preload font tags {% endcomment %}
   @font-face {
     font-family: 'Souvenir';
     src:  url({{ 'SouvenirStd-Light.woff' | asset_url }}) format('woff'),
-          url({{ 'SouvenirStd-Light.woff2' | asset_url }}) format('woff2');
+          url({{ souvenir_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -12,16 +20,16 @@
   @font-face {
     font-family: 'Brown';
     src:  url({{ 'brown-regular.woff' | asset_url }}) format('woff'),
-          url({{ 'brown-regular.woff2' | asset_url }}) format('woff2');
+          url({{ brown_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
-  
+
   @font-face {
     font-family: 'Material Icons';
     src:  url({{ 'material-icons-regular.woff' | asset_url }}) format('woff'),
-          url({{ 'material-icons-regular.woff2' | asset_url }}) format('woff2');
+          url({{ material_icons_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;

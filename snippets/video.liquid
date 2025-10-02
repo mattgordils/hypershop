@@ -12,7 +12,7 @@
 
 	assign video_class = class
 	if layout == 'cover' or layout == 'contain'
-		assign video_class = video_class | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
+		assign video_class = video_class | append: ' ' | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
 	endif
 -%}
 
