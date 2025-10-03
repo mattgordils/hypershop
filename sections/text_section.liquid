@@ -1,4 +1,8 @@
-<div class="{{ section.settings.section_spacing }} text-{{ section.settings.alignment }}">
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+<div class="{{ spacing_class }} text-{{ section.settings.alignment }}">
 	<div class="px-margin flex justify-{% if section.settings.alignment == 'center' %}center{% else %}start{% endif %}">
 		<div class="max-w-narrow w-full">
 			{% render 'text_lockup' with
@@ -7,6 +11,11 @@
 				body_class: 'max-w-[24em]',
 				headline_class: ''
 			%}
+
+      {% content_for 'block',
+        type: '_text-lockup',
+        id: 'text-lockup'
+      %}
 		</div>
 	</div>
 </div>
@@ -18,25 +27,25 @@
 		{
       "type": "select",
       "id": "section_spacing",
-      "default": "mb-v-space",
+      "default": "medium",
       "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
           "label": "None",
-          "value": "mb-0"
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-v-space-sm"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space-lg"
+          "value": "large"
         }
       ]
     },
@@ -59,118 +68,30 @@
 	],
 	"blocks": [
 		{
-      "type": "heading",
-      "name": "Heading",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "text",
-          "default": "Headline",
-          "label": "Headline Text"
-        },
-				{
-					"type": "select",
-					"id": "size",
-					"default": "h3",
-					"label": "Headline Size",
-					"options": [
-						{
-							"label": "H1",
-							"value": "h1"
-						},
-						{
-							"label": "H2",
-							"value": "h2"
-						},
-						{
-							"label": "H3",
-							"value": "h3"
-						},
-						{
-							"label": "H4",
-							"value": "h4"
-						}
-					]
-				}
-      ]
+      "type": "_text-lockup"
     },
-		{
-      "type": "text",
-      "name": "Text",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "text",
-          "label": "Text"
-        },
-				{
-					"type": "select",
-					"id": "size",
-					"default": "",
-					"label": "Text Size",
-					"options": [
-						{
-							"label": "Small",
-							"value": "body-small"
-						},
-						{
-							"label": "Normal",
-							"value": ""
-						},
-						{
-							"label": "Medium",
-							"value": "body-medium"
-						},
-						{
-							"label": "Large",
-							"value": "body-large"
-						}
-					]
-				}
-      ]
+    {
+      "type": "_headline"
     },
-		{
-      "type": "buttons",
-      "name": "Buttons",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "header",
-          "content": "Button 1"
-        },
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "default": "Shop Now",
-          "label": "Button 1 Label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "Button 1 Link"
-        },
-        {
-          "type": "header",
-          "content": "Button 2"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "Button 2 Label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "Button 2 Link"
-        }
-      ]
+    {
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
     }
 	],
-	"presets": [{
-		"name": "Text Section",
-		"category": "Text"
-	}]
+	"presets": [
+    {
+      "name": "Text Section",
+      "category": "Text",
+      "blocks": [
+        {
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
+        }
+      ]
+	  }
+  ]
 }
 {% endschema %}

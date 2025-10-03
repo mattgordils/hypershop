@@ -1,0 +1,47 @@
+<div class="rich-text {{ block.settings.size }}">
+  {{ block.settings.text }}
+</div>
+
+{% schema %}
+{
+  "name": "Text",
+  "class": "block-rich-text",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "default": "",
+      "label": "Text Size",
+      "options": [
+        {
+          "label": "Small",
+          "value": "body-small"
+        },
+        {
+          "label": "Normal",
+          "value": ""
+        },
+        {
+          "label": "Medium",
+          "value": "body-medium"
+        },
+        {
+          "label": "Large",
+          "value": "body-large"
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Text"
+    }
+  ]
+}
+{% endschema %}

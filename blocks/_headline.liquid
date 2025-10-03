@@ -1,0 +1,72 @@
+<{{ block.settings.element }} class="{{ block.settings.style }}">
+  {{ block.settings.text }}
+</{{ block.settings.element }}>
+
+{% schema %}
+{
+  "name": "Headline",
+  "class": "block-headline",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "default": "Headline",
+      "label": "Headline Text"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "default": "h2",
+      "label": "Headline Style",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "element",
+      "default": "h2",
+      "label": "Headline HTML Element",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Headline"
+    }
+  ]
+}
+{% endschema %}

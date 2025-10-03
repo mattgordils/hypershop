@@ -1,35 +1,50 @@
 {% comment %} Font file variables {% endcomment %}
-{% assign souvenir_woff2 = 'SouvenirStd-Light.woff2' %}
-{% assign brown_woff2 = 'brown-regular.woff2' %}
+{% assign rodger_woff2 = 'Rodger-Black.woff2' %}
+{% assign suisse_woff2 = 'SuisseBPIntl-Regular.woff2' %}
+{% assign suisse_bold_woff2 = 'SuisseBPIntl-Antique.woff2' %}
+{% assign suisse_italic_woff2 = 'SuisseBPIntl-RegularItalic.woff2' %}
 {% assign material_icons_woff2 = 'material-icons-regular.woff2' %}
 
-{{ souvenir_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
-{{ brown_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+{{ rodger_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
+{{ suisse_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
 {{ material_icons_woff2 | asset_url | preload_tag: as: 'font', type: 'font/woff2' }}
 
 <style>
   @font-face {
-    font-family: 'Souvenir';
-    src:  url({{ 'SouvenirStd-Light.woff' | asset_url }}) format('woff'),
-          url({{ souvenir_woff2 | asset_url }}) format('woff2');
+    font-family: 'Rodger';
+    src: url({{ rodger_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Brown';
-    src:  url({{ 'brown-regular.woff' | asset_url }}) format('woff'),
-          url({{ brown_woff2 | asset_url }}) format('woff2');
+    font-family: 'Suisse';
+    src: url({{ suisse_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Suisse';
+    src: url({{ suisse_italic_woff2 | asset_url }}) format('woff2');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Suisse';
+    src: url({{ suisse_bold_woff2 | asset_url }}) format('woff2');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
     font-family: 'Material Icons';
-    src:  url({{ 'material-icons-regular.woff' | asset_url }}) format('woff'),
-          url({{ material_icons_woff2 | asset_url }}) format('woff2');
+    src: url({{ material_icons_woff2 | asset_url }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;

@@ -6,7 +6,12 @@
 	endif
 
 	if layout != blank
-		assign object_fit = 'object-' | append: layout
+		if layout == 'cover'
+			assign object_fit = 'object-cover'
+		endif
+		if layout == 'contain'
+			assign object_fit = 'object-contain'
+		endif
 	endif
 
 	assign image_sizes = sizes | default: '100vw'

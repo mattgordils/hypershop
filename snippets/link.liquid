@@ -1,0 +1,17 @@
+{% if label != blank and to != blank %}
+  <a
+    href="{{ to }}"
+    target="{{ target }}"
+    class="{{ class }}"
+    title="{{ label }}"
+  >
+    {% if class contains 'circle' or class contains 'sqaure' %}
+      {% render 'icon_material' with icon: icon %}
+    {% else %}
+      {% if icon != blank %}
+        {% render 'icon_material' with icon: icon %}
+      {% endif %}
+      {{ label }}
+    {% endif %}
+  </a>
+{% endif %}

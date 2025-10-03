@@ -2,7 +2,8 @@
   "sections": {
     "settings": {
       "type": "page_settings",
-      "settings": {}
+      "settings": {},
+      "static": true
     }
   },
   "order": [

@@ -1,0 +1,26 @@
+{% if block.blocks.size > 0 %}
+  <in-view class="flex flex-col gap-gutter {% if section.settings.alignment == 'center' %}items-center{% else %}items-start{% endif %}">
+    {% for block in block.blocks %}
+      {% render block %}
+    {% endfor %}
+  </in-view>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Text Lockup",
+  "class": "block-text-lockup",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "_headline"
+    },
+    {
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
+    },
+  ]
+}
+{% endschema %}

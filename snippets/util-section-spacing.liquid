@@ -1,0 +1,16 @@
+{% liquid
+  assign spacing_class = ''
+
+  if space == 'small'
+    assign spacing_class = 'mb-v-space-sm'
+  endif
+
+  if space == 'medium'
+    assign spacing_class = 'mb-v-space'
+  endif
+
+  if space == 'large'
+    assign spacing_class = 'mb-v-space-lg'
+  endif
+%}
+{{ spacing_class }}

@@ -8,10 +8,6 @@ module.exports = {
   safelist: [],
   darkMode: "class",
   theme: {
-    fontFamily: {
-      sans: ['Souvenir', 'sans-serif'],
-      serif: ['Souvenir', 'serif']
-    },
     colors: {
       'current': 'currentColor',
       'transparent': 'transparent',

@@ -269,3 +269,9 @@
 		}
 	}
 }
+
+.block-text-lockup {
+	* + .block-actions {
+		padding-top: calc(var(--site-gutters) / 2);
+	}
+}
