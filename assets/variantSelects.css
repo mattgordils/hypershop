@@ -1312,6 +1312,9 @@ video {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.text-balance {
+  text-wrap: balance;
+}
 .rounded-full {
   border-radius: 9999px;
 }
