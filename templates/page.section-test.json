@@ -12,14 +12,12 @@
     "settings": {
       "type": "page_settings",
       "settings": {
-        "header_color": "var(--text-color)",
-        "header_overlap": false
+        "header_color": "var(--bg-color)",
+        "header_overlap": true
       }
     },
     "wide_media_cwqYYx": {
       "type": "wide_media",
-      "blocks": {},
-      "block_order": [],
       "name": "Wide Media",
       "settings": {
         "media_type": "image",
@@ -30,13 +28,19 @@
         "v_alignment": "items-center",
         "text_alignment": "center",
         "section_height": "h-screen-height",
-        "section_spacing": "medium"
+        "section_spacing": "mb-v-space"
       }
     },
     "text_section_7NkykN": {
       "type": "text_section",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {},
+          "blocks": {}
+        }
+      },
       "name": "Text Section",
       "settings": {
         "section_spacing": "mb-v-space",
