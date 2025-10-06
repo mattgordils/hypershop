@@ -1,9 +1,9 @@
 {% comment %} Font file variables {% endcomment %}
-{% assign rodger_woff2 = 'Rodger-Black.woff2' | asset_url %}
-{% assign suisse_woff2 = 'SuisseBPIntl-Regular.woff2' | asset_url %}
-{% assign suisse_bold_woff2 = 'SuisseBPIntl-Antique.woff2' | asset_url %}
-{% assign suisse_italic_woff2 = 'SuisseBPIntl-RegularItalic.woff2' | asset_url %}
-{% assign material_icons_woff2 = 'material-icons-regular.woff2' | asset_url %}
+{% assign rodger_woff2 = 'Rodger-Black.woff2' | file_url %}
+{% assign suisse_woff2 = 'SuisseBPIntl-Regular.woff2' | file_url %}
+{% assign suisse_bold_woff2 = 'SuisseBPIntl-Antique.woff2' | file_url %}
+{% assign suisse_italic_woff2 = 'SuisseBPIntl-RegularItalic.woff2' | file_url %}
+{% assign material_icons_woff2 = 'material-icons-regular.woff2' | file_url %}
 
 {{ rodger_woff2 | preload_tag: as: 'font', type: 'font/woff2' }}
 {{ suisse_woff2 | preload_tag: as: 'font', type: 'font/woff2' }}
