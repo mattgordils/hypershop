@@ -18,36 +18,8 @@
     },
     "wide_media_cwqYYx": {
       "type": "wide_media",
-      "blocks": {
-        "heading_Px3M4t": {
-          "type": "heading",
-          "settings": {
-            "text": "Headline",
-            "size": "h3"
-          }
-        },
-        "text_HKnQGT": {
-          "type": "text",
-          "settings": {
-            "text": "",
-            "size": ""
-          }
-        },
-        "buttons_gxmjUf": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop Now",
-            "button_link_1": "",
-            "button_label_2": "",
-            "button_link_2": ""
-          }
-        }
-      },
-      "block_order": [
-        "heading_Px3M4t",
-        "text_HKnQGT",
-        "buttons_gxmjUf"
-      ],
+      "blocks": {},
+      "block_order": [],
       "name": "Wide Media",
       "settings": {
         "media_type": "image",
@@ -58,41 +30,13 @@
         "v_alignment": "items-center",
         "text_alignment": "center",
         "section_height": "h-screen-height",
-        "section_spacing": "mb-v-space"
+        "section_spacing": "medium"
       }
     },
     "text_section_7NkykN": {
       "type": "text_section",
-      "blocks": {
-        "heading_Axqgqa": {
-          "type": "heading",
-          "settings": {
-            "text": "Headline",
-            "size": "h3"
-          }
-        },
-        "text_DgcgfQ": {
-          "type": "text",
-          "settings": {
-            "text": "Some text",
-            "size": ""
-          }
-        },
-        "buttons_QbgnnR": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop Now",
-            "button_link_1": "",
-            "button_label_2": "",
-            "button_link_2": ""
-          }
-        }
-      },
-      "block_order": [
-        "heading_Axqgqa",
-        "text_DgcgfQ",
-        "buttons_QbgnnR"
-      ],
+      "blocks": {},
+      "block_order": [],
       "name": "Text Section",
       "settings": {
         "section_spacing": "mb-v-space",

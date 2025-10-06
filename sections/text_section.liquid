@@ -2,21 +2,13 @@
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
-<div class="{{ spacing_class }} text-{{ section.settings.alignment }}">
-	<div class="px-margin flex justify-{% if section.settings.alignment == 'center' %}center{% else %}start{% endif %}">
-		<div class="max-w-narrow w-full">
-			{% render 'text_lockup' with
-				blocks: section.blocks,
-				alignment: section.settings.alignment,
-				body_class: 'max-w-[24em]',
-				headline_class: ''
-			%}
-
-      {% content_for 'block',
-        type: '_text-lockup',
-        id: 'text-lockup'
-      %}
-		</div>
+<div class="{{ spacing_class }}">
+	<div class="px-margin">
+    {% content_for 'block',
+      type: '_text-lockup',
+      id: 'text-lockup',
+      classname: 'max-w-narrow'
+    %}
 	</div>
 </div>
 
@@ -49,35 +41,10 @@
         }
       ]
     },
-		{
-      "type": "select",
-      "id": "alignment",
-      "default": "center",
-      "label": "Text Alignment",
-      "options": [
-        {
-          "label": "left",
-          "value": "left"
-        },
-        {
-          "label": "Center",
-          "value": "center"
-        }
-      ]
-    }
 	],
 	"blocks": [
 		{
       "type": "_text-lockup"
-    },
-    {
-      "type": "_headline"
-    },
-    {
-      "type": "_rich-text"
-    },
-    {
-      "type": "_actions"
     }
 	],
 	"presets": [

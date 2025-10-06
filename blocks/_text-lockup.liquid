@@ -1,5 +1,16 @@
+{% liquid
+  assign wrapper_class = 'items-start'
+  if block.settings.alignment == 'center'
+    assign wrapper_class = 'text-center items-center mx-auto'
+  endif
+
+  if classname != blank
+    assign wrapper_class = wrapper_class | append: ' ' | append: classname
+  endif
+%}
+
 {% if block.blocks.size > 0 %}
-  <in-view class="flex flex-col gap-gutter {% if section.settings.alignment == 'center' %}items-center{% else %}items-start{% endif %}">
+  <in-view class="flex flex-col gap-gutter {{ wrapper_class }}">
     {% for block in block.blocks %}
       {% render block %}
     {% endfor %}
@@ -10,7 +21,24 @@
 {
   "name": "Text Lockup",
   "class": "block-text-lockup",
-  "settings": [],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "default": "center",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "label": "left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        }
+      ]
+    }
+  ],
   "blocks": [
     {
       "type": "_headline"

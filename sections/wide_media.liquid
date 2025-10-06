@@ -1,3 +1,7 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
 {%-liquid
   assign hasMedia = false
   assign height_auto = false
@@ -12,7 +16,7 @@
   endif
 -%}
 
-<div class="{{ section.settings.section_spacing }}">
+<div class="{{ spacing_class }}">
   <div class="relative bg-light-grey h-full">
     <div class="media z-1 {% if height_auto %}relative{% else %}absolute top-0 left-0 w-full h-full{% endif %}">
       <div class="absolute top-0 left-0 w-full h-full bg-true-black z-1" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.00 }}"></div>
@@ -25,7 +29,11 @@
     <div class="{% if height_auto %}absolute top-0 left-0 w-full h-full{% else %}{{ section.settings.section_height }} relative{% endif %} text-bg overlay-content z-2 flex {{ section.settings.h_alignment }} {{ section.settings.v_alignment }} px-margin pb-margin pt-margin">
       <div class="grid gap-gutter w-full md:w-1/2 lg:w-1/3">
         <div>
-          {% render 'text_lockup' with blocks: section.blocks, alignment: section.settings.text_alignment %}
+          {% content_for 'block',
+            type: '_text-lockup',
+            id: 'text-lockup',
+            classname: 'max-w-narrow'
+          %}
         </div>
       </div>
     </div>
@@ -118,22 +126,6 @@
       ]
     },
     {
-      "type": "select",
-      "id": "text_alignment",
-      "default": "center",
-      "label": "Text Alignment",
-      "options": [
-        {
-          "label": "Left",
-          "value": "left"
-        },
-        {
-          "label": "Center",
-          "value": "center"
-        }
-      ]
-    },
-    {
       "type": "header",
       "content": "Spacing & Sizing"
     },
@@ -164,155 +156,46 @@
     {
       "type": "select",
       "id": "section_spacing",
-      "default": "mb-v-space",
+      "default": "medium",
       "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
           "label": "None",
-          "value": "mb-0"
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-v-space-sm"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space-lg"
+          "value": "large"
         }
       ]
-    }
+    },
 	],
 	"blocks": [
 		{
-      "type": "heading",
-      "name": "Heading",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "text",
-          "default": "Headline",
-          "label": "Headline Text"
-        },
-				{
-					"type": "select",
-					"id": "size",
-					"default": "h3",
-					"label": "Headline Size",
-					"options": [
-						{
-							"label": "H1",
-							"value": "h1"
-						},
-						{
-							"label": "H2",
-							"value": "h2"
-						},
-						{
-							"label": "H3",
-							"value": "h3"
-						},
-						{
-							"label": "H4",
-							"value": "h4"
-						}
-					]
-				}
-      ]
-    },
-		{
-      "type": "text",
-      "name": "Text",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "text",
-          "label": "Text"
-        },
-				{
-					"type": "select",
-					"id": "size",
-					"default": "",
-					"label": "Text Size",
-					"options": [
-						{
-							"label": "Small",
-							"value": "body-small"
-						},
-						{
-							"label": "Normal",
-							"value": ""
-						},
-						{
-							"label": "Medium",
-							"value": "body-medium"
-						},
-						{
-							"label": "Large",
-							"value": "body-large"
-						}
-					]
-				}
-      ]
-    },
-		{
-      "type": "buttons",
-      "name": "Buttons",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "header",
-          "content": "Button 1"
-        },
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "default": "Shop Now",
-          "label": "Button 1 Label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "Button 1 Link"
-        },
-        {
-          "type": "header",
-          "content": "Button 2"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "Button 2 Label"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "Button 2 Link"
-        }
-      ]
+      "type": "_text-lockup"
     }
 	],
 	"presets": [
     {
       "name": "Wide Media",
+      "category": "Text",
       "blocks": [
         {
-          "type": "heading"
-        },
-				{
-          "type": "text"
-        },
-				{
-          "type": "buttons"
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
         }
       ]
-    }
+	  }
   ]
 }
 {% endschema %}
