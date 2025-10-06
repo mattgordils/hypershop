@@ -1,18 +1,11 @@
-{% comment %} Font file variables {% endcomment %}
-{% assign rodger_woff2 = 'Rodger-Black.woff2' | file_url %}
-{% assign suisse_woff2 = 'SuisseBPIntl-Regular.woff2' | file_url %}
-{% assign suisse_bold_woff2 = 'SuisseBPIntl-Antique.woff2' | file_url %}
-{% assign suisse_italic_woff2 = 'SuisseBPIntl-RegularItalic.woff2' | file_url %}
-{% assign material_icons_woff2 = 'material-icons-regular.woff2' | file_url %}
-
-{{ rodger_woff2 | preload_tag: as: 'font', type: 'font/woff2' }}
-{{ suisse_woff2 | preload_tag: as: 'font', type: 'font/woff2' }}
-{{ material_icons_woff2 | preload_tag: as: 'font', type: 'font/woff2' }}
+<link rel="preload" href="{{ 'Rodger-Black.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ 'SuisseBPIntl-Regular.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ 'material-icons-regular.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
 
 <style>
   @font-face {
     font-family: 'Rodger';
-    src: url('{{ rodger_woff2 }}') format('woff2');
+    src: url({{ 'Rodger-Black.woff2' | asset_url | json }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -20,7 +13,7 @@
 
   @font-face {
     font-family: 'Suisse';
-    src: url('{{ suisse_woff2 }}') format('woff2');
+    src: url({{ 'SuisseBPIntl-Regular.woff2' | asset_url | json }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -28,7 +21,7 @@
 
   @font-face {
     font-family: 'Suisse';
-    src: url('{{ suisse_italic_woff2 }}') format('woff2');
+    src: url({{ 'SuisseBPIntl-RegularItalic.woff2' | asset_url | json }}) format('woff2');
     font-weight: normal;
     font-style: italic;
     font-display: swap;
@@ -36,7 +29,7 @@
 
   @font-face {
     font-family: 'Suisse';
-    src: url('{{ suisse_bold_woff2 }}') format('woff2');
+    src: url({{ 'SuisseBPIntl-Antique.woff2' | asset_url | json }}) format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -44,7 +37,7 @@
 
   @font-face {
     font-family: 'Material Icons';
-    src: url('{{ material_icons_woff2 }}') format('woff2');
+    src: url({{ 'material-icons-regular.woff2' | asset_url | json }}) format('woff2');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
