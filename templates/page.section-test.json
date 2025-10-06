@@ -18,6 +18,52 @@
     },
     "wide_media_cwqYYx": {
       "type": "wide_media",
+      "blocks": {
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "center"
+          },
+          "blocks": {
+            "headline_a9HnQG": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "All The Sections at Your Finger-Tips",
+                "style": "h1",
+                "element": "h1"
+              },
+              "blocks": {}
+            },
+            "actions_h9cYWr": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {},
+              "blocks": {
+                "button_CmWCY6": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Create Your Page",
+                    "link": "shopify://pages/section-dump",
+                    "new_tab": false,
+                    "style": "primary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_CmWCY6"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_a9HnQG",
+            "actions_h9cYWr"
+          ]
+        }
+      },
       "name": "Wide Media",
       "settings": {
         "media_type": "image",
@@ -26,9 +72,8 @@
         "overlay_opacity": 0,
         "h_alignment": "justify-center",
         "v_alignment": "items-center",
-        "text_alignment": "center",
         "section_height": "h-screen-height",
-        "section_spacing": "mb-v-space"
+        "section_spacing": "medium"
       }
     },
     "text_section_7NkykN": {
@@ -37,14 +82,39 @@
         "text-lockup": {
           "type": "_text-lockup",
           "static": true,
-          "settings": {},
-          "blocks": {}
+          "settings": {
+            "alignment": "center"
+          },
+          "blocks": {
+            "headline_Mz3m4T": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "All of the sections you could want...",
+                "style": "h2",
+                "element": "h2"
+              },
+              "blocks": {}
+            },
+            "rich_text_f4J9nm": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Build the perfect page with this amazing toolkit of sections and blocks. You'll never want to do it any other way again!</p>",
+                "size": "body-medium"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "headline_Mz3m4T",
+            "rich_text_f4J9nm"
+          ]
         }
       },
       "name": "Text Section",
       "settings": {
-        "section_spacing": "mb-v-space",
-        "alignment": "center"
+        "section_spacing": "medium"
       }
     },
     "product_grid_QwgTtj": {
