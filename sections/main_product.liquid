@@ -1,9 +1,31 @@
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
-<div id="mainPDP" class="flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
-  <div class="aspect-square bg-light-grey">
+{% liquid
+	assign media_sizes = '(min-width: 768px) 50vw, 100vw'
+%}
+
+<div
+	id="mainPDP"
+	data-product-update="{{ section.id }}"
+	class="flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}"
+>
+  <div class="aspect-square md:grid md:gap-gutter md:grid-cols-2" data-dynamic-content>
+		{% if product.selected_or_first_available_variant.image != blank %}
+			<div class="md:col-span-2">
+				{% render 'image' with
+					src: product.selected_or_first_available_variant.image,
+					loading: 'eager',
+					sizes: media_sizes,
+					class: 'w-full'
+				%}
+			</div>
+		{% endif %}
     {%- for image in product.images -%}
-      {% render 'image' with src: image %}
+      {% render 'image' with
+				src: image,
+				sizes: media_sizes,
+				class: 'w-full'
+			%}
     {%- endfor -%}
   </div>
 
@@ -31,13 +53,13 @@
 										{% render 'quantity_adjust' with item: product.selected_or_first_available_variant %}
 									</div>
 								{%- when 'price' -%}
-									<div {{ block.shopify_attributes }}>
+									<div {{ block.shopify_attributes }} data-dynamic-content>
 										<p class="body-large">
 											{% render 'product_price' with item: product.selected_or_first_available_variant %}
 										</p>
 									</div>
 								{%- when 'variant_picker' -%}
-									<div {{ block.shopify_attributes }}>
+									<div {{ block.shopify_attributes }} data-dynamic-content>
 										{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
 									</div>
 								{%- when 'buy_buttons' -%}

@@ -34,10 +34,13 @@ variant will update imagery and url
         <select
           name="{{ option.name }}"
           id="{{ section.id }}"
-          {% if option.values.size < 2 %}class="hidden"{% endif %}
+          value="{{ option.selected_value }}"
         >
           {%- for value in option.values -%}
-            <option value="{{ value | escape }}">{{ value }}</option>
+            <option
+              value="{{ value | escape }}"
+              {% if option.selected_value == value %}selected{% endif %}
+            >{{ value }}</option>
           {%- endfor -%}
         </select>
       </variant-selects>

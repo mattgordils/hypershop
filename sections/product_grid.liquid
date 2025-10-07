@@ -1,11 +1,19 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
 {%-liquid
   assign section_collection = collection
   if section.settings.collection != blank
     assign section_collection = collections[section.settings.collection]
   endif
+
+  if section.settings.products != blank
+    assign section_collection = section.settings
+  endif
 -%}
 
-<div class="px-margin {{ section.settings.section_spacing }}">
+<div class="px-margin {{ spacing_class }}">
   <div class="max-w-site-max-w mx-auto">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
       {% for product in section_collection.products %}
@@ -24,30 +32,36 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "Collection",
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "This will override the selected collection"
     },
 		{
       "type": "select",
       "id": "section_spacing",
-      "default": "mb-v-space",
+      "default": "medium",
       "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
           "label": "None",
-          "value": "mb-0"
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-v-space-sm"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space-lg"
+          "value": "large"
         }
       ]
     }

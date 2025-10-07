@@ -1,0 +1,59 @@
+{% if block.settings.media_type == 'video' %}
+  {% if block.settings.video != blank %}
+    {% render 'video' with
+      src: block.settings.video,
+      layout: layout %}
+  {% endif %}
+{% else %}
+  {% if block.settings.image != blank %}
+    {% render 'image' with
+      src: block.settings.image,
+      layout: layout,
+      loading: loading,
+      fetchpriority: fetchpriority
+    %}
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Media",
+  "class": "block-media",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "default": "image",
+      "label": "Media Type",
+      "options": [
+        {
+          "label": "Image",
+          "value": "image"
+        },
+        {
+          "label": "Video",
+          "value": "video"
+        }
+      ]
+    },
+		{
+			"type": "image_picker",
+			"id": "image",
+			"label": "Image",
+      "visible_if": "{{ block.settings.media_type == 'image' }}"
+		},
+    {
+			"type": "video",
+			"id": "video",
+			"label": "Video",
+      "visible_if": "{{ block.settings.media_type == 'video' }}"
+		}
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Media"
+    }
+  ]
+}
+{% endschema %}

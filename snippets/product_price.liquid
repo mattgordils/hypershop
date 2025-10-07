@@ -11,8 +11,8 @@
 
 <div id="productPrice" class={{ classname }}>
   {% if show_compare_price %}
-    <s class="text-error">{{ item.compare_at_price | times: times | money }}</s> {{ item.price | times: times | money }}
+    <s class="text-error">{{ item.compare_at_price | times: times | money }}</s> <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% else %}
-    {{ item.price | times: times | money }}
+    <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% endif %}
 </div>
