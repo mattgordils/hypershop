@@ -154,10 +154,11 @@ variant will update imagery and url
                   justify-center
                   align-center
                   leading-none
+                  cursor-pointer
                   transition-[border,color,opacity]
                   {% if is_selected %}border-current{% else %}border-transparent{% endif %}
                   {% if value_available %}
-                    {% if is_selected == false %}hover:border-hr-color cursor-pointer{% endif %}
+                    {% if is_selected == false %}hover:border-hr-color{% endif %}
                   {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
                 "
               >
@@ -260,10 +261,11 @@ variant will update imagery and url
                   justify-center
                   align-center
                   leading-none
+                  cursor-pointer
                   transition-[border,color,opacity]
                   {% if is_selected %}border-current{% else %}border-transparent{% endif %}
                   {% if value_available %}
-                    {% if is_selected == false %}hover:border-hr-color cursor-pointer{% endif %}
+                    {% if is_selected == false %}hover:border-hr-color{% endif %}
                   {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
                 "
               >

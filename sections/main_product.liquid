@@ -70,11 +70,10 @@
 									%}
 								</div>
 							{%- when 'buy_buttons' -%}
-								<div {{ block.shopify_attributes }} data-dynamic-content>
+								<div {{ block.shopify_attributes }}>
 									{% render 'add_to_cart_button' with
 										class: "w-full large",
-										product: product,
-										show_price: block.settings.show_price
+										product: product
 									%}
 								</div>
 							{%- when 'description' -%}
@@ -178,12 +177,6 @@
 			"name": "Buy Buttons",
 			"limit": 1,
 			"settings": [
-				{
-					"type": "checkbox",
-					"id": "show_price",
-					"default": true,
-					"label": "Show Price in Button"
-				},
 				{
 					"type": "checkbox",
 					"id": "show_dynamic_checkout",

@@ -1,25 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main_product",
       "blocks": {
         "title": {
-          "type": "title"
+          "type": "title",
+          "settings": {}
         },
         "price": {
-          "type": "price"
-        },
-        "description": {
-          "type": "description"
-        },
-        "variant_picker": {
-          "type": "variant_picker"
+          "type": "price",
+          "settings": {}
         },
         "quantity_selector": {
-          "type": "quantity_selector"
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
         },
         "buy_buttons": {
-          "type": "buy_buttons"
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "text": ""
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
         }
       },
       "block_order": [
@@ -31,14 +49,11 @@
         "description"
       ],
       "settings": {
+        "section_margin": "mb-v-space"
       }
     },
     "product_recommendations": {
       "type": "product_recommendations",
-      "blocks": {
-      },
-      "block_order": [
-      ],
       "settings": {
         "heading": "You may also like...",
         "section_margin": "mb-vertical-spacing"
