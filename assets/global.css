@@ -1453,17 +1453,13 @@ video {
   padding-top: .25em;
   padding-bottom: .25em;
 }
-.py-\[1em\] {
-  padding-top: 1em;
-  padding-bottom: 1em;
+.py-\[\.75em\] {
+  padding-top: .75em;
+  padding-bottom: .75em;
 }
 .py-gutter {
   padding-top: var(--site-gutters);
   padding-bottom: var(--site-gutters);
-}
-.py-\[\.75em\] {
-  padding-top: .75em;
-  padding-bottom: .75em;
 }
 .pb-20 {
   padding-bottom: 5rem;
