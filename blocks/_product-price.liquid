@@ -1,0 +1,44 @@
+<p class="{{ block.settings.size }}">
+  {% render 'product_price' with
+    item: product.selected_or_first_available_variant
+  %}
+</p>
+
+{% schema %}
+{
+  "name": "Price",
+  "class": "block-product-price",
+  "settings": [
+    {
+      "type": "select",
+      "id": "size",
+      "default": "body",
+      "label": "Text Size",
+      "options": [
+        {
+          "label": "Small",
+          "value": "body-small"
+        },
+        {
+          "label": "Normal",
+          "value": "body"
+        },
+        {
+          "label": "Medium",
+          "value": "body-medium"
+        },
+        {
+          "label": "Large",
+          "value": "body-large"
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Price"
+    }
+  ]
+}
+{% endschema %}

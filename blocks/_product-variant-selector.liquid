@@ -1,0 +1,20 @@
+<div data-dynamic-content>
+  {% render 'product_option_form' with
+    product: product,
+    context: 'PDP'
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Variant Selector",
+  "class": "block-variant-selector",
+  "settings": [],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Variant Selector"
+    }
+  ]
+}
+{% endschema %}

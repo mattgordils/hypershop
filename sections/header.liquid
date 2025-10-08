@@ -10,16 +10,19 @@
   
   header {
     color: var(--header-color);
+    border-color: transparent;
   }
 
-  #shopify-section-header.scrolled header {
+  #shopify-section-header.scrolled header,
+  #shopify-section-header:hover header {
     color: var(--text-color);
     background: var(--bg-color);
+    border-color: var(--hr-color);
   }
 </style>
 
 <sticky-header>
-  <header class="transition-[height,background] h-header-height w-full flex px-margin items-center justify-between">
+  <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center justify-between border-b">
     <div class="shrink-0">
       <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
         <a
@@ -31,30 +34,154 @@
         </a>
       </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
     </div>
-    <div class="shrink-0 grow">
-      <div class="flex space-x-gutter justify-end w-full">
-        {%- for link in section.settings.menu.links -%}
-          {% assign is_store_active = false %}
-          <div class="hidden md:flex justify-center items-center">
-            <div {% if link.active or is_store_active %} class="border-b border-transparent active"  {% else %} class="border-b border-transparent" {% endif %}>
-                <a href="{{ link.url }}" class="body-small md:body group" {% if link.active %}aria-current="page"{% endif %}>
-                  <span class="animate-underline inline-block">
-                    {{ link.title }}
-                  </span>
-                </a>
+    <div class="shrink-0 grow h-full">
+      <div class="flex justify-end w-full h-full items-center">
+        {% if section.settings.menu.links.size > 0 %}
+          <ul class="h-full hidden md:flex items-center">
+            {% for link in section.settings.menu.links %}
+              {% assign is_store_active = false %}
+              <li class="h-full">
+                <div
+                  class="
+                    h-full
+                    group/menu-item
+                    {% if link.active or is_store_active %}
+                      active
+                    {% endif %}
+                  "
+                >
+                  <a href="{{ link.url }}" class="px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center" {% if link.active %}aria-current="page"{% endif %}>
+                    <span class="animate-underline grow-0 shrink-0 leading-none">
+                      {{ link.title }}
+                    </span>
+                    {% if link.links.size > 0 %}
+                      <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition">keyboard_arrow_down</div>
+                    {% endif %}
+                  </a>
+                  {% if link.links.size > 0 %}
+                    <div
+                      class="
+                        transition-[visibility,opacity]
+                        invisible
+                        group-hover/menu-item:visible
+                        group-hover/menu-item:opacity-100
+                        group-hover/menu-item:delay-[0s]
+                        delay-[.2s]
+                        opacity-0
+                        absolute
+                        top-0
+                        left-0
+                        w-full
+                        bg-bg
+                        z-[-1]
+                        pt-header-height
+                      "
+                    >
+                      <div class="px-margin py-gutter min-h-[300px]">
+                        <ul>
+                          {% for sublink in link.links %}
+                            <li>
+                              <a
+                                href="{{ sublink.url }}"
+                                class="h3 group inline-block vertical-align-top{% if sublink.active %} active{% endif %}"
+                                {% if sublink.active %}aria-current="page"{% endif %}>
+                                <span class="animate-underline grow-0 shrink-0 leading-none">
+                                  {{ sublink.title }}
+                                </span>
+                              </a>
+                              {% if sublink.links.size > 0 %}
+                                <ul>
+                                  {% for subsublink in sublink.links %}
+                                    <li class="pl-6">
+                                      <a
+                                        href="{{ subsublink.url }}"
+                                        class="h3 group inline-block vertical-align-top{% if subsublink.active %} active{% endif %}"
+                                        {% if subsublink.active %}aria-current="page"{% endif %}>
+                                        <span class="animate-underline grow-0 shrink-0 leading-none">
+                                          {{ subsublink.title }}
+                                        </span>
+                                      </a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if shop.customer_accounts_enabled %}
+          <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center md:relative group/account-item">
+            <a
+              href="{{ routes.account_url }}"
+              aria-label="Account"
+              class="flex h-full items-center"
+            >
+              <div class="material-icon text-[18px]">person_outline</div>
+            </a>
+            <div class="
+                bg-bg
+                p-margin
+                absolute
+                left-0
+                top-0
+                md:left-[unset]
+                pt-header-height
+                z-[-1]
+                md:p-gutter
+                md:top-full
+                right-0
+                border-t
+                border-hr-color
+                whitespace-nowrap
+                invisbile
+                opacity-0
+                transition-[opacity,visibility]
+                group-hover/account-item:visible
+                group-hover/account-item:opacity-100
+              "
+            >
+              <ul class='border-t border-hr-color pt-margin md:pt-0 md:border-none'>
+                {% if customer %}
+                  <li>
+                    <a href="{{ routes.account_url }}">Account</a>
+                  </li>
+                  <li>
+                    <a href="{{ routes.account_logout_url }}">Log Out</a>
+                  </li>
+                {% else %}
+                  <li>
+                    <a href="{{ routes.account_login_url }}">Log In</a>
+                  </li>
+                  {% if shop.customer_accounts_optional %}
+                    <li>
+                      <a href="{{ routes.account_register_url }}" aria-label="Create an account">Create an account</a>
+                    </li>
+                  {% endif %}
+                {% endif %}
+              </ul>
             </div>
           </div>
-        {% endfor %}
+        {% endif %}
 
-        <modal-trigger
-          data-modal-id="menuPanel"
-          class="md:hidden"
-          role="button"
-          aria-label="Open navigation menu"
-          tabindex="0"
-        >Menu</modal-trigger>
+        <div class="flex gap-gutter pl-[calc(var(--site-gutters)/2)]">
+          <modal-trigger
+            data-modal-id="menuPanel"
+            class="md:hidden"
+            role="button"
+            aria-label="Open navigation menu"
+            tabindex="0"
+          >Menu</modal-trigger>
 
-        {% render 'cart_thumbnail' %}
+          {% render 'cart_thumbnail' %}
+        </div>
       </div>
     </div>
   </header>

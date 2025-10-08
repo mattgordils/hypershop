@@ -1,3 +1,7 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
 {% liquid
@@ -7,7 +11,7 @@
 <div
 	id="mainPDP"
 	data-product-update="{{ section.id }}"
-	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}"
+	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ spacing_class }}"
 >
   <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
 		{% if product.selected_or_first_available_variant.image != blank %}
@@ -115,146 +119,54 @@
     {
 			"type": "@app"
 		},
+		{
+      "type": "_headline"
+    },
     {
-			"type": "text",
-			"name": "Text Section",
-			"settings": [
-				{
-					"type": "text",
-					"id": "text",
-					"default": "Text block",
-					"label": "Text"
-				},
-				{
-					"type": "select",
-					"id": "text_style",
-					"default": "body",
-					"label": "Text Style",
-					"options": [
-						{
-							"value": "body",
-							"label": "Text"
-						},
-						{
-							"value": "h5",
-							"label": "Subtitle"
-						},
-						{
-							"value": "small-caps",
-							"label": "Uppercase"
-						}
-					]
-				}
-			]
-		},
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
+    },
 		{
-			"type": "title",
-			"name": "Title",
-			"limit": 1
-		},
+      "type": "_product-price"
+    },
 		{
-			"type": "quantity_selector",
-			"name": "Quantity Selector",
-			"limit": 1
-		},
+      "type": "_product-qty-input"
+    },
 		{
-			"type": "price",
-			"name": "Price",
-			"limit": 1
-		},
+      "type": "_product-variant-selector"
+    },
 		{
-			"type": "type",
-			"name": "Product Type",
-			"limit": 1
-		},
+      "type": "_product-buy-buttons"
+    },
 		{
-			"type": "variant_picker",
-			"name": "Variant Picker",
-			"limit": 1,
-			"settings": []
-		},
-		{
-			"type": "buy_buttons",
-			"name": "Buy Buttons",
-			"limit": 1,
-			"settings": [
-				{
-					"type": "checkbox",
-					"id": "show_price",
-					"default": true,
-					"label": "Show Price in Button"
-				}
-			]
-		},
-		{
-			"type": "description",
-			"name": "Description",
-			"limit": 1
-		},
-		{
-			"type": "custom_liquid",
-			"name": "Custom Liquid",
-			"settings": [
-				{
-					"type": "liquid",
-					"id": "custom_liquid",
-					"label": "Liquid Code",
-					"info": "Use at your own risk"
-				}
-			]
-		},
-		{
-			"type": "collapsible_tab",
-			"name": "Collapsible Tab",
-			"settings": [
-				{
-					"type": "text",
-					"id": "heading",
-					"default": "Collapsible row",
-					"label": "Row Title"
-				},
-				{
-					"type": "richtext",
-					"id": "content",
-					"label": "Text"
-				}
-			]
-		},
-		{
-			"type": "rating",
-			"name": "Rating",
-			"limit": 1,
-			"settings": [
-				{
-					"type": "paragraph",
-					"content": "Paragraph text"
-				}
-			]
-		}
+      "type": "_accordion"
+    }
   ],
   "settings": [
 		{
       "type": "select",
-      "id": "section_margin",
-      "default": "mb-v-space",
-      "label": "Section Margin",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
-          "label": "none",
-          "value": "mb-0"
+          "label": "None",
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-12 md:mb-margin"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space-sm"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space"
+          "value": "large"
         }
       ]
     }

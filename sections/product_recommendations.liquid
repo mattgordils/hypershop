@@ -1,4 +1,8 @@
-<div class="px-margin overflow-hidden {{ section.settings.section_margin }}">
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+<div class="px-margin overflow-hidden {{ spacing_class }}">
   <product-recommendations class="product-recommendations" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
     {% if recommendations.performed and recommendations.products_count > 0 %}
       <h2 class="h3 mb-v-space-sm">{{ section.settings.heading | escape }}</h2>
@@ -97,26 +101,26 @@
     },
     {
       "type": "select",
-      "id": "section_margin",
-      "default": "mb-v-space",
-      "label": "Section Margin",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
-          "label": "none",
-          "value": "mb-0"
+          "label": "None",
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-12 md:mb-margin"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space-sm"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space"
+          "value": "large"
         }
       ]
     }

@@ -1,0 +1,28 @@
+<div data-dynamic-content>
+  {% render 'add_to_cart_button' with
+    class: "w-full large",
+    product: product,
+    show_price: block.settings.show_price
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Buy Buttons",
+  "class": "block-buy-buttons",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "default": true,
+      "label": "Show Price in Button"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Buy Buttons"
+    }
+  ]
+}
+{% endschema %}

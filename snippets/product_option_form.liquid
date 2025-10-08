@@ -142,7 +142,7 @@ variant will update imagery and url
               >
               <label
                 for="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
-                title="{{ value }}"
+                title="{{ value }}{% if value_available == false %} | Sold Out{% endif %}"
                 class="
                   body-small
                   p-[2px]
@@ -154,10 +154,10 @@ variant will update imagery and url
                   justify-center
                   align-center
                   leading-none
-                  cursor-pointer
                   transition-[border,color,opacity]
                   {% if is_selected %}border-current{% else %}border-transparent{% endif %}
                   {% if value_available %}
+                    cursor-pointer
                     {% if is_selected == false %}hover:border-hr-color{% endif %}
                   {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
                 "
@@ -248,6 +248,9 @@ variant will update imagery and url
               >
               <label
                 for="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
+                {% if value_available == false %}
+                  title="Sold Out"
+                {% endif %}
                 class="
                   body-small
                   px-[.4em]
@@ -261,10 +264,10 @@ variant will update imagery and url
                   justify-center
                   align-center
                   leading-none
-                  cursor-pointer
                   transition-[border,color,opacity]
                   {% if is_selected %}border-current{% else %}border-transparent{% endif %}
                   {% if value_available %}
+                    cursor-pointer
                     {% if is_selected == false %}hover:border-hr-color{% endif %}
                   {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
                 "
