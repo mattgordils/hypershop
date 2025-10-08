@@ -11,8 +11,45 @@
   "sections": {
     "main": {
       "type": "main_product",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "headline_rJ4aXQ": {
+          "type": "_headline",
+          "name": "Headline",
+          "settings": {
+            "text": "Headline{{ closest.product.title }}",
+            "style": "h1",
+            "element": "h1"
+          },
+          "blocks": {}
+        },
+        "product_qty_input_RgDwba": {
+          "type": "_product-qty-input",
+          "name": "Quantity Input",
+          "settings": {},
+          "blocks": {}
+        },
+        "product_variant_selector_fGXUeW": {
+          "type": "_product-variant-selector",
+          "name": "Variant Selector",
+          "settings": {},
+          "blocks": {}
+        },
+        "rich_text_DAmrim": {
+          "type": "_rich-text",
+          "name": "Text",
+          "settings": {
+            "text": "{{ closest.product.description }}",
+            "size": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "headline_rJ4aXQ",
+        "product_qty_input_RgDwba",
+        "product_variant_selector_fGXUeW",
+        "rich_text_DAmrim"
+      ],
       "settings": {
         "section_spacing": "medium"
       }
