@@ -1,4 +1,9 @@
-<accordion-list class="block border-b border-hr-color">
+<accordion-list
+  class="block border-b border-hr-color"
+  {% if block.settings.first_open %}
+    data-initial-open="0"
+  {% endif %}
+>
   {% for block in block.blocks %}
     {% render block %}
   {% endfor %}

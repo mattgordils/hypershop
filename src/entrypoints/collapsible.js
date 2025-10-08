@@ -1,6 +1,5 @@
 export const toggleCollapsibleItem = (content, icon, expand) => {
   // Use areaHidden to toggle visibility
-  console.log(content.ariaHidden)
   if (expand === 'inherit') {
     expand = content.ariaHidden === 'true'
   }
@@ -17,7 +16,7 @@ export const toggleCollapsibleItem = (content, icon, expand) => {
 if (!customElements.get("collapsible-item")) {
   customElements.define(
     "collapsible-item",
-    class inView extends HTMLElement {
+    class collapsibleItem extends HTMLElement {
       constructor() {
         super();
         //
@@ -40,13 +39,20 @@ if (!customElements.get("collapsible-item")) {
 if (!customElements.get("accordion-list")) {
   customElements.define(
     "accordion-list",
-    class inView extends HTMLElement {
+    class accordionList extends HTMLElement {
       constructor() {
         super();
         //
         this.trigger = this.querySelectorAll('[data-collapsible="trigger"]')
         this.content = this.querySelectorAll('[data-collapsible="content"]')
         this.collapsibleItems = this.querySelectorAll('collapsible-item')
+
+        if (this.dataset.initialOpen) {
+          const item = this.collapsibleItems[this.dataset.initialOpen]
+          const content = item.querySelector('[data-collapsible="content"]')
+          const icon = item.querySelector('[data-collapsible="icon"] .animated-icon')
+          toggleCollapsibleItem(content, icon, true)
+        }
 
         this.trigger.forEach(item => {
           item.addEventListener('click', event => {
@@ -61,7 +67,6 @@ if (!customElements.get("accordion-list")) {
             })
           })
         })
-
       }
     }
   )

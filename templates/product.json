@@ -16,7 +16,7 @@
           "type": "_headline",
           "name": "Headline",
           "settings": {
-            "text": "Headline{{ closest.product.title }}",
+            "text": "{{ closest.product.title }}",
             "style": "h1",
             "element": "h1"
           },
