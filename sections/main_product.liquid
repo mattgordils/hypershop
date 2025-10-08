@@ -34,7 +34,7 @@
 		</div>
   </div>
 
-  <div class="px-margin" data-dynamic-content>
+  <div class="px-margin">
     <div class="flex flex-col gap-y-v-space-sm sticky top-sticky-top">
 			<add-to-cart-form class="flex flex-col gap-y-4">
 				{%- if section.blocks != blank -%}
@@ -58,12 +58,12 @@
 								</div>
 							{%- when 'price' -%}
 								<div {{ block.shopify_attributes }}>
-									<p class="body-large">
+									<p class="body-large" data-dynamic-content>
 										{% render 'product_price' with item: product.selected_or_first_available_variant %}
 									</p>
 								</div>
 							{%- when 'variant_picker' -%}
-								<div {{ block.shopify_attributes }}>
+								<div {{ block.shopify_attributes }} data-dynamic-content>
 									{% render 'product_option_form' with
 										product: product,
 										context: 'PDP'
