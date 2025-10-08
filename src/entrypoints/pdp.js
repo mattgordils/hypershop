@@ -1,3 +1,5 @@
+import "../styles/main-product.scss";
+
 if (!customElements.get("pdp-qty-input")) {
   customElements.define(
     "pdp-qty-input",

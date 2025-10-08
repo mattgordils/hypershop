@@ -2,6 +2,7 @@
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
 {% liquid
@@ -40,7 +41,7 @@
 
   <div class="px-margin">
     <div class="flex flex-col gap-y-v-space-sm sticky top-sticky-top">
-			<add-to-cart-form class="flex flex-col gap-y-4">
+			<add-to-cart-form class="pdp-blocks flex flex-col gap-y-4">
 				{%- if section.blocks != blank and section.blocks.size > 0 -%}
 					{% for block in section.blocks %}
 						{% render block %}
@@ -54,6 +55,7 @@
 {% schema %}
 {
   "name": "Product",
+	"class": "section-main-product",
   "blocks": [
     {
 			"type": "@app"
