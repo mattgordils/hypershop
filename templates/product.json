@@ -25,10 +25,10 @@
       "block_order": [
         "title",
         "price",
-        "description",
         "quantity_selector",
         "variant_picker",
-        "buy_buttons"
+        "buy_buttons",
+        "description"
       ],
       "settings": {
       }
