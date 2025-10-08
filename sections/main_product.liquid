@@ -9,7 +9,7 @@
 	data-product-update="{{ section.id }}"
 	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}"
 >
-  <div class="w-full aspect-square md:grid md:gap-gutter md:grid-cols-2" data-dynamic-content>
+  <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
 		{% if product.selected_or_first_available_variant.image != blank %}
 			<div class="md:col-span-2">
 				{% render 'image' with
@@ -22,14 +22,16 @@
 				%}
 			</div>
 		{% endif %}
-    {%- for image in product.images -%}
-      {% render 'image' with
-				src: image,
-				sizes: media_sizes,
-				ratio: 1,
-				class: 'w-full'
-			%}
-    {%- endfor -%}
+		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
+			{%- for image in product.images -%}
+				{% render 'image' with
+					src: image,
+					sizes: media_sizes,
+					ratio: 1,
+					class: 'w-full'
+				%}
+			{%- endfor -%}
+		</div>
   </div>
 
   <div class="px-margin" data-dynamic-content>
