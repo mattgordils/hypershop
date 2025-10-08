@@ -3,7 +3,7 @@
 {% endcapture %}
 
 <div class="px-margin overflow-hidden {{ spacing_class }}">
-  <product-recommendations class="product-recommendations" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
+  <product-recommendations class="product-recommendations opacity-0 transition-opacity duration-slow" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
     {% if recommendations.performed and recommendations.products_count > 0 %}
       <h2 class="h3 mb-v-space-sm">{{ section.settings.heading | escape }}</h2>
       <ul class="hidden lg:grid grid-cols-4 gap-x-gutter" role="list">
@@ -64,6 +64,13 @@
 
             if (recommendations && recommendations.innerHTML.trim().length) {
               this.innerHTML = recommendations.innerHTML;
+
+              // Trigger fade-in after content is loaded
+              requestAnimationFrame(() => {
+                this.classList.remove('opacity-0');
+                this.classList.add('!opacity-100');
+              });
+
               if(window.lazyload) window.lazyload();
             }
 
@@ -76,7 +83,8 @@
           });
       }
 
-      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 1000px 0px'}).observe(this);
+      // Increase rootMargin to trigger fetch earlier (2000px before entering viewport)
+      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 2000px 0px'}).observe(this);
     }
   }
 

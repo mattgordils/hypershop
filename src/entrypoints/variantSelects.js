@@ -55,7 +55,6 @@ class VariantSelects extends HTMLElement {
     this.updateCurrentVariant();
 
     if (!this.currentVariant) {
-      console.warn('No variant found for selection');
       return;
     }
 
@@ -79,14 +78,12 @@ class VariantSelects extends HTMLElement {
     // Find form containing variant data
     const form = this.closest('.add-to-cart-form, add-to-cart-form, #add-to-cart-form');
     if (!form) {
-      console.warn('Form container not found');
       return;
     }
 
     // Get variant data JSON
     const jsonScript = form.querySelector('[type="application/json"]');
     if (!jsonScript) {
-      console.warn('Variant JSON not found');
       return;
     }
 
@@ -95,12 +92,8 @@ class VariantSelects extends HTMLElement {
     // Collect selected options from UI
     const selectedOptions = this.getSelectedOptions(form);
 
-    console.log('Selected options:', selectedOptions);
-    console.log('Variant data sample:', variantData[0]?.options);
-
     // Match selections to variant
     this.currentVariant = getVariant(selectedOptions, variantData);
-    console.log('Current variant:', this.currentVariant);
   }
 
   /**
@@ -157,7 +150,6 @@ class VariantSelects extends HTMLElement {
     // Find container that needs updating
     const containerElement = this.closest('[data-product-update]');
     if (!containerElement) {
-      console.warn('No data-product-update element found');
       return;
     }
 
@@ -173,8 +165,6 @@ class VariantSelects extends HTMLElement {
     // Build fetch URL
     const fetchUrl = this.buildFetchURL(variantId, sectionId);
     if (!fetchUrl) return;
-
-    this.logDebugInfo(variantId, sectionId, updateId, fetchUrl);
 
     // Fetch and update (will auto-detect Sections API vs full page)
     this.fetchAndReplace(fetchUrl, section, containerElement, updateId, sectionId);
@@ -198,43 +188,21 @@ class VariantSelects extends HTMLElement {
   }
 
   /**
-   * Log debug information for troubleshooting
-   */
-  logDebugInfo(variantId, sectionId, updateId, fetchUrl) {
-    console.log('=== Section Update Debug ===');
-    console.log('isPDP:', this.isPDP);
-    console.log('window.location.pathname:', window.location.pathname);
-    console.log('variantId:', variantId);
-    console.log('sectionId:', sectionId);
-    console.log('updateId:', updateId);
-    console.log('Fetching:', fetchUrl);
-    console.log('===========================');
-  }
-
-  /**
    * Fetch page and replace dynamic content elements
    * Handles both Sections API (JSON response) and full page (HTML) automatically
    */
   fetchAndReplace(fetchUrl, section, containerElement, updateId, sectionId) {
-    console.log('🔄 Starting fetch:', fetchUrl);
-
     fetch(fetchUrl)
       .then(response => {
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response ok:', response.ok);
-
         const contentType = response.headers.get('content-type');
-        console.log('📡 Content-Type:', contentType);
 
         // Check if this is a Sections API response (JSON)
         if (contentType && contentType.includes('application/json')) {
           return response.json().then(data => {
-            console.log('📦 JSON response keys:', Object.keys(data));
             return { type: 'json', data };
           });
         } else {
           return response.text().then(html => {
-            console.log('📄 HTML response length:', html.length);
             return { type: 'html', data: html };
           });
         }
@@ -244,15 +212,10 @@ class VariantSelects extends HTMLElement {
 
         if (type === 'json') {
           // Sections API response - parse the section HTML from JSON
-          console.log('✅ Using Sections API (optimized)');
           const sectionHTML = data[sectionId];
 
           if (!sectionHTML) {
-            console.warn('⚠️ No section HTML in JSON response for sectionId:', sectionId);
-            console.warn('Available keys:', Object.keys(data));
-
             // Fallback: Try without Sections API
-            console.log('🔄 Falling back to full page fetch...');
             const fallbackUrl = fetchUrl.replace(/&sections=[^&]*/, '');
             return this.fetchAndReplace(fallbackUrl, section, containerElement, updateId, sectionId);
           }
@@ -262,29 +225,19 @@ class VariantSelects extends HTMLElement {
           fetchedSection = tempDoc.body.firstChild;
         } else {
           // Full page HTML - extract the section
-          console.log('✅ Using full page fetch');
-
           const parser = new DOMParser();
           const doc = parser.parseFromString(data, 'text/html');
           fetchedSection = doc.querySelector(`#${section.id}`);
         }
 
         if (!fetchedSection) {
-          console.warn('⚠️ Could not find section in response');
-          console.warn('Looking for section ID:', section.id);
           return;
         }
 
-        console.log('📊 Fetched section HTML length:', fetchedSection.innerHTML.length);
-        console.log('📊 Current section HTML length:', section.innerHTML.length);
-
-        // Debug: Check if fetched section is significantly smaller (likely incomplete in dev mode)
+        // Check if fetched section is significantly smaller (likely incomplete in dev mode)
         const sizeRatio = fetchedSection.innerHTML.length / section.innerHTML.length;
-        console.log('📊 Size ratio (fetched/current):', sizeRatio.toFixed(2));
 
         if (sizeRatio < 0.8 && this.isPDP) {
-          console.warn('⚠️ Fetched section is significantly smaller than current (likely Shopify CLI dev mode issue)');
-          console.log('🔄 Attempting fallback to full page fetch...');
           const fallbackUrl = fetchUrl.replace(/&sections=[^&]*/, '');
           return this.fetchAndReplace(fallbackUrl, section, containerElement, updateId, sectionId);
         }
@@ -293,20 +246,15 @@ class VariantSelects extends HTMLElement {
         const selector = updateId ? `[data-product-update="${updateId}"]` : '[data-product-update]';
         const newContainer = fetchedSection.querySelector(selector);
 
-        console.log('🔍 Looking for selector:', selector);
-        console.log('🔍 New container found:', !!newContainer);
-
         if (!newContainer) {
-          console.warn('⚠️ Could not find matching container in fetched section');
           return;
         }
 
         // Replace dynamic content elements
         this.replaceDynamicElements(containerElement, newContainer);
-        console.log('✅ Section update complete');
       })
       .catch(error => {
-        console.error('❌ Error updating section:', error);
+        console.error('Error updating section:', error);
       });
   }
 
@@ -317,9 +265,6 @@ class VariantSelects extends HTMLElement {
   replaceDynamicElements(containerElement, newContainer) {
     const oldDynamicElements = containerElement.querySelectorAll('[data-dynamic-content]');
     const newDynamicElements = newContainer.querySelectorAll('[data-dynamic-content]');
-
-    console.log('Found', oldDynamicElements.length, 'old dynamic elements:', oldDynamicElements);
-    console.log('Found', newDynamicElements.length, 'new dynamic elements:', newDynamicElements);
 
     // Replace each matching pair
     oldDynamicElements.forEach((oldElement, index) => {
@@ -335,18 +280,24 @@ class VariantSelects extends HTMLElement {
           const newImg = newElement.querySelector('img');
 
           if (oldImg && newImg && oldImg.src === newImg.src) {
-            console.log('Skipping image gallery update', index, '- variant image unchanged');
             return;
           }
         }
 
-        console.log('Replacing dynamic element', index);
         oldElement.parentNode.replaceChild(
           document.importNode(newElement, true),
           oldElement
         );
       }
     });
+
+    // After replacing elements, trigger reinitialization for custom elements
+    // This ensures event listeners are reattached to new DOM nodes
+    const event = new CustomEvent('section:updated', {
+      bubbles: true,
+      detail: { container: containerElement }
+    });
+    containerElement.dispatchEvent(event);
   }
 }
 
