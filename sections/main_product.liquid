@@ -57,8 +57,8 @@
 									{% render 'quantity_adjust' with item: product.selected_or_first_available_variant %}
 								</div>
 							{%- when 'price' -%}
-								<div {{ block.shopify_attributes }}>
-									<p class="body-large" data-dynamic-content>
+								<div {{ block.shopify_attributes }} data-dynamic-content>
+									<p class="body-large">
 										{% render 'product_price' with item: product.selected_or_first_available_variant %}
 									</p>
 								</div>
