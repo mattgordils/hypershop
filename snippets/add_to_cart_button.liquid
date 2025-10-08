@@ -20,10 +20,14 @@
   {% if is_available == false %}disabled{% endif %}
 >
   <span class="
-    button-content
-    {% if show_price %}
-    flex justify-between gap-6 items-baseline w-full
-    {% endif %}
+      button-content
+      {% if show_price %}
+      flex
+      justify-between
+      gap-6
+      items-baseline
+      w-full
+      {% endif %}
     "
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
