@@ -17,6 +17,9 @@
         },
         "quantity_selector": {
           "type": "quantity_selector"
+        },
+        "buy_buttons": {
+          "type": "buy_buttons"
         }
       },
       "block_order": [
@@ -24,7 +27,8 @@
         "price",
         "description",
         "quantity_selector",
-        "variant_picker"
+        "variant_picker",
+        "buy_buttons"
       ],
       "settings": {
       }

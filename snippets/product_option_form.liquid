@@ -20,7 +20,7 @@ variant will update imagery and url
 -%}
 
 
-<div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col" data-url="{{ product.url }}">
+<div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] gap-y-gutter flex-col" data-url="{{ product.url }}">
 
 {%- liquid
     assign current_variant = product.selected_or_first_available_variant
@@ -101,8 +101,7 @@ variant will update imagery and url
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex{% endif %}">
-          <legend class="h6">{{ option.name }}</legend>
+        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-2{% endif %}">
           {%- for value in option.values -%}
             {%- liquid
               # Look up availability from map
@@ -170,7 +169,8 @@ variant will update imagery and url
                       ratio: 1,
                       width: 120,
                       class: 'w-full',
-                      alt: value
+                      alt: value,
+                      loading: 'eager'
                     %}
                   </div>
                 {%- else -%}
@@ -250,8 +250,8 @@ variant will update imagery and url
                 for="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
                 class="
                   body-small
-                  px-[.5em]
-                  pt-[.1em]
+                  px-[.4em]
+                  pt-[.175em]
                   h-[30px]
                   min-w-[30px]
                   border

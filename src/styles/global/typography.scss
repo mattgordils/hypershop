@@ -66,10 +66,10 @@
 
 	h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
 		@include responsiveValue(font-size, 11px, 11px, 11px);
-		font-family: var(--mono-font);
+		font-family: var(--main-font);
 		line-height: 1.2em;
 		letter-spacing: .06em;
-		font-weight: normal;
+		font-weight: var(--medium);
 		font-style: normal;
 		text-transform: uppercase;
 	}

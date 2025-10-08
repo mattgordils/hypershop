@@ -6,10 +6,10 @@
 >
   <a
     href="{{ product.url }}"
-    class="aspect-3/4 relative block"
+    class="aspect-3/4 relative block border"
     aria-label="View {{ product.title }}"
   >
-    <div class="relative w-full h-full">
+    <div class="relative">
       {% render 'image' with
         src: product.featured_image,
         sizes: '640px',

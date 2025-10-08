@@ -1,19 +1,12 @@
 
 {%-liquid
-  assign text = 'Sold Out'
+  assign button_text = 'Sold Out'
   assign is_available = false
   if product.selected_variant.available
     assign is_available = true
-    assign text = 'Add to Cart'
+    assign button_text = 'Add to Cart'
   endif
 -%}
-
-{{product.selected_variant.title}}
-{% if product.selected_variant.available %}
-  is availability
-{% else %}
-  is NONT availability
-{% endif %}
 
 <button
   type="submit"
@@ -28,7 +21,7 @@
       {% if icon != blank %}
         {% render 'icon_material' with icon: icon %}
       {% endif %}
-      {{ text }}
+      {{ button_text }}
     {% endif %}
   </span>
 </button>
