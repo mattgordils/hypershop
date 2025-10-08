@@ -28,6 +28,9 @@
     Determine if this is an asset or schema image
   endcomment
   if image != blank
+		comment
+			If is a local asset in /assets
+		endcomment
     assign is_asset = true
   else
     assign is_asset = false

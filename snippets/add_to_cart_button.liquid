@@ -1,15 +1,25 @@
 
 {%-liquid
   assign text = 'Sold Out'
-  if product.available
+  assign is_available = false
+  if product.selected_variant.available
+    assign is_available = true
     assign text = 'Add to Cart'
   endif
 -%}
+
+{{product.selected_variant.title}}
+{% if product.selected_variant.available %}
+  is availability
+{% else %}
+  is NONT availability
+{% endif %}
+
 <button
   type="submit"
   class="button theme-product add-to-cart-btn {{ class }}"
   title="{{ text }}"
-  {% if product.available %}{% else %}disabled{% endif %}
+  {% if is_available == false %}disabled{% endif %}
 >
   <span class="button-content">
     {% if class contains 'circle' or class contains 'sqaure' %}

@@ -59,10 +59,10 @@ class VariantSelects extends HTMLElement {
       return;
     }
 
-    // Step 2: Store variant ID (will be needed after DOM replacement)
+    // Step 3: Store variant ID (will be needed after DOM replacement)
     const variantId = this.currentVariant.id;
 
-    // Step 3: Update UI based on context
+    // Step 4: Update UI based on context
     if (this.isPDP) {
       this.updateURL();           // Update browser URL
       this.updateSection(variantId); // Re-render product section
@@ -216,15 +216,27 @@ class VariantSelects extends HTMLElement {
    * Handles both Sections API (JSON response) and full page (HTML) automatically
    */
   fetchAndReplace(fetchUrl, section, containerElement, updateId, sectionId) {
+    console.log('🔄 Starting fetch:', fetchUrl);
+
     fetch(fetchUrl)
       .then(response => {
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
+
         const contentType = response.headers.get('content-type');
+        console.log('📡 Content-Type:', contentType);
 
         // Check if this is a Sections API response (JSON)
         if (contentType && contentType.includes('application/json')) {
-          return response.json().then(data => ({ type: 'json', data }));
+          return response.json().then(data => {
+            console.log('📦 JSON response keys:', Object.keys(data));
+            return { type: 'json', data };
+          });
         } else {
-          return response.text().then(html => ({ type: 'html', data: html }));
+          return response.text().then(html => {
+            console.log('📄 HTML response length:', html.length);
+            return { type: 'html', data: html };
+          });
         }
       })
       .then(({ type, data }) => {
@@ -232,11 +244,17 @@ class VariantSelects extends HTMLElement {
 
         if (type === 'json') {
           // Sections API response - parse the section HTML from JSON
-          console.log('Using Sections API (optimized)');
+          console.log('✅ Using Sections API (optimized)');
           const sectionHTML = data[sectionId];
+
           if (!sectionHTML) {
-            console.warn('No section HTML in response');
-            return;
+            console.warn('⚠️ No section HTML in JSON response for sectionId:', sectionId);
+            console.warn('Available keys:', Object.keys(data));
+
+            // Fallback: Try without Sections API
+            console.log('🔄 Falling back to full page fetch...');
+            const fallbackUrl = fetchUrl.replace(/&sections=[^&]*/, '');
+            return this.fetchAndReplace(fallbackUrl, section, containerElement, updateId, sectionId);
           }
 
           const parser = new DOMParser();
@@ -244,8 +262,7 @@ class VariantSelects extends HTMLElement {
           fetchedSection = tempDoc.body.firstChild;
         } else {
           // Full page HTML - extract the section
-          console.log('Using full page fetch');
-          console.log('Fetched HTML length:', data.length);
+          console.log('✅ Using full page fetch');
 
           const parser = new DOMParser();
           const doc = parser.parseFromString(data, 'text/html');
@@ -253,30 +270,43 @@ class VariantSelects extends HTMLElement {
         }
 
         if (!fetchedSection) {
-          console.warn('Could not find section in response');
+          console.warn('⚠️ Could not find section in response');
+          console.warn('Looking for section ID:', section.id);
           return;
         }
 
-        console.log('Fetched section HTML length:', fetchedSection.innerHTML.length);
-        console.log('Current section HTML length:', section.innerHTML.length);
+        console.log('📊 Fetched section HTML length:', fetchedSection.innerHTML.length);
+        console.log('📊 Current section HTML length:', section.innerHTML.length);
+
+        // Debug: Check if fetched section is significantly smaller (likely incomplete in dev mode)
+        const sizeRatio = fetchedSection.innerHTML.length / section.innerHTML.length;
+        console.log('📊 Size ratio (fetched/current):', sizeRatio.toFixed(2));
+
+        if (sizeRatio < 0.8 && this.isPDP) {
+          console.warn('⚠️ Fetched section is significantly smaller than current (likely Shopify CLI dev mode issue)');
+          console.log('🔄 Attempting fallback to full page fetch...');
+          const fallbackUrl = fetchUrl.replace(/&sections=[^&]*/, '');
+          return this.fetchAndReplace(fallbackUrl, section, containerElement, updateId, sectionId);
+        }
 
         // Find container in fetched section
         const selector = updateId ? `[data-product-update="${updateId}"]` : '[data-product-update]';
         const newContainer = fetchedSection.querySelector(selector);
 
-        console.log('Looking for selector:', selector);
-        console.log('New container found:', newContainer);
+        console.log('🔍 Looking for selector:', selector);
+        console.log('🔍 New container found:', !!newContainer);
 
         if (!newContainer) {
-          console.warn('Could not find matching container in fetched section');
+          console.warn('⚠️ Could not find matching container in fetched section');
           return;
         }
 
         // Replace dynamic content elements
         this.replaceDynamicElements(containerElement, newContainer);
+        console.log('✅ Section update complete');
       })
       .catch(error => {
-        console.error('Error updating section:', error);
+        console.error('❌ Error updating section:', error);
       });
   }
 
@@ -295,6 +325,21 @@ class VariantSelects extends HTMLElement {
     oldDynamicElements.forEach((oldElement, index) => {
       const newElement = newDynamicElements[index];
       if (newElement && oldElement.parentNode) {
+        // Only skip updates for actual image galleries (aspect-square class)
+        // Don't skip for product info sections that happen to contain images
+        const isImageGallery = oldElement.classList.contains('aspect-square');
+
+        if (isImageGallery) {
+          // Compare image sources to see if variant image changed
+          const oldImg = oldElement.querySelector('img');
+          const newImg = newElement.querySelector('img');
+
+          if (oldImg && newImg && oldImg.src === newImg.src) {
+            console.log('Skipping image gallery update', index, '- variant image unchanged');
+            return;
+          }
+        }
+
         console.log('Replacing dynamic element', index);
         oldElement.parentNode.replaceChild(
           document.importNode(newElement, true),
@@ -302,14 +347,6 @@ class VariantSelects extends HTMLElement {
         );
       }
     });
-  }
-
-  /**
-   * Legacy method - kept for backwards compatibility
-   * Not used in current implementation
-   */
-  updateOptions() {
-    this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
   }
 }
 
@@ -325,16 +362,6 @@ if (!customElements.get('variant-selects')) {
 class VariantRadios extends VariantSelects {
   constructor() {
     super();
-  }
-
-  /**
-   * Override: Get selected values from radio buttons
-   */
-  updateOptions() {
-    const fieldsets = Array.from(this.querySelectorAll('fieldset'));
-    this.options = fieldsets.map((fieldset) => {
-      return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked)?.value;
-    }).filter(Boolean);
   }
 }
 

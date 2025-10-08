@@ -16,7 +16,8 @@
 					src: product.selected_or_first_available_variant.image,
 					loading: 'eager',
 					sizes: media_sizes,
-					class: 'w-full'
+					class: 'w-full',
+					fetchpriority: 'high'
 				%}
 			</div>
 		{% endif %}
@@ -29,7 +30,7 @@
     {%- endfor -%}
   </div>
 
-  <div class="px-margin">
+  <div class="px-margin" data-dynamic-content>
     <div class="grid gap-y-v-space-sm sticky top-sticky-top">
       <div class='grid gap-y-gutter'>
 				<add-to-cart-form class="flex flex-col gap-y-4">
@@ -53,18 +54,24 @@
 										{% render 'quantity_adjust' with item: product.selected_or_first_available_variant %}
 									</div>
 								{%- when 'price' -%}
-									<div {{ block.shopify_attributes }} data-dynamic-content>
+									<div {{ block.shopify_attributes }}>
 										<p class="body-large">
 											{% render 'product_price' with item: product.selected_or_first_available_variant %}
 										</p>
 									</div>
 								{%- when 'variant_picker' -%}
-									<div {{ block.shopify_attributes }} data-dynamic-content>
-										{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
+									<div {{ block.shopify_attributes }}>
+										{% render 'product_option_form' with
+											product: product,
+											context: 'PDP'
+										%}
 									</div>
 								{%- when 'buy_buttons' -%}
 									<div {{ block.shopify_attributes }}>
-										BUY BUTTONS SEPERATE
+										{% render 'add_to_cart_button' with
+											class: "w-full large",
+											product: product
+										%}
 									</div>
 								{%- when 'description' -%}
 									<div {{ block.shopify_attributes }}>
@@ -92,73 +99,6 @@
 							{%- endcase -%}
 						{%- endfor -%}
 					{%- endif -%}
-
-					<input
-						type="text"
-						name="property_child_name"
-						data-title="Child Name"
-					/>
-
-					<select name="property_start_date" data-title="Start Date">
-						<option value="10/10/23">Oct 10</option>
-						<option value="10/17/23">Oct 17</option>
-						<option value="10/24/23">Oct 24</option>
-					</select>
-
-					<fieldset name="property_start_date_2" data-title="Start Date 2">
-						<div>
-              <input
-                type="radio" 
-                id="10/10/23"
-                value="10/10/23"
-              >
-              <label for="10/10/23">Oct 10</label>
-            </div>
-						<div>
-              <input
-                type="radio" 
-                id="10/17/23"
-                value="10/17/23"
-              >
-              <label for="10/17/23">Oct 17</label>
-            </div>
-						<div>
-              <input
-                type="radio" 
-                id="10/24/23"
-                value="10/24/23"
-              >
-              <label for="10/24/23">Oct 24</label>
-            </div>
-					</fieldset>
-
-					<fieldset class='mt-4' name="property_start_date_3" data-title="Start Date 3">
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/10/23"
-                value="start10/10/23"
-              >
-              <label for="start10/10/23">Oct 10</label>
-            </div>
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/17/23"
-                value="start10/17/23"
-              >
-              <label for="start10/17/23">Oct 17</label>
-            </div>
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/24/23"
-                value="start10/24/23"
-              >
-              <label for="start10/24/23">Oct 24</label>
-            </div>
-					</fieldset>
-
 				</add-to-cart-form>
       </div>
     </div>
@@ -228,28 +168,7 @@
 			"type": "variant_picker",
 			"name": "Variant Picker",
 			"limit": 1,
-			"settings": [
-				{
-					"type": "select",
-					"id": "picker_type",
-					"label": "Picker Type",
-					"default": "button",
-					"options": [
-						{
-							"value": "dropdown",
-							"label": "Dropdown"
-						},
-						{
-							"value": "button",
-							"label": "Button"
-						},
-						{
-							"value": "swatch",
-							"label": "Swatch"
-						}
-					]
-				}
-			]
+			"settings": []
 		},
 		{
 			"type": "buy_buttons",
