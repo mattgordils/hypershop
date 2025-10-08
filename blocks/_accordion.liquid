@@ -1,6 +1,8 @@
-<div>
-  Todo: Accordion
-</div>
+<accordion-list class="block border-b border-hr-color">
+  {% for block in block.blocks %}
+    {% render block %}
+  {% endfor %}
+</accordion-list>
 
 {% schema %}
 {
@@ -9,29 +11,14 @@
   "settings": [
     {
       "type": "checkbox",
-      "id": "show_price",
+      "id": "first_open",
       "default": true,
-      "label": "Show Price in Button"
+      "label": "First Item Open Initially"
     }
   ],
   "blocks": [
     {
-      "type": "row",
-      "name": "Row",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Lorem ipsum dolor sit amet, consectetur"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining unchanged.</p>"
-        }
-      ]
+      "type": "_title-w-text"
     }
   ],
   "presets": [

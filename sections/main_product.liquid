@@ -41,71 +41,10 @@
   <div class="px-margin">
     <div class="flex flex-col gap-y-v-space-sm sticky top-sticky-top">
 			<add-to-cart-form class="flex flex-col gap-y-4">
-				{%- if section.blocks != blank -%}
-					{%- for block in section.blocks -%}
-						{%- case block.type -%}
-							{%- when 'type' -%}
-								<div {{ block.shopify_attributes }}>
-									<p class='h6'>{{ product.type }}</p>
-								</div>
-							{%- when 'title' -%}
-								<div {{ block.shopify_attributes }}>
-									<h1>{{ product.title }}</h1>
-								</div>
-							{%- when 'text' -%}
-								<div {{ block.shopify_attributes }}>
-									<p class="{{ block.settings.text_style }}">{{ block.settings.text }}</p>
-								</div>
-							{%- when 'quantity_selector' -%}
-								<div {{ block.shopify_attributes }}>
-									{% render 'quantity_adjust' with item: product.selected_or_first_available_variant %}
-								</div>
-							{%- when 'price' -%}
-								<div {{ block.shopify_attributes }} data-dynamic-content>
-									<p class="body-large">
-										{% render 'product_price' with item: product.selected_or_first_available_variant %}
-									</p>
-								</div>
-							{%- when 'variant_picker' -%}
-								<div {{ block.shopify_attributes }} data-dynamic-content>
-									{% render 'product_option_form' with
-										product: product,
-										context: 'PDP'
-									%}
-								</div>
-							{%- when 'buy_buttons' -%}
-								<div {{ block.shopify_attributes }} data-dynamic-content>
-									{% render 'add_to_cart_button' with
-										class: "w-full large",
-										product: product,
-										show_price: block.settings.show_price
-									%}
-								</div>
-							{%- when 'description' -%}
-								<div {{ block.shopify_attributes }}>
-									<div class="rich-text body-small">
-										{{ product.description }}
-									</div>
-								</div>
-							{%- when 'custom_liquid' -%}
-								<div {{ block.shopify_attributes }}>
-									{{ block.custom_liquid }}
-								</div>
-							{%- when 'collapsible_tab' -%}
-								<div {{ block.shopify_attributes }}>
-									{{ block.title }}
-									{{ block.text }}
-								</div>
-							{%- when 'rating' -%}
-								<div {{ block.shopify_attributes }}>
-									RATING
-								</div>
-							{%- when '@app' -%}
-								<div {{ block.shopify_attributes }}>
-									{% render block %}
-								</div>
-						{%- endcase -%}
-					{%- endfor -%}
+				{%- if section.blocks != blank and section.blocks.size > 0 -%}
+					{% for block in section.blocks %}
+						{% render block %}
+					{% endfor %}
 				{%- endif -%}
 			</add-to-cart-form>
     </div>

@@ -4,6 +4,7 @@ module.exports = {
     "./templates/*.liquid",
     "./sections/*.liquid",
     "./snippets/*.liquid",
+    "./blocks/*.liquid",
   ],
   safelist: [],
   darkMode: "class",
