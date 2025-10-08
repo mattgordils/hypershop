@@ -7,15 +7,16 @@
 <div
 	id="mainPDP"
 	data-product-update="{{ section.id }}"
-	class="flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}"
+	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}"
 >
-  <div class="aspect-square md:grid md:gap-gutter md:grid-cols-2" data-dynamic-content>
+  <div class="w-full aspect-square md:grid md:gap-gutter md:grid-cols-2" data-dynamic-content>
 		{% if product.selected_or_first_available_variant.image != blank %}
 			<div class="md:col-span-2">
 				{% render 'image' with
 					src: product.selected_or_first_available_variant.image,
 					loading: 'eager',
 					sizes: media_sizes,
+					ratio: 1,
 					class: 'w-full',
 					fetchpriority: 'high'
 				%}
@@ -25,6 +26,7 @@
       {% render 'image' with
 				src: image,
 				sizes: media_sizes,
+				ratio: 1,
 				class: 'w-full'
 			%}
     {%- endfor -%}
