@@ -70,10 +70,11 @@
 									%}
 								</div>
 							{%- when 'buy_buttons' -%}
-								<div {{ block.shopify_attributes }}>
+								<div {{ block.shopify_attributes }} data-dynamic-content>
 									{% render 'add_to_cart_button' with
 										class: "w-full large",
-										product: product
+										product: product,
+										show_price: block.settings.show_price
 									%}
 								</div>
 							{%- when 'description' -%}
