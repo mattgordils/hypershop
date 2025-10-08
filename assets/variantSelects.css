@@ -1245,6 +1245,9 @@ video {
 .items-center {
   align-items: center;
 }
+.items-baseline {
+  align-items: baseline;
+}
 .justify-start {
   justify-content: flex-start;
 }
@@ -1265,6 +1268,9 @@ video {
 }
 .gap-v-space-sm {
   gap: var(--vertical-spacing-small);
+}
+.gap-10 {
+  gap: 2.5rem;
 }
 .gap-x-10 {
   -moz-column-gap: 2.5rem;
@@ -1406,9 +1412,9 @@ video {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
-.px-\[\.5em\] {
-  padding-left: .5em;
-  padding-right: .5em;
+.px-\[\.4em\] {
+  padding-left: .4em;
+  padding-right: .4em;
 }
 .px-\[var\(--cart-padding\)\] {
   padding-left: var(--cart-padding);
@@ -1429,14 +1435,6 @@ video {
 .py-\[\.25em\] {
   padding-top: .25em;
   padding-bottom: .25em;
-}
-.px-\[\.3em\] {
-  padding-left: .3em;
-  padding-right: .3em;
-}
-.px-\[\.4em\] {
-  padding-left: .4em;
-  padding-right: .4em;
 }
 .pb-20 {
   padding-bottom: 5rem;
@@ -1932,12 +1930,6 @@ button.shopify-payment-button__button,
 button.shopify-payment-button__button.large,
 .shopify-cleanslate [role=button].large {
   --button-height: 70px;
-  font-family: var(--main-font);
-  font-size: 20px;
-  line-height: 1.5em;
-  letter-spacing: 0;
-  font-weight: normal;
-  font-style: normal;
 }
 .button.small,
 button.shopify-payment-button__button.small,
@@ -2486,10 +2478,6 @@ svg *:not([fill=none]) {
 
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .md\:gap-gutter {
-    gap: var(--site-gutters);
   }
 }
 
