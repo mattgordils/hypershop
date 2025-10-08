@@ -34,21 +34,68 @@
           "settings": {},
           "blocks": {}
         },
-        "rich_text_DAmrim": {
-          "type": "_rich-text",
-          "name": "Text",
+        "product_buy_buttons_3BnDx3": {
+          "type": "_product-buy-buttons",
+          "name": "Buy Buttons",
           "settings": {
-            "text": "{{ closest.product.description }}",
-            "size": ""
+            "show_price": true
           },
           "blocks": {}
+        },
+        "accordion_Jb48mz": {
+          "type": "_accordion",
+          "name": "Accordion",
+          "settings": {
+            "first_open": true
+          },
+          "blocks": {
+            "title_w_text_idmxLp": {
+              "type": "_title-w-text",
+              "name": "Title & Text",
+              "settings": {
+                "title": "Description",
+                "title_size": "body bold",
+                "text": "{{ closest.product.description }}",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "title_w_text_W4tETC": {
+              "type": "_title-w-text",
+              "name": "Title & Text",
+              "settings": {
+                "title": "Sizing",
+                "title_size": "body bold",
+                "text": "<p>Size guide. Maybe need a new block for these situations?</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "title_w_text_MVYccA": {
+              "type": "_title-w-text",
+              "name": "Title & Text",
+              "settings": {
+                "title": "Returns",
+                "title_size": "body bold",
+                "text": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p><p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>",
+                "text_size": "body-tiny"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "title_w_text_idmxLp",
+            "title_w_text_W4tETC",
+            "title_w_text_MVYccA"
+          ]
         }
       },
       "block_order": [
         "headline_rJ4aXQ",
         "product_qty_input_RgDwba",
         "product_variant_selector_fGXUeW",
-        "rich_text_DAmrim"
+        "product_buy_buttons_3BnDx3",
+        "accordion_Jb48mz"
       ],
       "settings": {
         "section_spacing": "medium"
