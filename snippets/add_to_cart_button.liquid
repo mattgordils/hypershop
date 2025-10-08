@@ -39,7 +39,10 @@
       {{ button_text }}
     {% endif %}
     {% if show_price %}
-      {% render 'product_price' with item: product.selected_or_first_available_variant %}
+      {% render 'product_price' with
+        item: product.selected_or_first_available_variant,
+        compare_price_class: 'opacity-50'
+      %}
     {% endif %}
   </span>
 </button>
