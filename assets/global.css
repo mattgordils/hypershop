@@ -1074,6 +1074,9 @@ video {
 .z-\[9\] {
   z-index: 9;
 }
+.z-3 {
+  z-index: 3;
+}
 .col-span-2 {
   grid-column: span 2 / span 2;
 }
@@ -1174,6 +1177,15 @@ video {
 }
 .h-v-space-sm {
   height: var(--vertical-spacing-small);
+}
+.h-\[calc\(100\%\+1px\)\] {
+  height: calc(100% + 1px);
+}
+.h-\[calc\(100\%\+2px\)\] {
+  height: calc(100% + 2px);
+}
+.h-\[calc\(100\%\+10px\)\] {
+  height: calc(100% + 10px);
 }
 .max-h-\[100\%\] {
   max-height: 100%;
@@ -1416,6 +1428,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
 }
+.bg-\[red\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
+}
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -1432,6 +1448,18 @@ video {
 }
 .p-margin {
   padding: var(--site-margins);
+}
+.p-\[\.3em\] {
+  padding: .3em;
+}
+.p-gutter {
+  padding: var(--site-gutters);
+}
+.p-\[1\.3em\] {
+  padding: 1.3em;
+}
+.p-4 {
+  padding: 1rem;
 }
 .\!px-0 {
   padding-left: 0px !important;
@@ -1472,6 +1500,18 @@ video {
 .py-gutter {
   padding-top: var(--site-gutters);
   padding-bottom: var(--site-gutters);
+}
+.px-\[\.5em\] {
+  padding-left: .5em;
+  padding-right: .5em;
+}
+.py-\[\.3em\] {
+  padding-top: .3em;
+  padding-bottom: .3em;
+}
+.px-\[\.75em\] {
+  padding-left: .75em;
+  padding-right: .75em;
 }
 .pb-20 {
   padding-bottom: 5rem;

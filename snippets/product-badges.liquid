@@ -1,0 +1,36 @@
+{% liquid
+  assign badge_class = "rounded theme-light-grey body-tiny bold px-[.75em] py-[.3em] shrink-0 whitespace-nowrap"
+  assign wrapper_class = class | default: "flex flex-wrap gap-2"
+
+  assign has_badges = false
+  assign sold_out = false
+  assign on_sale = false
+
+  if product.selected_or_first_available_variant.available == false
+    assign sold_out = true
+    assign has_badges = true
+  endif
+  
+  if product.selected_or_first_available_variant.compare_at_price != blank and product.selected_or_first_available_variant.compare_at_price > product.price
+    assign on_sale = true
+    assign has_badges = true
+  endif
+
+  if has_badges
+    assign wrapper_class = wrapper_class | append: ' empty'
+  endif
+%}
+
+<div class="product-badges {{ wrapper_class }}" data-dynamic-content>
+  {% if sold_out %}
+    <div class="{{ badge_class }}">
+      Sold Out
+    </div>
+  {% endif %}
+
+  {% if on_sale %}
+    <div class="{{ badge_class }}">
+      On Sale
+    </div>
+  {% endif %}
+</div>

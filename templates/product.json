@@ -12,6 +12,14 @@
     "main": {
       "type": "main_product",
       "blocks": {
+        "badges": {
+          "type": "_product-badges",
+          "name": "Product Badges",
+          "settings": {
+            "product": "{{ product }}"
+          },
+          "blocks": {}
+        },
         "headline_rJ4aXQ": {
           "type": "_headline",
           "name": "Headline",
@@ -91,6 +99,7 @@
         }
       },
       "block_order": [
+        "badges",
         "headline_rJ4aXQ",
         "product_qty_input_RgDwba",
         "product_variant_selector_fGXUeW",

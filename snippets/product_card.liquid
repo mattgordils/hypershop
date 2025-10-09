@@ -10,6 +10,9 @@
     aria-label="View {{ product.title }}"
   >
     <div class="relative">
+      <div class="absolute top-0 left-0 w-full p-4 z-3">
+        {% render 'product-badges' with product: product %}
+      </div>
       {% render 'image' with
         src: product.featured_image,
         sizes: '640px',

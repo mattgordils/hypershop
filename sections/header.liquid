@@ -35,7 +35,14 @@
       </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
     </div>
     <div class="shrink-0 grow h-full">
-      <div class="flex justify-end w-full h-full items-center">
+      <div class="
+          flex
+          justify-end
+          w-full
+          items-center
+          h-[calc(100%+1px)] {% comment %} + 1px to compensate for the header border {% endcomment %}
+        "
+      >
         {% if section.settings.menu.links.size > 0 %}
           <ul class="h-full hidden md:flex items-center">
             {% for link in section.settings.menu.links %}

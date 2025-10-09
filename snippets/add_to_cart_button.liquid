@@ -1,10 +1,10 @@
 
 {%-liquid
-  assign is_available = true
-  assign button_text = 'Add to Cart'
-  if product.selected_variant.available == false
-    assign button_text = 'Sold Out'
-    assign is_available = false
+  assign is_available = false
+  assign button_text = 'Sold Out'
+  if product.selected_or_first_available_variant.available
+    assign button_text = 'Add to Cart'
+    assign is_available = true
   endif
 -%}
 

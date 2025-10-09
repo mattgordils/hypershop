@@ -1,0 +1,27 @@
+{% liquid
+  assign block_product = block.settings.product | default: product
+%}
+
+{% if block_product != blank %}
+  {% render 'product-badges' with product: block_product %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Badges",
+  "class": "block-product-badges",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Product Badges"
+    }
+  ]
+}
+{% endschema %}
