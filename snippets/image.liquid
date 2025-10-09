@@ -116,11 +116,14 @@
       {%- comment -%} Schema/CDN image with srcset {%- endcomment -%}
       {%- liquid
         assign srcset_items = ''
+        assign fallback_width = 800
 
         if ratio and aspect_ratio
           assign main_height = image_width | divided_by: aspect_ratio | round
+          assign fallback_height = fallback_width | divided_by: aspect_ratio | round
         else
           assign main_height = image.height
+          assign fallback_height = image.height
         endif
 
         for width_item in widths_array
@@ -141,7 +144,11 @@
         endfor
       -%}
       <img
-        src="{{ image | image_url: width: image_width }}"
+        {% if ratio and aspect_ratio %}
+          src="{{ image | image_url: width: fallback_width, height: fallback_height }}"
+        {% else %}
+          src="{{ image | image_url: width: fallback_width }}"
+        {% endif %}
         srcset="{{ srcset_items }}"
         sizes="{{ image_sizes }}"
         alt="{{ image_alt | escape }}"

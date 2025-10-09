@@ -6,14 +6,14 @@
 >
   <a
     href="{{ product.url }}"
-    class="aspect-3/4 relative block border"
+    class="aspect-3/4 relative block"
     aria-label="View {{ product.title }}"
   >
     <div class="relative">
       {% render 'image' with
         src: product.featured_image,
         sizes: '640px',
-        ratio: '3/4',
+        ratio: 0.75,
         loading: 'lazy',
         alt: product.title,
         class: 'z-1 relative'
@@ -23,7 +23,7 @@
           {% render 'image' with
             src: product.images[1],
             sizes: '640px',
-            ratio: '3/4',
+            ratio: 0.75,
             alt: product.title | append: ' - alternate view'
           %}
         </div>
