@@ -6,10 +6,7 @@ variant will update imagery and url
 {% endcomment %}
 
 {%-liquid
-  assign form_context = 'quick-add'
-  if context
-    assign form_context = context
-  endif
+  assign form_context = context | default: 'quick-add'
 
   assign section_id = section.id
   assign form_product = product
@@ -101,7 +98,7 @@ variant will update imagery and url
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-2{% endif %}">
+        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-2 flex-wrap{% endif %}">
           {%- for value in option.values -%}
             {%- liquid
               # Look up availability from map
@@ -218,7 +215,7 @@ variant will update imagery and url
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex{% endif %}">
+        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-1 flex-wrap{% endif %}">
           <legend class="h6">{{ option.name }}</legend>
           {%- for value in option.values -%}
             {%- liquid

@@ -14,7 +14,7 @@
         {% render 'product-badges' with product: product %}
       </div>
       {% render 'image' with
-        src: product.featured_image,
+        src: product.selected_or_first_available_variant.image,
         sizes: '640px',
         ratio: 0.75,
         loading: 'lazy',
@@ -41,12 +41,15 @@
       </a>
     </h3>
     <div class="body-small" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-      <meta itemprop="price" content="{{ product.first_available_variant.price | money_without_currency | remove: ',' }}">
+      <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
       <meta itemprop="priceCurrency" content="{{ shop.currency }}">
       <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
-      {% render 'product_price' with item: product.first_available_variant %}
+      {% render 'product_price' with item: product.selected_or_first_available_variant %}
     </div>
   </div>
 
-  {% render 'product_option_form' with product: product %}
+  {% render 'product_option_form' with
+    product: product,
+    section_context: context
+  %}
 </article>

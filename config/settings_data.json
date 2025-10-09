@@ -59,14 +59,14 @@
         }
       },
       "notification_banner": {
-        "type": "notification_banner",
+        "type": "notification-banner",
         "settings": {
           "text": "Deals, Deals, Deals!",
           "link": ""
         }
       },
       "menu_panel": {
-        "type": "menu_panel",
+        "type": "menu-panel",
         "settings": {
           "menu": "main-menu",
           "secondary_menu": "main-menu"

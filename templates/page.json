@@ -1,7 +1,7 @@
 {
   "sections": {
     "settings": {
-      "type": "page_settings",
+      "type": "page-settings",
       "settings": {}
     }
   },

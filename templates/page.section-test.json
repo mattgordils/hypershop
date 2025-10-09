@@ -10,14 +10,14 @@
 {
   "sections": {
     "settings": {
-      "type": "page_settings",
+      "type": "page-settings",
       "settings": {
         "header_color": "var(--bg-color)",
         "header_overlap": true
       }
     },
     "wide_media_cwqYYx": {
-      "type": "wide_media",
+      "type": "wide-media",
       "blocks": {
         "text-lockup": {
           "type": "_text-lockup",
@@ -83,7 +83,7 @@
       }
     },
     "text_section_7NkykN": {
-      "type": "text_section",
+      "type": "text-section",
       "blocks": {
         "text-lockup": {
           "type": "_text-lockup",
@@ -124,7 +124,7 @@
       }
     },
     "product_grid_QwgTtj": {
-      "type": "product_grid",
+      "type": "product-grid",
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",

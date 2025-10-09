@@ -111,7 +111,7 @@
       }
     },
     "product_recommendations": {
-      "type": "product_recommendations",
+      "type": "product-recommendations",
       "settings": {
         "heading": "You may also like...",
         "section_spacing": "medium"
