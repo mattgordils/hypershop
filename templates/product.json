@@ -11,6 +11,8 @@
   "sections": {
     "main": {
       "type": "main_product",
+      "id": "main-product",
+      "static":" true",
       "blocks": {
         "badges": {
           "type": "_product-badges",

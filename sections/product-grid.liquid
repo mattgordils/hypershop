@@ -13,6 +13,7 @@
   endif
 -%}
 
+{% if section_collection.products %}
 <div class="px-margin {{ spacing_class }}">
   <div class="max-w-site-max-w mx-auto">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
@@ -24,6 +25,9 @@
     </div>
   </div>
 </div>
+{% else %}
+  NO PRODUCTS
+{% endif %}
 
 {% schema %}
 {

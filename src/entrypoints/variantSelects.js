@@ -76,7 +76,7 @@ class VariantSelects extends HTMLElement {
    */
   updateCurrentVariant() {
     // Find form containing variant data
-    const form = this.closest('.add-to-cart-form, add-to-cart-form, #add-to-cart-form');
+    const form = this.closest('add-to-cart-form');
     if (!form) {
       return;
     }
@@ -149,6 +149,7 @@ class VariantSelects extends HTMLElement {
 
     // Find container that needs updating
     const containerElement = this.closest('[data-product-update]');
+
     if (!containerElement) {
       return;
     }
@@ -157,6 +158,7 @@ class VariantSelects extends HTMLElement {
 
     // Find parent Shopify section
     const section = this.closest('.shopify-section');
+
     if (!section) return;
 
     const sectionId = section.id.replace('shopify-section-', '');
@@ -228,11 +230,15 @@ class VariantSelects extends HTMLElement {
           const parser = new DOMParser();
           const doc = parser.parseFromString(data, 'text/html');
           fetchedSection = doc.querySelector(`#${section.id}`);
+
+          console.log(doc)
         }
 
         if (!fetchedSection) {
           return;
         }
+
+        console.log('fetchedSection', fetchedSection)
 
         // Check if fetched section is significantly smaller (likely incomplete in dev mode)
         const sizeRatio = fetchedSection.innerHTML.length / section.innerHTML.length;
@@ -245,6 +251,9 @@ class VariantSelects extends HTMLElement {
         // Find container in fetched section
         const selector = updateId ? `[data-product-update="${updateId}"]` : '[data-product-update]';
         const newContainer = fetchedSection.querySelector(selector);
+
+        console.log('selector: ', selector)
+        console.log('newContainer: ', newContainer)
 
         if (!newContainer) {
           return;

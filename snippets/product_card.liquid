@@ -1,12 +1,12 @@
 <article
-  class="product-card flex flex-col group"
+  class="product-card flex flex-col"
   data-product-update="product-{{ product.id }}"
   itemscope
   itemtype="https://schema.org/Product"
 >
   <a
     href="{{ product.url }}"
-    class="aspect-3/4 relative block"
+    class="aspect-3/4 relative block group"
     aria-label="View {{ product.title }}"
   >
     <div class="relative">
@@ -48,8 +48,16 @@
     </div>
   </div>
 
-  {% render 'product_option_form' with
-    product: product,
-    section_context: context
-  %}
+  <add-to-cart-form>
+    <div>
+      {% render 'product_option_form' with
+        product: product,
+        section_context: context
+      %}
+      {% render 'add_to_cart_button' with
+        class: "w-full",
+        product: product
+      %}
+    </div>
+  </add-to-cart-form>
 </article>

@@ -16,8 +16,7 @@ variant will update imagery and url
   endif
 -%}
 
-
-<div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] gap-y-gutter flex-col" data-url="{{ product.url }}">
+<div class="flex gap-x-[10px] gap-y-gutter flex-col" data-url="{{ product.url }}">
 
 {%- liquid
     assign current_variant = product.selected_or_first_available_variant
