@@ -21,16 +21,12 @@
   endif
 %}
 
-<div class="product-badges {{ wrapper_class }}" data-dynamic-content>
-  {% if sold_out %}
-    <div class="{{ badge_class }}">
-      Sold Out
-    </div>
-  {% endif %}
+<div class="product-badges {{ wrapper_class }}" data-dynamic-content data-badges>
+  <div class="hidden {{ badge_class }}" data-badge="sold-out">
+    Sold Out
+  </div>
 
-  {% if on_sale %}
-    <div class="{{ badge_class }}">
-      On Sale
-    </div>
-  {% endif %}
+  <div class="hidden {{ badge_class }}" data-badge="sale">
+    On Sale
+  </div>
 </div>

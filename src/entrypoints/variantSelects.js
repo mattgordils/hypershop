@@ -22,6 +22,15 @@ class VariantSelects extends HTMLElement {
     // Initialize only on first page load (not after re-render)
     if (this.isPDP && !this.isReinitialization()) {
       this.init();
+    } else if (!this.isPDP) {
+      // For cards, update badges on initial load
+      this.updateCurrentVariant();
+      if (this.currentVariant) {
+        const container = this.closest('[data-product-update]');
+        if (container) {
+          this.updateBadges(container, this.currentVariant);
+        }
+      }
     }
   }
 
@@ -43,6 +52,12 @@ class VariantSelects extends HTMLElement {
 
     if (this.currentVariant) {
       this.updateURL();
+
+      // Update badges for initial variant state
+      const container = this.closest('[data-product-update]');
+      if (container) {
+        this.updateBadges(container, this.currentVariant);
+      }
     }
   }
 
@@ -119,6 +134,56 @@ class VariantSelects extends HTMLElement {
     });
 
     return selectedOptions;
+  }
+
+  /**
+   * Update badge visibility based on variant
+   * Shows/hides sale and sold-out badges, hides wrapper if no badges visible
+   */
+  updateBadges(containerElement, variant) {
+    const saleBadge = containerElement.querySelector('[data-badge="sale"]');
+    const soldOutBadge = containerElement.querySelector('[data-badge="sold-out"]');
+    const badgesWrapper = containerElement.querySelector('[data-badges]');
+
+    let hasVisibleBadges = false;
+
+    // Update sale badge
+    if (saleBadge) {
+      const isOnSale = variant.compare_at_price && variant.compare_at_price > variant.price;
+      if (isOnSale) {
+        saleBadge.classList.remove('hidden');
+        hasVisibleBadges = true;
+      } else {
+        saleBadge.classList.add('hidden');
+      }
+    }
+
+    // Update sold out badge
+    if (soldOutBadge) {
+      if (!variant.available) {
+        soldOutBadge.classList.remove('hidden');
+        hasVisibleBadges = true;
+      } else {
+        soldOutBadge.classList.add('hidden');
+      }
+    }
+
+    // Check if there are any other visible badges (like tag badges)
+    if (badgesWrapper) {
+      const allBadges = badgesWrapper.querySelectorAll('.badge, [class*="badge"]');
+      allBadges.forEach(badge => {
+        if (!badge.classList.contains('hidden')) {
+          hasVisibleBadges = true;
+        }
+      });
+
+      // Hide wrapper if no badges are visible
+      if (hasVisibleBadges) {
+        badgesWrapper.classList.remove('hidden');
+      } else {
+        badgesWrapper.classList.add('hidden');
+      }
+    }
   }
 
   /**
@@ -416,24 +481,7 @@ class VariantSelects extends HTMLElement {
       });
 
       // Update badges based on variant
-      const saleBadge = containerElement.querySelector('[data-badge="sale"]');
-      if (saleBadge) {
-        const isOnSale = selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price;
-        if (isOnSale) {
-          saleBadge.classList.remove('hidden');
-        } else {
-          saleBadge.classList.add('hidden');
-        }
-      }
-
-      const soldOutBadge = containerElement.querySelector('[data-badge="sold-out"]');
-      if (soldOutBadge) {
-        if (!selectedVariant.available) {
-          soldOutBadge.classList.remove('hidden');
-        } else {
-          soldOutBadge.classList.add('hidden');
-        }
-      }
+      this.updateBadges(containerElement, selectedVariant);
 
       // Trigger reinitialization
       const event = new CustomEvent('section:updated', {
