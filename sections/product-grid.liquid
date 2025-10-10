@@ -3,30 +3,35 @@
 {% endcapture %}
 
 {%-liquid
-  assign section_collection = collection
-  if section.settings.collection != blank
-    assign section_collection = collections[section.settings.collection]
-  endif
+  assign section_collection = section.settings.collection | default: collection
 
   if section.settings.products != blank
     assign section_collection = section.settings
   endif
 -%}
 
-{% if section_collection.products %}
-<div class="px-margin {{ spacing_class }}">
-  <div class="max-w-site-max-w mx-auto">
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
-      {% for product in section_collection.products %}
-        <div>
-          {% render 'product_card' with product: product %}
-        </div>
-      {% endfor %}
+
+  collection<br>
+  {% if section.settings.collection != blank %}
+    section.settings.collection<br>
+  {% endif %}
+
+  {% if section.settings.products != blank %}
+    section.settings<br>
+  {% endif %}
+
+{% if section_collection.products.size > 0 %}
+  <div class="px-margin {{ spacing_class }}">
+    <div class="max-w-site-max-w mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
+        {% for product in section_collection.products %}
+          <div>
+            {% render 'product_card' with product: product %}
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
-{% else %}
-  NO PRODUCTS
 {% endif %}
 
 {% schema %}

@@ -122,6 +122,47 @@ class VariantSelects extends HTMLElement {
   }
 
   /**
+   * Build availability map for option values
+   * Based on the current variant selections, determines which option values
+   * have at least one available variant
+   */
+  buildAvailabilityMap(variants, currentVariant) {
+    const map = {};
+    const currentOptions = currentVariant.options;
+
+    // For each option position (0, 1, 2)
+    for (let position = 0; position < currentOptions.length; position++) {
+      // Get all unique values for this option position
+      const uniqueValues = [...new Set(variants.map(v => v.options[position]))];
+
+      uniqueValues.forEach(value => {
+        const mapKey = `${position + 1}-${value}`;
+
+        // Check if there's an available variant with this value
+        // that matches the other currently selected options
+        const hasAvailableVariant = variants.some(variant => {
+          if (!variant.available) return false;
+          if (variant.options[position] !== value) return false;
+
+          // Check if this variant matches other selected options
+          for (let i = 0; i < currentOptions.length; i++) {
+            if (i === position) continue; // Skip the position we're checking
+            if (variant.options[i] !== currentOptions[i]) {
+              return false;
+            }
+          }
+
+          return true;
+        });
+
+        map[mapKey] = hasAvailableVariant;
+      });
+    }
+
+    return map;
+  }
+
+  /**
    * Update browser URL with variant parameter
    * PDP only - keeps URL in sync with selection
    */
@@ -183,17 +224,208 @@ class VariantSelects extends HTMLElement {
       // PDP: Use current page with Sections API
       return `${window.location.pathname}?variant=${variantId}&sections=${sectionId}`;
     } else {
-      // Cards: Use product page with Sections API
+      // Cards: Use Shopify product JSON endpoint
       const productUrl = this.dataset.url || this.closest('[data-url]')?.dataset.url;
-      return productUrl ? `${productUrl}?variant=${variantId}&sections=${sectionId}` : null;
+      return productUrl ? `${productUrl}.js` : null;
     }
   }
 
   /**
-   * Fetch page and replace dynamic content elements
-   * Handles both Sections API (JSON response) and full page (HTML) automatically
+   * Fetch page and replace content
+   * PDP: Fetches section HTML and replaces dynamic content
+   * Cards: Fetches product JSON and updates image/price/button
    */
   fetchAndReplace(fetchUrl, section, containerElement, updateId, sectionId) {
+    if (!this.isPDP) {
+      // Cards: Use existing variant data from the page (no fetch needed!)
+      // The product_option_form already has all variant data in a JSON script tag
+      const form = this.closest('add-to-cart-form');
+      const jsonScript = form.querySelector('[type="application/json"]');
+
+      if (!jsonScript) {
+        console.error('Could not find variant data JSON in card');
+        return;
+      }
+
+      const variantData = JSON.parse(jsonScript.textContent);
+      console.log('Variant data from page:', variantData);
+      console.log('Current variant:', this.currentVariant);
+
+      // Find the selected variant
+      const selectedVariant = variantData.find(v => v.id === this.currentVariant.id);
+
+      if (!selectedVariant) {
+        console.error('Could not find selected variant in variant data');
+        return;
+      }
+
+      console.log('Selected variant:', selectedVariant);
+
+      // Update card image if variant has an image
+      if (selectedVariant.featured_image) {
+        const imgElement = containerElement.querySelector('img');
+        if (imgElement) {
+          // Get the original image's width and height attributes to determine aspect ratio
+          const width = imgElement.getAttribute('width') || 640;
+          const height = imgElement.getAttribute('height');
+
+          let targetWidth = 640;
+          let targetHeight;
+
+          // If we have height, calculate the aspect ratio and maintain it
+          if (height) {
+            const ratio = width / height;
+            targetHeight = Math.round(targetWidth / ratio);
+          } else {
+            // Default to 3:4 ratio (0.75) which is used in product cards
+            targetHeight = Math.round(targetWidth / 0.75); // 853
+          }
+
+          // Use Shopify's image sizing with both width and height to crop/scale properly
+          const imageUrl = selectedVariant.featured_image.src;
+          const sizedImageUrl = imageUrl.replace(/\.(jpg|jpeg|png|gif|webp)/i, `_${targetWidth}x${targetHeight}_crop_center.$1`);
+          imgElement.src = sizedImageUrl;
+          // Clear srcset so browser uses our sized src
+          imgElement.srcset = '';
+        }
+      }
+
+      // Update price and compare_at_price
+      const priceContainer = containerElement.querySelector('[id^="cardPrice-"]');
+      if (priceContainer) {
+        // Update meta price for schema.org
+        const priceMetaElement = priceContainer.querySelector('[itemprop="price"]');
+        if (priceMetaElement) {
+          const formattedPrice = (selectedVariant.price / 100).toFixed(2);
+          priceMetaElement.content = formattedPrice;
+        }
+
+        // Find the price display element (rendered by product_price snippet)
+        const priceDisplay = priceContainer.querySelector('#productPrice');
+        if (priceDisplay) {
+          const price = selectedVariant.price / 100;
+          const compareAtPrice = selectedVariant.compare_at_price ? selectedVariant.compare_at_price / 100 : null;
+
+          const priceWrapper = priceDisplay.querySelector('[data-variant-price]')
+          const compareAtPriceWrapper = priceDisplay.querySelector('[data-price-compare]')
+
+          // Format using Shopify money format (assuming USD for now)
+          const formatMoney = (cents) => {
+            return `$${(cents).toFixed(2)}`;
+          };
+
+          if (compareAtPrice && compareAtPrice > price) {
+            // Show sale price with compare at price
+            compareAtPriceWrapper.innerHTML = formatMoney(price)
+          } else {
+            // Regular price only
+            priceWrapper.innerHTML = formatMoney(price)
+          }
+        }
+      }
+
+      // Build availability map for all option values
+      // This tells us which option values have at least one available variant
+      const availabilityMap = this.buildAvailabilityMap(variantData, selectedVariant);
+
+      // Update all variant selectors to match the selected variant
+      // Update radio buttons
+      const variantRadios = containerElement.querySelectorAll('variant-radios');
+      variantRadios.forEach((radioGroup, index) => {
+        const optionValue = selectedVariant.options[index];
+        const radioInputs = radioGroup.querySelectorAll('input[type="radio"]');
+
+        radioInputs.forEach(radio => {
+          const isSelected = radio.value === optionValue;
+          const mapKey = `${index + 1}-${radio.value}`;
+          const isAvailable = availabilityMap[mapKey];
+
+          // Update checked state
+          radio.checked = isSelected;
+          if (isSelected) {
+            radio.setAttribute('checked', 'checked');
+          } else {
+            radio.removeAttribute('checked');
+          }
+
+          // Update disabled state
+          if (isAvailable) {
+            radio.removeAttribute('disabled');
+            radio.disabled = false;
+          } else {
+            radio.setAttribute('disabled', 'disabled');
+            radio.disabled = true;
+          }
+
+          // Update label classes for visual feedback
+          const label = radioGroup.querySelector(`label[for="${radio.id}"]`);
+          if (label) {
+            if (isSelected) {
+              label.classList.add('border-current');
+              label.classList.remove('border-transparent');
+            } else {
+              label.classList.remove('border-current');
+              label.classList.add('border-transparent');
+            }
+
+            if (!isAvailable) {
+              label.classList.add('cursor-not-allowed', 'text-light-text-color', 'opacity-50');
+              label.classList.remove('cursor-pointer');
+            } else {
+              label.classList.remove('cursor-not-allowed', 'text-light-text-color', 'opacity-50');
+              label.classList.add('cursor-pointer');
+            }
+          }
+        });
+      });
+
+      // Update select dropdowns
+      const variantSelectElements = containerElement.querySelectorAll('variant-selects select');
+      variantSelectElements.forEach((select, index) => {
+        const optionValue = selectedVariant.options[index];
+
+        // Update selected value
+        select.value = optionValue;
+        Array.from(select.options).forEach(option => {
+          if (option.value === optionValue) {
+            option.setAttribute('selected', 'selected');
+          } else {
+            option.removeAttribute('selected');
+          }
+
+          // Update disabled state
+          const mapKey = `${index + 1}-${option.value}`;
+          const isAvailable = availabilityMap[mapKey];
+
+          if (isAvailable) {
+            option.removeAttribute('disabled');
+            option.disabled = false;
+          } else {
+            option.setAttribute('disabled', 'disabled');
+            option.disabled = true;
+          }
+        });
+      });
+
+      // Update product URLs to include variant
+      const productLinks = containerElement.querySelectorAll('a[href*="/products/"]');
+      productLinks.forEach(link => {
+        const url = new URL(link.href);
+        url.searchParams.set('variant', selectedVariant.id);
+        link.href = url.toString();
+      });
+
+      // Trigger reinitialization
+      const event = new CustomEvent('section:updated', {
+        bubbles: true,
+        detail: { container: containerElement }
+      });
+      containerElement.dispatchEvent(event);
+
+      return;
+    }
+
+    // PDP: Fetch section HTML
     fetch(fetchUrl)
       .then(response => {
         const contentType = response.headers.get('content-type');
@@ -230,15 +462,11 @@ class VariantSelects extends HTMLElement {
           const parser = new DOMParser();
           const doc = parser.parseFromString(data, 'text/html');
           fetchedSection = doc.querySelector(`#${section.id}`);
-
-          console.log(doc)
         }
 
         if (!fetchedSection) {
           return;
         }
-
-        console.log('fetchedSection', fetchedSection)
 
         // Check if fetched section is significantly smaller (likely incomplete in dev mode)
         const sizeRatio = fetchedSection.innerHTML.length / section.innerHTML.length;
@@ -251,9 +479,6 @@ class VariantSelects extends HTMLElement {
         // Find container in fetched section
         const selector = updateId ? `[data-product-update="${updateId}"]` : '[data-product-update]';
         const newContainer = fetchedSection.querySelector(selector);
-
-        console.log('selector: ', selector)
-        console.log('newContainer: ', newContainer)
 
         if (!newContainer) {
           return;

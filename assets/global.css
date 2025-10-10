@@ -1591,6 +1591,9 @@ video {
 .text-light-text-color {
   color: var(--light-text-color);
 }
+.text-success {
+  color: var(--success);
+}
 .\!opacity-100 {
   opacity: 1 !important;
 }

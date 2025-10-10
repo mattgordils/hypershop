@@ -9,29 +9,29 @@
     class="aspect-3/4 relative block group"
     aria-label="View {{ product.title }}"
   >
-    <div class="relative">
-      <div class="absolute top-0 left-0 w-full p-4 z-3">
-        {% render 'product-badges' with product: product %}
-      </div>
-      {% render 'image' with
-        src: product.selected_or_first_available_variant.image,
-        sizes: '640px',
-        ratio: 0.75,
-        loading: 'lazy',
-        alt: product.title,
-        class: 'z-1 relative'
-      %}
-      {% if product.images[1] %}
-        <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          {% render 'image' with
-            src: product.images[1],
-            sizes: '640px',
-            ratio: 0.75,
-            alt: product.title | append: ' - alternate view'
-          %}
-        </div>
-      {% endif %}
+    <div class="absolute top-0 left-0 w-full p-4 z-3">
+      {% render 'product-badges' with product: product %}
     </div>
+    {% render 'image' with
+      src: product.selected_or_first_available_variant.image,
+      sizes: '640px',
+      ratio: 0.75,
+      layout: 'cover',
+      loading: 'lazy',
+      alt: product.title,
+      class: 'z-1 relative'
+    %}
+    {% if product.images[1] %}
+      <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        {% render 'image' with
+          src: product.images[1],
+          sizes: '640px',
+          ratio: 0.75,
+          layout: 'cover',
+          alt: product.title | append: ' - alternate view'
+        %}
+      </div>
+    {% endif %}
   </a>
 
   <div class="text-center">

@@ -13,7 +13,7 @@
 
 <div id="productPrice" class={{ classname }}>
   {% if show_compare_price %}
-    <s class="{{ og_price_class }}">{{ item.compare_at_price | times: times | money }}</s> <span data-variant-price>{{ item.price | times: times | money }}</span>
+    <s class="{{ og_price_class }}" data-price-compare>{{ item.compare_at_price | times: times | money }}</s> <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% else %}
     <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% endif %}
