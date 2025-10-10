@@ -27,7 +27,7 @@
 				%}
 			</div>
 		{% endif %}
-		<div class="hidden md:gridd md:grid-cols-2 gap-gutter">
+		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
 			{%- for image in product.images -%}
 				{% render 'image' with
 					src: image,
@@ -50,13 +50,6 @@
 			</add-to-cart-form>
     </div>
   </div>
-
-	<div style="width: 300px;" data-dynamic-content data-product-card>
-		{% render 'product_card' with
-			product: product,
-			context: 'pdp-card'
-		%}
-	</div>
 </div>
 
 {% schema %}

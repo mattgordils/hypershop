@@ -415,6 +415,26 @@ class VariantSelects extends HTMLElement {
         link.href = url.toString();
       });
 
+      // Update badges based on variant
+      const saleBadge = containerElement.querySelector('[data-badge="sale"]');
+      if (saleBadge) {
+        const isOnSale = selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price;
+        if (isOnSale) {
+          saleBadge.classList.remove('hidden');
+        } else {
+          saleBadge.classList.add('hidden');
+        }
+      }
+
+      const soldOutBadge = containerElement.querySelector('[data-badge="sold-out"]');
+      if (soldOutBadge) {
+        if (!selectedVariant.available) {
+          soldOutBadge.classList.remove('hidden');
+        } else {
+          soldOutBadge.classList.add('hidden');
+        }
+      }
+
       // Trigger reinitialization
       const event = new CustomEvent('section:updated', {
         bubbles: true,

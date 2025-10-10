@@ -132,7 +132,7 @@ variant will update imagery and url
                 name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
                 value="{{ value | escape }}"
                 form="{{ product_form_id }}"
-                class="hidden"
+                class="hidden peer"
                 {% if is_selected %}checked{% endif %}
                 {% unless value_available %}disabled{% endunless %}
               >
@@ -151,11 +151,18 @@ variant will update imagery and url
                   align-center
                   leading-none
                   transition-[border,color,opacity]
-                  {% if is_selected %}border-current{% else %}border-transparent{% endif %}
-                  {% if value_available %}
-                    cursor-pointer
-                    {% if is_selected == false %}hover:border-hr-color{% endif %}
-                  {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
+                  border-transparent
+                  hover:border-hr-color
+                  {% comment %} Checked {% endcomment %}
+                  peer-checked:border-current
+                  peer-checked:hover:border-current
+                  {% comment %} Enabled {% endcomment %}
+                  peer-enabled:cursor-pointer
+                  {% comment %} Disabled {% endcomment %}
+                  peer-disabled:cursor-not-allowed
+                  peer-disabled:text-light-text-color
+                  peer-disabled:opacity-50
+                  peer-disabled:border-transparent
                 "
               >
                 {%- if color_variant.image -%}
@@ -238,7 +245,7 @@ variant will update imagery and url
                 name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
                 value="{{ value | escape }}"
                 form="{{ product_form_id }}"
-                class="hidden"
+                class="hidden peer"
                 {% if is_selected %}checked{% endif %}
                 {% unless value_available %}disabled{% endunless %}
               >
@@ -261,11 +268,18 @@ variant will update imagery and url
                   align-center
                   leading-none
                   transition-[border,color,opacity]
-                  {% if is_selected %}border-current{% else %}border-transparent{% endif %}
-                  {% if value_available %}
-                    cursor-pointer
-                    {% if is_selected == false %}hover:border-hr-color{% endif %}
-                  {% else %}cursor-not-allowed text-light-text-color opacity-50{% endif %}
+                  border-transparent
+                  hover:border-hr-color
+                  {% comment %} Checked {% endcomment %}
+                  peer-checked:border-current
+                  peer-checked:hover:border-current
+                  {% comment %} Enabled {% endcomment %}
+                  peer-enabled:cursor-pointer
+                  {% comment %} Disabled {% endcomment %}
+                  peer-disabled:cursor-not-allowed
+                  peer-disabled:text-light-text-color
+                  peer-disabled:opacity-50
+                  peer-disabled:border-transparent
                 "
               >
                 {{ value }}
