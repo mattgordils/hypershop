@@ -76,7 +76,6 @@
       },
       "name": "Wide Media",
       "settings": {
-        "media_type": "image",
         "overlay_opacity": 0,
         "h_alignment": "justify-center",
         "v_alignment": "items-center",
@@ -132,7 +131,8 @@
           "type": "_media",
           "static": true,
           "settings": {
-            "media_type": "image"
+            "media_type": "image",
+            "image": "shopify://shop_images/Yony5f73544f8c51285f73544f8c749.169399275f73544f8c749.jpg"
           },
           "blocks": {}
         },
@@ -193,8 +193,6 @@
       },
       "name": "Media With Text",
       "settings": {
-        "media_type": "image",
-        "image": "shopify://shop_images/Yony5f73544f8c51285f73544f8c749.169399275f73544f8c749.jpg",
         "h_alignment": "justify-center",
         "v_alignment": "items-center",
         "section_spacing": "medium"
