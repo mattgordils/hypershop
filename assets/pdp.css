@@ -1,10 +1,1 @@
-/*!*****************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main-product.scss ***!
-  \*****************************************************************************************************************************************************************/
-.section-main-product .pdp-blocks .shopify-block:empty,
-.section-main-product .pdp-blocks .shopify-block.block-product-badges:not(:has(.product-badges.empty)) {
-  display: none;
-}
-.section-main-product .pdp-blocks .block-headline {
-  text-wrap: balance;
-}
+.section-main-product .pdp-blocks .shopify-block.block-product-badges:not(:has(.product-badges.empty)),.section-main-product .pdp-blocks .shopify-block:empty{display:none}.section-main-product .pdp-blocks .block-headline{text-wrap:balance}

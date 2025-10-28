@@ -4,15 +4,15 @@
 	"scripts": {
 		"start": "npm-run-all --parallel webpack:watch theme:dev",
 		"dev": "npm start",
-		"build": "NODE_ENV=production yarn webpack:build",
+		"build": "NODE_ENV=production npm run webpack:build",
 		"clean": "rm -rf assets",
 		"// WEBPACK //": "",
 		"webpack:watch": "webpack watch",
 		"webpack:build": "webpack build",
 		"// THEME //": "",
 		"theme:dev": "shopify theme dev -e def",
-		"theme:push:all": "yarn build && shopify theme push",
-		"theme:push:theme": "yarn build && shopify theme push -x 'templates/*.json' -x 'config/settings_schema.json'",
+		"theme:push:all": "npm run build && shopify theme push",
+		"theme:push:theme": "npm run build && shopify theme push -x 'templates/*.json' -x 'config/settings_schema.json'",
 		"theme:pull:all": "shopify theme pull --nodelete",
 		"theme:pull:data": "shopify theme pull --nodelete -x 'assets/*' -x 'layout/*' -x 'locales/*' -x 'sections/*' -x 'snippets/*' -x 'templates/*.liquid' -x 'config/settings_schema.json' "
 	},

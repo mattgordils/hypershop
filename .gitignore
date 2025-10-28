@@ -5,7 +5,9 @@
 ._*
 .Spotlight-V100
 .Trashes
+.claude
 ehthumbs.db
 Thumbs.db
 node_modules
+yarn.lock
 .claude
