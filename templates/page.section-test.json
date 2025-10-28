@@ -19,6 +19,16 @@
     "wide_media_cwqYYx": {
       "type": "wide-media",
       "blocks": {
+        "media": {
+          "type": "_media",
+          "static": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/needle-on-record.jpg",
+            "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4"
+          },
+          "blocks": {}
+        },
         "text-lockup": {
           "type": "_text-lockup",
           "static": true,
@@ -62,19 +72,11 @@
             "headline_a9HnQG",
             "actions_h9cYWr"
           ]
-        },
-        "media": {
-          "type": "_media",
-          "static": true,
-          "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/needle-on-record.jpg",
-            "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4",
-          }
         }
       },
       "name": "Wide Media",
       "settings": {
+        "media_type": "image",
         "overlay_opacity": 0,
         "h_alignment": "justify-center",
         "v_alignment": "items-center",
@@ -123,11 +125,87 @@
         "section_spacing": "medium"
       }
     },
+    "media_w_text_NEGyQf": {
+      "type": "media-w-text",
+      "blocks": {
+        "media": {
+          "type": "_media",
+          "static": true,
+          "settings": {
+            "media_type": "image"
+          },
+          "blocks": {}
+        },
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "center"
+          },
+          "blocks": {
+            "headline_dUphXT": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Headline",
+                "style": "h2",
+                "element": "h2"
+              },
+              "blocks": {}
+            },
+            "rich_text_aygqzK": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Put text next to an image or video if you like. It can be pretty nice.</p>",
+                "size": ""
+              },
+              "blocks": {}
+            },
+            "actions_wheHiN": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {},
+              "blocks": {
+                "button_6Ua8LD": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Button Text",
+                    "link": "shopify://products/camp-collar-shirt-with-piping-5",
+                    "new_tab": false,
+                    "style": "primary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_6Ua8LD"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_dUphXT",
+            "rich_text_aygqzK",
+            "actions_wheHiN"
+          ]
+        }
+      },
+      "name": "Media With Text",
+      "settings": {
+        "media_type": "image",
+        "image": "shopify://shop_images/Yony5f73544f8c51285f73544f8c749.169399275f73544f8c749.jpg",
+        "h_alignment": "justify-center",
+        "v_alignment": "items-center",
+        "section_spacing": "medium"
+      }
+    },
     "product_grid_QwgTtj": {
       "type": "product-grid",
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
+        "products": [],
         "section_spacing": "medium"
       }
     },
@@ -252,6 +330,7 @@
     "settings",
     "wide_media_cwqYYx",
     "text_section_7NkykN",
+    "media_w_text_NEGyQf",
     "product_grid_QwgTtj",
     "accordion_6z8g69"
   ]

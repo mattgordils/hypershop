@@ -12,67 +12,6 @@
     "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
-    "sections": {
-      "header": {
-        "type": "page_header",
-        "blocks": {
-          "image_tLXnEa": {
-            "type": "image",
-            "settings": {
-              "logo": "shopify://shop_images/Yony5f73548769f1f15f7354876a09d.191545425f7354876a09d_3d6988f8-990d-4db8-8f12-90233275d4cb.jpg"
-            }
-          }
-        },
-        "block_order": [
-          "image_tLXnEa"
-        ],
-        "settings": {
-          "menu": "main-menu"
-        }
-      },
-      "age_gate": {
-        "type": "page_age-gate",
-        "settings": {
-          "expiration": 2,
-          "url": "",
-          "logo": "shopify://shop_images/Vector.png",
-          "question-text": "Are you of legal purchase age for alcohol?",
-          "fine-print-text": "YOU MUST BE OF LEGAL DRINKING AGE IN YOUR RESPECTIVE COUNTRY FOR ENTRY. BY ENTERING YOU ACCEPT OUR TERMS AND CONDITIONS AND OUR PRIVACY AND COOKIE POLICY. WE ENCOURAGE DRINKING RESPONSIBLY."
-        }
-      },
-      "footer": {
-        "type": "page_footer",
-        "settings": {
-          "link_list_1": "main-menu",
-          "link_list_2": "main-menu",
-          "link_list_3": "main-menu",
-          "text": "sign up for newsletter",
-          "text-confirm": "thank you!"
-        }
-      },
-      "cart": {
-        "type": "page_cart-panel",
-        "settings": {
-          "text_footer": "Free shipping on orders over $100",
-          "upsell_collection": "frontpage",
-          "text_checkout": "Checkout"
-        }
-      },
-      "notification_banner": {
-        "type": "page_notification-banner",
-        "settings": {
-          "text": "Deals, Deals, Deals!",
-          "link": ""
-        }
-      },
-      "menu_panel": {
-        "type": "page_menu-panel",
-        "settings": {
-          "menu": "main-menu",
-          "secondary_menu": "main-menu"
-        }
-      }
-    },
     "content_for_index": []
   }
 }
