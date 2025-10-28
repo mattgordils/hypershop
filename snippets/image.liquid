@@ -1,93 +1,171 @@
-{%-liquid
-	assign max_width = 2000
+{% comment %}
+  Optimized Image Snippet
+  
+  Usage:
+  {% render 'image',
+    image: section.settings.image,
+    alt: 'Description',
+    width: 1200,
+    ratio: '16/9',
+    sizes: '(min-width: 1024px) 50vw, 100vw',
+    loading: 'lazy',
+    class: 'custom-class',
+    fetchpriority: 'high'
+  %}
+{% endcomment %}
 
-	if max_size != blank
-		assign max_width = max_size
-	endif
+{% liquid
+  comment
+    Default parameters
+  endcomment
+  assign image_width = width | default: 1200
+  assign image_loading = loading | default: 'lazy'
+  assign image_class = class | default: ''
+  assign image_sizes = sizes | default: '100vw'
+  assign image_alt = alt | default: image.alt | default: ''
 
-	assign objectFit = 'object-cover'
-	if image_position != blank
-		assign objectFit = 'object' | append: '-' | append: image_position
-	endif
+  comment
+    Determine if this is an asset or schema image
+  endcomment
+  if image != blank
+		comment
+			If is a local asset in /assets
+		endcomment
+    assign is_asset = true
+  else
+    assign is_asset = false
+    assign image = src
+  endif
 
-	if image_position == 'contain'
-		assign objectFit = 'object-contain'
-	endif
+  comment
+    Calculate aspect ratio dimensions if ratio is provided
+    Ratio can be a decimal (0.75) or string (3/4)
+  endcomment
+  if ratio
+    assign ratio_string = ratio | append: ''
+    if ratio_string contains '/'
+      assign ratio_parts = ratio | split: '/'
+      assign ratio_width = ratio_parts[0] | times: 1.0
+      assign ratio_height = ratio_parts[1] | times: 1.0
+      assign aspect_ratio = ratio_width | divided_by: ratio_height
+    else
+      assign aspect_ratio = ratio | times: 1.0
+    endif
+  endif
 
-	assign imageSizes = '100vw'
-	if sizes
-		assign imageSizes = sizes
-	endif
-	
-	assign alt_text = ''
-	if alt
-		assign alt_text = alt | strip_html
-	endif
+  comment
+    Define srcset widths for responsive images
+  endcomment
+  assign widths = '320,640,768,1024,1280,1536,1920,2048,2560'
+  assign widths_array = widths | split: ','
 
-	assign imageLoading = 'lazy'
-	if loading
-		assign imageLoading = loading
-	endif
+  if layout != blank
+    if layout == 'cover'
+      assign object_fit = 'object-cover'
+    endif
+    if layout == 'contain'
+      assign object_fit = 'object-contain'
+    endif
+  endif
 
-	assign ImgWidth = src.width
-	if width
-		assign ImgWidth = width
-	endif
+  assign image_class = class
+  if image_loading == 'lazy'
+    assign image_class = image_class | append: ' opacity-0 transition-opacity duration-slow'
+  endif
 
-	assign ImgHeight = src.height
-	if height
-		assign ImgHeight = height
-	endif
--%}
+  if layout == 'cover' or layout == 'contain'
+    assign image_class = image_class | append: ' ' | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
+  endif
+%}
 
-<script>
-	function revealImage(event) {
-		event.target.classList.remove('opacity-0')
-	}
+<script type="text/javascript">
+  function revealImage(event) {
+    event.target.classList.remove('opacity-0');
+  }
 </script>
 
 {% if image != blank %}
-	<img 
-		class="{{ classname }} {% if imageLoading == 'lazy' %}opacity-0 transition-opacity duration-slow {% endif %} {{ objectFit }} shrink-0 {% if image_position == 'cover' or image_position == 'contain' %}absolute top-0 left-0 w-full h-full{% else %}w-full h-auto{% endif %}" 
-		id="{{ id }}"
-		src="{{ image | asset_img_url: '480x' | split: '?' | first }}"
-		width="{{ ImgWidth }}"
-		height="{{ ImgHeight }}"
-		sizes="{{ imageSizes }}"
-		srcset="{{ image | asset_img_url: '640x' | split: '?' | first }} 640w,
-						{{ image | asset_img_url: '720x' | split: '?' | first }} 720w,
-						{{ image | asset_img_url: '900x' | split: '?' | first }} 900w,
-						{{ image | asset_img_url: '1200x' | split: '?' | first }} 1200w,
-						{{ image | asset_img_url: '1500x' | split: '?' | first }} 1500w,
-						{{ image | asset_img_url: '1800x' | split: '?' | first }} 1800w,
-						{{ image | asset_img_url: '2000x' | split: '?' | first }} 2000w,
-						{{ image | asset_img_url: '2400x' | split: '?' | first }} 2400w"
-		loading="{{ imageLoading }}"
-		alt="{{ alt_text }}"
-		{%- if imageLoading == 'lazy' -%}
-		onLoad="revealImage(event)"
-		{%- endif -%}
-	>
-{% else %}
-	<img 
-		class="{{ classname }} {% if imageLoading == 'lazy' %}opacity-0 transition-opacity duration-slow {% endif %} {{ objectFit }} shrink-0 {% if image_position == 'cover' or image_position == 'contain' %}absolute top-0 left-0 w-full h-full{% else %}w-full h-auto{% endif %}" 
-		id="{{ id }}"
-		src="{{ src | image_url: width: '480x' }}"
-		width="{{ ImgWidth }}"
-		height="{{ ImgHeight }}"
-		sizes="{{ imageSizes }}"
-		srcset="{% if src.width > 640 and max_width >= 640 %}{{ src.src | img_url: '640x' }} 640w,{% endif %}
-						{% if src.width > 720 and max_width >= 720 %},{{ src.src | img_url: '720x' }} 720w,{% endif %}
-						{% if src.width > 900 and max_width >= 900 %},{{ src.src | img_url: '900x' }} 900w,{% endif %}
-						{% if src.width > 1200 and max_width >= 1200 %},{{ src.src | img_url: '1200x' }} 1200w,{% endif %}
-						{% if src.width > 1500 and max_width >= 1500 %},{{ src.src | img_url: '1500x' }} 1500w,{% endif %}
-						{% if src.width > 1800 and max_width >= 1800 %},{{ src.src | img_url: '1800x' }} 1800w,{% endif %}
-						{% if src.width > 2000 and max_width >= 2000 %},{{ src.src | img_url: '2000x' }} 2000w,{% endif %}
-						{% if src.width > 2400 and max_width >= 2400 %},{{ src.src | img_url: '2400x' }} 2400w,{% endif %}"
-		loading="{{ imageLoading }}"
-		alt="{{ alt_text }}"
-		{%- if imageLoading == 'lazy' -%}
-		onLoad="revealImage(event)"
-		{%- endif -%}
-	>
+  <picture>
+    {% if is_asset %}
+      {%- comment -%} Asset-based image {%- endcomment -%}
+      {%- liquid
+        if ratio and aspect_ratio
+          assign asset_height = image_width | divided_by: aspect_ratio | round
+        else
+          assign asset_height = image_width
+        endif
+      -%}
+      <img
+        src="{{ image | asset_url }}"
+        alt="{{ image_alt | escape }}"
+        width="{{ image_width }}"
+        height="{{ asset_height }}"
+        loading="{{ image_loading }}"
+        {% if fetchpriority %}
+          fetchpriority="{{ fetchpriority }}"
+        {% endif %}
+        {% if image_class != blank %}
+          class="{{ image_class }}"
+        {% endif %}
+        decoding="async"
+        {% if image_loading == 'lazy' %}
+          onLoad="revealImage(event)"
+        {% endif %}
+      >
+    {% else %}
+      {%- comment -%} Schema/CDN image with srcset {%- endcomment -%}
+      {%- liquid
+        assign srcset_items = ''
+        assign fallback_width = 800
+
+        if ratio and aspect_ratio
+          assign main_height = image_width | divided_by: aspect_ratio | round
+          assign fallback_height = fallback_width | divided_by: aspect_ratio | round
+        else
+          assign main_height = image.height
+          assign fallback_height = image.height
+        endif
+
+        for width_item in widths_array
+          assign current_width = width_item | times: 1
+          if current_width <= image.width
+            if ratio and aspect_ratio
+              assign calculated_height = current_width | divided_by: aspect_ratio | round
+              assign srcset_item = image | image_url: width: current_width, height: calculated_height | append: ' ' | append: current_width | append: 'w'
+            else
+              assign srcset_item = image | image_url: width: current_width | append: ' ' | append: current_width | append: 'w'
+            endif
+
+            if srcset_items != ''
+              assign srcset_items = srcset_items | append: ', '
+            endif
+            assign srcset_items = srcset_items | append: srcset_item
+          endif
+        endfor
+      -%}
+      <img
+        {% if ratio and aspect_ratio %}
+          src="{{ image | image_url: width: fallback_width, height: fallback_height }}"
+        {% else %}
+          src="{{ image | image_url: width: fallback_width }}"
+        {% endif %}
+        srcset="{{ srcset_items }}"
+        sizes="{{ image_sizes }}"
+        alt="{{ image_alt | escape }}"
+        width="{{ image_width }}"
+        height="{{ main_height }}"
+        loading="{{ image_loading }}"
+        {% if fetchpriority %}
+          fetchpriority="{{ fetchpriority }}"
+        {% endif %}
+        {% if image_class != blank %}
+          class="{{ image_class }}"
+        {% endif %}
+        decoding="async"
+        {% if image_loading == 'lazy' %}
+          onLoad="revealImage(event)"
+        {% endif %}
+      >
+    {% endif %}
+  </picture>
 {% endif %}

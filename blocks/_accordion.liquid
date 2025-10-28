@@ -1,0 +1,35 @@
+<accordion-list
+  class="block border-b border-hr-color"
+  {% if block.settings.first_open %}
+    data-initial-open="0"
+  {% endif %}
+>
+  {% for block in block.blocks %}
+    {% render block %}
+  {% endfor %}
+</accordion-list>
+
+{% schema %}
+{
+  "name": "Accordion",
+  "class": "block-accordion",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "default": true,
+      "label": "First Item Open Initially"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_title-w-text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+@layer base {
+  .animate-underline {
+		text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size var(--slow-speed);
+	}
+
+	.active .animate-underline,
+	.animate-underline:hover,
+	.group:hover .animate-underline {
+		background-size: 100% 1px;
+		background-position: 0% 100%;
+	}
+}

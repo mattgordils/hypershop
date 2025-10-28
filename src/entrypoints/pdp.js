@@ -1,3 +1,5 @@
+import "../styles/main-product.scss";
+
 if (!customElements.get("pdp-qty-input")) {
   customElements.define(
     "pdp-qty-input",
@@ -5,7 +7,6 @@ if (!customElements.get("pdp-qty-input")) {
       constructor() {
         super();
         //
-        console.log(this.dataset)
         this.qtyInput = this.querySelector('input[data-input="qty"]')
 
         this.qtyAdjustDecrease = this.querySelector('button#qtyDown')
@@ -25,8 +26,6 @@ if (!customElements.get("pdp-qty-input")) {
       }
 
       setDisabled() {
-        console.log('this.nextDown', this.nextDown)
-        console.log('this.nextUp', this.nextUp)
         if (this.nextUp > this.maxLimit) {
           this.qtyAdjustIncrease.disabled = true
         } else {

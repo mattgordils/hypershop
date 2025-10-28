@@ -1,17 +1,13 @@
-{% if label != blank %}
-  <a
-    href="{{ to }}"
-    target="{{ target }}"
-    class="button {{ class }}"
-    title="{{ label }}"
-  >
-    {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon_material' with icon: icon %}
-    {% else %}
-      {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
-      {% endif %}
-      {{ label }}
-    {% endif %}
-  </a>
-{% endif %}
+{% liquid
+  assign button_class = 'button'
+  if class != blank
+    assign button_class = button_class | append: ' ' | append: class
+  endif
+%}
+
+{% render 'link' with
+  label: label,
+  target: target,
+  class: button_class,
+  to: to
+%}

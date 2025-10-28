@@ -7,12 +7,14 @@
   if item.compare_at_price != blank and item.compare_at_price > item.price
     assign show_compare_price = true
   endif
+
+  assign og_price_class = compare_price_class | default: 'text-error'
 -%}
 
 <div id="productPrice" class={{ classname }}>
   {% if show_compare_price %}
-    <s class="text-error">{{ item.compare_at_price | times: times | money }}</s> {{ item.price | times: times | money }}
+    <s class="{{ og_price_class }}" data-price-compare>{{ item.compare_at_price | times: times | money }}</s> <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% else %}
-    {{ item.price | times: times | money }}
+    <span data-variant-price>{{ item.price | times: times | money }}</span>
   {% endif %}
 </div>

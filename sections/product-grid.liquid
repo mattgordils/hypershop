@@ -1,0 +1,77 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+{%-liquid
+  assign section_collection = section.settings.collection | default: collection
+
+  if section.settings.products != blank
+    assign section_collection = section.settings
+  endif
+-%}
+
+{% if section_collection.products.size > 0 %}
+  <div class="px-margin {{ spacing_class }}">
+    <div class="max-w-site-max-w mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
+        {% for product in section_collection.products %}
+          <div>
+            {% render 'product_card' with product: product %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "tag": "section",
+  "class": "section-product-grid",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "This will override the selected collection"
+    },
+		{
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    }
+	],
+  "presets": [
+    {
+      "name": "Product Grid"
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,24 +1,65 @@
-<div class="product-card flex flex-col gap-y-gutter cursor-pointer">
-  <a href="{{ product.url }}" class="aspect-3/4 relative">
-    {% render 'image' with
-      src: product.featured_image,
-      id: 'cardImage',
-      image_position: 'cover',
-      sizes: '640px',
-      max_size: 640
-      notlazy: notlazy,
-      alt: product.title
-    %}
-  </a>
-  <a href="{{ product.url }}">
-    <div class="text-center">
-      <div class="body">
-        {{ product.title }}
-      </div>
-      <div class="body-small">
-        {% render 'product_price' with item: product.first_available_variant %}
-      </div>
+<article
+  class="product-card flex flex-col"
+  data-product-update="product-{{ product.id }}"
+  itemscope
+  itemtype="https://schema.org/Product"
+>
+  <a
+    href="{{ product.url }}"
+    class="aspect-3/4 relative block group"
+    aria-label="View {{ product.title }}"
+  >
+    <div class="absolute top-0 left-0 w-full p-4 z-3">
+      {% render 'product-badges' with product: product %}
     </div>
+    {% render 'image' with
+      src: product.selected_or_first_available_variant.image,
+      sizes: '640px',
+      ratio: 0.75,
+      layout: 'cover',
+      loading: 'lazy',
+      alt: product.title,
+      class: 'z-1 relative'
+    %}
+    {% if product.images[1] %}
+      <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        {% render 'image' with
+          src: product.images[1],
+          sizes: '640px',
+          ratio: 0.75,
+          layout: 'cover',
+          alt: product.title | append: ' - alternate view'
+        %}
+      </div>
+    {% endif %}
   </a>
-  {% render 'product_option_form' with product: product %}
-</div>
+
+  <div class="text-center pb-gutter">
+    <h3 class="body">
+      <a href="{{ product.url }}" itemprop="name" class="border-none pt-gutter block">
+        {{ product.title }}
+      </a>
+    </h3>
+    <div class="body-small" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
+      <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+      <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+      {% render 'product_price' with item: product.selected_or_first_available_variant %}
+    </div>
+  </div>
+
+  <add-to-cart-form>
+    <div>
+      {% render 'product_option_form' with
+        product: product,
+        section_context: context,
+        class: "pb-gutter items-center",
+        label_class: "text-center pb-1 block"
+      %}
+      {% render 'add_to_cart_button' with
+        class: "w-full",
+        product: product
+      %}
+    </div>
+  </add-to-cart-form>
+</article>

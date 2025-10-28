@@ -2,7 +2,7 @@
   assign section_id = section.id
 -%}
 
-<div class="product-card">
+<div class="product-card" data-product-update="product-{{ product.id }}">
   <add-to-cart-form class="shrink-0 grow-0">
     <div class="flex flex-col gap-y-gutter">
       <div class="flex gap-x-gutter">
@@ -11,7 +11,7 @@
             {% render 'image' with
               src: product.featured_image,
               id: 'cardImage',
-              image_position: 'cover',
+              layout: 'cover',
               sizes: '300px',
               notlazy: notlazy,
               alt: product.title
@@ -22,7 +22,7 @@
           <div class="body">
             {{ product.title }}
           </div>
-          <div class="body-small">
+          <div class="body-small" id="cardPrice">
             {% render 'product_price' with item: product.first_available_variant %}
           </div>
 

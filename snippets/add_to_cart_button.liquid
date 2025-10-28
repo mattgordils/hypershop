@@ -1,24 +1,48 @@
 
 {%-liquid
-  assign text = 'Sold Out'
-  if product.available
-    assign text = 'Add to Cart'
+  assign is_available = false
+  assign button_text = 'Sold Out'
+  if product.selected_or_first_available_variant.available
+    assign button_text = 'Add to Cart'
+    assign is_available = true
   endif
 -%}
+
 <button
   type="submit"
-  class="button theme-product add-to-cart-btn {{ class }}"
+  class="
+    button
+    theme-product
+    add-to-cart-btn
+    {{ class }}
+  "
   title="{{ text }}"
-  {% if product.available %}{% else %}disabled{% endif %}
+  {% if is_available == false %}disabled{% endif %}
 >
-  <span class="button-content">
+  <span class="
+      button-content
+      {% if show_price %}
+      flex
+      justify-between
+      gap-6
+      items-baseline
+      w-full
+      {% endif %}
+    "
+  >
     {% if class contains 'circle' or class contains 'sqaure' %}
       {% render 'icon_material' with icon: icon %}
     {% else %}
       {% if icon != blank %}
         {% render 'icon_material' with icon: icon %}
       {% endif %}
-      {{ text }}
+      {{ button_text }}
+    {% endif %}
+    {% if show_price %}
+      {% render 'product_price' with
+        item: product.selected_or_first_available_variant,
+        compare_price_class: 'opacity-50'
+      %}
     {% endif %}
   </span>
 </button>

@@ -1,0 +1,107 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+{% capture padding_class %}
+  {% render 'util-section-padding' with space: section.settings.section_padding %}
+{% endcapture %}
+
+<div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }}">
+	<div class="px-margin">
+    {% content_for 'block',
+      type: '_text-lockup',
+      id: 'text-lockup',
+      classname: 'max-w-narrow text-balance'
+    %}
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Text Section",
+  "tag": "section",
+  "class": "section-text-section",
+	"settings": [
+    // Section Spacing
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+		{
+      "type": "select",
+      "id": "section_padding",
+      "default": "none",
+      "label": "Section Padding",
+      "info": "Equal space added above and below the section",
+      "visible_if": "{{ section.settings.color_scheme != 'theme-default' }}",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+	],
+	"blocks": [
+		{
+      "type": "_text-lockup"
+    }
+	],
+	"presets": [
+    {
+      "name": "Text Section",
+      "category": "Text",
+      "blocks": [
+        {
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
+        }
+      ]
+	  }
+  ]
+}
+{% endschema %}

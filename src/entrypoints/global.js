@@ -6,6 +6,7 @@ import { refreshCart } from "./cart";
 import './modal';
 import './collapsible';
 import './inView';
+import './slideshow';
 
 // Console Signature
 document.addEventListener('DOMContentLoaded', () => {
@@ -89,13 +90,32 @@ if (!customElements.get("add-to-cart-form")) {
     class AddToCartForm extends HTMLElement {
       constructor() {
         super();
+        this.init();
+
+        // Reinitialize when section is updated (after variant change)
+        // Listen on the product-update container since that's where the event is dispatched
+        const productContainer = this.closest('[data-product-update]');
+        if (productContainer) {
+          productContainer.addEventListener('section:updated', () => {
+            this.init();
+          });
+        }
+      }
+
+      init() {
         this.addButton = this.querySelector(".add-to-cart-btn");
         this.qtyInput = this.querySelector("input[data-input='qty']");
         if (!this.addButton) {
           return undefined
         }
-        
-        this.addButton.addEventListener("click", (event) => {
+
+        // Remove old listener if it exists
+        if (this.handleClick) {
+          this.addButton.removeEventListener("click", this.handleClick);
+        }
+
+        // Store the bound handler so we can remove it later
+        this.handleClick = (event) => {
           event.preventDefault();
           const productOptions = this.querySelectorAll('variant-radios input, variant-selects')
           const selectedOptions = getSelectedOptions(productOptions)
@@ -170,8 +190,9 @@ if (!customElements.get("add-to-cart-form")) {
           .catch((error) => {
             console.error("Error:", error);
           });
+        };
 
-        });
+        this.addButton.addEventListener("click", this.handleClick);
       }
     }
   );

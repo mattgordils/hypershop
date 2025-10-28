@@ -1,68 +1,55 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
-    "checkout_logo_image": "shopify:\/\/shop_images\/test-logo.png",
+    "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
-    "sections": {
-      "header": {
-        "type": "header",
+    "content_for_index": [],
+    "color_schemes": {
+      "theme-default": {
         "settings": {
-          "menu": "main-menu"
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text": "#000",
+          "button": "#000",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
         }
       },
-      "age_gate": {
-        "type": "age_gate",
+      "theme-light-grey": {
         "settings": {
-          "expiration": 2,
-          "url": "",
-          "logo": "shopify:\/\/shop_images\/Vector.png",
-          "question-text": "Are you of legal purchase age for alcohol?",
-          "fine-print-text": "YOU MUST BE OF LEGAL DRINKING AGE IN YOUR RESPECTIVE COUNTRY FOR ENTRY. BY ENTERING YOU ACCEPT OUR TERMS AND CONDITIONS AND OUR PRIVACY AND COOKIE POLICY. WE ENCOURAGE DRINKING RESPONSIBLY."
+          "background": "#f2f2f2",
+          "background_gradient": "",
+          "text": "#000",
+          "button": "#000",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
         }
       },
-      "footer": {
-        "type": "footer",
+      "theme-dark": {
         "settings": {
-          "link_list_1": "main-menu",
-          "link_list_2": "main-menu",
-          "link_list_3": "main-menu",
-          "text": "sign up for newsletter",
-          "text-confirm": "thank you!"
-        }
-      },
-      "email-capture": {
-        "type": "email-capture",
-        "settings": {
-          "expiration": 2,
-          "text-main": "SUBSCRIBE TO THE NEWSLETTER",
-          "text-above": "STAY UP TO DATE WITH EVENTS & HAPPENINGS",
-          "placeholder-text": "Email",
-          "text-below": "",
-          "text-confirm": "thank you!"
-        }
-      },
-      "cart": {
-        "type": "cart",
-        "settings": {
-          "text_footer": "Free shipping on orders over $100",
-          "upsell_collection": "frontpage",
-          "text_checkout": "Checkout"
-        }
-      },
-      "centered_text_blurb": {
-        "type": "centered_text_blurb",
-        "settings": {
-          "text": "Centered text blurb"
-        }
-      },
-      "loading": {
-        "type": "loading",
-        "settings": {
+          "background": "#000",
+          "background_gradient": "",
+          "text": "#fff",
+          "button": "#fff",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
         }
       }
-    },
-    "content_for_index": [
-
-    ]
+    }
   }
 }

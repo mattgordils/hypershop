@@ -1,0 +1,12 @@
+.page-sections {
+  section.shopify-section {
+    &:first-of-type {
+      /* adjustments for when is first section */
+      &.section-wide-media {
+        .section-inner {
+          --content-padding: calc(var(--header-offset) * -1) !important;
+        }
+      }
+    }
+  }
+}

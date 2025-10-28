@@ -6,10 +6,7 @@ variant will update imagery and url
 {% endcomment %}
 
 {%-liquid
-  assign form_context = 'quick-add'
-  if context
-    assign form_context = context
-  endif
+  assign form_context = context | default: 'quick-add'
 
   assign section_id = section.id
   assign form_product = product
@@ -17,27 +14,216 @@ variant will update imagery and url
   if section_context
     assign section_id = section.id | append: '-' | append: section_context
   endif
+
+  assign has_options = false
+
+  for option in product.options_with_values
+    if option.values.size > 1 and has_options == false
+      assign has_options = true
+    endif
+  endfor
 -%}
 
+<div
+  class="flex gap-x-[10px] gap-y-gutter flex-col{% if has_options == false %} hidden{% endif %} {{ class }}"
+  data-url="{{ product.url }}"
+>
 
-<div id="add-to-cart-form" class="add-to-cart-form flex gap-x-[10px] flex-col" data-url="{{ product.url }}">
+{%- liquid
+    assign current_variant = product.selected_or_first_available_variant
+    assign option1_value = current_variant.option1
+    assign option2_value = current_variant.option2
+    assign option3_value = current_variant.option3
+
+    # Build availability map: "position-value" => available (true/false)
+    # e.g., "1-Red", "2-Medium", "3-Cotton"
+    assign availability_map = ''
+
+    for option in product.options_with_values
+      assign option_position = forloop.index
+
+      for value in option.values
+        assign map_key = option_position | append: '-' | append: value
+        assign value_available = false
+
+        for variant in product.variants
+          assign matches = true
+
+          case option_position
+            when 1
+              if option2_value != blank and variant.option2 != option2_value
+                assign matches = false
+              endif
+              if option3_value != blank and variant.option3 != option3_value
+                assign matches = false
+              endif
+              if matches and variant.option1 == value and variant.available
+                assign value_available = true
+                break
+              endif
+            when 2
+              if option1_value != blank and variant.option1 != option1_value
+                assign matches = false
+              endif
+              if option3_value != blank and variant.option3 != option3_value
+                assign matches = false
+              endif
+              if matches and variant.option2 == value and variant.available
+                assign value_available = true
+                break
+              endif
+            when 3
+              if option1_value != blank and variant.option1 != option1_value
+                assign matches = false
+              endif
+              if option2_value != blank and variant.option2 != option2_value
+                assign matches = false
+              endif
+              if matches and variant.option3 == value and variant.available
+                assign value_available = true
+                break
+              endif
+          endcase
+        endfor
+
+        # Store in map as "key:true;" or "key:false;"
+        assign availability_map = availability_map | append: map_key | append: ':' | append: value_available | append: ';'
+      endfor
+    endfor
+  -%}
 
   {%- for option in product.options_with_values -%}
+    {%- liquid
+      assign option_position = forloop.index
+      assign option_position0 = forloop.index0
+    -%}
+
+    {%- comment -%} Render Color as dropdown select {%- endcomment -%}
+
+    {%- comment -%} Render other options as radio buttons {%- endcomment -%}
     {%- if option.name == 'Color' -%}
+      <variant-radios
+        data-context="{{ context }}"
+        data-section="{{ section.id }}"
+        data-url="{{ product.url }}"
+        {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
+      >
+        <fieldset class="flex gap-2 flex-wrap">
+          {%- for value in option.values -%}
+            {%- liquid
+              # Look up availability from map
+              assign map_key = option_position | append: '-' | append: value | append: ':true'
+              assign value_available = false
+              if availability_map contains map_key
+                assign value_available = true
+              endif
+            -%}
+
+            {%- liquid
+              # Get any variant with this color value that has an image
+              assign color_variant = blank
+              for variant in product.variants
+                if variant.options[option_position0] == value and variant.image != blank
+                  assign color_variant = variant
+                  break
+                endif
+              endfor
+
+              # Check if this value is currently selected
+              assign is_selected = false
+              if current_variant.options[option_position0] == value
+                assign is_selected = true
+              endif
+            -%}
+            
+            <div>
+              <input
+                type="radio"
+                id="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
+                name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
+                value="{{ value | escape }}"
+                form="{{ product_form_id }}"
+                class="hidden peer"
+                {% if is_selected %}checked{% endif %}
+                {% unless value_available %}disabled{% endunless %}
+              >
+              <label
+                for="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
+                title="{{ value }}{% if value_available == false %} | Sold Out{% endif %}"
+                class="
+                  body-small
+                  p-[2px]
+                  border
+                  w-[60px]
+                  rounded
+                  inline-flex
+                  items-center
+                  justify-center
+                  align-center
+                  leading-none
+                  transition-[border,color,opacity]
+                  border-transparent
+                  hover:border-hr-color
+                  {% comment %} Checked {% endcomment %}
+                  peer-checked:border-current
+                  peer-checked:hover:border-current
+                  {% comment %} Enabled {% endcomment %}
+                  peer-enabled:cursor-pointer
+                  {% comment %} Disabled {% endcomment %}
+                  peer-disabled:cursor-not-allowed
+                  peer-disabled:text-light-text-color
+                  peer-disabled:opacity-50
+                  peer-disabled:border-transparent
+                "
+              >
+                {%- if color_variant.image -%}
+                  <div class="aspect-square w-full rounded-[calc(var(--base-border-radius)-2px)] overflow-hidden">
+                    {% render 'image' with
+                      src: color_variant.image,
+                      ratio: 1,
+                      width: 120,
+                      class: 'w-full',
+                      alt: value,
+                      loading: 'eager'
+                    %}
+                  </div>
+                {%- else -%}
+                  {{ value }}
+                {%- endif -%}
+              </label>
+            </div>
+          {%- endfor -%}
+        </fieldset>
+      </variant-radios>
+    {%- elsif option.name == 'Something' -%}
       <variant-selects
         data-context="{{ context }}"
         data-section="{{ section.id }}"
         data-url="{{ product.url }}"
         data-selected="{{ value | escape }}"
         {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
         <select
           name="{{ option.name }}"
           id="{{ section.id }}"
-          {% if option.values.size < 2 %}class="hidden"{% endif %}
+          value="{{ option.selected_value }}"
         >
           {%- for value in option.values -%}
-            <option value="{{ value | escape }}">{{ value }}</option>
+            {%- liquid
+              # Look up availability from map
+              assign map_key = option_position | append: '-' | append: value | append: ':true'
+              assign value_available = false
+              if availability_map contains map_key
+                assign value_available = true
+              endif
+            -%}
+            <option
+              value="{{ value | escape }}"
+              {% if option.selected_value == value %}selected{% endif %}
+              {% unless value_available %}disabled{% endunless %}
+            >{{ value }}</option>
           {%- endfor -%}
         </select>
       </variant-selects>
@@ -47,20 +233,69 @@ variant will update imagery and url
         data-section="{{ section.id }}"
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% endif %}">
-          <legend class="h6">{{ option.name }}</legend>
+        <fieldset class="flex gap-1 flex-wrap">
+          <legend class="h6 {{ label_class }}">{{ option.name }}</legend>
           {%- for value in option.values -%}
+            {%- liquid
+              # Look up availability from map
+              assign map_key = option_position | append: '-' | append: value | append: ':true'
+              assign value_available = false
+              if availability_map contains map_key
+                assign value_available = true
+              endif
+
+              # Check if this value is currently selected
+              assign is_selected = false
+              if current_variant.options[option_position0] == value
+                assign is_selected = true
+              endif
+            -%}
             <div>
               <input
-                type="radio" 
-                id="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}"
+                type="radio"
+                id="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
                 name="{{ option.name }}-{{ section_id }}-{{ form_product.id }}"
                 value="{{ value | escape }}"
                 form="{{ product_form_id }}"
-                {% if option.selected_value == value %}checked{% endif %}
+                class="hidden peer"
+                {% if is_selected %}checked{% endif %}
+                {% unless value_available %}disabled{% endunless %}
               >
-              <label for="{{ section_id }}-{{ form_product.id }}-{{ forloop.index0 }}" class="body-small">
+              <label
+                for="{{ section_id }}-{{ form_product.id }}-{{ option.name | handleize }}-{{ forloop.index0 }}"
+                {% if value_available == false %}
+                  title="Sold Out"
+                {% endif %}
+                class="
+                  body-small
+                  px-[.4em]
+                  pt-[.175em]
+                  h-[30px]
+                  min-w-[30px]
+                  border
+                  rounded-[100px]
+                  inline-flex
+                  items-center
+                  justify-center
+                  align-center
+                  leading-none
+                  transition-[border,color,opacity]
+                  border-transparent
+                  hover:border-hr-color
+                  {% comment %} Checked {% endcomment %}
+                  peer-checked:border-current
+                  peer-checked:hover:border-current
+                  {% comment %} Enabled {% endcomment %}
+                  peer-enabled:cursor-pointer
+                  {% comment %} Disabled {% endcomment %}
+                  peer-disabled:cursor-not-allowed
+                  peer-disabled:text-light-text-color
+                  peer-disabled:opacity-50
+                  peer-disabled:border-transparent
+                "
+              >
                 {{ value }}
               </label>
             </div>
@@ -73,18 +308,5 @@ variant will update imagery and url
   <script type="application/json">
     {{ product.variants | json }}
   </script>
-
-  {% render 'add_to_cart_button' with
-    class: "w-full",
-    product: product
-  %}
-
-  {%- if showBuyNow -%}
-    {%- form 'product', product, data-productid: product.id, id: 'product_form_id', data-productid: product.id, class: 'form w-full', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-      <div class="mt-2">
-        {{ form | payment_button }}
-      </div>
-    {%- endform -%}
-  {%- endif -%}
     
 </div>

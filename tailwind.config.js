@@ -4,14 +4,11 @@ module.exports = {
     "./templates/*.liquid",
     "./sections/*.liquid",
     "./snippets/*.liquid",
+    "./blocks/*.liquid",
   ],
   safelist: [],
   darkMode: "class",
   theme: {
-    fontFamily: {
-      sans: ['Souvenir', 'sans-serif'],
-      serif: ['Souvenir', 'serif']
-    },
     colors: {
       'current': 'currentColor',
       'transparent': 'transparent',

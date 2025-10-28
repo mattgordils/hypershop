@@ -1,0 +1,17 @@
+{% render 'quantity_adjust' with
+  item: product.selected_or_first_available_variant
+%}
+
+{% schema %}
+{
+  "name": "Quantity Input",
+  "class": "block-qty-input",
+  "settings": [],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Quantity Input"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+.section-main-product {
+  .pdp-blocks {
+    .shopify-block:empty,
+    .shopify-block.block-product-badges:not(:has(.product-badges.empty)) {
+      display: none;
+    }
+    .block-headline {
+      text-wrap: balance;
+    }
+  }
+}

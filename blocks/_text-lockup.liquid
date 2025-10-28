@@ -1,0 +1,66 @@
+{% liquid
+  assign wrapper_class = 'items-start'
+  if block.settings.alignment == 'center'
+    assign wrapper_class = 'text-center items-center mx-auto'
+  endif
+
+  if block.settings.alignment == 'right'
+    assign wrapper_class = 'text-right items-end mx-auto'
+  endif
+
+  if classname != blank
+    assign wrapper_class = wrapper_class | append: ' ' | append: classname
+  endif
+%}
+
+{% if block.blocks.size > 0 %}
+  <in-view class="flex flex-col gap-gutter {{ wrapper_class }}">
+    {% for block in block.blocks %}
+      {% render block %}
+    {% endfor %}
+  </in-view>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Text Lockup",
+  "class": "block-text-lockup",
+  "settings": [
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "default": "center",
+      "label": "Text Alignment"
+    },
+    {
+      "type": "range",
+      "id": "media_max_width",
+      "min": 20,
+      "max": 2000,
+      "step": 20,
+      "label": "Media Max Width",
+      "info": "Sets the max width in pixels of the media block. For icon usage.",
+      "default": 2000
+    },
+  ],
+  "blocks": [
+    {
+      "type": "_media"
+    },
+    {
+      "type": "_headline"
+    },
+    {
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
+    },
+  ],
+  "presets": [
+    {
+      "name": "Text Lockup"
+    }
+  ]
+}
+{% endschema %}

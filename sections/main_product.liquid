@@ -1,144 +1,53 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
-<div id="mainPDP" class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
-  <div class="aspect-square bg-light-grey">
-    {%- for image in product.images -%}
-      {% render 'image' with src: image %}
-    {%- endfor -%}
+{% liquid
+	assign media_sizes = '(min-width: 768px) 50vw, 100vw'
+%}
+
+<div
+	id="mainPDP"
+	data-product-update="{{ section.id }}"
+	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ spacing_class }}"
+>
+  <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
+		{% if product.selected_or_first_available_variant.image != blank %}
+			<div class="md:col-span-2">
+				{% render 'image' with
+					src: product.selected_or_first_available_variant.image,
+					loading: 'eager',
+					sizes: media_sizes,
+					ratio: 1,
+					class: 'w-full',
+					fetchpriority: 'high'
+				%}
+			</div>
+		{% endif %}
+		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
+			{%- for image in product.images -%}
+				{% render 'image' with
+					src: image,
+					sizes: media_sizes,
+					ratio: 1,
+					class: 'w-full'
+				%}
+			{%- endfor -%}
+		</div>
   </div>
 
   <div class="px-margin">
-    <div class="grid gap-y-v-space-sm sticky top-sticky-top">
-      <div class='grid gap-y-gutter'>
-				<add-to-cart-form class="flex flex-col gap-y-4">
-					{%- if section.blocks != blank -%}
-						{%- for block in section.blocks -%}
-							{%- case block.type -%}
-								{%- when 'type' -%}
-									<div {{ block.shopify_attributes }}>
-										<p class='h6'>{{ product.type }}</p>
-									</div>
-								{%- when 'title' -%}
-									<div {{ block.shopify_attributes }}>
-										<h1>{{ product.title }}</h1>
-									</div>
-								{%- when 'text' -%}
-									<div {{ block.shopify_attributes }}>
-										<p class="{{ block.settings.text_style }}">{{ block.settings.text }}</p>
-									</div>
-								{%- when 'quantity_selector' -%}
-									<div {{ block.shopify_attributes }}>
-										{% render 'quantity_adjust' with item: product.selected_or_first_available_variant %}
-									</div>
-								{%- when 'price' -%}
-									<div {{ block.shopify_attributes }}>
-										<p class="body-large">
-											{% render 'product_price' with item: product.selected_or_first_available_variant %}
-										</p>
-									</div>
-								{%- when 'variant_picker' -%}
-									<div {{ block.shopify_attributes }}>
-										{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
-									</div>
-								{%- when 'buy_buttons' -%}
-									<div {{ block.shopify_attributes }}>
-										BUY BUTTONS SEPERATE
-									</div>
-								{%- when 'description' -%}
-									<div {{ block.shopify_attributes }}>
-										<div class="rich-text body-small">
-											{{ product.description }}
-										</div>
-									</div>
-								{%- when 'custom_liquid' -%}
-									<div {{ block.shopify_attributes }}>
-										{{ block.custom_liquid }}
-									</div>
-								{%- when 'collapsible_tab' -%}
-									<div {{ block.shopify_attributes }}>
-										{{ block.title }}
-										{{ block.text }}
-									</div>
-								{%- when 'rating' -%}
-									<div {{ block.shopify_attributes }}>
-										RATING
-									</div>
-								{%- when '@app' -%}
-									<div {{ block.shopify_attributes }}>
-										{% render block %}
-									</div>
-							{%- endcase -%}
-						{%- endfor -%}
-					{%- endif -%}
-
-					<input
-						type="text"
-						name="property_child_name"
-						data-title="Child Name"
-					/>
-
-					<select name="property_start_date" data-title="Start Date">
-						<option value="10/10/23">Oct 10</option>
-						<option value="10/17/23">Oct 17</option>
-						<option value="10/24/23">Oct 24</option>
-					</select>
-
-					<fieldset name="property_start_date_2" data-title="Start Date 2">
-						<div>
-              <input
-                type="radio" 
-                id="10/10/23"
-                value="10/10/23"
-              >
-              <label for="10/10/23">Oct 10</label>
-            </div>
-						<div>
-              <input
-                type="radio" 
-                id="10/17/23"
-                value="10/17/23"
-              >
-              <label for="10/17/23">Oct 17</label>
-            </div>
-						<div>
-              <input
-                type="radio" 
-                id="10/24/23"
-                value="10/24/23"
-              >
-              <label for="10/24/23">Oct 24</label>
-            </div>
-					</fieldset>
-
-					<fieldset class='mt-4' name="property_start_date_3" data-title="Start Date 3">
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/10/23"
-                value="start10/10/23"
-              >
-              <label for="start10/10/23">Oct 10</label>
-            </div>
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/17/23"
-                value="start10/17/23"
-              >
-              <label for="start10/17/23">Oct 17</label>
-            </div>
-						<div>
-              <input
-                type="checkbox" 
-                id="start10/24/23"
-                value="start10/24/23"
-              >
-              <label for="start10/24/23">Oct 24</label>
-            </div>
-					</fieldset>
-
-				</add-to-cart-form>
-      </div>
+    <div class="flex flex-col gap-y-v-space-sm sticky top-sticky-top">
+			<add-to-cart-form class="pdp-blocks flex flex-col gap-y-4">
+				{%- if section.blocks != blank and section.blocks.size > 0 -%}
+					{% for block in section.blocks %}
+						{% render block %}
+					{% endfor %}
+				{%- endif -%}
+			</add-to-cart-form>
     </div>
   </div>
 </div>
@@ -146,177 +55,68 @@
 {% schema %}
 {
   "name": "Product",
+  "tag": "section",
+	"class": "section-main-product",
   "blocks": [
     {
 			"type": "@app"
 		},
+		{
+      "type": "_headline"
+    },
     {
-			"type": "text",
-			"name": "Text Section",
-			"settings": [
-				{
-					"type": "text",
-					"id": "text",
-					"default": "Text block",
-					"label": "Text"
-				},
-				{
-					"type": "select",
-					"id": "text_style",
-					"default": "body",
-					"label": "Text Style",
-					"options": [
-						{
-							"value": "body-medium",
-							"label": "Text"
-						},
-						{
-							"value": "h5",
-							"label": "Subtitle"
-						},
-						{
-							"value": "small-caps",
-							"label": "Uppercase"
-						}
-					]
-				}
-			]
-		},
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
+    },
 		{
-			"type": "title",
-			"name": "Title",
-			"limit": 1
-		},
+      "type": "_product-price"
+    },
 		{
-			"type": "quantity_selector",
-			"name": "Quantity Selector",
-			"limit": 1
-		},
+      "type": "_product-qty-input"
+    },
 		{
-			"type": "price",
-			"name": "Price",
-			"limit": 1
-		},
+      "type": "_product-variant-selector"
+    },
 		{
-			"type": "type",
-			"name": "Product Type",
-			"limit": 1
-		},
+      "type": "_product-buy-buttons"
+    },
 		{
-			"type": "variant_picker",
-			"name": "Variant Picker",
-			"limit": 1,
-			"settings": [
-				{
-					"type": "select",
-					"id": "picker_type",
-					"label": "Picker Type",
-					"default": "button",
-					"options": [
-						{
-							"value": "dropdown",
-							"label": "Dropdown"
-						},
-						{
-							"value": "button",
-							"label": "Button"
-						},
-						{
-							"value": "swatch",
-							"label": "Swatch"
-						}
-					]
-				}
-			]
-		},
+      "type": "_product-badges"
+    },
 		{
-			"type": "buy_buttons",
-			"name": "Buy Buttons",
-			"limit": 1,
-			"settings": [
-				{
-					"type": "checkbox",
-					"id": "show_dynamic_checkout",
-					"default": true,
-					"label": "Show Dynamic Checkout Buttons"
-				},
-				{
-					"type": "text",
-					"id": "text",
-					"label": "Text",
-					"info": "ie: Shipping and returns policy"
-				}
-			]
-		},
-		{
-			"type": "description",
-			"name": "Description",
-			"limit": 1
-		},
-		{
-			"type": "custom_liquid",
-			"name": "Custom Liquid",
-			"settings": [
-				{
-					"type": "liquid",
-					"id": "custom_liquid",
-					"label": "Liquid Code",
-					"info": "Use at your own risk"
-				}
-			]
-		},
-		{
-			"type": "collapsible_tab",
-			"name": "Collapsible Tab",
-			"settings": [
-				{
-					"type": "text",
-					"id": "heading",
-					"default": "Collapsible row",
-					"label": "Row Title"
-				},
-				{
-					"type": "richtext",
-					"id": "content",
-					"label": "Text"
-				}
-			]
-		},
-		{
-			"type": "rating",
-			"name": "Rating",
-			"limit": 1,
-			"settings": [
-				{
-					"type": "paragraph",
-					"content": "Paragraph text"
-				}
-			]
-		}
+      "type": "_accordion"
+    }
   ],
   "settings": [
+    {
+      "type": "header",
+      "content": "Product Badges",
+      "info": "To get badges like “Best Seller” to appear, when editing the product add a tag of “badge-Best Seller”"
+    },
 		{
       "type": "select",
-      "id": "section_margin",
-      "default": "mb-v-space",
-      "label": "Section Margin",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
         {
-          "label": "none",
-          "value": "mb-0"
+          "label": "None",
+          "value": "none"
         },
         {
           "label": "Small",
-          "value": "mb-12 md:mb-margin"
+          "value": "small"
         },
         {
           "label": "Medium",
-          "value": "mb-v-space-sm"
+          "value": "medium"
         },
         {
           "label": "Large",
-          "value": "mb-v-space"
+          "value": "large"
         }
       ]
     }

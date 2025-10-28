@@ -1,0 +1,28 @@
+{% if block.blocks.size > 0 %}
+  <div class="flex gap-gutter flex-wrap items-center {% if block.settings.alignment == 'center' %}justify-center{% else %}justify-start{% endif %}">
+    {% for block in block.blocks %}
+      {% render block %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Links",
+  "class": "block-actions",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "_button"
+    },
+    {
+      "type": "_link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Links"
+    }
+  ]
+}
+{% endschema %}

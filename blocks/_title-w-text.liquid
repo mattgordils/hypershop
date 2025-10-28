@@ -1,0 +1,86 @@
+<collapsible-item class="border-t border-hr-color" id="{{ block.id }}">
+  <button data-collapsible="trigger" class="{{ block.settings.title_size }} text-left flex justify-between items-center gap-x-gutter w-full py-[.75em]">
+    <div class="pt-[.1em]">{{ block.settings.title }}</div>
+    <div class="h-[1em] shrink-0 grow-0 flex items-center justify-center pb-[1px]">
+      <div data-collapsible="icon">{% render 'icon_animated', icon: 'plus' %}</div>
+    </div>
+  </button>
+  <div data-collapsible="content">
+    <div>
+      <div class="rich-text pb-6 {{ block.settings.text_size }}">{{ block.settings.text }}</div>
+    </div>
+  </div>
+</collapsible-item>
+
+{% schema %}
+{
+  "name": "Title & Text",
+  "class": "block-title-w-text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "default": "body bold",
+      "label": "Headline Size",
+      "options": [
+        {
+          "label": "Large",
+          "value": "h4"
+        },
+        {
+          "label": "Medium",
+          "value": "h5"
+        },
+        {
+          "label": "Medium",
+          "value": "body bold"
+        },
+        {
+          "label": "Small",
+          "value": "body-small bold"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "default": "body-small",
+      "label": "Text Size",
+      "options": [
+        {
+          "label": "Large",
+          "value": "body-large"
+        },
+        {
+          "label": "Medium",
+          "value": "body"
+        },
+        {
+          "label": "Small",
+          "value": "body-small"
+        },
+        {
+          "label": "Tiny",
+          "value": "body-tiny"
+        }
+      ]
+    },
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Title & Text"
+    }
+  ]
+}
+{% endschema %}

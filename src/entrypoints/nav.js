@@ -31,32 +31,47 @@ const scrollThreshold = 40
 class StickyHeader extends HTMLElement {
   constructor() {
     super();
+    this.scrollThreshold = 40;
+    this.ticking = false;
   }
 
   connectedCallback() {
-    this.header = document.getElementById('shopify-section-header');
+    this.header = document.getElementById('shopify-section-page_header');
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
-    window.addEventListener('scroll', this.onScrollHandler, false);
+
+    // Use passive listener for better performance
+    window.addEventListener('scroll', this.onScrollHandler, { passive: true });
+
+    // Set initial state
+    this.requestTick();
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('scroll', this.onScrollHandler);
   }
 
   onScroll() {
-    console.log('scroll')
+    this.requestTick();
+  }
+
+  requestTick() {
+    if (!this.ticking) {
+      requestAnimationFrame(() => {
+        this.updateHeader();
+        this.ticking = false;
+      });
+      this.ticking = true;
+    }
+  }
+
+  updateHeader() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    // let scrollDirection = "down"
-    // const lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
-    // const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    // const direction = scrollY > lastScrollY ? "down" : "up";
-    // if (direction !== scrollDirection && (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)) {
-    //   scrollDirection = direction
-    //   console.log(direction)
-    // }
-
-    if (scrollTop > scrollThreshold) {
-      this.header.classList.add('scrolled');
+    if (scrollTop > this.scrollThreshold) {
+      this.header?.classList.add('scrolled');
     } else {
-      this.header.classList.remove('scrolled');
+      this.header?.classList.remove('scrolled');
     }
   }
 }

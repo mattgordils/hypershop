@@ -1,24 +1,25 @@
 // Refresh Cart
 export const refreshCart = (fullRefresh = false) => {
-  const cartDrawer = document.querySelector('#shopify-section-cart #cartContent')
+  const sectionTitle = 'page_cart-panel'
+  const cartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
   if (!cartDrawer) {
     // Don't run if no cart drawer section is found
     return false
   }
 
-  fetch(window.Shopify.routes.root + "?sections=cart")
+  fetch(window.Shopify.routes.root + "?sections=" + sectionTitle)
     .then(res => res.json())
     .then(res => {
-      const currentCartDrawer = document.querySelector('#shopify-section-cart #cartContent')
-      const currentCartHeader = document.querySelector('#shopify-section-cart #cartHeader')
+      const currentCartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
+      const currentCartHeader = document.querySelector('#shopify-section-' + sectionTitle + ' #cartHeader')
 
       var el = document.createElement( 'div' );
-      el.innerHTML = res['cart']
-      const oldCartCount = document.querySelector('#shopify-section-cart #cartHeader').dataset.cartCount
+      el.innerHTML = res[sectionTitle]
+      const oldCartCount = document.querySelector('#shopify-section-' + sectionTitle + ' #cartHeader').dataset.cartCount
       const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
 
-      const oldlineCount = document.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
-      const newlineCount = el.querySelectorAll('#shopify-section-cart #cartLineItem')?.length
+      const oldlineCount = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
+      const newlineCount = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
 
       if (newCartCount == 0 || oldCartCount == 0 || (oldlineCount !== newlineCount)) {
         fullRefresh = true
@@ -27,13 +28,13 @@ export const refreshCart = (fullRefresh = false) => {
       if (fullRefresh) {
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
-        const cartHeader = el.querySelector('#cartHeader')
+        // const cartHeader = el.querySelector('#cartHeader')
         currentCartDrawer.outerHTML = cartContent.outerHTML
-        currentCartHeader.outerHTML = cartHeader.outerHTML
+        // currentCartHeader.outerHTML = cartHeader.outerHTML
       } else {
         // Update Cart Pieces
-        const updateItems = document.querySelectorAll('#shopify-section-cart #cartUpdate')
-        const updatedItems = el.querySelectorAll('#shopify-section-cart #cartUpdate')
+        const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
+        const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
         updateItems.forEach((item, index) => {
           item.innerHTML = updatedItems[index].innerHTML
         });
@@ -67,7 +68,22 @@ if (!customElements.get("cart-remove-item")) {
             updates: {
               [event.currentTarget.dataset.itemId]: 0,
             },
-          };
+          }
+
+          if (event.currentTarget.dataset.itemId.includes(', ')) {
+            const variantIds = event?.currentTarget?.dataset?.itemId.split(', ')?.filter(item => item !== '')
+            const updatesObj = {}
+            if (variantIds.length > 0) {
+              variantIds.forEach(id => {
+                updatesObj[id] = 0
+              })
+            }
+
+            formData = {
+              updates: updatesObj
+            }
+          }
+          
           fetch(window.Shopify.routes.root + "cart/update.js", {
             method: "POST",
             headers: {
