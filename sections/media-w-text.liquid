@@ -2,6 +2,10 @@
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
+{% capture padding_class %}
+  {% render 'util-section-padding' with space: section.settings.section_padding %}
+{% endcapture %}
+
 {%-liquid
   assign hasMedia = false
   assign media_position = 'cover'
@@ -24,20 +28,37 @@
     assign image_loading = 'eager'
     assign image_fetch_priority = 'high'
   endif
+
+  assign text_col_class = 'md:order-1'
+  assign media_col_class = 'md:order-2'
+  if section.settings.media_placement == 'left'
+    assign text_col_class = 'md:order-2'
+    assign media_col_class = 'md:order-1'
+  endif
+
+  assign wrapper_class = 'px-margin'
+  assign grid_class = 'gap-x-gutter'
+  if section.settings.edge_to_edge
+    assign wrapper_class = ''
+    assign grid_class = ''
+    assign text_col_class = text_col_class | append: ' px-margin'
+  endif
 -%}
 
-<div class="{{ spacing_class }} section-inner">
-  <div class="grid md:grid-cols-12 gap-gutter">
-    <div class="md:col-span-6">
-      {% content_for 'block',
-        type: '_media',
-        id: 'media',
-        loading: image_loading,
-        fetchpriority: image_fetch_priority
-      %}
-    </div>
-    <div class="md:col-span-6 z-2 flex {{ section.settings.h_alignment }} {{ section.settings.v_alignment }}">
-      <div>
+<div class="{{ spacing_class }} {{ padding_class }} {{ wrapper_class }} {{ section.settings.color_scheme }} section-inner">
+  <div class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm {{ section.settings.v_alignment }}">
+    {% if section.settings.media_placement_mobile != 'bottom' %}
+      <div class="md:col-span-6 {{ media_col_class }}">
+        {% content_for 'block',
+          type: '_media',
+          id: 'media',
+          loading: image_loading,
+          fetchpriority: image_fetch_priority
+        %}
+      </div>
+    {% endif %}
+    <div class="md:col-span-6 z-2 flex {{ text_col_class }}">
+      <div class="w-full">
         {% content_for 'block',
           type: '_text-lockup',
           id: 'text-lockup',
@@ -45,6 +66,16 @@
         %}
       </div>
     </div>
+    {% if section.settings.media_placement_mobile == 'bottom' %}
+      <div class="md:col-span-6 {{ media_col_class }}">
+        {% content_for 'block',
+          type: '_media',
+          id: 'media',
+          loading: image_loading,
+          fetchpriority: image_fetch_priority
+        %}
+      </div>
+    {% endif %}
   </div>
 </div>
 
@@ -56,25 +87,21 @@
 	"settings": [
     {
       "type": "header",
-      "content": "Alignment"
+      "content": "Layout"
     },
     {
       "type": "select",
-      "id": "h_alignment",
-      "default": "justify-center",
-      "label": "Horizontal Alignment",
+      "id": "media_placement",
+      "default": "left",
+      "label": "Media Placement",
       "options": [
         {
           "label": "Left",
-          "value": "justify-start"
-        },
-        {
-          "label": "Center",
-          "value": "justify-center"
+          "value": "left"
         },
         {
           "label": "Right",
-          "value": "justify-end"
+          "value": "right"
         }
       ]
     },
@@ -99,8 +126,67 @@
       ]
     },
     {
+      "type": "checkbox",
+      "id": "edge_to_edge",
+      "default": false,
+      "label": "Edge To Edge"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "select",
+      "id": "media_placement_mobile",
+      "default": "top",
+      "label": "Mobile Media Placement",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        }
+      ]
+    },
+    // Section Spacing
+    {
       "type": "header",
       "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+		{
+      "type": "select",
+      "id": "section_padding",
+      "default": "none",
+      "label": "Section Padding",
+      "info": "Equal space added above and below the section",
+      "visible_if": "{{ section.settings.color_scheme != 'theme-default' }}",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
     },
     {
       "type": "select",

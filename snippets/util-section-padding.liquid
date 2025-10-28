@@ -1,0 +1,16 @@
+{% liquid
+  assign padding_class = ''
+
+  if space == 'small'
+    assign padding_class = 'py-v-space-sm'
+  endif
+
+  if space == 'medium'
+    assign padding_class = 'py-v-space'
+  endif
+
+  if space == 'large'
+    assign padding_class = 'py-v-space-lg'
+  endif
+%}
+{{ padding_class }}

@@ -12,6 +12,44 @@
     "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
-    "content_for_index": []
+    "content_for_index": [],
+    "color_schemes": {
+      "theme-default": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text": "#000",
+          "button": "#000",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
+        }
+      },
+      "theme-light-grey": {
+        "settings": {
+          "background": "#f2f2f2",
+          "background_gradient": "",
+          "text": "#000",
+          "button": "#000",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
+        }
+      },
+      "theme-dark": {
+        "settings": {
+          "background": "#000",
+          "background_gradient": "",
+          "text": "#fff",
+          "button": "#fff",
+          "button_label": "",
+          "secondary_button": "#c6c1bb",
+          "secondary_button_label": "",
+          "shadow": ""
+        }
+      }
+    }
   }
 }

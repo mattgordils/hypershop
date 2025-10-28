@@ -1,0 +1,22 @@
+{%-liquid
+  assign button_theme = 'light-grey'
+  if button_class != blank
+    assign button_theme = button_class
+  endif
+  assign nav_button_base_class = ' pointer-events-auto mt-v-space-sm rectangle small'
+  assign button_classname = button_theme | append: nav_button_base_class
+  assign button_classname_prev = button_classname | append: ' slider-prev'
+  assign button_classname_next = button_classname | append: ' slider-next'
+-%}
+<div class="pointer-events-none flex gap-2 items-center justify-center {{ class }}">
+  {% if show_prev != false %}
+    {% render 'button' with
+      icon: 'arrow_forward',
+      class: button_classname_prev
+    %}
+  {% endif %}
+  {% render 'button' with
+    icon: 'arrow_back',
+    class: button_classname_next
+  %}
+</div>

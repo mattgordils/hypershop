@@ -1,0 +1,154 @@
+slide-show {
+  display: block;
+  --slide-gap: var(--site-gutters);
+  --slides-to-show: var(--slides-xs, 1);
+  @media (min-width: 640px) {
+    --slides-to-show: var(--slides-sm, 1);
+  }
+  @media (min-width: 768px) {
+    --slides-to-show: var(--slides-md, 1);
+  }
+  @media (min-width: 1024px) {
+    --slides-to-show: var(--slides-lg, 1);
+  }
+  @media (min-width: 1280px) {
+    --slides-to-show: var(--slides-xl, 1);
+  }
+  @media (min-width: 1536px) {
+    --slides-to-show: var(--slides-2xl, 1);
+  }
+  @media (min-width: 1800px) {
+    --slides-to-show: var(--slides-3xl, 1);
+  }
+
+  &:not(.overflow-visible) {
+    overflow: hidden;
+  }
+
+  img,
+  video {
+    user-select: none;
+  }
+
+  .slider-container {
+    display: flex;
+    justify-content: flex-start;
+    grid-column-gap: var(--slide-gap);
+  }
+
+  &[data-axis='y'] {
+    .slider-container {
+      flex-wrap: wrap;
+      height: 100%;
+      .slider-slide {
+        flex: unset;
+        width: 100%;
+      }
+    }
+  }
+
+  .slider-slide {
+    &:not(.auto-width) {
+      --slide-width: calc(
+        (100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)
+      );
+      flex: 0 0
+        calc(
+          (100% / var(--slides-to-show)) - var(--slide-gap) * (var(--slides-to-show) - 1) /
+            var(--slides-to-show)
+        );
+      flex: 0 0 var(--slide-width);
+    }
+    &.auto-width {
+      flex-shrink: 0;
+    }
+
+    min-width: 0;
+    img,
+    video {
+      min-width: 100%;
+    }
+  }
+
+  /* Styles for when slideshow loops */
+  &.loop,
+  &[data-loop='true'] {
+    .slider-container {
+      grid-column-gap: 0;
+      .slider-slide {
+        --slide-width: calc(
+          ((100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
+            var(--slide-gap)
+        );
+        padding: 0 calc(var(--slide-gap) / 2);
+      }
+    }
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    button {
+      padding: 3px;
+      > span {
+        display: block;
+        width: 6px;
+        height: 6px;
+        text-indent: -200px;
+        overflow: hidden;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        transition: all var(--md-speed) ease-in-out;
+      }
+      &.active {
+        > span {
+          background-color: currentColor;
+        }
+      }
+    }
+  }
+
+  .slider-nav {
+    &.thumbnails {
+      button {
+        opacity: 0.5;
+        transition: opacity var(--md-speed) ease-in-out;
+        &:hover {
+          opacity: 0.75;
+        }
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes progress-end {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+.slide-progress {
+  transition: width 500ms ease-in-out;
+  &.animating {
+    animation: progress var(--timeout, 4000ms) linear;
+  }
+  &.ended {
+    float: right;
+    animation: progress-end var(--timeout, 300ms) ease-in;
+  }
+}

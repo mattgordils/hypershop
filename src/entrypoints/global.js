@@ -6,6 +6,7 @@ import { refreshCart } from "./cart";
 import './modal';
 import './collapsible';
 import './inView';
+import './slideshow';
 
 // Console Signature
 document.addEventListener('DOMContentLoaded', () => {

@@ -36,7 +36,7 @@ class StickyHeader extends HTMLElement {
   }
 
   connectedCallback() {
-    this.header = document.getElementById('shopify-section-header');
+    this.header = document.getElementById('shopify-section-page_header');
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
 
