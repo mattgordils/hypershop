@@ -10,16 +10,6 @@
   endif
 -%}
 
-
-  collection<br>
-  {% if section.settings.collection != blank %}
-    section.settings.collection<br>
-  {% endif %}
-
-  {% if section.settings.products != blank %}
-    section.settings<br>
-  {% endif %}
-
 {% if section_collection.products.size > 0 %}
   <div class="px-margin {{ spacing_class }}">
     <div class="max-w-site-max-w mx-auto">
@@ -37,6 +27,8 @@
 {% schema %}
 {
   "name": "Product Grid",
+  "tag": "section",
+  "class": "section-product-grid",
   "settings": [
     {
       "type": "collection",

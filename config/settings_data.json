@@ -14,7 +14,7 @@
     "checkout_button_color": "#482225",
     "sections": {
       "header": {
-        "type": "header",
+        "type": "page_header",
         "blocks": {
           "image_tLXnEa": {
             "type": "image",
@@ -31,7 +31,7 @@
         }
       },
       "age_gate": {
-        "type": "age_gate",
+        "type": "page_age-gate",
         "settings": {
           "expiration": 2,
           "url": "",
@@ -41,7 +41,7 @@
         }
       },
       "footer": {
-        "type": "footer",
+        "type": "page_footer",
         "settings": {
           "link_list_1": "main-menu",
           "link_list_2": "main-menu",
@@ -51,7 +51,7 @@
         }
       },
       "cart": {
-        "type": "cart",
+        "type": "page_cart-panel",
         "settings": {
           "text_footer": "Free shipping on orders over $100",
           "upsell_collection": "frontpage",
@@ -59,14 +59,14 @@
         }
       },
       "notification_banner": {
-        "type": "notification-banner",
+        "type": "page_notification-banner",
         "settings": {
           "text": "Deals, Deals, Deals!",
           "link": ""
         }
       },
       "menu_panel": {
-        "type": "menu-panel",
+        "type": "page_menu-panel",
         "settings": {
           "menu": "main-menu",
           "secondary_menu": "main-menu"

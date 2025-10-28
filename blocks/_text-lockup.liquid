@@ -4,6 +4,10 @@
     assign wrapper_class = 'text-center items-center mx-auto'
   endif
 
+  if block.settings.alignment == 'right'
+    assign wrapper_class = 'text-right items-end mx-auto'
+  endif
+
   if classname != blank
     assign wrapper_class = wrapper_class | append: ' ' | append: classname
   endif
@@ -23,20 +27,10 @@
   "class": "block-text-lockup",
   "settings": [
     {
-      "type": "select",
+      "type": "text_alignment",
       "id": "alignment",
       "default": "center",
-      "label": "Text Alignment",
-      "options": [
-        {
-          "label": "left",
-          "value": "left"
-        },
-        {
-          "label": "Center",
-          "value": "center"
-        }
-      ]
+      "label": "Text Alignment"
     }
   ],
   "blocks": [

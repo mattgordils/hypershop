@@ -45,21 +45,21 @@
 
     {% render 'integrations_after_body_open' %}
     
-    {% section 'notification-banner' %}
-    {% section 'header' %}
+    {% section 'page_notification-banner' %}
+    {% section 'page_header' %}
     
     {% comment %}
-    {% section 'age_gate' %}
+    {% section 'page_age-gate' %}
     {% endcomment %}
     
     <main id="main-content" data-barba="container" data-barba-namespace="home" role="main">
-      <div>
+      <div class="page-sections">
         {{ content_for_layout }}
       </div>
     </main>
 
-    {% section 'cart' %}
-    {% section 'footer' %}
+    {% section 'page_cart-panel' %}
+    {% section 'page_footer' %}
 
     <div class="page-transition-overlay"></div>
 
@@ -70,7 +70,7 @@
       {{ 'shopify-editor.js' | asset_url | script_tag }}
     {%- endif -%}
 
-    {% section 'menu-panel' %}
+    {% section 'page_menu-panel' %}
 
     {% render 'integrations_before_body_close' %}
 

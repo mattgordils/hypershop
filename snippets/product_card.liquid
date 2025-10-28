@@ -34,7 +34,7 @@
     {% endif %}
   </a>
 
-  <div class="text-center">
+  <div class="text-center pb-gutter">
     <h3 class="body">
       <a href="{{ product.url }}" itemprop="name" class="border-none pt-gutter block">
         {{ product.title }}
@@ -52,7 +52,8 @@
     <div>
       {% render 'product_option_form' with
         product: product,
-        section_context: context
+        section_context: context,
+        class: "pb-gutter items-center"
       %}
       {% render 'add_to_cart_button' with
         class: "w-full",

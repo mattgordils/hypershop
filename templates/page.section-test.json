@@ -10,7 +10,7 @@
 {
   "sections": {
     "settings": {
-      "type": "page-settings",
+      "type": "page_settings",
       "settings": {
         "header_color": "var(--bg-color)",
         "header_overlap": true
@@ -128,7 +128,7 @@
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
-        "section_spacing": "mb-v-space"
+        "section_spacing": "medium"
       }
     },
     "accordion_6z8g69": {

@@ -1,4 +1,4 @@
-<footer id="footer" class="p-margin" role="contentinfo">
+<div id="footer" class="p-margin" role="contentinfo">
 	{% comment %} tiny links {% endcomment %}
 	<div class="mb-v-space grid grid-cols-2 lg:grid-cols-12 gap-x-gutter gap-y-v-space">
 
@@ -80,11 +80,13 @@
 			<a class="body-tiny animate-underline" href="https://hyperlinknyc.com/">Site Credit</a>
 		</div>
 	</div>
-</footer>
+</div>
 
 {% schema %}
 {
   "name": "footer",
+	"tag": "footer",
+	"class": "section-footer",
   "settings": [
 		{
 			"type": "header",

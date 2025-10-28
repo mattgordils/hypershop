@@ -22,6 +22,15 @@ class VariantSelects extends HTMLElement {
     // Initialize only on first page load (not after re-render)
     if (this.isPDP && !this.isReinitialization()) {
       this.init();
+    } else if (this.isPDP && this.isReinitialization()) {
+      // On PDP with variant param (from URL), still update badges for initial load
+      this.updateCurrentVariant();
+      if (this.currentVariant) {
+        const container = this.closest('[data-product-update]');
+        if (container) {
+          this.updateBadges(container, this.currentVariant);
+        }
+      }
     } else if (!this.isPDP) {
       // For cards, update badges on initial load
       this.updateCurrentVariant();
@@ -143,6 +152,7 @@ class VariantSelects extends HTMLElement {
   updateBadges(containerElement, variant) {
     const saleBadge = containerElement.querySelector('[data-badge="sale"]');
     const soldOutBadge = containerElement.querySelector('[data-badge="sold-out"]');
+    const otherBadges = containerElement.querySelector('.badge.badge-static');
     const badgesWrapper = containerElement.querySelector('[data-badges]');
 
     let hasVisibleBadges = false;
@@ -169,8 +179,9 @@ class VariantSelects extends HTMLElement {
     }
 
     // Check if there are any other visible badges (like tag badges)
-    if (badgesWrapper) {
+    if (badgesWrapper && !otherBadges) {
       const allBadges = badgesWrapper.querySelectorAll('.badge, [class*="badge"]');
+
       allBadges.forEach(badge => {
         if (!badge.classList.contains('hidden')) {
           hasVisibleBadges = true;
@@ -371,20 +382,20 @@ class VariantSelects extends HTMLElement {
           const price = selectedVariant.price / 100;
           const compareAtPrice = selectedVariant.compare_at_price ? selectedVariant.compare_at_price / 100 : null;
 
-          const priceWrapper = priceDisplay.querySelector('[data-variant-price]')
-          const compareAtPriceWrapper = priceDisplay.querySelector('[data-price-compare]')
-
           // Format using Shopify money format (assuming USD for now)
           const formatMoney = (cents) => {
             return `$${(cents).toFixed(2)}`;
           };
 
+          // Re-render the price display to match product_price.liquid logic
           if (compareAtPrice && compareAtPrice > price) {
             // Show sale price with compare at price
-            compareAtPriceWrapper.innerHTML = formatMoney(price)
+            // Structure: <s data-price-compare>compare_at_price</s> <span data-variant-price>price</span>
+            priceDisplay.innerHTML = `<s class="text-error" data-price-compare>${formatMoney(compareAtPrice)}</s> <span data-variant-price>${formatMoney(price)}</span>`;
           } else {
-            // Regular price only
-            priceWrapper.innerHTML = formatMoney(price)
+            // Regular price only (no sale)
+            // Structure: <span data-variant-price>price</span>
+            priceDisplay.innerHTML = `<span data-variant-price>${formatMoney(price)}</span>`;
           }
         }
       }
@@ -592,6 +603,11 @@ class VariantSelects extends HTMLElement {
         );
       }
     });
+
+    // Update badges based on current variant (for PDP)
+    if (this.currentVariant) {
+      this.updateBadges(containerElement, this.currentVariant);
+    }
 
     // After replacing elements, trigger reinitialization for custom elements
     // This ensures event listeners are reattached to new DOM nodes

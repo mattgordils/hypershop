@@ -14,9 +14,20 @@ variant will update imagery and url
   if section_context
     assign section_id = section.id | append: '-' | append: section_context
   endif
+
+  assign has_options = false
+
+  for option in product.options_with_values
+    if option.values.size > 1 and has_options == false
+      assign has_options = true
+    endif
+  endfor
 -%}
 
-<div class="flex gap-x-[10px] gap-y-gutter flex-col" data-url="{{ product.url }}">
+<div
+  class="flex gap-x-[10px] gap-y-gutter flex-col{% if has_options == false %} hidden{% endif %} {{ class }}"
+  data-url="{{ product.url }}"
+>
 
 {%- liquid
     assign current_variant = product.selected_or_first_available_variant
@@ -96,8 +107,9 @@ variant will update imagery and url
         data-section="{{ section.id }}"
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-2 flex-wrap{% endif %}">
+        <fieldset class="flex gap-2 flex-wrap">
           {%- for value in option.values -%}
             {%- liquid
               # Look up availability from map
@@ -166,7 +178,7 @@ variant will update imagery and url
                 "
               >
                 {%- if color_variant.image -%}
-                  <div class="rounded-[calc(var(--base-border-radius)-2px)] overflow-hidden">
+                  <div class="aspect-square w-full rounded-[calc(var(--base-border-radius)-2px)] overflow-hidden">
                     {% render 'image' with
                       src: color_variant.image,
                       ratio: 1,
@@ -191,6 +203,7 @@ variant will update imagery and url
         data-url="{{ product.url }}"
         data-selected="{{ value | escape }}"
         {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
         <select
           name="{{ option.name }}"
@@ -220,8 +233,9 @@ variant will update imagery and url
         data-section="{{ section.id }}"
         data-url="{{ product.url }}"
         {{ block.shopify_attributes }}
+        class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
-        <fieldset class="{% if option.values.size < 2 %}!hidden{% else %}flex gap-1 flex-wrap{% endif %}">
+        <fieldset class="flex gap-1 flex-wrap">
           <legend class="h6">{{ option.name }}</legend>
           {%- for value in option.values -%}
             {%- liquid
