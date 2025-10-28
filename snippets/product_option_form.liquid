@@ -236,7 +236,7 @@ variant will update imagery and url
         class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
         <fieldset class="flex gap-1 flex-wrap">
-          <legend class="h6">{{ option.name }}</legend>
+          <legend class="h6 {{ label_class }}">{{ option.name }}</legend>
           {%- for value in option.values -%}
             {%- liquid
               # Look up availability from map

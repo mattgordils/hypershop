@@ -1,7 +1,7 @@
 <script src="{{ 'nav.js' | asset_url }}"></script>
 
 <style>
-  #shopify-section-header {
+  #shopify-section-page_header {
     position: sticky;
     top: 0;
     z-index: 5;
@@ -13,8 +13,8 @@
     border-color: transparent;
   }
 
-  #shopify-section-header.scrolled header,
-  #shopify-section-header:hover header {
+  #shopify-section-page_header.scrolled header,
+  #shopify-section-page_header:hover header {
     color: var(--text-color);
     background: var(--bg-color);
     border-color: var(--hr-color);
@@ -232,7 +232,6 @@
 {% schema %}
 {
   "name": "Header",
-  "tag": "div",
   "class": "section-header",
   "settings": [
     {
