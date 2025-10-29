@@ -11,7 +11,66 @@
 -%}
 
 {% if section_collection.products.size > 0 %}
-  <div class="px-margin {{ spacing_class }}">
+  <collection-grid
+    id="collectionItems"
+    class="block px-margin {{ spacing_class }}"
+    data-url="{{ collection.url }}"
+    data-section-id="{{ section.id }}"
+  >
+    <div class="mb-gutter">
+      {% if section_collection.products.size > 0 %}
+          <span class="text-light-text-color"> {{ section_collection.products.size }} Items </span>
+        {% endif %}
+
+      {% if collection.sort_options.size > 0 %}
+        <div id="sortItems" class="relative z-10 inline-block align-top">
+            <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
+            <span class="border-b border-dashed border-hr-color transition group-hover:border-text-color">
+              Sort By
+              {% for option in collection.sort_options %}
+                {% if option.value == collection.sort_by %}
+                  {{ option.name }}
+                {% endif %}
+              {% endfor %}
+            </span>
+            <span class="icon block -mt-[2px] transition">
+              {% render 'icon_material' with icon: 'keyboard_arrow_down', class: 'block' %}
+            </span>
+          </button>
+          <ul
+            id="sortList"
+            class="hidden absolute top-[calc(100%+10px)] left-0 bg-bg flex flex-col items-start justify-start border border-hr-color pl-4 pr-8 py-3"
+          >
+            {% for option in collection.sort_options %}
+              <li class="filter-item">
+                <label
+                  class="cursor-pointer body py-[.1em] flex items-start justify-center gap-x-2 whitespace-nowrap"
+                  for="{{ option.value }}"
+                >
+                  <input
+                    class="hidden peer"
+                    name="sort_by"
+                    type="radio"
+                    value="{{ option.value }}"
+                    id="{{ option.value }}"
+                    {% if option.value == collection.sort_by %}
+                      checked
+                    {% endif %}
+                  >
+                  <div class="text-transparent peer-checked:text-current shrink-0 whitespace-nowrap flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color">
+                    <div class="marker w-[6px] h-[6px] rounded-full bg-current"></div>
+                  </div>
+                  {{ option.name }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% render 'filters' %}
+    </div>
+
     <div class="max-w-site-max-w mx-auto">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
         {% for product in section_collection.products %}
@@ -21,7 +80,7 @@
         {% endfor %}
       </div>
     </div>
-  </div>
+  </collection-grid>
 {% endif %}
 
 {% schema %}

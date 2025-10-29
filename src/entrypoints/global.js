@@ -7,6 +7,7 @@ import './modal';
 import './collapsible';
 import './inView';
 import './slideshow';
+import './sort-filter';
 
 // Console Signature
 document.addEventListener('DOMContentLoaded', () => {

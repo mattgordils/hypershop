@@ -1,0 +1,274 @@
+{%- assign hide_these_filters = 'Product Set ID,Is Home Try On,Is Purchasable,Is Rentable,Price,Product type' | split: ',' -%}
+{%- assign has_active_filters = false -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+      {%- assign has_active_filters = true -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- for filter_value in filter.active_values -%}
+      {%- assign has_active_filters = true -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div id='collectionFilters' class='collection-filters'>
+  {% if has_active_filters %}
+    <div class='flex flex-wrap gap-3 border-b border-hr-color pb-4 mb-4'>
+      <button
+        id='clearAllFilters'
+        class='h6 border-b border-dashed transition border-hr-color hover:border-current hover:text-error'
+      >
+        Clear All
+      </button>
+      {%- for filter in collection.filters -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+            <a
+              href='{{ filter.url_to_remove }}'
+              class='remove-filter flex gap-1 items-center justify-start h6 text-light-text-color hover:text-error transition'
+            >
+              {%- assign min_value = filter.min_value.value | default: 0 -%}
+              {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+              {{ min_value | money }}—{{ max_value | money }}
+              <div class='text-[1.2em] text-center pt-[.1em]'>×</div>
+            </a>
+          {%- endif -%}
+        {%- else -%}
+          {%- for filter_value in filter.active_values -%}
+            <a
+              href='{{ filter_value.url_to_remove }}'
+              class='remove-filter flex gap-1 items-center justify-start h6 text-light-text-color hover:text-error transition'
+              title='Remove {{ filter.label }} filter'
+            >
+              {{ filter_value.label }}
+              <div class='text-[1.2em] text-center pt-[.1em] pointer-events-none'>×</div>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {% endif %}
+
+  <form>
+    {%- for filter in collection.filters -%}
+      {%- unless hide_these_filters contains filter.label -%}
+        {%- comment -%}for backward compatibiilty with legacy use of product set id filter{%- endcomment -%}
+        {% if filter.type != 'boolean' %}
+          <collapsible-item class='border-b border-hr-color'>
+            <summary
+              data-collapsible='trigger'
+              class='cursor-pointer block body font-medium {% if forloop.index == 1 %}pb-4{% else %}py-4{% endif %}'
+            >
+              <div class='flex gap-3 items-center justify-between'>
+                <span>{{ filter.label }}</span>
+                <div data-collapsible='icon' class='w-[10px] rotate-180'>
+                  {% render 'icon_material' with icon: 'keyboard_arrow_down', class: 'arrow transition rotate-180' %}
+                </div>
+
+                {%- if filter.active_values.size > 0 -%}
+                  <span class='hidden'>({{ filter.active_values.size }})</span>
+                {%- endif -%}
+              </div>
+            </summary>
+
+            <div data-collapsible='content' aria-hidden='false'>
+              <div>
+                <div class='pb-5'>
+                  {% comment %}
+                    <div>
+                      <p>{{ filter.active_values.size }} selected</p>
+                      {%- if filter.active_values.size > 0 -%}
+                        <p><a href="{{ filter.url_to_remove }}">Reset</a></p>
+                      {%- endif -%}
+                    </div>
+                  {% endcomment %}
+                  {%- case filter.type -%}
+                    {%- when 'list' -%}
+                      <ul class='{% if filter.label == 'Color' %}flex flex-wrap gap-x-3 justify-start{% endif %}'>
+                        {%- for filter_value in filter.values -%}
+                          <li class='filter-item body {% if filter.label == 'Color' %}w-[40%] grow min-w-[100px]{% endif %}'>
+                            <label
+                              for='Filter-{{ filter.param_name }}-{{ forloop.index }}'
+                              class='flex items-start justify-start gap-2 py-[.1em]'
+                            >
+                              <input
+                                type='checkbox'
+                                class='hidden peer'
+                                name='{{ filter_value.param_name }}'
+                                value='{{ filter_value.value }}'
+                                id='Filter-{{ filter.param_name }}-{{ forloop.index }}'
+                                {% if filter_value.active -%}
+                                  checked
+                                {%- endif %}
+                                {% if filter_value.count == 0 and filter_value.active == false -%}
+                                  disabled
+                                {%- endif %}
+                              >
+                              <span class="text-transparent peer-checked:text-current">
+                                {%- case filter.label -%}
+                                  {%- when 'Color' -%}
+                                    {%- liquid
+                                      assign color = shop.metaobjects.color_list[filter_value.label]
+                                    -%}
+                                    <div
+                                      style='--color: {% if color.color != blank %}{{ color.color }}{% else %}var(--hr-color){% endif %};'
+                                      class='relative flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-[var(--color)]'
+                                    >
+                                      {% if color.swatch != blank %}
+                                        {%
+                                          render 'image' with
+                                          src: color.swatch,
+                                          size: '20px',
+                                          image_position: 'cover',
+                                          classname: 'rounded-full'
+                                        %}
+                                      {% endif %}
+                                      <div
+                                        class='marker w-[6px] h-[6px] rounded-full bg-text-color'
+                                      ></div>
+                                    </div>
+                                  {%- else -%}
+                                    <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color'>
+                                      <div
+                                        class='marker w-[6px] h-[6px] rounded-full bg-current'
+                                      ></div>
+                                    </div>
+                                {%- endcase -%}
+                              </span>
+                              <span>
+                                {{ filter_value.label }}
+                              </span>
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- when 'price_range' -%}
+                      <div class='filter-group-display__price-range grid grid-cols-2 gap-2'>
+                        <div class='filter-group-display__price-range-from'>
+                          <div
+                            style='--input-border: var(--hr-color);'
+                            class='large input-component relative has-placeholder has-label inline-block w-full'
+                          >
+                            <span class='pl-[calc(var(--input-height)*0.2)] pt-[13px] absolute left-0 top-[1px] bottom-0 flex items-center justify-start'>
+                              {{- cart.currency.symbol -}}
+                            </span>
+                            <input
+                              class='input !pl-[calc(var(--input-height)*0.2+.65em)]'
+                              name='{{ filter.min_value.param_name }}'
+                              id='Filter-{{ filter.min_value.param_name }}'
+                              {% if filter.min_value.value -%}
+                                value='{{ filter.min_value.value | money_without_currency | replace: ',', '' }}'
+                              {%- endif %}
+                              type='number'
+                              placeholder='0'
+                              min='0'
+                              max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                            >
+
+                            <label
+                              class='input-label'
+                              for='Filter-{{ filter.min_value.param_name }}'
+                            >
+                              From
+                            </label>
+                          </div>
+                        </div>
+                        <div class='filter-group-display__price-range-to'>
+                          <div
+                            style='--input-border: var(--hr-color);'
+                            class='large input-component relative has-placeholder has-label inline-block w-full'
+                          >
+                            <span class='pl-[calc(var(--input-height)*0.2)] pt-[13px] absolute left-0 top-[1px] bottom-0 flex items-center justify-start'>
+                              {{- cart.currency.symbol -}}
+                            </span>
+                            <input
+                              class='input !pl-[calc(var(--input-height)*0.2+.65em)]'
+                              name='{{ filter.max_value.param_name }}'
+                              id='Filter-{{ filter.max_value.param_name }}'
+                              {% if filter.max_value.value -%}
+                                value='{{ filter.max_value.value | money_without_currency | replace: ',', '' }}'
+                              {%- endif %}
+                              type='number'
+                              placeholder='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                              min='0'
+                              max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+                            >
+
+                            <label
+                              class='input-label'
+                              for='Filter-{{ filter.max_value.param_name }}'
+                              >To</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                  {%- endcase -%}
+                </div>
+              </div>
+            </div>
+          </collapsible-item>
+        {% else %}
+          <div data-collapsible='trigger' class='border-b border-hr-color block body font-medium'>
+            <div class='flex gap-4 items-center justify-between filter-item true-false relative {% if forloop.index == 1 %}pb-4{% else %}py-4{% endif %}'>
+              {{ filter.label }}
+              <label
+                for='Filter-{{ filter.param_name }}-{{ filter.true_value.value }}'
+                class='tf-label label-true'
+              >
+                <input
+                  type='radio'
+                  class='hidden'
+                  name='{{ filter.param_name }}'
+                  value='{{ filter.true_value.value }}'
+                  data-value='true'
+                  id='Filter-{{ filter.param_name }}-{{ filter.true_value.value }}'
+                  {% if filter.true_value.active -%}
+                    checked
+                  {%- endif %}
+                  {% if filter.true_value.count == 0 and filter.true_value.active == false -%}
+                    disabled
+                  {%- endif -%}
+
+                ><span class='hidden'>{{ filter.true_value.label }}</span>
+              </label>
+
+              <label
+                for='Filter-{{ filter.param_name }}-{{ filter.false_value.value }}'
+                class='tf-label label-false'
+              >
+                <input
+                  type='radio'
+                  class='hidden'
+                  name='{{ filter.param_name }}'
+                  value='{{ filter.false_value.value }}'
+                  data-value='false'
+                  id='Filter-{{ filter.param_name }}-{{ filter.false_value.value }}'
+                  {% if filter.false_value.active -%}
+                    checked
+                  {%- endif %}
+                  {% if filter.false_value.count == 0 and filter.false_value.active == false -%}
+                    disabled
+                  {%- endif %}
+
+                ><span class='hidden'>{{ filter.false_value.label }}</span>
+              </label>
+
+              <div class='flex items-center justify-end gap-2'>
+                <div class='relative smallcaps text-light-text-color'>
+                  <span class='block transition toggle-label off'>Off</span>
+                  <span class='block transition toggle-label on absolute top-0 right-0'>On</span>
+                </div>
+                <div class='toggle h-[10px] w-[20px] rounded-full bg-hr-color'>
+                  <div
+                    class='transition w-[10px] h-[10px] border-[2px] rounded-full border-hr-color bg-text-color'
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {%- endunless -%}
+    {%- endfor -%}
+  </form>
+</div>

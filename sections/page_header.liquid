@@ -57,14 +57,17 @@
                     {% endif %}
                   "
                 >
-                  <a href="{{ link.url }}" class="px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center" {% if link.active %}aria-current="page"{% endif %}>
+                  <{% if link.links.size > 0 %}div{% else %}a href="{{ link.url }}"{% endif %}
+                    class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+                    {% if link.active %}aria-current="page"{% endif %}
+                  >
                     <span class="animate-underline grow-0 shrink-0 leading-none">
                       {{ link.title }}
                     </span>
                     {% if link.links.size > 0 %}
                       <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition-transform">keyboard_arrow_down</div>
                     {% endif %}
-                  </a>
+                  </{% if link.links.size > 0 %}div{% else %}a{% endif %}>
                   {% if link.links.size > 0 %}
                     <div
                       class="

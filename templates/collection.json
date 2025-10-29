@@ -3,10 +3,7 @@
     "main": {
       "type": "product-grid",
       "blocks": {},
-      "block_order": [],
-      "settings": {
-        "collection": "{{ collection }}"
-      }
+      "block_order": []
     }
   },
   "order": [
