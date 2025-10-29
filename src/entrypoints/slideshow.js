@@ -29,6 +29,7 @@ if (!customElements.get('slide-show')) {
         this.slides = this.querySelectorAll('.slider-slide') || []
         this.navs = this.querySelectorAll('.slider-nav')
         this.currentSlide = 0
+        this.breakpoints = this?.dataset?.breakpoints ? JSON.parse(this?.dataset?.breakpoints) : {}
         this.initializeSlideshow()
       }
 
@@ -98,7 +99,8 @@ if (!customElements.get('slide-show')) {
           axis: this.axis,
           align: this.align,
           watchDrag: this.drag,
-          containScroll: 'trimSnaps'
+          containScroll: 'trimSnaps',
+          breakpoints: this.breakpoints
         }
 
         // initialize slider
@@ -113,6 +115,7 @@ if (!customElements.get('slide-show')) {
         const embla = EmblaCarousel(this, options, plugins)
 
         const toggleActiveWhenScrollable = () => {
+          console.log('toggleActiveWhenScrollable')
           setTimeout(() => {
             let isScrollable = embla.internalEngine().scrollSnaps.length > 1
 
@@ -199,6 +202,15 @@ if (!customElements.get('slide-show')) {
           setTheme()
         }
 
+        const setInactive = () => {
+          console.log('setInactive')
+          if (embla?.internalEngine()?.options?.active) {
+            this.classList.remove('inactive')
+          } else {
+            this.classList.add('inactive')
+          }
+        }
+
         const renderDots = () => {
           if (this.dots) {
             let dotItems = ''
@@ -245,10 +257,14 @@ if (!customElements.get('slide-show')) {
         }
 
         embla.on('scroll', updateSlide)
-        window.addEventListener('resize', toggleActiveWhenScrollable)
+        window.addEventListener('resize', () => {
+          toggleActiveWhenScrollable()
+          setInactive()
+        })
         toggleActiveWhenScrollable()
         updateSlide()
         renderDots()
+        setInactive()
         renderNav()
         this.editorActions(embla)
       }

@@ -52,6 +52,7 @@
                   class="
                     h-full
                     group/menu-item
+                    menu-item
                     {% if link.active or is_store_active %}
                       active
                     {% endif %}
@@ -90,7 +91,7 @@
                       "
                     >
                       <div class="px-margin py-gutter min-h-[300px]">
-                        <ul>
+                        <ul class="sublinks scroll-entrance">
                           {% for sublink in link.links %}
                             <li>
                               <a
@@ -168,7 +169,7 @@
                 md:top-full
                 right-0
                 whitespace-nowrap
-                invisbile
+                invisible
                 opacity-0
                 transition-[opacity,visibility]
                 group-hover/account-item:visible
@@ -246,24 +247,6 @@
       "id": "menu",
       "default": "main-menu",
       "label": "Navigation Menu"
-    }
-  ],
-  "max_blocks": 3,
-  "blocks": [
-    {
-      "type": "image",
-      "name": "Image",
-      "settings": [
-        {
-          "type": "header",
-          "content": "Content"
-        },
-        {
-          "type": "image_picker",
-          "id": "logo",
-          "label": "Logo"
-        }
-      ]
     }
   ]
 }

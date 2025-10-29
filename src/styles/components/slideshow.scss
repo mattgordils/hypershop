@@ -1,4 +1,4 @@
-slide-show {
+slide-show:not(.inactive) {
   display: block;
   --slide-gap: var(--site-gutters);
   --slides-to-show: var(--slides-xs, 1);
@@ -81,6 +81,18 @@ slide-show {
             var(--slide-gap)
         );
         padding: 0 calc(var(--slide-gap) / 2);
+      }
+    }
+    &[data-align='start'] {
+      .slider-container {
+        grid-column-gap: 0;
+        .slider-slide {
+          --slide-width: calc(
+            ((100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
+              var(--slide-gap)
+          );
+          padding: 0 var(--slide-gap) 0 0;
+        }
       }
     }
   }

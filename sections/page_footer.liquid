@@ -1,3 +1,7 @@
+{% liquid
+	assign columns = section.blocks | where: 'type', 'menu'
+%}
+
 <div id="footer" class="p-margin" role="contentinfo">
 	{% comment %} tiny links {% endcomment %}
 	<div class="mb-v-space grid grid-cols-2 lg:grid-cols-12 gap-x-gutter gap-y-v-space">
@@ -28,45 +32,22 @@
 			</div>
 		</div>
 
-		<div class="lg:col-span-2">
-			{% for link in section.settings.link_list_1.links %}
-				<ul>
-					<li>
-						<a href="{{ link.url }}" class="py-1 inline-block align-top">
-							<span class="animate-underline">
-								{{ link.title }}
-							</span>
-						</a>
-					</li>
-				</ul>
-			{% endfor %}
-		</div>
-
-		<div class="lg:col-span-2">
-			{% for link in section.settings.link_list_2.links %}
-				<ul>
-					<li>
-						<a href="{{ link.url }}" class="py-1 inline-block align-top">
-							<span class="animate-underline">
-								{{ link.title }}
-							</span>
-						</a>
-					</li>
-				</ul>
-			{% endfor %}
-		</div>
-
-		<div class="lg:col-span-2">
-			{% for link in section.settings.link_list_3.links %}
-				<ul>
-					<li>
-						<a href="{{ link.url }}" class="py-1 inline-block align-top">
-							<span class="animate-underline">
-								{{ link.title }}
-							</span>
-						</a>
-					</li>
-				</ul>
+		<div class="lg:col-span-6 flex gap-gutter">
+			{% for column in columns %}
+				<div class="w-1 grow">
+					<h6 class="smallcaps mb-4">{{ column.settings.link_list.title }}</h6>
+					{% for link in column.settings.link_list.links %}
+						<ul class="leading-none">
+							<li>
+								<a href="{{ link.url }}" class="inline-block align-top body-small bold">
+									<span class="animate-underline">
+										{{ link.title }}
+									</span>
+								</a>
+							</li>
+						</ul>
+					{% endfor %}
+				</div>
 			{% endfor %}
 		</div>
 
@@ -87,28 +68,23 @@
   "name": "footer",
 	"tag": "footer",
 	"class": "section-footer",
+	"blocks": [
+		{
+      "type": "menu",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "link_list",
+          "label": "Menu"
+        }
+      ]
+    }
+	],
   "settings": [
 		{
 			"type": "header",
 			"content": "Content"
-		},
-		{
-			"type": "link_list",
-			"id": "link_list_1",
-			"default": "main-menu",
-			"label": "Link List 1"
-		},
-		{
-			"type": "link_list",
-			"id": "link_list_2",
-			"default": "main-menu",
-			"label": "Link List 2"
-		},
-		{
-			"type": "link_list",
-			"id": "link_list_3",
-			"default": "main-menu",
-			"label": "Link List 3"
 		},
 		{
 			"type": "text",

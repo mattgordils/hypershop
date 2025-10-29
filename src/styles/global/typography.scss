@@ -32,9 +32,6 @@
 	}
 
 	h3, .h3, .h3 p {
-		--mobile-font-size: 32;
-		--desktop-font-size: 32;
-		--xl-font-size: calc(var(--desktop-font-size) * var(--typography-multiplier));
 		@include responsiveValue(font-size, 32px, 32px, 32px);
 		font-family: var(--secondary-font);
 		line-height: 1.2em;

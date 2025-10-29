@@ -74,7 +74,23 @@
   endif
 
   if layout == 'cover' or layout == 'contain'
-    assign image_class = image_class | append: ' ' | append: object_fit | append: ' absolute top-0 left-0 w-full h-full'
+    assign image_class = image_class | append: ' ' | append: object_fit | append: ' absolute top-0 left-0 w-full h-full object-[var(--hotspot-x)_var(--hotspot-y)]'
+  endif
+
+  comment
+    Get hotspot position from Shopify focal point
+    Default to 50% 50% (center) if not set
+  endcomment
+  if image.presentation.focal_point.x != blank
+    assign hotspot_x = image.presentation.focal_point.x | append: '%'
+  else
+    assign hotspot_x = '50%'
+  endif
+
+  if image.presentation.focal_point.y != blank
+    assign hotspot_y = image.presentation.focal_point.y | append: '%'
+  else
+    assign hotspot_y = '50%'
   endif
 %}
 
@@ -85,7 +101,7 @@
 </script>
 
 {% if image != blank %}
-  <picture>
+  <picture style="--hotspot-x: {{ hotspot_x }}; --hotspot-y: {{ hotspot_y }}">
     {% if is_asset %}
       {%- comment -%} Asset-based image {%- endcomment -%}
       {%- liquid

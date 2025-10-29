@@ -15,7 +15,8 @@ body:not([data-shopify-editor]) {
   }
 
   in-view.in-view > *,
-  .scroll-entrance[data-in-view = 'true'] > * {
+  .scroll-entrance[data-in-view = 'true'] > *,
+  .menu-item:hover ul.sublinks.scroll-entrance > * { {
     transform: none;
     opacity: 1;
     &:nth-child(1) {
