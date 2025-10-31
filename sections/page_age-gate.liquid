@@ -1,82 +1,83 @@
 <script src="{{ 'ageGate.js' | asset_url }}" defer="defer"></script>
 
 <modal-component id="ageGate">
-    <age-gate
-        id="js-ageGate"
-        class="modal-content agegate bg-bg lg:h-1/2 lg:w-1/2 m-auto justify-center items-center border"
-        data-expire="{{ section.settings.expiration }}"
-    >
-        <div class="flex justify-center items-center h-screen lg:h-full text-burgundy text-center">
-            <div class="m-auto flex-col flex gap-y-gutter p-margin">
-                <div class="h6">
-                    {{ section.settings.question-text }}
-                </div>
-                <div class="flex gap-x-10 justify-center">
-                    <button id="ageYes" class="h1 animate-underline">
-                        YES
-                    </button>
-                    <a class="h1 animate-underline" href="{{ section.settings.url }}" target="_blank">
-                        NO
-                    </a>
-                </div>
-                <div class="body-small">
-                    {{ section.settings.fine-print-text}}
-                </div>
-            </div>
+  <age-gate
+    id="js-ageGate"
+    class="modal-content agegate bg-bg lg:h-1/2 lg:w-1/2 m-auto justify-center items-center border"
+    data-expire="{{ section.settings.expiration }}"
+  >
+    <div class="flex justify-center items-center h-screen lg:h-full text-burgundy text-center">
+      <div class="m-auto flex-col flex gap-y-gutter p-margin">
+        <div class="h6">
+          {{ section.settings.question-text }}
         </div>
-    </age-gate>
+        <div class="flex gap-x-10 justify-center">
+          <button id="ageYes" class="h1 animate-underline">
+            YES
+          </button>
+          <a class="h1 animate-underline" href="{{ section.settings.url }}" target="_blank">
+            NO
+          </a>
+        </div>
+        <div class="body-small">
+          {{ section.settings.fine-print-text}}
+        </div>
+      </div>
+    </div>
+  </age-gate>
 
-    <div class="overlay bg-text-color opacity-20"></div>
+  <div class="overlay bg-text-color opacity-20"></div>
 </modal-component>
 
 
 {% schema %}
 {
-    "name": "Age Gate",
-    "settings": [
-        {
-            "type": "header",
-            "content": "Settings"
-        },
-        {
-            "type": "range",
-            "id": "expiration",
-            "label": "Cookie Expiration",
-            "info": "After the user has closed the age gate, choose the length of time to wait before displaying it again.",
-            "min": 1,
-            "max": 10,
-            "step": 1,
-            "default": 2,
-            "unit": "day"
-        },
-        {
-            "type": "header",
-            "content": "Content"
-        },
-        {
-            "type": "url",
-            "id": "url",
-            "label": "Redirect URL",
-            "info": "If the user is underage, choose where to redirect them to."
-        },
-        {
-            "type": "image_picker",
-            "id": "logo",
-            "label": "Logo",
-            "info": "Logo to show above the age gate content."
-        },
-        {
-            "type": "text",
-            "id": "question-text",
-            "label": "Question Text",
-            "info": "Age gate question"
-        },
-        {
-            "type": "text",
-            "id": "fine-print-text",
-            "label": "Fine Print Text",
-            "info": "Text to show below y/n"
-        }
-    ]
+  "name": "Age Gate",
+  "class": "section-age-gate",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Settings"
+    },
+    {
+      "type": "range",
+      "id": "expiration",
+      "label": "Cookie Expiration",
+      "info": "After the user has closed the age gate, choose the length of time to wait before displaying it again.",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 2,
+      "unit": "day"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Redirect URL",
+      "info": "If the user is underage, choose where to redirect them to."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Logo to show above the age gate content."
+    },
+    {
+      "type": "text",
+      "id": "question-text",
+      "label": "Question Text",
+      "info": "Age gate question"
+    },
+    {
+      "type": "text",
+      "id": "fine-print-text",
+      "label": "Fine Print Text",
+      "info": "Text to show below y/n"
+    }
+  ]
 }
 {% endschema %}
