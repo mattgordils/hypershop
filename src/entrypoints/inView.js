@@ -29,14 +29,13 @@ if (!customElements.get("parallax-view")) {
     class parallaxView extends HTMLElement {
       constructor() {
         super();
+        this.ticking = false;
         //
         this.observer = new IntersectionObserver(item => {
           const inViewItem = item[0]
           if (inViewItem.isIntersecting) {
-            console.log(inViewItem.intersectionRatio)
             this.classList.add('in-view');
           }
-          console.log(inViewItem.intersectionRatio)
         }, {
           threshold: .5
         });
@@ -44,13 +43,24 @@ if (!customElements.get("parallax-view")) {
 
       connectedCallback() {
         this.onScrollHandler = this.onScroll.bind(this);
-        window.addEventListener('scroll', this.onScrollHandler, false);
+        window.addEventListener('scroll', this.onScrollHandler, { passive: true });
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('scroll', this.onScrollHandler);
       }
 
       onScroll() {
-        // Get the element
-        const element = this
+        if (!this.ticking) {
+          requestAnimationFrame(() => {
+            this.updateParallax();
+            this.ticking = false;
+          });
+          this.ticking = true;
+        }
+      }
 
+      updateParallax() {
         // Get the viewport height
         const viewportHeight = window.innerHeight;
 
@@ -58,16 +68,15 @@ if (!customElements.get("parallax-view")) {
         const scrollTop = window.scrollY;
 
         // Get the element offset top
-        const elementOffsetTop = element.offsetTop;
+        const elementOffsetTop = this.offsetTop;
 
         // Calculate the percentage of the element that's in view
-        const percentage = Math.round((scrollTop + viewportHeight - elementOffsetTop) / (viewportHeight + element.offsetHeight) * 100);
+        const percentage = (scrollTop + viewportHeight - elementOffsetTop) / (viewportHeight + this.offsetHeight);
 
-        if (percentage >= 0 && percentage <= 100) {
-          this.style.cssText = "--percentage: " + percentage / 100
+        if (percentage >= 0 && percentage <= 1) {
+          this.style.setProperty('--percentage', percentage);
         }
-
-      } 
+      }
     }
   );
 }
