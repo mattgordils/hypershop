@@ -305,7 +305,10 @@ variant will update imagery and url
     {%- endif -%}
   {%- endfor -%}
 
-  <script type="application/json">
+  <script
+    type="application/json"
+    id="productJson"
+  >
     {{ product.variants | json }}
   </script>
     

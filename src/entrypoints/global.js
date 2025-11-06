@@ -161,7 +161,7 @@ if (!customElements.get("add-to-cart-form")) {
           if (this?.dataset?.variantId) {
             variantId = this.dataset.variantId
           } else {
-            variantData = JSON.parse(this.querySelector('[type="application/json"]').textContent)
+            variantData = JSON.parse(this.querySelector('[type="application/json"]#productJson').textContent)
             variantId = getVariant(selectedOptions, variantData).id
           }
 

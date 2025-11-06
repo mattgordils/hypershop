@@ -106,7 +106,7 @@ class VariantSelects extends HTMLElement {
     }
 
     // Get variant data JSON
-    const jsonScript = form.querySelector('[type="application/json"]');
+    const jsonScript = form.querySelector('[type="application/json"]#productJson');
     if (!jsonScript) {
       return;
     }
@@ -316,7 +316,7 @@ class VariantSelects extends HTMLElement {
       // Cards: Use existing variant data from the page (no fetch needed!)
       // The product_option_form already has all variant data in a JSON script tag
       const form = this.closest('add-to-cart-form');
-      const jsonScript = form.querySelector('[type="application/json"]');
+      const jsonScript = form.querySelector('[type="application/json"]#productJson');
 
       if (!jsonScript) {
         console.error('Could not find variant data JSON in card');
