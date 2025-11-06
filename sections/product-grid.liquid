@@ -3,7 +3,7 @@
 {% endcapture %}
 
 {%-liquid
-  assign show_filters = true
+  assign show_filters = collection
   assign section_collection = section.settings.collection | default: collection
 
   if section.settings.products != blank
@@ -25,7 +25,7 @@
           {% endif %}
 
         {% if collection.sort_options.size > 0 %}
-          <div id="sortItems" class="relative z-10 inline-block align-top">
+          <div id="sortItems" class="relative z-2 inline-block align-top">
               <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
               <span class="border-b border-dashed border-hr-color transition group-hover:border-text-color">
                 Sort By
@@ -74,14 +74,14 @@
       </div>
     {% endif %}
 
-    <div class="max-w-site-max-w mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
+    <div class="max-w-site-max-w mx-auto relative z-1">
+      <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
         {% for product in section_collection.products %}
           <div>
             {% render 'product_card' with product: product %}
           </div>
         {% endfor %}
-      </div>
+      </in-view>
     </div>
   </{% if show_filters %}collection-grid{% else %}div{% endif %}>
 {% endif %}
@@ -113,6 +113,10 @@
         {
           "label": "None",
           "value": "none"
+        },
+        {
+          "label": "Slim",
+          "value": "slim"
         },
         {
           "label": "Small",

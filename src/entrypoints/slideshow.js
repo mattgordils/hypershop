@@ -106,7 +106,10 @@ if (!customElements.get('slide-show')) {
         // initialize slider
         let plugins = [ClassNames()]
         if (this.autoplay) {
-          plugins = [...plugins, Autoplay({ delay: this.autoplaySpeed })]
+          plugins = [...plugins, Autoplay({
+            delay: this.autoplaySpeed,
+            stopOnLastSnap: !this.loop
+          })]
         }
         if (this.fade) {
           plugins = [...plugins, Fade()]
@@ -115,7 +118,6 @@ if (!customElements.get('slide-show')) {
         const embla = EmblaCarousel(this, options, plugins)
 
         const toggleActiveWhenScrollable = () => {
-          console.log('toggleActiveWhenScrollable')
           setTimeout(() => {
             let isScrollable = embla.internalEngine().scrollSnaps.length > 1
 
@@ -203,7 +205,6 @@ if (!customElements.get('slide-show')) {
         }
 
         const setInactive = () => {
-          console.log('setInactive')
           if (embla?.internalEngine()?.options?.active) {
             this.classList.remove('inactive')
           } else {

@@ -56,7 +56,14 @@ if (!customElements.get('collection-grid')) {
         this.filterPanelClose = this.querySelector('#filterPanelClose')
 
         this.sortAndFilterItems.forEach((sfItem) => {
-          sfItem?.addEventListener('change', () => {
+          sfItem?.addEventListener('change', (event) => {
+            // If a regular filter is checked, uncheck the "All" checkbox for that filter type
+            if (event.target.type === 'checkbox' && event.target.checked && event.target.value !== 'all') {
+              const allCheckbox = this.querySelector(`input[name="${event.target.name}"][value="all"]`)
+              if (allCheckbox) {
+                allCheckbox.checked = false
+              }
+            }
             this.sortAndFilter()
           })
         })
@@ -111,9 +118,9 @@ if (!customElements.get('collection-grid')) {
       }
 
       sortDropdown = () => {
-        const trigger = this.sortItems.querySelector('#sortTrigger')
-        const triggerIcon = trigger.querySelector('.icon')
-        const list = this.sortItems.querySelector('#sortList')
+        const trigger = this?.sortItems?.querySelector('#sortTrigger')
+        const triggerIcon = trigger?.querySelector('.icon')
+        const list = this?.sortItems?.querySelector('#sortList')
 
         trigger?.addEventListener('click', () => {
           if (list.classList.contains('hidden')) {
@@ -129,9 +136,19 @@ if (!customElements.get('collection-grid')) {
       sortAndFilter = (reset = false, fetchUrl = false) => {
         let sfValues = false
 
+        // Find all "all" checkboxes that are checked
+        const allCheckboxes = Array.from(this.sortAndFilterItems).filter(
+          item => item.value === 'all' && item.checked
+        )
+        const excludeNames = allCheckboxes.map(item => item.name)
+
         sfValues = Array.from(this.sortAndFilterItems)
           .map((item) => {
             if (item.value && item.name) {
+              // Skip if this filter's name is in the exclude list
+              if (excludeNames.includes(item.name)) {
+                return null
+              }
               if ((item.type === 'checkbox' || item.type === 'radio') && item.checked) {
                 if (item.type === 'radio' && sfValues[item.name]) {
                   sfValues[item.name] = item.value
@@ -143,7 +160,7 @@ if (!customElements.get('collection-grid')) {
               }
             }
           })
-          .filter((item) => item !== undefined)
+          .filter((item) => item !== undefined && item !== null)
 
         let pageUrl = this.collectionUrl
         let sectionId = this.sectionId

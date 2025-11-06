@@ -86,11 +86,44 @@
                   {%- case filter.type -%}
                     {%- when 'list' -%}
                       <ul class='{% if filter.label == 'Color' %}flex flex-wrap gap-x-3 justify-start{% endif %}'>
+                        <li class='filter-item body {% if filter.label == 'Color' %}w-[40%] grow min-w-[100px]{% endif %}'>
+                          <label
+                            for='Filter-{{ filter.param_name }}-all'
+                            class='flex items-start justify-start gap-2 py-[.1em]'
+                          >
+                            <input
+                              type='checkbox'
+                              class='hidden peer'
+                              name='{{ filter.param_name }}'
+                              value='all'
+                              id='Filter-{{ filter.param_name }}-all'
+                              {% if filter.active_values.size < 1 -%}
+                                checked
+                              {%- endif %}
+                            >
+                            <span class="text-transparent{% if filter.active_values.size < 1 %} text-current{% endif %}">
+                              <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-base bg-hr-color {% if filter.active_values.size < 1 -%}theme-dark{%- endif %}'>
+                                <div
+                                  class='marker -mt-[2px] w-[4px] h-[8px] rounded-base border-r border-b border-current rotate-45'
+                                ></div>
+                              </div>
+                            </span>
+                            <span>
+                              All
+                            </span>
+                          </label>
+                        </li>
                         {%- for filter_value in filter.values -%}
+                          {% liquid
+                            assign filter_disabled = false
+                            if filter_value.count == 0 and filter_value.active == false
+                              assign filter_disabled = true
+                            endif
+                          %}
                           <li class='filter-item body {% if filter.label == 'Color' %}w-[40%] grow min-w-[100px]{% endif %}'>
                             <label
                               for='Filter-{{ filter.param_name }}-{{ forloop.index }}'
-                              class='flex items-start justify-start gap-2 py-[.1em]'
+                              class='flex items-start justify-start gap-2 py-[.1em] {% if filter_disabled == true %}opacity-50 cursor-not-allowed{% else %}cursor-pointer{% endif %}'
                             >
                               <input
                                 type='checkbox'
@@ -129,9 +162,9 @@
                                       ></div>
                                     </div>
                                   {%- else -%}
-                                    <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color'>
+                                    <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-base bg-hr-color{% if filter_value.active %} theme-dark{% endif %}'>
                                       <div
-                                        class='marker w-[6px] h-[6px] rounded-full bg-current'
+                                        class='marker -mt-[2px] w-[4px] h-[8px] rounded-base border-r border-b border-current rotate-45'
                                       ></div>
                                     </div>
                                 {%- endcase -%}

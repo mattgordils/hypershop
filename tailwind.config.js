@@ -27,6 +27,7 @@ module.exports = {
       'none': '0',
       'sm': '4px',
       DEFAULT: 'var(--base-border-radius)',
+      'base': 'var(--base-border-radius)',
       'button': 'var(--button-border-radius)',
       'md': '12px',
       'lg': '20px',
