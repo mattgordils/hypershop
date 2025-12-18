@@ -21,12 +21,12 @@
     {% if show_filters %}
       <div class="mb-gutter">
         {% if section_collection.products.size > 0 %}
-            <span class="text-light-text-color"> {{ section_collection.products.size }} Items </span>
-          {% endif %}
+          <span class="text-light-text-color"> {{ section_collection.products.size }} Items </span>
+        {% endif %}
 
         {% if collection.sort_options.size > 0 %}
           <div id="sortItems" class="relative z-2 inline-block align-top">
-              <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
+            <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
               <span class="border-b border-dashed border-hr-color transition group-hover:border-text-color">
                 Sort By
                 {% for option in collection.sort_options %}

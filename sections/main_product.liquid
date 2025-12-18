@@ -28,14 +28,7 @@
 			</div>
 		{% endif %}
 		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
-			{%- for image in product.images -%}
-				{% render 'image' with
-					src: image,
-					sizes: media_sizes,
-					ratio: 1,
-					class: 'w-full'
-				%}
-			{%- endfor -%}
+			{% render 'product_media' %}
 		</div>
   </div>
 

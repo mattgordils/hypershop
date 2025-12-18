@@ -1,14 +1,19 @@
-<div class="w-full flex justify-between items-center border-b pb-gutter">
-    <div id="cartHeader" data-cart-count="{{ cart.item_count }}">
+<div id='cartUpdate' class="px-[--cart-padding] w-full flex justify-between items-center border-hr-color">
+    <div id="cartHeader" class="body-large bold pt-[.1em]" data-cart-count="{{ cart.item_count }}">
         {% if cart.item_count < 1 %}
-            <p class="h5">Your Cart</p>
+            <p class="pb-[.05em] body-large !font-semibold">Your Bag</p>
         {% else %}
-            <p class="h5">Cart (<span id="cartCount">{{ cart.item_count }}</span>)</p>
+            <p class="pb-[.05em] body-large !font-semibold">
+                Your Bag
+                <span>
+                    ({{ cart.item_count }})
+                </span>
+            </p>
         {% endif %}
     </div>
     <div class="flex items-center justify-end">
-        <modal-trigger class="cart-close button circle unpadd transparent">
-            <div class="icon material-icon">close</div>
+        <modal-trigger class="cart-close button circle transparent -mr-[18px]">
+            <div class="icon material-icon text-[18px]">close</div>
         </modal-trigger>
     </div>
 </div>

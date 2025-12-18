@@ -1,23 +1,58 @@
 <modal-component id="cartDrawer" class="cart-container drawer">
   <div
-    class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] bg-bg z-1"
+    class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] theme-white z-1"
   >
-    <div class="flex flex-col bg-off_white h-full">
-      <div class="shrink-0 pt-gutter px-[var(--cart-padding)]">
+    <div class="flex flex-col theme-white h-full">
+      <div class="shrink-0">
         {% render 'cart_header' %}
       </div>
+
+      <div
+        id="cartUpdate"
+      >
+        <div class="{% if cart.item_count < 1 %}hidden{% endif %}">
+          {% liquid
+            assign cart_subtotal = cart.items_subtotal_price | divided_by: 100.00
+            assign shipping_level = cart_subtotal | divided_by: section.settings.free_shipping_threshold
+            if shipping_level > 1
+              assign shipping_level = 1
+            endif
+
+            assign spend_x_more = section.settings.free_shipping_threshold | times: 100.00 | minus: cart.items_subtotal_price | money
+          %}
+          <div class="theme-light-grey p-[--cart-padding]">
+            {% if shipping_level == 1 %}
+              <p class="body bold pb-1">
+                {{ section.settings.free_shipping_met_text }}
+              </p>
+            {% else %}
+              <p class="body bold pb-1">
+                {{ section.settings.free_shipping_text | replace: "[x]", spend_x_more }}
+              </p>
+            {% endif %}
+            <div class="h-1 w-full bg-[rgba(0,0,0,.1)] rounded">
+              <div style="--width: {{ shipping_level | times: 100 }}%;" class="rounded bg-success h-full w-[--width]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="cartContent" class="grow overflow-hidden flex flex-col shrink">
-        <div class="flex flex-col px-[var(--cart-padding)] justify-between grow overflow-y-auto overflow-x-hidden max-h-[100%] shrink">
+        <div class="flex flex-col px-[--cart-padding] justify-between grow overflow-y-auto overflow-x-hidden max-h-[100%] shrink">
           {% if cart.item_count < 1 %}
-            <div class="flex pb-20 flex-col gap-gutter justify-center items-center h-full text-center">
+            <div class="flex pb-20 flex-col gap-6 justify-center items-center h-full text-center">
               <p class="h3">Your cart is empty</p>
-              <modal-trigger class="button large">Continue Shopping</modal-toggle>
+              {% render 'button', to: '/collections/all', label: 'Continue Shopping' %}
+              {% comment %} <modal-trigger class="button">Continue Shopping</modal-toggle> {% endcomment %}
             </div>
           {% else %}
             <div class="flex flex-col max-h-[100%]">
-              {% for item in cart.items %}
-                {% render 'cart_item' with item: item %}
-              {% endfor %}
+              <div class="py-[--cart-padding] space-y-[--cart-padding]">
+                {% for item in cart.items %}
+                  {% if forloop.index0 != 0 %}<hr class="m-0 border-hr-color">{% endif %}
+                  {% render 'cart_item' with item: item %}
+                {% endfor %}
+              </div>
             </div>
           {% endif %}
 
@@ -48,7 +83,7 @@
 {% schema %}
 {
   "name": "Cart",
-  "class": "section-cart-panel",
+  "class": "section-cart",
   "blocks": [
     {
 			"type": "@app"
@@ -74,6 +109,36 @@
       "id": "text_checkout",
       "label": "Checkout Link Text",
       "default": "Checkout"
+    },
+    {
+      "type": "checkbox",
+      "id": "free_shipping",
+      "label": "Show Free Shipping Meter",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free Shipping Threshold",
+      "info": "In dollars",
+      "default": 300,
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_met_text",
+      "label": "Free Shipping Text",
+      "info": "Visible when the free shipping threshold is met.",
+      "default": "You've added enough to you bag for free shipping!",
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "free_shipping_text",
+      "label": "Free Shipping Text",
+      "info": "[x] will be replaced with the amount necessary to meet the free shipping threshold",
+      "default": "Spend [x] more to get free shipping",
+      "visible_if": "{{ section.settings.free_shipping }}"
     }
   ]
 }

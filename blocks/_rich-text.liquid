@@ -1,4 +1,4 @@
-<div class="rich-text {{ block.settings.size }}">
+<div class="rich-text {{ block.settings.size }}{% if block.settings.text == blank %} block-empty{% endif %}">
   {{ block.settings.text }}
 </div>
 

@@ -8,7 +8,7 @@
     transition: background-size var(--slow-speed);
 	}
 
-	.active .animate-underline,
+	.active > .animate-underline,
 	.animate-underline:hover,
 	.group:hover .animate-underline {
 		background-size: 100% 1px;

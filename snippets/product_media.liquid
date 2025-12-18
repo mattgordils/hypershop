@@ -1,0 +1,44 @@
+{% liquid
+  assign aspect_ratio = 0.8
+  assign playing = video_playing | default: true
+%}
+
+{%- for media_item in product.media -%}
+  {% if media_item.image.src != product.selected_or_first_available_variant.image.src or product.selected_or_first_available_variant.image.src == blank %}
+    <div
+      class="{{ class }}"
+      data-index="{{ forloop.index }}"
+    >
+      <div
+        style="--aspect: {{ aspect_ratio }};"
+        class="aspect-[--aspect] relative bg-light-color"
+      >
+        {% if media_item.media_type == 'video' %}
+          {% if playing %}
+            {% render 'video' with
+              src: media_item,
+              layout: 'cover'
+            %}
+          {% else %}
+            {% render 'image' with
+              src: media_item.preview_image,
+              layout: 'cover',
+              sizes: sizes
+            %}
+            <div class="z-2 absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none text-yellow">
+              {% render 'icon_material', icon: 'play_arrow', size: 36 %}
+            </div>
+          {% endif %}
+        {% else %}
+          {% if media_item.image != blank %}
+            {% render 'image' with
+              src: media_item.image,
+              layout: 'cover',
+              sizes: sizes
+            %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{%- endfor -%}

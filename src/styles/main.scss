@@ -24,8 +24,6 @@
 //
 // === Components ===
 //
-
-@import "./components/link";
 @import './components/rich-text';
 @import './components/scroll-entrance';
 @import './components/button';
@@ -40,7 +38,7 @@
 @layer base {
   :root {
     /* Grid */
-    @include responsiveValue(--site-gutters, 8px, 20px, 20px);
+    @include responsiveValue(--site-gutters, 8px, 16px, 16px);
     @include responsiveValue(--site-margins, 16px, 50px, 75px);
     @include responsiveValue(--vertical-spacing, 40px, 100px, 120px);
     @include responsiveValue(--vertical-spacing-small, 20px, 50px, 60px);
@@ -124,7 +122,7 @@ body {
   fill: currentcolor;
 }
 
-svg *:not([fill = 'none']) {
+svg:not(.full-color) * {
   fill: currentcolor;
 }
 
@@ -134,4 +132,11 @@ svg *:not([fill = 'none']) {
 
 .grid.reverse > * {
   direction: initial;
+}
+
+/* Hide empty blocks */
+.shopify-block {
+  &:has(> .block-empty) {
+    display: none;
+  }
 }

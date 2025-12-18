@@ -14,7 +14,7 @@
   }
 
   #shopify-section-page_header.scrolled header,
-  #shopify-section-page_header:hover header {
+  #shopify-section-page_header:has(:hover) header {
     color: var(--text-color);
     background: var(--bg-color);
     border-color: var(--hr-color);
@@ -46,30 +46,35 @@
         {% if section.settings.menu.links.size > 0 %}
           <ul class="h-full hidden md:flex items-center">
             {% for link in section.settings.menu.links %}
-              {% assign is_store_active = false %}
+              {%-liquid
+                assign has_sublinks = false
+                if link.links.size > 0
+                  assign has_sublinks = true
+                endif
+              %}
               <li class="h-full">
                 <div
                   class="
                     h-full
                     group/menu-item
                     menu-item
-                    {% if link.active or is_store_active %}
+                    {% if link.active %}
                       active
                     {% endif %}
                   "
                 >
-                  <{% if link.links.size > 0 %}div{% else %}a href="{{ link.url }}"{% endif %}
+                  <{% if has_sublinks %}div{% else %}a href="{{ link.url }}"{% endif %}
                     class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
                     {% if link.active %}aria-current="page"{% endif %}
                   >
                     <span class="animate-underline grow-0 shrink-0 leading-none">
                       {{ link.title }}
                     </span>
-                    {% if link.links.size > 0 %}
+                    {% if has_sublinks %}
                       <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition-transform">keyboard_arrow_down</div>
                     {% endif %}
-                  </{% if link.links.size > 0 %}div{% else %}a{% endif %}>
-                  {% if link.links.size > 0 %}
+                  </{% if has_sublinks %}div{% else %}a{% endif %}>
+                  {% if has_sublinks %}
                     <div
                       class="
                         transition-[visibility,opacity]
@@ -93,6 +98,12 @@
                       <div class="px-margin py-gutter min-h-[300px]">
                         <ul class="sublinks scroll-entrance">
                           {% for sublink in link.links %}
+                            {%-liquid
+                              assign has_sub_sublinks = false
+                              if sublink.links.size > 0
+                                assign has_sub_sublinks = true
+                              endif
+                            %}
                             <li>
                               <a
                                 href="{{ sublink.url }}"
@@ -102,7 +113,7 @@
                                   {{ sublink.title }}
                                 </span>
                               </a>
-                              {% if sublink.links.size > 0 %}
+                              {% if has_sub_sublinks %}
                                 <ul>
                                   {% for subsublink in sublink.links %}
                                     <li class="pl-6">

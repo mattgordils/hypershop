@@ -1,7 +1,7 @@
 body[data-state-cart="open"] {}
 
 .cart-container {
-  --cart-padding: 20px;
+  --cart-padding: var(--site-gutters);
   @media screen and (max-width: 767px) {
     --cart-padding: var(--site-margins);
   }

@@ -117,10 +117,16 @@ if (!customElements.get('slide-show')) {
 
         const embla = EmblaCarousel(this, options, plugins)
 
+        // Store embla instance and resize handler for cleanup
+        this.embla = embla
+        this.resizeHandler = null
+
         const toggleActiveWhenScrollable = () => {
           setTimeout(() => {
+            const hasSlides = this.slides && this.slides.length > 0
             let isScrollable = embla.internalEngine().scrollSnaps.length > 1
 
+            // Hide controls if not scrollable, but don't mark as inactive if we have slides
             if (!isScrollable) {
               this?.arrowNext?.classList.add('!hidden')
               this?.arrowPrev?.classList.add('!hidden')
@@ -130,7 +136,10 @@ if (!customElements.get('slide-show')) {
               this?.arrowPrev?.classList.remove('!hidden')
               this?.dots?.classList.remove('!hidden')
             }
-            embla.reInit({ active: isScrollable })
+
+            // Only reInit with active: false if we have no slides at all
+            // If we have slides that exactly match slides-to-show, keep active: true
+            embla.reInit({ active: hasSlides })
           }, 100)
         }
 
@@ -257,17 +266,33 @@ if (!customElements.get('slide-show')) {
           }
         }
 
-        embla.on('scroll', updateSlide)
-        window.addEventListener('resize', () => {
+        // Store resize handler so we can remove it later
+        this.resizeHandler = () => {
           toggleActiveWhenScrollable()
           setInactive()
-        })
+        }
+
+        embla.on('scroll', updateSlide)
+        window.addEventListener('resize', this.resizeHandler)
         toggleActiveWhenScrollable()
         updateSlide()
         renderDots()
         setInactive()
         renderNav()
         this.editorActions(embla)
+      }
+
+      destroySlideshow() {
+        // Destroy Embla instance
+        if (this.embla) {
+          this.embla.destroy()
+          this.embla = null
+        }
+        // Remove resize listener
+        if (this.resizeHandler) {
+          window.removeEventListener('resize', this.resizeHandler)
+          this.resizeHandler = null
+        }
       }
     }
   )

@@ -1,22 +1,100 @@
-<div id="cartUpdate" class="mx-[var(--cart-padding)] border-t pt-gutter">
+<div id="cartUpdate" class="mx-[--cart-padding] border-hr-color">
   <div class="hidden lg:block lg:col-span-2"></div>
   <div class="flex flex-col lg:col-span-10">
-    <div class="flex justify-between font-xl-sans">
-      <div>Total</div>
-      <div>
-        {{ cart.total_price | money_with_currency }}
+    <discount-form class="summary-items py-gutter border-t border-hr-color flex flex-col items-stretch gap-1">
+      <div class="body flex justify-between items-baseline font-xl-sans gap-gutter">
+        <div class="grow">
+          <input
+            type="text"
+            placeholder="Enter discount code"
+            style="--input-border-color: transparent;"
+            class="small w-full !px-0 !bg-transparent outline-none"
+          >
+        </div>
+        <div>
+          <button class="button small grey opacity-50 cursor-not-allowed" disabled>Apply</button>
+        </div>
       </div>
+      <div class="discount-status body-small hidden"></div>
+    </discount-form>
+
+    <div class="summary-items py-gutter border-t border-hr-color flex flex-col items-stretch">
+      <div class="body flex justify-between font-xl-sans">
+        <div>Subtotal</div>
+        <div>
+          {{ cart.items_subtotal_price | money }}
+        </div>
+      </div>
+
+      <div class="body flex justify-between font-xl-sans">
+        <div>Shipping</div>
+        {% liquid
+          assign cart_subtotal = cart.items_subtotal_price | divided_by: 100.00
+          assign shipping_level = cart_subtotal | divided_by: section.settings.free_shipping_threshold
+          if shipping_level > 1
+            assign shipping_level = 1
+          endif
+        %}
+        <div class="{% if shipping_level == 1 %}text-error font-semibold{% else %}text-light-text-color{% endif %}">
+          {% if shipping_level == 1 %}
+            FREE
+          {% else %}
+            Calculated at checkout
+          {% endif %}
+        </div>
+      </div>
+
+      {% if cart.cart_level_discount_applications.size > 0 %}
+        {% for discount_application in cart.cart_level_discount_applications %}
+          <div class="body flex justify-between font-xl-sans items-center">
+            <div class="grow">
+              Discount
+            </div>
+              <div class="grow-0 shrink-0 inline-flex gap-1 items-center theme-cream tinycaps pl-[.3em] pr-[.1em] mr-2">
+                <span>{{ discount_application.title }}</span>
+                {% if discount_application.type == 'discount_code' %}
+                  {%- comment -%}Manual discount code - show remove button{%- endcomment -%}
+                  <discount-remove class="tracking-normal inline-flex items-center justify-center h-full">
+                    <button class="transition hover:text-error inline-flex items-center justify-center">
+                      {% render 'icon_material', icon: 'close', size: 12, class: 'block' %}
+                    </button>
+                  </discount-remove>
+                {% endif %}
+              </div>
+            <div class="grow-0 shrink-0 text-error">
+              -{{ discount_application.total_allocated_amount | money }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
-    <div class="pt-2 font-sm-serif text-gray body-small text-light-text-color">
-      {{ section.settings['text_footer'] }}
-    </div>
+
+    <div class="pb-[2px]">
+      <div class="border-t border-hr-color pt-gutter flex justify-between body-medium !font-semibold">
+        <div>Estimated Total</div>
+        <div>
+          {{ cart.total_price | money_with_currency }}
+        </div>
+      </div>
+
+      {% if section.settings.text_footer != blank %}
+        <div class="body-small !font-semibold">
+          {{ section.settings.text_footer }}
+        </div>
+      {% endif %}
+     </div>
   </div>
 </div>
-<div class="w-full bg-orange font-xl-sans p-[var(--cart-padding)] lg:flex lg:justify-between">
+<div class="pt-gutter w-full bg-orange font-xl-sans pb-[--cart-padding] px-[--cart-padding] lg:flex lg:justify-between">
   <form class="cart__drawer-total w-full" method="post" action="/cart">
     <button type="submit" class="button large w-full pt-[15px] lg:pt-0 lg:font-2xl-sans">
-      {{ section.settings['text_checkout'] }}
+      <div class="pl-3">
+        {{ section.settings['text_checkout'] }}&nbsp;<span class="opacity-50 hidden xs:inline-block">{{ cart.item_count }} Items</span>
+      </div>
     </button>
     <input type="hidden" name="checkout" value="Checkout">
   </form>
+</div>
+<div class="px-[--cart-padding] pb-[--cart-padding]">
+  {% render 'payment-icons' %}
 </div>

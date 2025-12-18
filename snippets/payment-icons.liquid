@@ -1,0 +1,14 @@
+<div
+  class="{{ class }}"
+>
+  <ul
+    class="m-0 flex flex-wrap justify-start items-center gap-[8px]"
+    role="list"
+  >
+    {%- for type in shop.enabled_payment_types -%}
+      <li class="flex items-center">
+        {{ type | payment_type_svg_tag: class: 'w-[26px] full-color' }}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
