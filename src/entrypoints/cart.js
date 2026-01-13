@@ -1,7 +1,6 @@
 // Refresh Cart
 const updateCartCount = () => {
   const cartCountItems = document.querySelectorAll('#cartCount')
-  console.log(cartCountItems)
   cartCountItems.forEach(item => {
     const newCartCount = document.querySelector('#cartHeader').dataset.cartCount
     let prependContent = ''
@@ -58,10 +57,6 @@ export const refreshCart = (fullRefresh = false) => {
         const cartContent = el.querySelector('#cartContent')
         const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
         const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        
-        console.log(cartContent)
-        console.log(updateItems)
-        console.log(updatedItems)
         
         currentCartDrawer.outerHTML = cartContent.outerHTML
         updateItems?.forEach((item, index) => {
@@ -196,7 +191,6 @@ if (!customElements.get("cart-quantity-adjust")) {
           },
           body: JSON.stringify(formData),
         })
-          // .then((data) => {console.log(data)})
           .then((data) => successHandler(data))
           .then((data) => {
             refreshCart();

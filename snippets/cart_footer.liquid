@@ -1,22 +1,24 @@
 <div id="cartUpdate" class="mx-[--cart-padding] border-hr-color">
   <div class="hidden lg:block lg:col-span-2"></div>
   <div class="flex flex-col lg:col-span-10">
-    <discount-form class="summary-items py-gutter border-t border-hr-color flex flex-col items-stretch gap-1">
-      <div class="body flex justify-between items-baseline font-xl-sans gap-gutter">
-        <div class="grow">
-          <input
-            type="text"
-            placeholder="Enter discount code"
-            style="--input-border-color: transparent;"
-            class="small w-full !px-0 !bg-transparent outline-none"
-          >
+    {% if section.settings.show_discount_input %}
+      <discount-form class="summary-items py-gutter border-t border-hr-color flex flex-col items-stretch gap-1">
+        <div class="body flex justify-between items-baseline font-xl-sans gap-gutter">
+          <div class="grow">
+            <input
+              type="text"
+              placeholder="Enter discount code"
+              style="--input-border-color: transparent;"
+              class="small w-full !px-0 !bg-transparent outline-none"
+            >
+          </div>
+          <div>
+            <button class="button small grey opacity-50 cursor-not-allowed" disabled>Apply</button>
+          </div>
         </div>
-        <div>
-          <button class="button small grey opacity-50 cursor-not-allowed" disabled>Apply</button>
-        </div>
-      </div>
-      <div class="discount-status body-small hidden"></div>
-    </discount-form>
+        <div class="discount-status body-small hidden"></div>
+      </discount-form>
+    {% endif %}
 
     <div class="summary-items py-gutter border-t border-hr-color flex flex-col items-stretch">
       <div class="body flex justify-between font-xl-sans">
@@ -78,7 +80,7 @@
       </div>
 
       {% if section.settings.text_footer != blank %}
-        <div class="body-small !font-semibold">
+        <div class="body-small text-light-text-color">
           {{ section.settings.text_footer }}
         </div>
       {% endif %}
@@ -95,6 +97,8 @@
     <input type="hidden" name="checkout" value="Checkout">
   </form>
 </div>
-<div class="px-[--cart-padding] pb-[--cart-padding]">
-  {% render 'payment-icons' %}
-</div>
+{% if section.settings.show_payment_icons %}
+  <div class="px-[--cart-padding] pb-[--cart-padding]">
+    {% render 'payment-icons' %}
+  </div>
+{% endif %}

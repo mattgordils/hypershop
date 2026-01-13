@@ -1,9 +1,9 @@
-<div id='cartUpdate' class="px-[--cart-padding] w-full flex justify-between items-center border-hr-color">
-    <div id="cartHeader" class="body-large bold pt-[.1em]" data-cart-count="{{ cart.item_count }}">
+<div id='cartUpdate' class="h-header-height px-[--cart-padding] w-full flex justify-between items-center border-hr-color">
+    <div id="cartHeader" class="body-large bold" data-cart-count="{{ cart.item_count }}">
         {% if cart.item_count < 1 %}
-            <p class="pb-[.05em] body-large !font-semibold">Your Bag</p>
+            <p class="h5 !font-semibold">Your Bag</p>
         {% else %}
-            <p class="pb-[.05em] body-large !font-semibold">
+            <p class="h5 !font-semibold">
                 Your Bag
                 <span>
                     ({{ cart.item_count }})

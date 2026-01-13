@@ -58,10 +58,32 @@
 			<p class="body-tiny">©{{ "now" | date: "%Y" }}. {{ shop.name }}</p>
 		</div>
 		<div>
-			<a class="body-tiny animate-underline" href="https://hyperlinknyc.com/">Site Credit</a>
+			<collapsible-trigger
+				class="cursor-pointer body-tiny animate-underline"
+				data-id="siteCred"
+			>
+				Site Credit
+			</collapsible-trigger>
 		</div>
 	</div>
 </div>
+<collapsible-item id="siteCred">
+	<div data-collapsible="content" class="theme-dark">
+		<div>
+			<div class="max-w-site-max-w py-gutter px-margin body-small text-center">
+				Site by <a class="animate-underline" href="https://hyperlinknyc.com/">Studio Hyperlink</a>
+			</div>
+		</div>
+	</div>
+</collapsible-item>
+
+<script>
+	document.querySelector('[data-id="siteCred"]').addEventListener('click', () => {
+		setTimeout(() => {
+			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+		}, 300)
+	})
+</script>
 
 {% schema %}
 {

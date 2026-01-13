@@ -1,95 +1,34 @@
+<script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
+
 {% capture spacing_class %}
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
 <div class="px-margin overflow-hidden {{ spacing_class }}">
-  <product-recommendations class="product-recommendations opacity-0 transition-opacity duration-slow" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=4">
-    {% if recommendations.performed and recommendations.products_count > 0 %}
-      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading | escape }}</h2>
-      <ul class="hidden lg:grid grid-cols-4 gap-x-gutter" role="list">
-        {%- if recommendations.products.size > 0 -%}
-          {% for recommendation in recommendations.products %}
-            <li>
-              {% render 'product_card', card_product: recommendation, section_id: section.id %}
-            </li>
-          {% endfor %}
-        {% else %}
-          {% for recommendation in (1..4) %}
-            <li>
-              {% render 'product_card', card_product: recommendation, section_id: section.id %}
-            </li>
-          {% endfor %}
-        {% endif %}
-      </ul>
-
-      <div class="w-full lg:hidden">
-        <ul
-          class="slick-slider recommendations progress-dots slide-gap slick-visible-overflow"
-          role="list"
-        >
-          {%- if recommendations.products.size > 0 -%}
-            {% for recommendation in recommendations.products %}
-              <li>
-                {% render 'product_card', card_product: recommendation, section_id: section.id %}
-              </li>
-            {% endfor %}
-          {% else %}
-            {% for recommendation in (1..4) %}
-              <li>
-                {% render 'product_card', card_product: recommendation, section_id: section.id %}
-              </li>
-            {% endfor %}
-          {% endif %}
-        </ul>
-      </div>
+  <product-recommendations
+    class="product-recommendations"
+    data-product-handle="{{ product.handle }}"
+    data-product-id="{{ product.id }}"
+    {% if product.collections.size > 0 %}
+    data-collection-handle="{{ product.collections.first.handle }}"
     {% endif %}
+    data-product-tags="{{ product.tags | join: ',' }}"
+    data-min-products="{{ section.settings.min_products }}"
+    data-max-products="{{ section.settings.max_products }}"
+    data-hide-sold-out="{{ section.settings.hide_sold_out }}"
+    data-section-id="{{ section.id }}"
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div data-loading class="text-center py-8">
+      <p>Loading recommendations...</p>
+    </div>
+
+    <div data-product-container class="grid grid-cols-2 lg:grid-cols-4 gap-x-gutter gap-y-v-space"></div>
   </product-recommendations>
 </div>
-
-{% javascript %}
-  class ProductRecommendations extends HTMLElement {
-    constructor() {
-      super();
-
-      const handleIntersection = (entries, observer) => {
-        if (!entries[0].isIntersecting) return;
-        observer.unobserve(this);
-
-        fetch(this.dataset.url)
-          .then(response => response.text())
-          .then(text => {
-            const html = document.createElement('div');
-            html.innerHTML = text;
-            const recommendations = html.querySelector('product-recommendations');
-
-            if (recommendations && recommendations.innerHTML.trim().length) {
-              this.innerHTML = recommendations.innerHTML;
-
-              // Trigger fade-in after content is loaded
-              requestAnimationFrame(() => {
-                this.classList.remove('opacity-0');
-                this.classList.add('!opacity-100');
-              });
-
-              if(window.lazyload) window.lazyload();
-            }
-
-            if (html.querySelector('.slick-slider.recommendations')) {
-              this.classList.add('product-recommendations--loaded');
-            }
-          })
-          .catch(e => {
-            console.error(e);
-          });
-      }
-
-      // Increase rootMargin to trigger fetch earlier (2000px before entering viewport)
-      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 2000px 0px'}).observe(this);
-    }
-  }
-
-  customElements.define('product-recommendations', ProductRecommendations);
-{% endjavascript %}
 
 {% schema %}
 {
@@ -99,13 +38,39 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Uses the Shopify generated recommended products"
+      "content": "Displays product recommendations with intelligent fallbacks. First tries Shopify's recommendation API, then products from the same collection, then products with the same tags, and finally random products to meet the minimum."
     },
     {
       "type": "text",
       "id": "heading",
-      "default": "Shop Similar",
-      "label": "Headline"
+      "default": "You may also like",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "min_products",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Minimum products to show",
+      "info": "If fewer recommendations are available, the section will fill with products from the same collection, tags, or random products"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 8,
+      "label": "Maximum products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_sold_out",
+      "default": true,
+      "label": "Hide sold out products",
+      "info": "When enabled, sold out products will be excluded and replaced with other available products to meet the minimum"
     },
     {
       "type": "select",

@@ -1,0 +1,14 @@
+{%- comment -%}
+  Helper section for product-recommendations
+  Renders product cards from a comma-separated list of handles
+{%- endcomment -%}
+
+{%- assign handles_param = request.url | split: 'handles=' | last | split: '&' | first -%}
+{%- assign product_handles = handles_param | split: ',' -%}
+
+{%- for handle in product_handles -%}
+  {%- assign product = all_products[handle] -%}
+  {%- if product.id -%}
+    {% render 'product_card', product: product %}
+  {%- endif -%}
+{%- endfor -%}

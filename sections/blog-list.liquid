@@ -1,0 +1,265 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+
+{% liquid
+  assign section_blog = blog
+  assign has_articles = false
+  assign show_tags = false
+
+  assign article_blocks = section.blocks | where: 'type', 'article'
+
+  if blog.all_tags.size > 0
+    assign show_tags = true
+  endif
+
+  if section.settings.blog != blank
+    assign section_blog = section.settings.blog
+  endif
+
+  if section_blog.articles.size > 0
+    assign has_articles = true
+  endif
+
+  if article_blocks.size > 0
+    assign has_articles = true
+  endif
+%}
+
+{% if has_articles %}
+  <blog-grid>
+    <div
+      id="blogGrid"
+      class="
+        {{ spacing_class }}
+        {{ section.settings.color_scheme }}
+      "
+      data-url="{{ blog.url }}"
+      data-section-id="{{ section.id }}"
+    >
+      {% if show_tags %}
+        <div class="py-gutter px-margin">
+          <div>
+            <fieldset class="flex flex-wrap gap-half-gutter">
+              <input
+                type="radio"
+                name="blog_tag"
+                id="blog_tag-all"
+                value="all"
+                class="hidden peer/all"
+                {% unless current_tags %}checked{% endunless %}
+              />
+              <label
+                class="button small grey {% if current_tags %}grey{% else %}dark{% endif %}"
+                for="blog_tag-all"
+              >
+                All Stories
+              </label>
+              {% for tag in blog.all_tags %}
+                <input
+                  type="radio"
+                  name="blog_tag"
+                  id="blog_tag-{{ tag.handle }}"
+                  value="{{ tag.handle }}"
+                  class="hidden peer/{{ tag.handle }}"
+                  {% if current_tags contains tag %}checked{% endif %}
+                />
+                <label
+                  class="button small {% if current_tags contains tag %}dark{% else %}grey{% endif %}"
+                  for="blog_tag-{{ tag.handle }}"
+                >
+                  {{ tag.title }}
+                </label>
+              {% endfor %}
+            </fieldset>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if article_blocks.size < 1 %}
+        {% paginate section_blog.articles by 11 %}
+          <in-view
+            class="
+              grid
+              grid-cols-2
+              md:grid-cols-3
+              lg:grid-cols-4
+              gap-x-gutter
+              gap-y-v-space-sm
+              px-margin
+            "
+          >
+            {% for article_item in section_blog.articles %}
+              {% if article_item.title != blank and article.handle != article_item.handle %}
+                {% liquid
+                  assign featured_item = false
+                  if current_tags == blank
+                    if forloop.index0 == 0 and section.settings.feature_first_item == true
+                      assign featured_item = true
+                    endif
+                    if article_item.metafields.custom.featured
+                      assign featured_item = true
+                    endif
+                  endif
+                %}
+                <div class="{% if featured_item %}col-span-2{% endif %}">
+                  {% render 'article-card',
+                    card_article: article_item,
+                    featured: featured_item,
+                    show_date: section.settings.show_date,
+                    show_excerpt: section.settings.show_excerpt
+                  %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </in-view>
+          {% render 'paginate-nav',
+            class: 'pt-v-space-sm',
+            paginate: paginate
+          %}
+        {% endpaginate %}
+      {% else %}
+        {% comment %}
+        Don't paginate when articles are manually entered
+        {% endcomment %}
+        <in-view
+          class="
+            grid
+            grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+            gap-x-gutter
+            gap-y-v-space-sm
+            px-margin
+          "
+        >
+          {% for article_item in article_blocks %}
+            {% liquid
+              assign article_item = article_item.settings.article
+            %}
+            {% if article_item.title != blank and article.handle != article_item.handle %}
+              {% liquid
+                assign featured_item = false
+                if forloop.index0 == 0 and section.settings.feature_first_item == true
+                  assign featured_item = true
+                endif
+                if article.metafields.custom.featured
+                  assign featured_item = true
+                endif
+              %}
+              <div>
+                {% render 'article-card',
+                  card_article: article_item,
+                  featured: featured_item,
+                  show_date: section.settings.show_date,
+                  show_excerpt: section.settings.show_excerpt
+                %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </in-view>
+      {% endif %}
+    </div>
+  </blog-grid>
+
+  {% if show_tags %}
+    <script src="{{ 'blog-filter.js' | asset_url }}" defer></script>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+	"name": "Blog Post List",
+  "tag": "section",
+  "class": "section-blog-grid",
+	"settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    // Card Settings
+    {
+      "type": "header",
+      "content": "Story Card Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_first_item",
+      "label": "Feature First Story",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show Story Date",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show Story Excerpt",
+      "default": true
+    },
+    // Section Spacing
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Slim",
+          "value": "slim"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    }
+	],
+	"blocks": [
+    {
+      "type": "article",
+      "name": "Article",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Article"
+        }
+      ]
+    }
+  ],
+	"presets": [
+    {
+      "name": "Blog Post List",
+      "category": "Blog"
+	  }
+  ]
+}
+{% endschema %}

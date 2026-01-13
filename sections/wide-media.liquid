@@ -12,45 +12,38 @@
 
   if section.settings.section_height == 'auto-height'
   assign height_auto = true
-  assign media_position = 'unset'
-  endif
-
-  assign is_first_section = false
-  if section.index == 2
-    assign is_first_section = true
-  endif
-
-  assign image_loading = 'lazy'
-  assign image_fetch_priority = ''
-  if is_first_section
-    assign image_loading = 'eager'
-    assign image_fetch_priority = 'high'
   endif
 -%}
 
-<div class="{{ spacing_class }} section-inner theme-dark" style="--content-padding: var(--site-margins);">
+<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner theme-dark" style="--content-padding: var(--site-margins);">
   <div class="relative bg-true-black h-full">
-    <div class="media z-1 {% if height_auto %}relative{% else %}absolute top-0 left-0 w-full h-full{% endif %}">
-      <div class="absolute top-0 left-0 w-full h-full bg-true-black z-1" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.00 }}"></div>
-      {% content_for 'block',
-        type: '_media',
-        id: 'media',
-        layout: media_position,
-        loading: image_loading,
-        fetchpriority: image_fetch_priority
-      %}
-    </div>
-    <div class="{% if height_auto %}absolute top-0 left-0 w-full h-full{% else %}{{ section.settings.section_height }} relative{% endif %} overlay-content z-2 flex {{ section.settings.h_alignment }} {{ section.settings.v_alignment }} px-margin pb-margin pt-[--content-padding]">
-      <div class="grid gap-gutter w-full sm:w-[66.666%] xl:w-1/2 2xl:w-1/3">
-        <div>
-          {% content_for 'block',
-            type: '_text-lockup',
-            id: 'text-lockup',
-            classname: 'max-w-narrow text-balance'
-          %}
-        </div>
+    {% if section.blocks.size > 1 %}
+    <slide-show
+      class="w-full h-full"
+      data-loop="true"
+      style="--slide-gap: 0px;"
+      {% if section.settings.slideshow_autoplay %}
+      data-autoplay="true"
+      data-autoplay="{{ section.settings.slideshow_autoplay_speed | times: 1000.00 }}"
+      {% endif %}
+    >
+      <div class="slider-container h-full">
+    {% endif %}
+
+        {% for block in section.blocks %}
+          {% if section.blocks.size > 1 %}
+          <div class="slider-slide h-full" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          {% endif %}
+            {% render block %}
+          {% if section.blocks.size > 1 %}
+          </div>
+          {% endif %}
+        {% endfor %}
+        
+    {% if section.blocks.size > 1 %}
       </div>
-    </div>
+    </slide-show>
+    {% endif %}
   </div>
 </div>
 
@@ -60,59 +53,6 @@
   "tag": "section",
   "class": "section-wide-media",
 	"settings": [
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "label": "Overlay Opacity",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "Alignment"
-    },
-    {
-      "type": "select",
-      "id": "h_alignment",
-      "default": "justify-center",
-      "label": "Horizontal Alignment",
-      "options": [
-        {
-          "label": "Left",
-          "value": "justify-start"
-        },
-        {
-          "label": "Center",
-          "value": "justify-center"
-        },
-        {
-          "label": "Right",
-          "value": "justify-end"
-        }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "v_alignment",
-      "default": "items-center",
-      "label": "Vertical Alignment",
-      "options": [
-        {
-          "label": "Top",
-          "value": "items-start"
-        },
-        {
-          "label": "Center",
-          "value": "items-center"
-        },
-        {
-          "label": "Bottom",
-          "value": "items-end"
-        }
-      ]
-    },
     {
       "type": "header",
       "content": "Spacing & Sizing"
@@ -165,29 +105,39 @@
           "value": "large"
         }
       ]
-    }
+    },
+    {
+      "type": "header",
+      "content": "Slideshow Settings",
+      "info": "Only apply if there are multiple slides"
+    },
+    {
+      "type": "checkbox",
+      "id": "slideshow_autoplay",
+      "label": "Autoplay slideshow",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "slideshow_autoplay_speed",
+      "min": 0,
+      "max": 20,
+      "step": 0.5,
+      "label": "Overlay Opacity",
+      "default": 6,
+      "visible_if": "{{ section.settings.slideshow_autoplay == true }}"
+    },
 	],
 	"blocks": [
-		{
-      "type": "_text-lockup"
+    {
+      "type": "_media-slide"
     }
 	],
 	"presets": [
     {
       "name": "Wide Media",
       "category": "Text",
-      "blocks": [
-        {
-          "id": "media",
-          "type": "_media",
-          "static": true
-        },
-        {
-          "id": "text-lockup",
-          "type": "_text-lockup",
-          "static": true
-        }
-      ]
+      "blocks": []
 	  }
   ]
 }

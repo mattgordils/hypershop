@@ -1,0 +1,135 @@
+{%- if paginate.pages > 1 -%}
+  {%- liquid
+    assign current_page = paginate.current_page
+    assign total_pages = paginate.pages
+    assign pages_to_show = 2
+    assign pages_plus_one = pages_to_show | plus: 1
+    assign pages_plus_two = pages_to_show | plus: 2
+    assign total_minus_one = total_pages | minus: 1
+
+    assign item_base_class = 'body-small flex items-center justify-center transition min-w-[32px] h-[32px] border border-transparent rounded-full'
+    assign arrow_class = item_base_class | append: ' hover:border-hr-color'
+    assign page_class = item_base_class | append: ' font-bold px-2 hover:border-hr-color'
+    assign ellipsis_class = item_base_class | append: ' text-light-text-color opacity-50'
+    assign current_class = item_base_class | append: ' px-2 !border-current text-main'
+  -%}
+
+  <nav class="pagination {{ class }}" role="navigation" aria-label="Pagination">
+    <ul class="flex items-center justify-center gap-1" role="list">
+      {%- comment -%} Previous button {%- endcomment -%}
+      <li>
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="{{ arrow_class }}" aria-label="Previous page">
+            {% render 'icon_material', icon: 'arrow_back' %}
+          </a>
+        {%- else -%}
+          {% comment %}
+          Don't show prev arrow if on first page
+          <span class="{{ arrow_class }} opacity-40 cursor-not-allowed" aria-disabled="true">
+            {% render 'icon_material', icon: 'arrow_back' %}
+          </span>
+          {% endcomment %}
+        {%- endif -%}
+      </li>
+
+      {%- comment -%} First page {%- endcomment -%}
+      {%- if current_page > pages_plus_one -%}
+        <li>
+          <a
+            href="{{ paginate.parts.first.url }}"
+            class="{{ page_class }}"
+            aria-label="Page 1"
+          >
+            1
+          </a>
+        </li>
+      {%- endif -%}
+
+      {%- comment -%} Left ellipsis {%- endcomment -%}
+      {%- if current_page > pages_plus_two -%}
+        <li>
+          <span class="{{ ellipsis_class }}" aria-hidden="true">•••</span>
+        </li>
+      {%- endif -%}
+
+      {%- comment -%} Page numbers around current {%- endcomment -%}
+      {%- assign start_page = current_page | minus: pages_to_show -%}
+      {%- assign end_page = current_page | plus: pages_to_show -%}
+
+      {%- if start_page < 1 -%}
+        {%- assign start_page = 1 -%}
+      {%- endif -%}
+
+      {%- if end_page > total_pages -%}
+        {%- assign end_page = total_pages -%}
+      {%- endif -%}
+
+      {%- for page_num in (start_page..end_page) -%}
+        <li>
+          {%- if page_num == current_page -%}
+            <span
+              class="{{ current_class }}"
+              aria-current="page"
+            >
+              {{ page_num }}
+            </span>
+          {%- else -%}
+            {%- assign page_url = paginate.parts.first.url | split: '?' | first -%}
+            {%- if page_num == 1 -%}
+              {%- assign page_link = page_url -%}
+            {%- else -%}
+              {%- assign page_param = '?page=' | append: page_num -%}
+              {%- assign page_link = page_url | append: page_param -%}
+            {%- endif -%}
+            <a
+              href="{{ page_link }}"
+              class="{{ page_class }}"
+              aria-label="Page {{ page_num }}"
+            >
+              {{ page_num }}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+
+      {%- comment -%} Right ellipsis {%- endcomment -%}
+      {%- assign last_shown_page = current_page | plus: pages_to_show -%}
+      {%- if last_shown_page < total_minus_one -%}
+        <li>
+          <span class="{{ ellipsis_class }}" aria-hidden="true">•••</span>
+        </li>
+      {%- endif -%}
+
+      {%- comment -%} Last page {%- endcomment -%}
+      {%- if last_shown_page < total_pages -%}
+        <li>
+          {%- assign last_page_param = '?page=' | append: total_pages -%}
+          {%- assign last_page_link = page_url | append: last_page_param -%}
+          <a
+            href="{{ last_page_link }}"
+            class="{{ page_class }}"
+            aria-label="Page {{ total_pages }}"
+          >
+            {{ total_pages }}
+          </a>
+        </li>
+      {%- endif -%}
+
+      {%- comment -%} Next button {%- endcomment -%}
+      <li>
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="{{ arrow_class }}" aria-label="Next page">
+            {% render 'icon_material', icon: 'arrow_forward' %}
+          </a>
+        {%- else -%}
+          {% comment %}
+          Don't show next arrow if on first page
+          <span class="{{ arrow_class }} opacity-40 cursor-not-allowed" aria-disabled="true">
+            {% render 'icon_material', icon: 'arrow_forward' %}
+          </span>
+          {% endcomment %}
+        {%- endif -%}
+      </li>
+    </ul>
+  </nav>
+{%- endif -%}

@@ -6,6 +6,27 @@ const refreshSlideshow = section => {
   if (sectionSlideshows?.length > 0) {
     sectionSlideshows.forEach(slideshow => {
       slideshow.slider.update()
+
+      // Restore slide position after reload
+      const storedSlideIndex = sessionStorage.getItem(`slideshow-${section.id}-index`)
+      if (storedSlideIndex !== null && slideshow.embla) {
+        const index = parseInt(storedSlideIndex)
+
+        // Store original autoplay and disable it
+        if (!slideshow.dataset.originalAutoplay) {
+          slideshow.dataset.originalAutoplay = slideshow.dataset.autoplay
+        }
+        slideshow.dataset.autoplay = 'false'
+
+        setTimeout(() => {
+          slideshow.embla.scrollTo(index)
+          // Stop autoplay after scrolling
+          const autoplayPlugin = slideshow.embla.plugins().autoplay
+          if (autoplayPlugin) {
+            autoplayPlugin.stop()
+          }
+        }, 100)
+      }
     })
   }
 }
@@ -67,14 +88,87 @@ function sectionEditor(ev) {
   return
 }
 
+const handleSlideSelection = (target, isSelect) => {
+  const section = target.closest('[data-shopify-editor-section]')
+  const slideshow = section?.querySelector('slide-show')
+
+  if (slideshow && slideshow.embla) {
+    const slides = Array.from(slideshow.querySelectorAll('.slider-slide'))
+
+    // First, try to find slider-slide that matches the block's shopify-editor-block ID (for direct blocks)
+    let sliderSlide = slides.find(
+      (slide) => slide?.dataset?.shopifyEditorBlock === target?.dataset?.shopifyEditorBlock
+    )
+
+    // If not found, check if the target is a child block inside a slider-slide
+    if (!sliderSlide) {
+      sliderSlide = slides.find((slide) => {
+        // Check if this slide contains a block that contains the target
+        const blockInSlide = slide.querySelector(`[data-shopify-editor-block="${target?.dataset?.shopifyEditorBlock}"]`)
+        return blockInSlide !== null
+      })
+    }
+
+    if (sliderSlide) {
+      if (isSelect) {
+        // Store the current slide index for restoration after section reload
+        const slideIndex = sliderSlide.dataset.index
+        if (section && slideIndex !== undefined) {
+          sessionStorage.setItem(`slideshow-${section.id}-index`, slideIndex)
+        }
+
+        // Store original autoplay value if not already stored
+        if (!slideshow.dataset.originalAutoplay) {
+          slideshow.dataset.originalAutoplay = slideshow.dataset.autoplay
+        }
+        // Disable autoplay
+        slideshow.dataset.autoplay = 'false'
+        // Stop autoplay if it's running
+        const autoplayPlugin = slideshow.embla.plugins().autoplay
+        if (autoplayPlugin) {
+          autoplayPlugin.stop()
+        }
+      } else {
+        // Clear stored slide index on deselect
+        if (section) {
+          sessionStorage.removeItem(`slideshow-${section.id}-index`)
+        }
+
+        // Restore original autoplay value
+        if (slideshow.dataset.originalAutoplay) {
+          slideshow.dataset.autoplay = slideshow.dataset.originalAutoplay
+          delete slideshow.dataset.originalAutoplay
+          // Restart autoplay if it was originally enabled
+          if (slideshow.dataset.autoplay === 'true') {
+            const autoplayPlugin = slideshow.embla.plugins().autoplay
+            if (autoplayPlugin) {
+              autoplayPlugin.play()
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 function blockEditor(ev) {
-  const { target } = ev;
-  console.log('target: ', target.querySelector('[data-collapsible="content"]'))
+  const { target } = ev
 
   const collapseContent = target.querySelector('[data-collapsible="content"]')
   const collapseIcon = target.querySelector('[data-collapsible="icon"]')
 
-  toggleCollapsibleItem(collapseContent, collapseIcon, 'inherit')
+  if (collapseContent) {
+    toggleCollapsibleItem(collapseContent, collapseIcon, 'inherit')
+  }
+
+  // Handle slide selection
+  console.log('EV: ', ev.type)
+
+  if (ev.type === 'shopify:block:select') {
+    handleSlideSelection(target, true)
+  } else if (ev.type === 'shopify:block:deselect') {
+    handleSlideSelection(target, false)
+  }
 }
 
 document.addEventListener("shopify:section:select", sectionEditor);

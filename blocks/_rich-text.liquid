@@ -1,6 +1,8 @@
-<div class="rich-text {{ block.settings.size }}{% if block.settings.text == blank %} block-empty{% endif %}">
-  {{ block.settings.text }}
-</div>
+{% if block.settings.text != blank %}
+  <div class="rich-text {{ block.settings.size }}">
+    {{ block.settings.text }}
+  </div>
+{% endif %}
 
 {% schema %}
 {

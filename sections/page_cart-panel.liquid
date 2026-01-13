@@ -7,35 +7,37 @@
         {% render 'cart_header' %}
       </div>
 
-      <div
-        id="cartUpdate"
-      >
-        <div class="{% if cart.item_count < 1 %}hidden{% endif %}">
-          {% liquid
-            assign cart_subtotal = cart.items_subtotal_price | divided_by: 100.00
-            assign shipping_level = cart_subtotal | divided_by: section.settings.free_shipping_threshold
-            if shipping_level > 1
-              assign shipping_level = 1
-            endif
+      {% if section.settings.free_shipping %}
+        <div
+          id="cartUpdate"
+        >
+          <div class="{% if cart.item_count < 1 %}hidden{% endif %}">
+            {% liquid
+              assign cart_subtotal = cart.items_subtotal_price | divided_by: 100.00
+              assign shipping_level = cart_subtotal | divided_by: section.settings.free_shipping_threshold
+              if shipping_level > 1
+                assign shipping_level = 1
+              endif
 
-            assign spend_x_more = section.settings.free_shipping_threshold | times: 100.00 | minus: cart.items_subtotal_price | money
-          %}
-          <div class="theme-light-grey p-[--cart-padding]">
-            {% if shipping_level == 1 %}
-              <p class="body bold pb-1">
-                {{ section.settings.free_shipping_met_text }}
-              </p>
-            {% else %}
-              <p class="body bold pb-1">
-                {{ section.settings.free_shipping_text | replace: "[x]", spend_x_more }}
-              </p>
-            {% endif %}
-            <div class="h-1 w-full bg-[rgba(0,0,0,.1)] rounded">
-              <div style="--width: {{ shipping_level | times: 100 }}%;" class="rounded bg-success h-full w-[--width]"></div>
+              assign spend_x_more = section.settings.free_shipping_threshold | times: 100.00 | minus: cart.items_subtotal_price | money
+            %}
+            <div class="theme-light-grey p-[--cart-padding]">
+              {% if shipping_level == 1 %}
+                <p class="body bold pb-1">
+                  {{ section.settings.free_shipping_met_text }}
+                </p>
+              {% else %}
+                <p class="body bold pb-1">
+                  {{ section.settings.free_shipping_text | replace: "[x]", spend_x_more }}
+                </p>
+              {% endif %}
+              <div class="h-1 w-full bg-[rgba(0,0,0,.1)] rounded">
+                <div style="--width: {{ shipping_level | times: 100 }}%;" class="rounded bg-success h-full w-[--width]"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endif %}
 
       <div id="cartContent" class="grow overflow-hidden flex flex-col shrink">
         <div class="flex flex-col px-[--cart-padding] justify-between grow overflow-y-auto overflow-x-hidden max-h-[100%] shrink">
@@ -109,6 +111,27 @@
       "id": "text_checkout",
       "label": "Checkout Link Text",
       "default": "Checkout"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_input",
+      "label": "Show Discount Code Input",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show Payment Icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Shipping Meter",
+      "visible_if": "{{ section.settings.free_shipping }}"
     },
     {
       "type": "checkbox",

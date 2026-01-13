@@ -1,0 +1,70 @@
+{% liquid
+  assign article = card_article
+  assign article_excerpt = article.excerpt_or_content | strip_html | truncatewords: 30
+  assign has_media = false
+
+  assign article_image = article.image
+  assign article_video = article.metafields.custom.featured_video.value
+
+  if article_image == blank and article_video != blank
+    assign article_image = article_video.preview_image
+  endif
+
+  if article_image != blank or article_video != blank
+    assign has_media = true
+  endif
+%}
+
+<a
+  class="block group"
+  href="{{ article.url }}"
+  aria-label="Read {{ article.title }}"
+>
+  <div class="relative aspect-[4/5]{% if featured %} md:aspect-[1.63] 2xl:aspect-[1.6175]{% else %}{% endif %}">
+    {% if has_media %}
+      {% render 'image' with
+        src: article_image,
+        sizes: '800px',
+        layout: 'cover',
+        alt: product.title | append: ' - alternate view'
+      %}
+      <div class="absolute top-0 left-0 w-full h-full bg-true-black z-2 opacity-0 transition-opacity group-hover:opacity-20"></div>
+    {% else %}
+      <div class="absolute top-0 left-0 w-full h-full theme-green">
+        <div class="p-gutter gap-y-2 flex flex-col h-full group-hover:bg-true-black transition">
+          {% if show_date %}
+            <div class="smallcaps grow-0 shrink-0">{{ article.published_at | date: '%-d.%m.%Y' }}</div>
+          {% endif %}
+          <h4 class="h4 grow text-balance">
+            {{ article.title }}
+          </h4>
+          {% if show_excerpt %}
+            <div class="body-medium pt-[.1em] text-balance max-w-[42em] grow-0 shrink-0">
+              <p>{{ article_excerpt }}</p>
+            </div>
+          {% endif %}
+          <div class="grow-0 shrink-0">
+            <span class="tinycaps animate-underline underlined">
+              Read More
+            </span>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  {% if has_media %}
+    <div class="pt-gutter space-y-1">
+      {% if show_date %}
+        <div class="smallcaps">{{ article.published_at | date: '%-d.%m.%Y' }}</div>
+      {% endif %}
+      <h4 class="body-large bold">
+        <span class="animate-underline">{{ article.title }}</span>
+      </h4>
+      {% if show_excerpt %}
+        <div class="body-small pt-[.1em] text-balance max-w-[42em]">
+          <p>{{ article_excerpt }}</p>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</a>

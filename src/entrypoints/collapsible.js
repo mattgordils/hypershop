@@ -35,9 +35,9 @@ if (!customElements.get("collapsible-item")) {
           if (!this.content) {
             console.error('collapsible-item: No content element found', this)
             return
+          } else {
+            this.content.ariaHidden = 'true'
           }
-
-          this.content.ariaHidden = 'true'
 
           this.trigger.forEach(item => {
             item.addEventListener('click', event => {
@@ -45,6 +45,43 @@ if (!customElements.get("collapsible-item")) {
             })
           })
         }, 0)
+      }
+    }
+  )
+}
+
+if (!customElements.get("collapsible-trigger")) {
+  customElements.define(
+    "collapsible-trigger",
+    class collapsibleTrigger extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.addEventListener('click', () => {
+          const targetId = this.dataset.id
+          if (!targetId) {
+            console.error('collapsible-trigger: No data-id attribute found', this)
+            return
+          }
+
+          const targetItem = document.getElementById(targetId)
+          if (!targetItem || targetItem.tagName.toLowerCase() !== 'collapsible-item') {
+            console.error(`collapsible-trigger: No collapsible-item found with id "${targetId}"`, this)
+            return
+          }
+
+          const content = targetItem.querySelector('[data-collapsible="content"]')
+          const icon = targetItem.querySelector('[data-collapsible="icon"] .animated-icon')
+
+          if (!content) {
+            console.error(`collapsible-trigger: Target collapsible-item "${targetId}" has no content element`, targetItem)
+            return
+          }
+
+          toggleCollapsibleItem(content, icon, 'inherit')
+        })
       }
     }
   )

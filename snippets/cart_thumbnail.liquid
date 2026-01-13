@@ -1,6 +1,18 @@
 <modal-trigger
   data-modal-id="cartDrawer"
-  class="cart-thumbnail flex items-center justify-center w-6 h-6 leading-none cursor-pointer text-center rounded-full theme-dark"
+  class="min-w-2 min-h-2 cart-thumbnail flex items-center justify-center leading-none cursor-pointer text-center rounded-full theme-dark"
 >
-  <span id="cartCount" class="body-small">{{ cart.item_count }}</span>
+  <span
+    id="cartCount"
+    class="body-small w-6 h-6 flex items-center justify-center"
+    data-empty-hide="true"
+  >
+    {{ cart.item_count }}
+  </span>
 </modal-trigger>
+
+{% style %}
+  .cart-thumbnail:has(#cartCount:not(.hidden)) {
+    /* special styles for when there ARE items in the cart */
+  }
+{% endstyle %}

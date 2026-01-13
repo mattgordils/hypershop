@@ -134,9 +134,8 @@ svg:not(.full-color) * {
   direction: initial;
 }
 
-/* Hide empty blocks */
-.shopify-block {
-  &:has(> .block-empty) {
-    display: none;
-  }
+/* Hide empty sections and blocks */
+.shopify-section:empty,
+.shopify-block:empty {
+  display: none;
 }

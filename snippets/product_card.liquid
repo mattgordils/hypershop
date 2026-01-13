@@ -1,3 +1,11 @@
+{%-liquid
+  assign card_image = product.images[0]
+  assign card_hover_image = product.images[1]
+  if product.selected_or_first_available_variant.image != blank
+    assign card_image = product.selected_or_first_available_variant.image
+  endif
+-%}
+
 <article
   class="product-card flex flex-col"
   data-product-update="product-{{ product.id }}"
@@ -13,7 +21,7 @@
       {% render 'product-badges' with product: product %}
     </div>
     {% render 'image' with
-      src: product.selected_or_first_available_variant.image,
+      src: card_image,
       sizes: '640px',
       ratio: 0.75,
       layout: 'cover',
@@ -21,10 +29,10 @@
       alt: product.title,
       class: 'z-1 relative'
     %}
-    {% if product.images[1] %}
+    {% if card_hover_image != blank%}
       <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
         {% render 'image' with
-          src: product.images[1],
+          src: card_hover_image,
           sizes: '640px',
           ratio: 0.75,
           layout: 'cover',
