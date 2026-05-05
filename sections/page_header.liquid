@@ -11,10 +11,11 @@
   header {
     color: var(--header-color);
     border-color: transparent;
+    background: var(--header-bg);
   }
 
   #shopify-section-page_header.scrolled header,
-  #shopify-section-page_header:has(:hover) header {
+  #shopify-section-page_header:has(.menu-item.has-sublinks:hover) header {
     color: var(--text-color);
     background: var(--bg-color);
     border-color: var(--hr-color);
@@ -28,7 +29,7 @@
         <a
           href="{{ routes.root_url }}"
           title="Go to {{ shop.name }} homepage"
-          class='w-[120px] md:w-[160px] block border-0'
+          class='w-[156px] md:w-[104px] block border-0'
         >
           {% render 'logo' %}
         </a>
@@ -60,6 +61,9 @@
                     menu-item
                     {% if link.active %}
                       active
+                    {% endif %}
+                    {% if has_sublinks %}
+                      has-sublinks
                     {% endif %}
                   "
                 >
@@ -251,7 +255,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Content"
+      "content": "Header"
     },
     {
       "type": "link_list",

@@ -6,7 +6,7 @@
   {% render 'util-section-padding' with space: section.settings.section_padding %}
 {% endcapture %}
 
-<div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }}">
+<div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} flex items-center justify-center h-[calc(100vh-var(--full-header-height))]">
 	<div class="px-margin">
     {% content_for 'block',
       type: '_text-lockup',
@@ -18,7 +18,7 @@
 
 {% schema %}
 {
-	"name": "Text Section",
+	"name": "404",
   "tag": "section",
   "class": "section-text-section",
 	"settings": [
@@ -93,19 +93,6 @@
 		{
       "type": "_text-lockup"
     }
-	],
-	"presets": [
-    {
-      "name": "Text Section",
-      "category": "Text",
-      "blocks": [
-        {
-          "id": "text-lockup",
-          "type": "_text-lockup",
-          "static": true
-        }
-      ]
-	  }
-  ]
+	]
 }
 {% endschema %}

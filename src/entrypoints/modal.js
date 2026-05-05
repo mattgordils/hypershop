@@ -116,9 +116,17 @@ class ModalTrigger extends HTMLElement {
 
     this.addEventListener('click', () => {
       const modalId = this.dataset.modalId
-      if (modalId) {
+      let modalIsOpen = false
+
+      if (modalId && document.querySelector('#' + modalId + '.open')) {
+        modalIsOpen = true
+      }
+
+      if (modalId && !modalIsOpen) {
+        // Open modal if it isnt open already
         openModal(modalId)
       } else {
+        // Close modal if it is already open
         closeModal()
       }
     })

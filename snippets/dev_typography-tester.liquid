@@ -1,0 +1,85 @@
+{%-liquid
+  assign test_text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+-%}
+
+<div class="px-margin py-[200px]">
+  <div class="max-w-site-max-w mx-auto flex flex-col items-stretch md:grid md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
+    {% comment %} Headlines {% endcomment %}
+    <div class="flex flex-col items-stretch gap-v-space-sm">
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h1</h6>
+        <h1>Headline Number 1</h1>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h2</h6>
+        <h2>Headline Number 2</h2>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h3</h6>
+        <h3>Headline Number 3</h3>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h4</h6>
+        <h4>Headline Number 4</h4>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h5</h6>
+        <h5>Headline Number 5</h5>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">h6</h6>
+        <h6>Headline Number 6</h6>
+      </div>
+    </div>
+
+    {% comment %} Body {% endcomment %}
+    <div class="flex flex-col items-stretch gap-v-space-sm">
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-tiny</h6>
+        <p class="body-tiny">{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-small</h6>
+        <p class="body-small">{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body (default)</h6>
+        <p>{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-medium</h6>
+        <p class="body-medium">{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-large</h6>
+        <p class="body-large">{{ test_text }}</p>
+      </div>
+    </div>
+
+    {% comment %} UI {% endcomment %}
+    <div class="flex flex-col items-stretch gap-v-space-sm">
+      <div class="space-y-2">
+        <h6 class="text-light-text-color">Button</h6>
+        <div>
+          {% render 'button' label: 'Primary Button', to: '/' %}
+        </div>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-small</h6>
+        <p class="body-small">{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body (default)</h6>
+        <p>{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-medium</h6>
+        <p class="body-medium">{{ test_text }}</p>
+      </div>
+      <div class="space-y-1">
+        <h6 class="text-light-text-color">body-large</h6>
+        <p class="body-large">{{ test_text }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,7 +14,7 @@
       "settings": {}
     },
     "main": {
-      "type": "text-section",
+      "type": "main-404",
       "blocks": {
         "text-lockup": {
           "type": "_text-lockup",

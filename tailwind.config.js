@@ -85,6 +85,9 @@ module.exports = {
       },
       transitionDelay: {
         'stagger-time': 'var(--stagger-time)',
+      },
+      screens: {
+        'huge': '1800px'
       }
     }
   },

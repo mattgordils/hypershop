@@ -46,7 +46,7 @@
 -%}
 
 <div class="{{ spacing_class }} {{ padding_class }} {{ wrapper_class }} {{ section.settings.color_scheme }} section-inner">
-  <div class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm {{ section.settings.v_alignment }}">
+  <in-view class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm {{ section.settings.v_alignment }}">
     {% if section.settings.media_placement_mobile != 'bottom' %}
       <div class="md:col-span-6 {{ media_col_class }}">
         {% content_for 'block',
@@ -76,7 +76,7 @@
         %}
       </div>
     {% endif %}
-  </div>
+  </in-view>
 </div>
 
 {% schema %}
@@ -198,6 +198,10 @@
         {
           "label": "None",
           "value": "none"
+        },
+        {
+          "label": "Slim",
+          "value": "slim"
         },
         {
           "label": "Small",

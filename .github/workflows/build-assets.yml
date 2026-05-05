@@ -10,6 +10,9 @@ on:
       - 'package-lock.json'
       - 'webpack.config.js'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest

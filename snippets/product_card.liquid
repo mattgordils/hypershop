@@ -44,8 +44,10 @@
 
   <div class="text-center pb-gutter">
     <h3 class="body">
-      <a href="{{ product.url }}" itemprop="name" class="border-none pt-gutter block">
-        {{ product.title }}
+      <a href="{{ product.url }}" itemprop="url" class="border-none pt-gutter block">
+        <span itemprop="name">
+          {{ product.title }}
+        </span>
       </a>
     </h3>
     <div class="body-small" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">

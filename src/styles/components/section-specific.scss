@@ -7,6 +7,11 @@
           --content-padding: calc(var(--header-offset) * -1) !important;
         }
       }
+      .block-media-slide {
+        .media {
+          top: calc(var(--header-banner-height) - 1px) !important;
+        }
+      }
     }
   }
 }

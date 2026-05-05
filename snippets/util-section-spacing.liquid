@@ -1,6 +1,10 @@
 {% liquid
   assign spacing_class = ''
 
+  if space == 'slim'
+    assign spacing_class = 'mb-gutter'
+  endif
+  
   if space == 'small'
     assign spacing_class = 'mb-v-space-sm'
   endif

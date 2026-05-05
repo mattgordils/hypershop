@@ -15,8 +15,8 @@
   endif
 -%}
 
-<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner theme-dark" style="--content-padding: var(--site-margins);">
-  <div class="relative bg-true-black h-full">
+<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner">
+  <div class="relative h-full{% if section.settings.section_width == 'margins' %} mx-margin{% endif %}">
     {% if section.blocks.size > 1 %}
     <slide-show
       class="w-full h-full"
@@ -32,7 +32,7 @@
 
         {% for block in section.blocks %}
           {% if section.blocks.size > 1 %}
-          <div class="slider-slide h-full" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <div class="slider-slide overflow-hidden h-full" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
           {% endif %}
             {% render block %}
           {% if section.blocks.size > 1 %}
@@ -83,6 +83,22 @@
     },
     {
       "type": "select",
+      "id": "section_width",
+      "default": "full",
+      "label": "Section Height",
+      "options": [
+        {
+          "label": "Full Width",
+          "value": "full"
+        },
+        {
+          "label": "Margins",
+          "value": "margins"
+        }
+      ]
+    },
+    {
+      "type": "select",
       "id": "section_spacing",
       "default": "medium",
       "label": "Section Spacing",
@@ -91,6 +107,10 @@
         {
           "label": "None",
           "value": "none"
+        },
+        {
+          "label": "Slim",
+          "value": "slim"
         },
         {
           "label": "Small",

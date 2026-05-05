@@ -1,6 +1,9 @@
 {% style %}
 	:root {
 		--header-color: {{ section.settings.header_color }};
+    {% if section.settings.header_overlap != true %}
+    --header-bg: var(--bg-color);
+    {% endif %}
     --header-offset: {% if section.settings.header_overlap %}calc(var(--full-header-height) * -1){% else %}0{% endif %};
 	}
 {% endstyle %}
