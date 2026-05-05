@@ -88,13 +88,12 @@ module.exports = {
 				},
 			},
 			{
-				test: /\.s[ac]ss$/i,
+				test: /\.css$/i,
 				include: [srcDir],
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
 					'postcss-loader',
-					'sass-loader',
 				],
 			},
 		],

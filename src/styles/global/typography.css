@@ -1,0 +1,226 @@
+:root {
+  --typography-multiplier: 1;
+}
+
+@layer base {
+  h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, p a {
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  h1, .h1, .h1 p {
+    /* responsiveValue(36px, 60px, 70px) */
+    font-size: clamp(36px, calc(26.769px + 2.308vw), 60px);
+    @media (min-width: 1440px) { font-size: clamp(60px, calc(45px + 1.042vw), 70px); }
+    @media (min-width: 2400px) { font-size: 70px; }
+    font-family: var(--secondary-font);
+    line-height: 1em;
+    letter-spacing: -.04em;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  h2, .h2, .h2 p {
+    font-size: 42px;
+    font-family: var(--secondary-font);
+    line-height: 1.2em;
+    letter-spacing: -.02em;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  h3, .h3, .h3 p {
+    font-size: 32px;
+    font-family: var(--secondary-font);
+    line-height: 1.2em;
+    letter-spacing: -.02em;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  h4, .h4, .h4 p {
+    font-size: 24px;
+    font-family: var(--secondary-font);
+    line-height: 1.2em;
+    letter-spacing: -.02em;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  h5, .h5, .h5 p {
+    font-size: 20px;
+    font-family: var(--secondary-font);
+    line-height: 1em;
+    letter-spacing: -.02em;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
+    font-size: 11px;
+    font-family: var(--main-font);
+    line-height: 1.2em;
+    letter-spacing: .06em;
+    font-weight: var(--medium);
+    font-style: normal;
+    text-transform: uppercase;
+  }
+
+  p.tiny, .body-tiny, .body-tiny p,
+  ul.tiny, .body-tiny ul,
+  ol.tiny, .body-tiny ol {
+    font-family: var(--main-font);
+    font-size: 12px;
+    line-height: 1.5em;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  p.small, .body-small, .body-small p,
+  ul.small, .body-small ul,
+  ol.small, .body-small ol {
+    font-size: 14px;
+    font-family: var(--main-font);
+    line-height: 1.5em;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  p, .body, .body p, .body ul, .body ol {
+    font-size: 16px;
+    font-family: var(--main-font);
+    line-height: 1.5em;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  p.medium, .body-medium, .body-medium p,
+  ul.medium, .body-medium ul,
+  ol.medium, .body-medium ol {
+    font-size: 18px;
+    font-family: var(--main-font);
+    line-height: 1.5em;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  p.large, .body-large, .body-large p,
+  ul.large, .body-large ul,
+  ol.large, .body-large ol {
+    font-size: 20px;
+    font-family: var(--main-font);
+    line-height: 1.5em;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .mono, .mono > p { font-family: var(--mono-font); }
+
+  strong, b, .bold { font-weight: var(--bold); }
+
+  a, button, .button, .link { cursor: pointer; }
+
+  input[type="text"],
+  input[type="color"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="reset"],
+  input[type="search"],
+  input[type="submit"],
+  input[type="tel"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
+  select {
+    --input-bg: var(--light-grey);
+    --input-color: var(--text-color);
+    --input-border-weight: 1px;
+    --input-border-color: var(--input-bg);
+    --input-height: var(--button-height);
+    appearance: none;
+    cursor: pointer;
+    height: var(--input-height);
+    text-transform: none;
+    font-family: var(--main-font);
+    font-size: 16px;
+    letter-spacing: 0;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    line-height: 1em;
+    display: block;
+    padding: 0 calc(var(--input-height) * .3);
+    border-radius: var(--base-border-radius);
+    background: var(--input-bg);
+    color: var(--input-color);
+    border: var(--input-border-weight) solid var(--input-border-color);
+    transition: background var(--md-speed) ease-in-out,
+                color var(--md-speed) ease-in-out,
+                border var(--md-speed) ease-in-out,
+                box-shadow var(--md-speed) ease-in-out,
+                transform var(--md-speed) ease-in-out,
+                opacity var(--md-speed) ease-in-out;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  select { line-height: calc(var(--input-height) - 1px); }
+
+  .material-icon {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+  }
+}
+
+#productPrice s {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  &:after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: currentColor;
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+    left: 0;
+    right: 0;
+    transform: rotate(-5deg);
+  }
+}
+
+.block-text-lockup * + .block-actions {
+  padding-top: calc(var(--site-gutters) / 2);
+}

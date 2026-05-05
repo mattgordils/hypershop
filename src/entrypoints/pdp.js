@@ -1,4 +1,4 @@
-import "../styles/main-product.scss";
+import "../styles/main-product.css";
 
 if (!customElements.get("pdp-qty-input")) {
   customElements.define(

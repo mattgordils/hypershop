@@ -1,13 +1,7 @@
 /* THEMES */
-/* Update the color_schemes object to match for use across the site */
-.theme-default {
-  /* color: var(--text-color);
-  background: var(--bg-color); */
-}
-
 *[class*="theme-"] {
   color: var(--text-color);
-	background: var(--bg-color);
+  background: var(--bg-color);
 }
 
 .theme-light-grey {

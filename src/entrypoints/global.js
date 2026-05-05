@@ -1,4 +1,4 @@
-import "../styles/main.scss";
+import "../styles/main.css";
 import { openModal } from "./modal";
 import { refreshCart } from "./cart";
 

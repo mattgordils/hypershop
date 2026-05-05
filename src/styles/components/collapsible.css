@@ -8,7 +8,7 @@ collapsible-item {
   --delay-in: 0ms;
   --speed: var(--md-speed);
 
-  div[data-collapsible="content"] {
+  & div[data-collapsible="content"] {
     display: grid;
     grid-template-rows: 0fr;
     contain: paint;

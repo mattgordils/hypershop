@@ -22,7 +22,7 @@ modal-component {
     opacity: 0 !important;
   }
 
-  .overlay {
+  & .overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -31,18 +31,18 @@ modal-component {
     z-index: 1;
   }
 
-  .modal-content {
+  & .modal-content {
     z-index: 2;
   }
 
-  .overlay,
-  .modal-content {
+  & .overlay,
+  & .modal-content {
     transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   /* Drawers */
   &.drawer {
-    .modal-content {
+    & .modal-content {
       position: fixed;
       top: 0;
       bottom: 0;
@@ -50,27 +50,21 @@ modal-component {
       opacity: 1 !important;
       transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    &.from-left {
-      .modal-content {
-        left: 0;
-      }
+    &.from-left .modal-content {
+      left: 0;
     }
   }
 
   &.drawer:not(.open) {
-    .modal-content {
+    & .modal-content {
       opacity: 1 !important;
       transform: translate3d(100%, 0, 0);
     }
-    &.from-left {
-      .modal-content {
-        transform: translate3d(-100%, 0, 0);
-      }
+    &.from-left .modal-content {
+      transform: translate3d(-100%, 0, 0);
     }
-    &.from-bottom {
-      .modal-content {
-        transform: translate3d(0, 100%, 0);
-      }
+    &.from-bottom .modal-content {
+      transform: translate3d(0, 100%, 0);
     }
   }
 }
