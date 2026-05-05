@@ -1,6 +1,5 @@
 {%- liquid
   assign lorem_short = 'This is an example of what text and buttons will look like on this background color option.'
-  assign lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
   assign lorem_long = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
   assign acc_r = settings.color_accent | color_extract: 'red'
@@ -145,85 +144,63 @@
     </div>
   </div>
 
-  {%- comment -%} ═══ COLOR THEMES ═══ {%- endcomment -%}
+  {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
   <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">Color Themes</strong>
+    <strong class="h6">Color Schemes</strong>
   </div>
 
-  <div class="px-margin grid grid-cols-1 md:grid-cols-3 gap-gutter mb-v-space-lg">
-
-    {%- comment -%} Default {%- endcomment -%}
-    <div class="rounded-md border border-hr-color" style="padding: 32px;">
-      <p class="eyebrow text-light-text-color" style="margin-bottom: 12px;">Theme Style</p>
-      <h2 style="margin-bottom: 12px;">Default</h2>
-      <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-      <hr class="border-hr-color" style="margin-bottom: 24px;">
-      <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-        <button class="button small">Get Started</button>
-        <button class="button secondary small">Learn More</button>
-        <button class="button small" disabled>Disabled</button>
-      </div>
-      <a href="#" class="h6">Our Mission</a>
+  {%- if settings.color_schemes != blank -%}
+    <div class="px-margin grid grid-cols-1 md:grid-cols-3 gap-gutter mb-v-space-lg">
+      {%- for scheme in settings.color_schemes -%}
+        {%- liquid
+          assign sc_bg     = scheme.settings.background
+          assign sc_text   = scheme.settings.text
+          assign sc_accent = scheme.settings.accent
+          assign sc_label  = scheme.settings.button_label
+          assign sc_r = sc_text | color_extract: 'red'
+          assign sc_g = sc_text | color_extract: 'green'
+          assign sc_b = sc_text | color_extract: 'blue'
+        -%}
+        <div
+          class="rounded-md color-scheme-{{ scheme.id }}"
+          style="padding: 32px; background: var(--bg-color); color: var(--text-color);"
+        >
+          <p class="eyebrow" style="margin-bottom: 12px; color: var(--light-text-color);">Scheme {{ forloop.index }}</p>
+          <h2 style="margin-bottom: 12px;">{{ sc_bg }}</h2>
+          <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
+          <hr style="margin-bottom: 24px; border-color: var(--hr-color);">
+          <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
+            <button class="button small">Get Started</button>
+            <button class="button secondary small">Learn More</button>
+            <button class="button small" disabled>Disabled</button>
+          </div>
+          <a href="#" class="h6" style="color: var(--text-color);">Our Mission</a>
+          <div class="mt-v-space-sm grid grid-cols-4 gap-2">
+            <div>
+              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_bg }}; border: 1px solid var(--hr-color);"></div>
+              <p class="body-tiny" style="color: var(--light-text-color);">BG</p>
+            </div>
+            <div>
+              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_text }};"></div>
+              <p class="body-tiny" style="color: var(--light-text-color);">Text</p>
+            </div>
+            <div>
+              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_accent }};"></div>
+              <p class="body-tiny" style="color: var(--light-text-color);">Accent</p>
+            </div>
+            <div>
+              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_label }}; border: 1px solid var(--hr-color);"></div>
+              <p class="body-tiny" style="color: var(--light-text-color);">Label</p>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
     </div>
-
-    {%- comment -%} Light Grey {%- endcomment -%}
-    <div class="rounded-md theme-light-grey" style="padding: 32px;">
-      <p class="eyebrow text-light-text-color" style="margin-bottom: 12px;">Theme Style</p>
-      <h2 style="margin-bottom: 12px;">Light Grey</h2>
-      <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-      <hr class="border-hr-color" style="margin-bottom: 24px;">
-      <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-        <button class="button small">Get Started</button>
-        <button class="button secondary small">Learn More</button>
-        <button class="button small" disabled>Disabled</button>
-      </div>
-      <a href="#" class="h6">Our Mission</a>
+  {%- else -%}
+    <div class="px-margin mb-v-space-lg">
+      <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
     </div>
-
-    {%- comment -%} Dark {%- endcomment -%}
-    <div class="rounded-md theme-dark" style="padding: 32px;">
-      <p class="eyebrow text-light-text-color" style="margin-bottom: 12px;">Theme Style</p>
-      <h2 style="margin-bottom: 12px;">Dark</h2>
-      <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-      <hr class="border-hr-color" style="margin-bottom: 24px;">
-      <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-        <button class="button small">Get Started</button>
-        <button class="button secondary small">Learn More</button>
-        <button class="button small" disabled>Disabled</button>
-      </div>
-      <a href="#" class="h6">Our Mission</a>
-    </div>
-
-    {%- comment -%} Accent — uses settings.color_accent as bg, settings.color_background as text {%- endcomment -%}
-    {%- assign acc_bg = settings.color_accent -%}
-    {%- assign acc_text = settings.color_background -%}
-    <div class="rounded-md" style="
-      padding: 32px;
-      background: {{ acc_bg }};
-      color: {{ acc_text }};
-      --bg-color: {{ acc_bg }};
-      --text-color: {{ acc_text }};
-      --button-bg: {{ acc_text }};
-      --button-color: {{ acc_bg }};
-      --button-border: {{ acc_text }};
-      --button-hover-bg: {{ acc_text }};
-      --button-hover-color: {{ acc_bg }};
-      --button-hover-border: {{ acc_text }};
-      --hr-color: rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.25);
-    ">
-      <p class="eyebrow" style="margin-bottom: 12px; opacity: .5;">Theme Style</p>
-      <h2 style="margin-bottom: 12px;">Accent</h2>
-      <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-      <hr style="margin-bottom: 24px; border-color: rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.25);">
-      <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-        <button class="button small">Get Started</button>
-        <button class="button secondary small" style="--button-color: {{ acc_text }}; --button-border: {{ acc_text }}; --button-hover-bg: {{ acc_text }}; --button-hover-color: {{ acc_bg }};">Learn More</button>
-        <button class="button small" disabled>Disabled</button>
-      </div>
-      <a href="#" class="h6" style="color: {{ acc_text }};">Our Mission</a>
-    </div>
-
-  </div>
+  {%- endif -%}
 
 </div>
 

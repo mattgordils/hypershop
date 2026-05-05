@@ -1,0 +1,29 @@
+{%- if settings.color_schemes != blank -%}
+<style>
+  {%- for scheme in settings.color_schemes -%}
+    {%- liquid
+      assign sc_bg     = scheme.settings.background
+      assign sc_text   = scheme.settings.text
+      assign sc_accent = scheme.settings.accent
+      assign sc_label  = scheme.settings.button_label
+      assign sc_r = sc_text | color_extract: 'red'
+      assign sc_g = sc_text | color_extract: 'green'
+      assign sc_b = sc_text | color_extract: 'blue'
+    -%}
+    .color-scheme-{{ scheme.id }} {
+      --bg-color: {{ sc_bg }};
+      --text-color: {{ sc_text }};
+      --main-color: {{ sc_accent }};
+      --light-text-color: rgba({{ sc_r }}, {{ sc_g }}, {{ sc_b }}, 0.5);
+      --hr-color: rgba({{ sc_r }}, {{ sc_g }}, {{ sc_b }}, 0.15);
+      --light-grey: {{ sc_bg | color_mix: sc_text, 95 }};
+      --button-bg: {{ sc_accent }};
+      --button-color: {{ sc_label }};
+      --button-border: {{ sc_accent }};
+      --button-hover-bg: {{ sc_text }};
+      --button-hover-color: {{ sc_bg }};
+      --button-hover-border: {{ sc_text }};
+    }
+  {%- endfor -%}
+</style>
+{%- endif -%}
