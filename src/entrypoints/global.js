@@ -1,5 +1,5 @@
 import "../styles/main.css";
-import { openModal } from "./modal";
+import { openModal, closeModal } from "./modal";
 import { refreshCart } from "./cart";
 
 // Components
@@ -9,12 +9,7 @@ import './inView';
 import './slideshow';
 import './sort-filter';
 
-// Console Signature
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('\n╔    ╗  Site by STUDIO HYPERLINK\n║ ╠╣ ║  www.studiohyper.link\n╚    ╝  Hot Bagels, Hotter Websites\n ');
-})
-
-// Utils?
+// Utils
 function isMobileOrTablet() {
   const ua = navigator.userAgent;
   if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
@@ -85,6 +80,22 @@ export const getSelectedOptions = productOptions => {
   return selectedOptions
 }
 
+const addToCart = (variantId, quantity = 1, properties = {}, sellingPlan = null) => {
+  const formData = {
+    items: [{ id: variantId, quantity, properties, selling_plan: sellingPlan }]
+  };
+  return fetch(window.Shopify.routes.root + 'cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  }).then(res => res.json());
+};
+
+window.theme = {
+  modal: { open: openModal, close: closeModal },
+  cart: { add: addToCart, refresh: refreshCart },
+};
+
 if (!customElements.get("add-to-cart-form")) {
   customElements.define(
     "add-to-cart-form",
@@ -124,8 +135,6 @@ if (!customElements.get("add-to-cart-form")) {
           const subscription = this.querySelector('.rc-widget .rc-selling-plans select.rc-selling-plans-dropdown__select')
           const propertiesInputs = this.querySelectorAll('[name^="property_"]')
 
-          console.log('propertiesInputs: ',propertiesInputs)
-          
           let properties = {}
           if (propertiesInputs?.length > 0) {
             propertiesInputs.forEach(prop => {
@@ -154,8 +163,6 @@ if (!customElements.get("add-to-cart-form")) {
             })
           }
 
-          console.log('properties: ',properties)
-
           let variantId = ''
           let variantData = ''
           if (this?.dataset?.variantId) {
@@ -183,8 +190,7 @@ if (!customElements.get("add-to-cart-form")) {
             },
             body: JSON.stringify(formData)
           })
-          .then(data => {
-            console.log(data)
+          .then(() => {
             refreshCart();
           })
           .then(() => { openModal("cartDrawer") })

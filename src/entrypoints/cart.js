@@ -50,8 +50,6 @@ export const refreshCart = (fullRefresh = false) => {
         fullRefresh = true
       }
 
-      fullRefresh = true
-
       if (fullRefresh) {
         // Full Cart Refresh
         const cartContent = el.querySelector('#cartContent')
@@ -389,8 +387,6 @@ if (!customElements.get("discount-remove")) {
         this.button.disabled = true;
         this.button.classList.add('opacity-50');
 
-        console.log('Removing discount...');
-
         // Remove discount by sending empty string to /cart/update.js
         fetch(window.Shopify.routes.root + 'cart/update.js', {
           method: 'POST',
@@ -403,8 +399,6 @@ if (!customElements.get("discount-remove")) {
         })
         .then(response => response.json())
         .then(data => {
-          console.log('Discount removed:', data);
-
           // Refresh the cart to show updated totals
           refreshCart(true);
 

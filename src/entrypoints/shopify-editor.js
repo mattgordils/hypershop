@@ -57,8 +57,6 @@ function sectionEditor(ev) {
   const { target } = ev;
   const section = document.querySelector('#' + target.id)
 
-  console.log(ev)
-
   // Cart Drawer
   if (ev.type === 'shopify:section:select') {
     // Open Section Modal On Select
@@ -162,8 +160,6 @@ function blockEditor(ev) {
   }
 
   // Handle slide selection
-  console.log('EV: ', ev.type)
-
   if (ev.type === 'shopify:block:select') {
     handleSlideSelection(target, true)
   } else if (ev.type === 'shopify:block:deselect') {

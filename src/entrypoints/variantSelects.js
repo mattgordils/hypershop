@@ -11,6 +11,19 @@
 
 import { getVariant } from './global'
 
+const getLiveRegion = () => {
+  let el = document.getElementById('variant-live-region');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'variant-live-region';
+    el.setAttribute('aria-live', 'polite');
+    el.setAttribute('aria-atomic', 'true');
+    el.className = 'sr-only';
+    document.body.appendChild(el);
+  }
+  return el;
+};
+
 class VariantSelects extends HTMLElement {
   constructor() {
     super();
@@ -79,8 +92,12 @@ class VariantSelects extends HTMLElement {
     this.updateCurrentVariant();
 
     if (!this.currentVariant) {
+      getLiveRegion().textContent = 'Selected combination is unavailable.';
       return;
     }
+
+    const availText = this.currentVariant.available ? 'In stock' : 'Sold out';
+    getLiveRegion().textContent = `${this.currentVariant.title} — ${availText}.`;
 
     // Step 3: Store variant ID (will be needed after DOM replacement)
     const variantId = this.currentVariant.id;
@@ -318,24 +335,14 @@ class VariantSelects extends HTMLElement {
       const form = this.closest('add-to-cart-form');
       const jsonScript = form.querySelector('[type="application/json"]#productJson');
 
-      if (!jsonScript) {
-        console.error('Could not find variant data JSON in card');
-        return;
-      }
+      if (!jsonScript) return;
 
       const variantData = JSON.parse(jsonScript.textContent);
-      console.log('Variant data from page:', variantData);
-      console.log('Current variant:', this.currentVariant);
 
       // Find the selected variant
       const selectedVariant = variantData.find(v => v.id === this.currentVariant.id);
 
-      if (!selectedVariant) {
-        console.error('Could not find selected variant in variant data');
-        return;
-      }
-
-      console.log('Selected variant:', selectedVariant);
+      if (!selectedVariant) return;
 
       // Update card image if variant has an image
       if (selectedVariant.featured_image) {
