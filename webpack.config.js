@@ -49,6 +49,7 @@ class RemoveDuplicateCssPlugin {
 }
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isStoreBuild = process.env.STORE_BUILD === '1';
 const srcDir = path.resolve(__dirname, 'src');
 const entrypointsDir = path.resolve(srcDir, 'entrypoints');
 const assetsDir = path.resolve(srcDir, 'assets');
@@ -73,8 +74,9 @@ module.exports = {
 		followSymlinks: true
 	},
 	optimization: {
+		// Store build: skip minification so Shopify reviewers can read the source
+		minimize: isStoreBuild ? false : isProduction,
 		minimizer: ['...', new CssMinimizerPlugin()],
-		// Remove empty chunks (like CSS files from JS-only entry points)
 		removeEmptyChunks: true,
 	},
 	module: {

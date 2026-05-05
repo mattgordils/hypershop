@@ -9,6 +9,7 @@
 		"start": "npm-run-all --parallel webpack:watch theme:dev",
 		"dev": "npm start",
 		"build": "NODE_ENV=production npm run webpack:build",
+		"build:store": "NODE_ENV=production STORE_BUILD=1 npm run webpack:build",
 		"clean": "rm -rf assets",
 		"// WEBPACK //": "",
 		"webpack:watch": "webpack watch",
