@@ -3,15 +3,10 @@
 {% endcapture %}
 
 {%-liquid
-  assign hasMedia = false
-  assign height_auto = false
-  assign media_position = 'cover'
   if section.settings.image != blank
-    assign hasMedia = true
   endif
 
   if section.settings.section_height == 'auto-height'
-  assign height_auto = true
   endif
 -%}
 
@@ -49,10 +44,10 @@
 
 {% schema %}
 {
-	"name": "Wide Media",
+  "name": "Wide Media",
   "tag": "section",
   "class": "section-wide-media",
-	"settings": [
+  "settings": [
     {
       "type": "header",
       "content": "Spacing & Sizing"
@@ -146,19 +141,21 @@
       "label": "Overlay Opacity",
       "default": 6,
       "visible_if": "{{ section.settings.slideshow_autoplay == true }}"
-    },
-	],
-	"blocks": [
+    }
+  ],
+  "blocks": [
     {
       "type": "_media-slide"
     }
-	],
-	"presets": [
+  ],
+  "presets": [
     {
       "name": "Wide Media",
       "category": "Text",
-      "blocks": []
-	  }
+      "blocks": [
+
+      ]
+    }
   ]
 }
 {% endschema %}

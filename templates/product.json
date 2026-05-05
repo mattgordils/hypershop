@@ -1,18 +1,9 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "main_product",
       "id": "main-product",
-      "static":" true",
+      "static": " true",
       "blocks": {
         "badges": {
           "type": "_product-badges",
@@ -20,7 +11,8 @@
           "settings": {
             "product": "{{ product }}"
           },
-          "blocks": {}
+          "blocks": {
+          }
         },
         "headline_rJ4aXQ": {
           "type": "_headline",
@@ -30,19 +22,24 @@
             "style": "h1",
             "element": "h1"
           },
-          "blocks": {}
+          "blocks": {
+          }
         },
         "product_qty_input_RgDwba": {
           "type": "_product-qty-input",
           "name": "Quantity Input",
-          "settings": {},
-          "blocks": {}
+          "settings": {
+          },
+          "blocks": {
+          }
         },
         "product_variant_selector_fGXUeW": {
           "type": "_product-variant-selector",
           "name": "Variant Selector",
-          "settings": {},
-          "blocks": {}
+          "settings": {
+          },
+          "blocks": {
+          }
         },
         "product_buy_buttons_3BnDx3": {
           "type": "_product-buy-buttons",
@@ -50,7 +47,8 @@
           "settings": {
             "show_price": true
           },
-          "blocks": {}
+          "blocks": {
+          }
         },
         "accordion_Jb48mz": {
           "type": "_accordion",
@@ -68,7 +66,8 @@
                 "text": "{{ closest.product.description }}",
                 "text_size": "body-small"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "title_w_text_W4tETC": {
               "type": "_title-w-text",
@@ -79,7 +78,8 @@
                 "text": "<p>Size guide. Maybe need a new block for these situations?</p>",
                 "text_size": "body-small"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "title_w_text_MVYccA": {
               "type": "_title-w-text",
@@ -90,7 +90,8 @@
                 "text": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p><p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>",
                 "text_size": "body-tiny"
               },
-              "blocks": {}
+              "blocks": {
+              }
             }
           },
           "block_order": [

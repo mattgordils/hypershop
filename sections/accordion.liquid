@@ -20,7 +20,7 @@
       <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4 pt-v-space-sm">
         <accordion-list class="block border-b border-hr-color">
           {% for row in section.blocks %}
-            <collapsible-item class="border-t border-hr-color" id="{{row.id}}" {{ row.shopify_attributes }}>
+            <collapsible-item class="border-t border-hr-color" id="{{ row.id }}" {{ row.shopify_attributes }}>
               <button data-collapsible="trigger" class="text-left h5 flex justify-between gap-x-gutter w-full py-4">
                 <div class="pt-[.125em]">{{ row.settings.title }}</div>
                 <div class="h-[1.125em] shrink-0 grow-0 flex items-center justify-center pb-[1px]">
@@ -57,7 +57,6 @@
       "label": "Headline",
       "default": "FAQs"
     },
-    // Section Spacing
     {
       "type": "header",
       "content": "Spacing & Sizing"
@@ -68,7 +67,7 @@
       "label": "Section Color",
       "default": "theme-default"
     },
-		{
+    {
       "type": "select",
       "id": "section_padding",
       "default": "none",
@@ -125,7 +124,7 @@
     }
   ],
   "blocks": [
-		{
+    {
       "type": "row",
       "name": "Row",
       "settings": [
@@ -143,7 +142,7 @@
         }
       ]
     }
-	],
+  ],
   "presets": [
     {
       "name": "Accordion",
@@ -152,21 +151,21 @@
           "type": "row",
           "settings": {
             "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
+            "text": "<p>The answer to the question.</p>"
           }
         },
         {
           "type": "row",
           "settings": {
             "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
+            "text": "<p>The answer to the question.</p>"
           }
         },
         {
           "type": "row",
           "settings": {
             "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
+            "text": "<p>The answer to the question.</p>"
           }
         }
       ]

@@ -97,11 +97,26 @@
         "label": "Maximum page width",
         "default": "1600px",
         "options": [
-          { "value": "1200px", "label": "Narrow (1200px)" },
-          { "value": "1440px", "label": "Standard (1440px)" },
-          { "value": "1600px", "label": "Wide (1600px)" },
-          { "value": "1920px", "label": "Extra wide (1920px)" },
-          { "value": "100%",   "label": "Full width" }
+          {
+            "value": "1200px",
+            "label": "Narrow (1200px)"
+          },
+          {
+            "value": "1440px",
+            "label": "Standard (1440px)"
+          },
+          {
+            "value": "1600px",
+            "label": "Wide (1600px)"
+          },
+          {
+            "value": "1920px",
+            "label": "Extra wide (1920px)"
+          },
+          {
+            "value": "100%",
+            "label": "Full width"
+          }
         ]
       },
       {

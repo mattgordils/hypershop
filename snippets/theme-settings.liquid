@@ -2,15 +2,15 @@
   assign heading_font = settings.font_heading
   assign body_font    = settings.font_body
   assign heading_font_bold   = heading_font | font_modify: 'weight', 'bolder'
-  assign body_font_bold      = body_font    | font_modify: 'weight', 'bolder'
-  assign body_font_italic    = body_font    | font_modify: 'style',  'italic'
+  assign body_font_bold      = body_font | font_modify: 'weight', 'bolder'
+  assign body_font_italic    = body_font | font_modify: 'style', 'italic'
 -%}
 
 {%- unless heading_font.system? -%}
-  <link rel="preload" as="font" href="{{ heading_font | font_url: 'woff2' }}" type="font/woff2" crossorigin>
+  {{ heading_font | font_url: 'woff2' | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {%- endunless -%}
 {%- unless body_font.system? -%}
-  <link rel="preload" as="font" href="{{ body_font | font_url: 'woff2' }}" type="font/woff2" crossorigin>
+  {{ body_font | font_url: 'woff2' | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {%- endunless -%}
 
 <style>

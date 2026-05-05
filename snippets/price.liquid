@@ -1,5 +1,0 @@
-{% if product.price_min and product.price_max %}
-  {{ product.price_min | money }}—{{ product.price_max | money }}
-{% else %}
-  {{ product.price | money }}
-{% endif %}

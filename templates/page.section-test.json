@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "settings": {
@@ -27,7 +18,8 @@
             "image": "shopify://shop_images/needle-on-record.jpg",
             "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4"
           },
-          "blocks": {}
+          "blocks": {
+          }
         },
         "text-lockup": {
           "type": "_text-lockup",
@@ -44,12 +36,14 @@
                 "style": "h1",
                 "element": "h1"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "actions_h9cYWr": {
               "type": "_actions",
               "name": "Links",
-              "settings": {},
+              "settings": {
+              },
               "blocks": {
                 "button_CmWCY6": {
                   "type": "_button",
@@ -60,7 +54,8 @@
                     "new_tab": false,
                     "style": "primary"
                   },
-                  "blocks": {}
+                  "blocks": {
+                  }
                 }
               },
               "block_order": [
@@ -101,7 +96,8 @@
                 "style": "h2",
                 "element": "h2"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "rich_text_f4J9nm": {
               "type": "_rich-text",
@@ -110,7 +106,8 @@
                 "text": "<p>Build the perfect page with this amazing toolkit of sections and blocks. You'll never want to do it any other way again!</p>",
                 "size": "body-medium"
               },
-              "blocks": {}
+              "blocks": {
+              }
             }
           },
           "block_order": [
@@ -134,7 +131,8 @@
             "media_type": "image",
             "image": "shopify://shop_images/Yony5f73544f8c51285f73544f8c749.169399275f73544f8c749.jpg"
           },
-          "blocks": {}
+          "blocks": {
+          }
         },
         "text-lockup": {
           "type": "_text-lockup",
@@ -151,7 +149,8 @@
                 "style": "h2",
                 "element": "h2"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "rich_text_aygqzK": {
               "type": "_rich-text",
@@ -160,12 +159,14 @@
                 "text": "<p>Put text next to an image or video if you like. It can be pretty nice.</p>",
                 "size": ""
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "actions_wheHiN": {
               "type": "_actions",
               "name": "Links",
-              "settings": {},
+              "settings": {
+              },
               "blocks": {
                 "button_6Ua8LD": {
                   "type": "_button",
@@ -176,7 +177,8 @@
                     "new_tab": false,
                     "style": "primary"
                   },
-                  "blocks": {}
+                  "blocks": {
+                  }
                 }
               },
               "block_order": [
@@ -203,7 +205,9 @@
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
-        "products": [],
+        "products": [
+
+        ],
         "section_spacing": "medium"
       }
     },

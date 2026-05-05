@@ -3,16 +3,12 @@
   assign wrapper_class = class | default: "flex flex-wrap gap-1"
 
   assign has_badges = false
-  assign sold_out = false
-  assign on_sale = false
 
   if product.selected_or_first_available_variant.available == false
-    assign sold_out = true
     assign has_badges = true
   endif
   
   if product.selected_or_first_available_variant.compare_at_price != blank and product.selected_or_first_available_variant.compare_at_price > product.price
-    assign on_sale = true
     assign has_badges = true
   endif
 
