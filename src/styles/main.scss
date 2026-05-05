@@ -1,10 +1,9 @@
 //
-// === Tailwind ===
+// === Tailwind v4 ===
 //
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.js";
 
 //
 // === Config, Functions, Reset ===
