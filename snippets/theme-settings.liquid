@@ -1,0 +1,41 @@
+{%- liquid
+  assign heading_font = settings.font_heading
+  assign body_font    = settings.font_body
+  assign heading_font_bold   = heading_font | font_modify: 'weight', 'bolder'
+  assign body_font_bold      = body_font    | font_modify: 'weight', 'bolder'
+  assign body_font_italic    = body_font    | font_modify: 'style',  'italic'
+-%}
+
+{%- unless heading_font.system? -%}
+  <link rel="preload" as="font" href="{{ heading_font | font_url: 'woff2' }}" type="font/woff2" crossorigin>
+{%- endunless -%}
+{%- unless body_font.system? -%}
+  <link rel="preload" as="font" href="{{ body_font | font_url: 'woff2' }}" type="font/woff2" crossorigin>
+{%- endunless -%}
+
+<style>
+  {{ heading_font | font_face: font_display: 'swap' }}
+  {%- if heading_font_bold -%}{{ heading_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
+  {{ body_font | font_face: font_display: 'swap' }}
+  {%- if body_font_bold -%}{{ body_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
+  {%- if body_font_italic -%}{{ body_font_italic | font_face: font_display: 'swap' }}{%- endif -%}
+
+  :root {
+    --bg-color: {{ settings.color_background }};
+    --bg-color-rgb: {{ settings.color_background | color_extract: 'red' }}, {{ settings.color_background | color_extract: 'green' }}, {{ settings.color_background | color_extract: 'blue' }};
+    --text-color: {{ settings.color_text }};
+    --text-color-rgb: {{ settings.color_text | color_extract: 'red' }}, {{ settings.color_text | color_extract: 'green' }}, {{ settings.color_text | color_extract: 'blue' }};
+    --main-color: {{ settings.color_accent }};
+    --error: {{ settings.color_error }};
+    --success: {{ settings.color_success }};
+    --light-grey: {{ settings.color_light_grey }};
+
+    --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --secondary-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+
+    --site-max-width: {{ settings.site_max_width }};
+    --base-border-radius: {{ settings.border_radius }}px;
+    --button-border-radius: {{ settings.button_border_radius }}px;
+    --header-height: {{ settings.header_height }}px;
+  }
+</style>

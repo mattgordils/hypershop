@@ -12,10 +12,9 @@
     <link rel="preload" href="{{ 'global.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{{ 'global.css' | asset_url }}"></noscript>
 
-    {% if settings.favicon != blank %}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
-    {% endif %}
-
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
 
     <title>
       {{ page_title }}
@@ -33,7 +32,7 @@
 
     {{ content_for_header }}
 
-    {% render 'fonts' %}
+    {% render 'theme-settings' %}
 
     {% render 'integrations_before_head_close' %}
   </head>

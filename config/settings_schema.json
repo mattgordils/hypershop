@@ -1,86 +1,179 @@
 [
-	{
-		"name": "theme_info",
-		"theme_name": "Development",
-		"theme_version": "1.0.0",
-		"theme_author": "Studio Hyperlink",
-		"theme_documentation_url": "https://github.com/mattgordils/hypershop",
-		"theme_support_email": "matt@hyperlinknyc.com"
-	},
-	{
-		"name": "Favicon",
-		"settings": [
-			{
-				"type": "image_picker",
-				"id": "favicon",
-				"label": "Favicon",
-				"info": "This should be a 128x128 PNG file."
-			}
-		]
-	},
-	{
-    "name": "Color Schemes",
+  {
+    "name": "theme_info",
+    "theme_name": "Total Control",
+    "theme_version": "1.0.0",
+    "theme_author": "Studio Hyperlink",
+    "theme_documentation_url": "https://github.com/mattgordils/hypershop",
+    "theme_support_email": "matt@hyperlinknyc.com"
+  },
+  {
+    "name": "Favicon",
     "settings": [
       {
-        "type": "color_scheme_group",
-        "id": "color_schemes",
-        "definition": [
-          {
-            "type": "color",
-            "id": "background",
-            "label": "Background"
-          },
-          {
-            "type": "color_background",
-            "id": "background_gradient",
-            "label": "Background"
-          },
-          {
-            "type": "color",
-            "id": "text",
-            "label": "Text"
-          },
-          {
-            "type": "color",
-            "id": "button",
-            "label": "Button"
-          },
-          {
-            "type": "color",
-            "id": "button_label",
-            "label": "Button Label"
-          },
-          {
-            "type": "color",
-            "id": "secondary_button",
-            "label": "Secondary Button"
-          },
-          {
-            "type": "color",
-            "id": "secondary_button_label",
-            "label": "Secondary Button Label"
-          },
-          {
-            "type": "color",
-            "id": "shadow",
-            "label": "Shadow"
-          }
-        ],
-        "role": {
-          "text": "text",
-          "background": {
-            "solid": "background",
-            "gradient": "background_gradient"
-          },
-          "links": "secondary_button_label",
-          "icons": "text",
-          "primary_button": "button",
-          "on_primary_button": "button_label",
-          "primary_button_border": "button",
-          "secondary_button": "secondary_button",
-          "on_secondary_button": "secondary_button_label",
-          "secondary_button_border": "secondary_button_label"
-        }
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "128×128px PNG recommended."
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "info": "Used for buttons, links, and highlights.",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_light_grey",
+        "label": "Light grey",
+        "info": "Used for subtle backgrounds and alternate section fills.",
+        "default": "#f2f2f2"
+      },
+      {
+        "type": "color",
+        "id": "color_error",
+        "label": "Error",
+        "default": "#cc0000"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "Success",
+        "default": "#008000"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Headings",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_body_size",
+        "label": "Body font size",
+        "min": 12,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "site_max_width",
+        "label": "Maximum page width",
+        "default": "1600px",
+        "options": [
+          { "value": "1200px", "label": "Narrow (1200px)" },
+          { "value": "1440px", "label": "Standard (1440px)" },
+          { "value": "1600px", "label": "Wide (1600px)" },
+          { "value": "1920px", "label": "Extra wide (1920px)" },
+          { "value": "100%",   "label": "Full width" }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Border radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "button_border_radius",
+        "label": "Button border radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "header_height",
+        "label": "Header height",
+        "min": 48,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "default": 60
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_twitter_link",
+        "label": "Twitter (X)",
+        "info": "https://twitter.com/shopify"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "info": "https://www.facebook.com/shopify"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "info": "https://www.instagram.com/shopify"
+      },
+      {
+        "type": "url",
+        "id": "social_pinterest_link",
+        "label": "Pinterest",
+        "info": "https://www.pinterest.com/shopify"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok",
+        "info": "https://www.tiktok.com/@shopify"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube_link",
+        "label": "YouTube",
+        "info": "https://www.youtube.com/shopify"
       }
     ]
   }

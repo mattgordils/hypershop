@@ -22,11 +22,11 @@
 {% if template.name == 'product' %}
   {% if product.media.size > 0 %}
     {% for media in product.media limit:3 -%}
-      <meta property="og:image" content="https:{{ media | img_url: '1200x1200' }}">
+      <meta property="og:image" content="{{ media | image_url: width: 1200, height: 1200 }}">
     {% endfor -%}
 
     {% for media in product.media limit:3 -%}
-      <meta property="og:image:secure_url" content="https:{{ media | img_url: '1200x1200' }}">
+      <meta property="og:image:secure_url" content="{{ media | image_url: width: 1200, height: 1200 }}">
     {% endfor -%}
   {% endif %}
 {% else %}
