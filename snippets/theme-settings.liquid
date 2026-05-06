@@ -33,9 +33,17 @@
     --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};
     --secondary-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
 
+    --site-margins: {{ settings.mobile_margin }}px;
+    --site-gutters: {{ settings.mobile_gutter }}px;
     --site-max-width: {{ settings.site_max_width }};
     --base-border-radius: {{ settings.border_radius }}px;
     --button-border-radius: {{ settings.button_border_radius }}px;
     --header-height: {{ settings.header_height }}px;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --site-margins: {{ settings.desktop_margin }}px;
+      --site-gutters: {{ settings.desktop_gutter }}px;
+    }
   }
 </style>

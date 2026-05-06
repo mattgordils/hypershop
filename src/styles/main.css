@@ -97,12 +97,9 @@
    ============================================================ */
 @layer base {
   :root {
-    /* Grid — fluid via clamp (converted from SCSS responsiveValue mixin) */
-    --site-gutters: clamp(8px, calc(4.923px + 0.769vw), 16px);
-
-    --site-margins: clamp(16px, calc(2.923px + 3.269vw), 50px);
-    @media (min-width: 1440px) { --site-margins: clamp(50px, calc(12.5px + 2.604vw), 75px); }
-    @media (min-width: 2400px) { --site-margins: 75px; }
+    /* Grid — set by theme settings (snippets/theme-settings.liquid); defaults here as fallback */
+    --site-gutters: 12px;
+    --site-margins: 16px;
 
     --vertical-spacing: clamp(40px, calc(16.923px + 5.769vw), 100px);
     @media (min-width: 1440px) { --vertical-spacing: clamp(100px, calc(70px + 2.083vw), 120px); }

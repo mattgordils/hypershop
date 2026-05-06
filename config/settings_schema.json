@@ -144,6 +144,62 @@
     "name": "Layout",
     "settings": [
       {
+        "type": "header",
+        "content": "Grid — Mobile"
+      },
+      {
+        "type": "range",
+        "id": "mobile_margin",
+        "label": "Mobile margin",
+        "info": "Horizontal padding on the left and right edges.",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "mobile_gutter",
+        "label": "Mobile gutter",
+        "info": "Gap between grid columns.",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 14
+      },
+      {
+        "type": "header",
+        "content": "Grid — Desktop"
+      },
+      {
+        "type": "range",
+        "id": "desktop_margin",
+        "label": "Desktop margin",
+        "info": "Horizontal padding on the left and right edges.",
+        "min": 0,
+        "max": 400,
+        "step": 4,
+        "unit": "px",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "desktop_gutter",
+        "label": "Desktop gutter",
+        "info": "Gap between grid columns.",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+      },
+      {
+        "type": "header",
+        "content": "Page"
+      },
+      {
         "type": "select",
         "id": "site_max_width",
         "label": "Maximum page width",
