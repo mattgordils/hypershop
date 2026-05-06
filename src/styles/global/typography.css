@@ -9,16 +9,13 @@
   }
 
   h1, .h1, .h1 p {
-    /* responsiveValue(36px, 60px, 70px) */
-    font-size: clamp(36px, calc(26.769px + 2.308vw), 60px);
-    @media (min-width: 1440px) { font-size: clamp(60px, calc(45px + 1.042vw), 70px); }
-    @media (min-width: 2400px) { font-size: 70px; }
+    font-size: var(--h1-size, 36px);
     font-family: var(--secondary-font);
-    line-height: 1em;
-    letter-spacing: -.04em;
-    font-weight: normal;
-    font-style: normal;
-    text-transform: none;
+    line-height: var(--h1-line-height, 1em);
+    letter-spacing: var(--h1-letter-spacing, -0.04em);
+    font-weight: var(--h1-weight, 400);
+    font-style: var(--h1-style, normal);
+    text-transform: var(--h1-transform, none);
   }
 
   h2, .h2, .h2 p {
@@ -200,6 +197,10 @@
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'liga';
+  }
+
+  hr {
+    border-color: var(--hr-color);
   }
 }
 

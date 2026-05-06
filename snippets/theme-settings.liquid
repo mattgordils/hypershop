@@ -39,11 +39,19 @@
     --base-border-radius: {{ settings.border_radius }}px;
     --button-border-radius: {{ settings.button_border_radius }}px;
     --header-height: {{ settings.header_height }}px;
+
+    --h1-size: {{ settings.h1_size_mobile }}px;
+    --h1-weight: {{ settings.h1_weight }};
+    --h1-style: {{ settings.h1_style }};
+    --h1-transform: {{ settings.h1_transform }};
+    --h1-letter-spacing: {{ settings.h1_letter_spacing | times: 0.01 }}em;
+    --h1-line-height: {{ settings.h1_line_height | times: 0.01 }}em;
   }
   @media (min-width: 768px) {
     :root {
       --site-margins: {{ settings.desktop_margin }}px;
       --site-gutters: {{ settings.desktop_gutter }}px;
+      --h1-size: {{ settings.h1_size_desktop }}px;
     }
   }
 </style>
