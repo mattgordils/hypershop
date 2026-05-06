@@ -199,16 +199,10 @@
         ]
       },
       {
-        "type": "select",
-        "id": "h1_transform",
-        "label": "Text transform",
-        "default": "none",
-        "options": [
-          { "value": "none", "label": "None" },
-          { "value": "uppercase", "label": "Uppercase" },
-          { "value": "lowercase", "label": "Lowercase" },
-          { "value": "capitalize", "label": "Capitalize" }
-        ]
+        "type": "checkbox",
+        "id": "h1_uppercase",
+        "label": "Uppercase",
+        "default": false
       },
       {
         "type": "header",

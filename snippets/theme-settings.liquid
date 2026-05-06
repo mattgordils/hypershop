@@ -40,10 +40,16 @@
     --button-border-radius: {{ settings.button_border_radius }}px;
     --header-height: {{ settings.header_height }}px;
 
-    --h1-size: {{ settings.h1_size_mobile }}px;
+    --h1-size-mobile: {{ settings.h1_size_mobile }};
+    --h1-size-desktop: {{ settings.h1_size_desktop }};
+    --h1-size: clamp(
+      calc(var(--h1-size-mobile) * 1px),
+      calc(var(--h1-size-mobile) * 1px + (var(--h1-size-desktop) - var(--h1-size-mobile)) * ((100vw - 400px) / 1040)),
+      calc(var(--h1-size-desktop) * 1px)
+    );
     --h1-weight: {{ settings.h1_weight }};
     --h1-style: {{ settings.h1_style }};
-    --h1-transform: {{ settings.h1_transform }};
+    --h1-transform: {%- if settings.h1_uppercase -%}uppercase{%- else -%}none{%- endif -%};
     --h1-letter-spacing: {{ settings.h1_letter_spacing | times: 0.01 }}em;
     --h1-line-height: {{ settings.h1_line_height | times: 0.01 }}em;
   }
@@ -51,7 +57,6 @@
     :root {
       --site-margins: {{ settings.desktop_margin }}px;
       --site-gutters: {{ settings.desktop_gutter }}px;
-      --h1-size: {{ settings.h1_size_desktop }}px;
     }
   }
 </style>
