@@ -102,19 +102,13 @@
           "background": "background",
           "text": "text",
           "primary_button": "accent",
+          "on_primary_button": "button_label",
+          "primary_button_border": "accent",
           "secondary_button": "background",
-          "secondary_button_label": "text",
+          "on_secondary_button": "text",
           "secondary_button_border": "text",
           "links": "accent",
-          "icons": "text",
-          "borders": "text",
-          "card_background": "background",
-          "card_text": "text",
-          "badge_background": "accent",
-          "badge_foreground": "button_label",
-          "overlay_background": "text",
-          "overlay_text": "background",
-          "shadow": "text"
+          "icons": "text"
         }
       }
     ]
