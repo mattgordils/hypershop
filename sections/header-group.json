@@ -1,0 +1,15 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "notification-banner": {
+      "type": "page_notification-banner",
+      "settings": {}
+    },
+    "header": {
+      "type": "page_header",
+      "settings": {}
+    }
+  },
+  "order": ["notification-banner", "header"]
+}

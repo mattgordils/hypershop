@@ -45,8 +45,7 @@
 
     {% render 'integrations_after_body_open' %}
     
-    {% section 'page_notification-banner' %}
-    {% section 'page_header' %}
+    {% sections 'header-group' %}
     
     {% comment %}
     {% section 'page_age-gate' %}
@@ -55,15 +54,19 @@
     <main id="main-content" role="main">
       <div class="page-sections">
         {%- if request.design_mode -%}
-          {% section 'styleguide' %}
-        {%- else -%}
-          {{ content_for_layout }}
+          <details>
+            <summary class="fixed bottom-0 left-0 w-full p-4 pointer-events-none flex items-center justify-center">
+              <p class="button pointer-events-auto">View Styleguide</p>
+            </summary>
+            <div>{% section 'styleguide' %}</div>
+          </details>
         {%- endif -%}
+        {{ content_for_layout }}
       </div>
     </main>
 
     {% section 'page_cart-panel' %}
-    {% section 'page_footer' %}
+    {% sections 'footer-group' %}
 
     <script src="{{ 'global.js' | asset_url }}" defer></script>
     <script src="{{ 'cart.js' | asset_url }}" defer></script>
