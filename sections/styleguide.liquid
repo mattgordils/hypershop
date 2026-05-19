@@ -65,7 +65,7 @@
     {%- assign sg_color_labels = settings.color_background | append: ',' | append: settings.color_text | append: ',' | append: settings.color_accent | append: ',computed,computed,' | append: settings.color_light_grey | append: ',' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
     {%- for var in sg_color_vars -%}
       <div>
-        <div class="w-full rounded-base mb-2 border border-hr-color" style="aspect-ratio: 3/2; background: var({{ var }})"></div>
+        <div class="w-full rounded mb-2 border border-hr-color" style="aspect-ratio: 3/2; background: var({{ var }})"></div>
         <p class="body-tiny mono">{{ var }}</p>
         <p class="body-tiny text-light-text-color">{{ sg_color_labels[forloop.index0] }}</p>
       </div>
@@ -112,7 +112,7 @@
     <strong class="h6">UI Elements</strong>
   </div>
 
-  <div class="px-margin grid grid-cols-1 md:grid-cols-2 gap-gutter mb-v-space-lg">
+  <div class="px-margin grid grid-cols-1 md:grid-cols-2 gap-gutter mb-v-space-lg relative">
     <div>
       <p class="eyebrow text-light-text-color mb-gutter">Button Primary (Default)</p>
       <div class="flex flex-col items-start gap-gutter mb-v-space-sm">
@@ -150,7 +150,7 @@
   </div>
 
   {%- if settings.color_schemes != blank -%}
-    <div class="px-margin grid grid-cols-1 md:grid-cols-3 gap-gutter mb-v-space-lg">
+    <div class="px-margin grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
       {%- for scheme in settings.color_schemes -%}
         {%- liquid
           assign sc_bg     = scheme.settings.background
@@ -161,36 +161,40 @@
           assign sc_g = sc_text | color_extract: 'green'
           assign sc_b = sc_text | color_extract: 'blue'
         -%}
-        <div
-          class="rounded-md color-scheme-{{ scheme.id }}"
-          style="padding: 32px; background: var(--bg-color); color: var(--text-color);"
-        >
-          <p class="eyebrow" style="margin-bottom: 12px; color: var(--light-text-color);">Scheme {{ forloop.index }}</p>
-          <h2 style="margin-bottom: 12px;">{{ sc_bg }}</h2>
-          <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-          <hr style="margin-bottom: 24px; border-color: var(--hr-color);">
-          <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-            <button class="button small">Get Started</button>
-            <button class="button secondary small">Learn More</button>
-            <button class="button small" disabled>Disabled</button>
-          </div>
-          <a href="#" class="h6" style="color: var(--text-color);">Our Mission</a>
-          <div class="mt-v-space-sm grid grid-cols-4 gap-2">
-            <div>
-              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_bg }}; border: 1px solid var(--hr-color);"></div>
-              <p class="body-tiny" style="color: var(--light-text-color);">BG</p>
+        <div class="relative">
+          <div class="absolute inset-0 border border-current rounded opacity-7"></div>
+          <div
+            class="rounded color-scheme-{{ scheme.id }} p-gutter"
+            style="background: var(--bg-color); color: var(--text-color);"
+          >
+            <p class="eyebrow text-light-text-color mb-3">Color Scheme Example</p>
+            <h2 style="margin-bottom: 12px;">Scheme {{ forloop.index }}</h2>
+            <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
+            <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
+              <button class="button small">Get Started</button>
+              <button class="button secondary small">Learn More</button>
+              <button class="button small" disabled>Disabled</button>
+              <a href="#" class="h6" style="color: var(--text-color);">Text Link</a>
             </div>
-            <div>
-              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_text }};"></div>
-              <p class="body-tiny" style="color: var(--light-text-color);">Text</p>
-            </div>
-            <div>
-              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_accent }};"></div>
-              <p class="body-tiny" style="color: var(--light-text-color);">Accent</p>
-            </div>
-            <div>
-              <div class="w-full rounded-sm mb-1" style="aspect-ratio: 1; background: {{ sc_label }}; border: 1px solid var(--hr-color);"></div>
-              <p class="body-tiny" style="color: var(--light-text-color);">Label</p>
+            <hr class="mt-v-space-sm">
+            <h6 href="#" class="mb-4 mt-2">Colors</h6>
+            <div class=" flex gap-x-2 gap-y-4 flex-wrap">
+              <div class="w-1 grow min-w-[100px]">
+                <div class="w-full h-[100px] rounded" style="background: {{ sc_bg }}; border: 1px solid var(--hr-color);"></div>
+                <p class="body-tiny" style="color: var(--light-text-color);">Background</p>
+              </div>
+              <div class="w-1 grow min-w-[100px]">
+                <div class="w-full h-[100px] rounded" style="background: {{ sc_text }};"></div>
+                <p class="body-tiny" style="color: var(--light-text-color);">Text</p>
+              </div>
+              <div class="w-1 grow min-w-[100px]">
+                <div class="w-full h-[100px] rounded" style="background: {{ sc_accent }};"></div>
+                <p class="body-tiny" style="color: var(--light-text-color);">Accent</p>
+              </div>
+              <div class="w-1 grow min-w-[100px]">
+                <div class="w-full h-[100px] rounded" style="background: {{ sc_label }}; border: 1px solid var(--hr-color);"></div>
+                <p class="body-tiny" style="color: var(--light-text-color);">Label</p>
+              </div>
             </div>
           </div>
         </div>

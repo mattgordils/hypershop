@@ -2,8 +2,8 @@
   assign heading_font = settings.font_heading
   assign body_font    = settings.font_body
   assign heading_font_bold   = heading_font | font_modify: 'weight', 'bolder'
-  assign body_font_bold      = body_font | font_modify: 'weight', 'bolder'
-  assign body_font_italic    = body_font | font_modify: 'style', 'italic'
+  assign body_font_bold      = body_font    | font_modify: 'weight', 'bolder'
+  assign body_font_italic    = body_font    | font_modify: 'style',  'italic'
 -%}
 
 {%- unless heading_font.system? -%}
@@ -21,6 +21,7 @@
   {%- if body_font_italic -%}{{ body_font_italic | font_face: font_display: 'swap' }}{%- endif -%}
 
   :root {
+    /* Colors */
     --bg-color: {{ settings.color_background }};
     --bg-color-rgb: {{ settings.color_background | color_extract: 'red' }}, {{ settings.color_background | color_extract: 'green' }}, {{ settings.color_background | color_extract: 'blue' }};
     --text-color: {{ settings.color_text }};
@@ -30,33 +31,140 @@
     --success: {{ settings.color_success }};
     --light-grey: {{ settings.color_light_grey }};
 
+    /* Fonts */
     --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};
     --secondary-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
 
-    --site-margins: {{ settings.mobile_margin }}px;
-    --site-gutters: {{ settings.mobile_gutter }}px;
+    /* Layout */
     --site-max-width: {{ settings.site_max_width }};
     --base-border-radius: {{ settings.border_radius }}px;
     --button-border-radius: {{ settings.button_border_radius }}px;
     --header-height: {{ settings.header_height }}px;
 
+    /* Grid — fluid clamp from 400px → 1440px viewport */
+    --site-margins-mobile: {{ settings.mobile_margin }};
+    --site-margins-desktop: {{ settings.desktop_margin }};
+    --site-gutters-mobile: {{ settings.mobile_gutter }};
+    --site-gutters-desktop: {{ settings.desktop_gutter }};
+    --site-margins: clamp(
+      calc(var(--site-margins-mobile) * 1px),
+      calc(var(--site-margins-mobile) * 1px + (var(--site-margins-desktop) - var(--site-margins-mobile)) * ((100vw - 400px) / 1040)),
+      calc(var(--site-margins-desktop) * 1px)
+    );
+    --site-gutters: clamp(
+      calc(var(--site-gutters-mobile) * 1px),
+      calc(var(--site-gutters-mobile) * 1px + (var(--site-gutters-desktop) - var(--site-gutters-mobile)) * ((100vw - 400px) / 1040)),
+      calc(var(--site-gutters-desktop) * 1px)
+    );
+
+    /* Headings — fluid clamp from 400px → 1440px viewport */
     --h1-size-mobile: {{ settings.h1_size_mobile }};
     --h1-size-desktop: {{ settings.h1_size_desktop }};
-    --h1-size: clamp(
-      calc(var(--h1-size-mobile) * 1px),
-      calc(var(--h1-size-mobile) * 1px + (var(--h1-size-desktop) - var(--h1-size-mobile)) * ((100vw - 400px) / 1040)),
-      calc(var(--h1-size-desktop) * 1px)
-    );
+    --h1-size: clamp(calc(var(--h1-size-mobile) * 1px), calc(var(--h1-size-mobile) * 1px + (var(--h1-size-desktop) - var(--h1-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h1-size-desktop) * 1px));
     --h1-weight: {{ settings.h1_weight }};
     --h1-style: {{ settings.h1_style }};
-    --h1-transform: {%- if settings.h1_uppercase -%}uppercase{%- else -%}none{%- endif -%};
+    --h1-transform: {{ settings.h1_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h1-letter-spacing: {{ settings.h1_letter_spacing | times: 0.01 }}em;
     --h1-line-height: {{ settings.h1_line_height | times: 0.01 }}em;
-  }
-  @media (min-width: 768px) {
-    :root {
-      --site-margins: {{ settings.desktop_margin }}px;
-      --site-gutters: {{ settings.desktop_gutter }}px;
-    }
+
+    --h2-size-mobile: {{ settings.h2_size_mobile }};
+    --h2-size-desktop: {{ settings.h2_size_desktop }};
+    --h2-size: clamp(calc(var(--h2-size-mobile) * 1px), calc(var(--h2-size-mobile) * 1px + (var(--h2-size-desktop) - var(--h2-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h2-size-desktop) * 1px));
+    --h2-weight: {{ settings.h2_weight }};
+    --h2-style: {{ settings.h2_style }};
+    --h2-transform: {{ settings.h2_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --h2-letter-spacing: {{ settings.h2_letter_spacing | times: 0.01 }}em;
+    --h2-line-height: {{ settings.h2_line_height | times: 0.01 }}em;
+
+    --h3-size-mobile: {{ settings.h3_size_mobile }};
+    --h3-size-desktop: {{ settings.h3_size_desktop }};
+    --h3-size: clamp(calc(var(--h3-size-mobile) * 1px), calc(var(--h3-size-mobile) * 1px + (var(--h3-size-desktop) - var(--h3-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h3-size-desktop) * 1px));
+    --h3-weight: {{ settings.h3_weight }};
+    --h3-style: {{ settings.h3_style }};
+    --h3-transform: {{ settings.h3_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --h3-letter-spacing: {{ settings.h3_letter_spacing | times: 0.01 }}em;
+    --h3-line-height: {{ settings.h3_line_height | times: 0.01 }}em;
+
+    --h4-size-mobile: {{ settings.h4_size_mobile }};
+    --h4-size-desktop: {{ settings.h4_size_desktop }};
+    --h4-size: clamp(calc(var(--h4-size-mobile) * 1px), calc(var(--h4-size-mobile) * 1px + (var(--h4-size-desktop) - var(--h4-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h4-size-desktop) * 1px));
+    --h4-weight: {{ settings.h4_weight }};
+    --h4-style: {{ settings.h4_style }};
+    --h4-transform: {{ settings.h4_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --h4-letter-spacing: {{ settings.h4_letter_spacing | times: 0.01 }}em;
+    --h4-line-height: {{ settings.h4_line_height | times: 0.01 }}em;
+
+    --h5-size-mobile: {{ settings.h5_size_mobile }};
+    --h5-size-desktop: {{ settings.h5_size_desktop }};
+    --h5-size: clamp(calc(var(--h5-size-mobile) * 1px), calc(var(--h5-size-mobile) * 1px + (var(--h5-size-desktop) - var(--h5-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h5-size-desktop) * 1px));
+    --h5-weight: {{ settings.h5_weight }};
+    --h5-style: {{ settings.h5_style }};
+    --h5-transform: {{ settings.h5_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --h5-letter-spacing: {{ settings.h5_letter_spacing | times: 0.01 }}em;
+    --h5-line-height: {{ settings.h5_line_height | times: 0.01 }}em;
+
+    --h6-size-mobile: {{ settings.h6_size_mobile }};
+    --h6-size-desktop: {{ settings.h6_size_desktop }};
+    --h6-size: clamp(calc(var(--h6-size-mobile) * 1px), calc(var(--h6-size-mobile) * 1px + (var(--h6-size-desktop) - var(--h6-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--h6-size-desktop) * 1px));
+    --h6-weight: {{ settings.h6_weight }};
+    --h6-style: {{ settings.h6_style }};
+    --h6-transform: {{ settings.h6_uppercase | default: true | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --h6-letter-spacing: {{ settings.h6_letter_spacing | times: 0.01 }}em;
+    --h6-line-height: {{ settings.h6_line_height | times: 0.01 }}em;
+
+    /* Body styles — fluid clamp from 400px → 1440px viewport */
+    --body-tiny-size-mobile: {{ settings.tiny_size_mobile }};
+    --body-tiny-size-desktop: {{ settings.tiny_size_desktop }};
+    --body-tiny-size: clamp(calc(var(--body-tiny-size-mobile) * 1px), calc(var(--body-tiny-size-mobile) * 1px + (var(--body-tiny-size-desktop) - var(--body-tiny-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--body-tiny-size-desktop) * 1px));
+    --body-tiny-weight: {{ settings.tiny_weight }};
+    --body-tiny-style: {{ settings.tiny_style }};
+    --body-tiny-transform: {{ settings.tiny_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --body-tiny-letter-spacing: {{ settings.tiny_letter_spacing | times: 0.01 }}em;
+    --body-tiny-line-height: {{ settings.tiny_line_height | times: 0.01 }}em;
+
+    --body-small-size-mobile: {{ settings.small_size_mobile }};
+    --body-small-size-desktop: {{ settings.small_size_desktop }};
+    --body-small-size: clamp(calc(var(--body-small-size-mobile) * 1px), calc(var(--body-small-size-mobile) * 1px + (var(--body-small-size-desktop) - var(--body-small-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--body-small-size-desktop) * 1px));
+    --body-small-weight: {{ settings.small_weight }};
+    --body-small-style: {{ settings.small_style }};
+    --body-small-transform: {{ settings.small_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --body-small-letter-spacing: {{ settings.small_letter_spacing | times: 0.01 }}em;
+    --body-small-line-height: {{ settings.small_line_height | times: 0.01 }}em;
+
+    --body-size-mobile: {{ settings.body_size_mobile }};
+    --body-size-desktop: {{ settings.body_size_desktop }};
+    --body-size: clamp(calc(var(--body-size-mobile) * 1px), calc(var(--body-size-mobile) * 1px + (var(--body-size-desktop) - var(--body-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--body-size-desktop) * 1px));
+    --body-weight: {{ settings.body_weight }};
+    --body-style: {{ settings.body_style }};
+    --body-transform: {{ settings.body_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --body-letter-spacing: {{ settings.body_letter_spacing | times: 0.01 }}em;
+    --body-line-height: {{ settings.body_line_height | times: 0.01 }}em;
+
+    --body-medium-size-mobile: {{ settings.medium_size_mobile }};
+    --body-medium-size-desktop: {{ settings.medium_size_desktop }};
+    --body-medium-size: clamp(calc(var(--body-medium-size-mobile) * 1px), calc(var(--body-medium-size-mobile) * 1px + (var(--body-medium-size-desktop) - var(--body-medium-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--body-medium-size-desktop) * 1px));
+    --body-medium-weight: {{ settings.medium_weight }};
+    --body-medium-style: {{ settings.medium_style }};
+    --body-medium-transform: {{ settings.medium_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --body-medium-letter-spacing: {{ settings.medium_letter_spacing | times: 0.01 }}em;
+    --body-medium-line-height: {{ settings.medium_line_height | times: 0.01 }}em;
+
+    --body-large-size-mobile: {{ settings.large_size_mobile }};
+    --body-large-size-desktop: {{ settings.large_size_desktop }};
+    --body-large-size: clamp(calc(var(--body-large-size-mobile) * 1px), calc(var(--body-large-size-mobile) * 1px + (var(--body-large-size-desktop) - var(--body-large-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--body-large-size-desktop) * 1px));
+    --body-large-weight: {{ settings.large_weight }};
+    --body-large-style: {{ settings.large_style }};
+    --body-large-transform: {{ settings.large_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --body-large-letter-spacing: {{ settings.large_letter_spacing | times: 0.01 }}em;
+    --body-large-line-height: {{ settings.large_line_height | times: 0.01 }}em;
+
+    --blockquote-size-mobile: {{ settings.blockquote_size_mobile }};
+    --blockquote-size-desktop: {{ settings.blockquote_size_desktop }};
+    --blockquote-size: clamp(calc(var(--blockquote-size-mobile) * 1px), calc(var(--blockquote-size-mobile) * 1px + (var(--blockquote-size-desktop) - var(--blockquote-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--blockquote-size-desktop) * 1px));
+    --blockquote-weight: {{ settings.blockquote_weight }};
+    --blockquote-style: {{ settings.blockquote_style }};
+    --blockquote-transform: {{ settings.blockquote_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --blockquote-letter-spacing: {{ settings.blockquote_letter_spacing | times: 0.01 }}em;
+    --blockquote-line-height: {{ settings.blockquote_line_height | times: 0.01 }}em;
   }
 </style>

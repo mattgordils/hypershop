@@ -19,106 +19,121 @@
   }
 
   h2, .h2, .h2 p {
-    font-size: 42px;
+    font-size: var(--h2-size, 42px);
     font-family: var(--secondary-font);
-    line-height: 1.2em;
-    letter-spacing: -.02em;
-    font-weight: normal;
-    font-style: normal;
-    text-transform: none;
+    line-height: var(--h2-line-height, 1.2em);
+    letter-spacing: var(--h2-letter-spacing, -0.02em);
+    font-weight: var(--h2-weight, 400);
+    font-style: var(--h2-style, normal);
+    text-transform: var(--h2-transform, none);
   }
 
   h3, .h3, .h3 p {
-    font-size: 32px;
+    font-size: var(--h3-size, 32px);
     font-family: var(--secondary-font);
-    line-height: 1.2em;
-    letter-spacing: -.02em;
-    font-weight: normal;
-    font-style: normal;
-    text-transform: none;
+    line-height: var(--h3-line-height, 1.2em);
+    letter-spacing: var(--h3-letter-spacing, -0.02em);
+    font-weight: var(--h3-weight, 400);
+    font-style: var(--h3-style, normal);
+    text-transform: var(--h3-transform, none);
   }
 
   h4, .h4, .h4 p {
-    font-size: 24px;
+    font-size: var(--h4-size, 24px);
     font-family: var(--secondary-font);
-    line-height: 1.2em;
-    letter-spacing: -.02em;
-    font-weight: normal;
-    font-style: normal;
-    text-transform: none;
+    line-height: var(--h4-line-height, 1.2em);
+    letter-spacing: var(--h4-letter-spacing, -0.02em);
+    font-weight: var(--h4-weight, 400);
+    font-style: var(--h4-style, normal);
+    text-transform: var(--h4-transform, none);
   }
 
   h5, .h5, .h5 p {
-    font-size: 20px;
+    font-size: var(--h5-size, 20px);
     font-family: var(--secondary-font);
-    line-height: 1em;
-    letter-spacing: -.02em;
-    font-weight: normal;
-    font-style: normal;
-    text-transform: none;
+    line-height: var(--h5-line-height, 1em);
+    letter-spacing: var(--h5-letter-spacing, -0.02em);
+    font-weight: var(--h5-weight, 400);
+    font-style: var(--h5-style, normal);
+    text-transform: var(--h5-transform, none);
   }
 
   h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
-    font-size: 11px;
+    font-size: var(--h6-size, 11px);
     font-family: var(--main-font);
-    line-height: 1.2em;
-    letter-spacing: .06em;
-    font-weight: var(--medium);
-    font-style: normal;
-    text-transform: uppercase;
+    line-height: var(--h6-line-height, 1.2em);
+    letter-spacing: var(--h6-letter-spacing, 0.06em);
+    font-weight: var(--h6-weight, 500);
+    font-style: var(--h6-style, normal);
+    text-transform: var(--h6-transform, uppercase);
   }
 
   p.tiny, .body-tiny, .body-tiny p,
   ul.tiny, .body-tiny ul,
   ol.tiny, .body-tiny ol {
     font-family: var(--main-font);
-    font-size: 12px;
-    line-height: 1.5em;
-    letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
+    font-size: var(--body-tiny-size, 12px);
+    line-height: var(--body-tiny-line-height, 1.5em);
+    letter-spacing: var(--body-tiny-letter-spacing, 0);
+    font-weight: var(--body-tiny-weight, 400);
+    font-style: var(--body-tiny-style, normal);
+    text-transform: var(--body-tiny-transform, none);
   }
 
   p.small, .body-small, .body-small p,
   ul.small, .body-small ul,
   ol.small, .body-small ol {
-    font-size: 14px;
     font-family: var(--main-font);
-    line-height: 1.5em;
-    letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
+    font-size: var(--body-small-size, 14px);
+    line-height: var(--body-small-line-height, 1.5em);
+    letter-spacing: var(--body-small-letter-spacing, 0);
+    font-weight: var(--body-small-weight, 400);
+    font-style: var(--body-small-style, normal);
+    text-transform: var(--body-small-transform, none);
   }
 
   p, .body, .body p, .body ul, .body ol {
-    font-size: 16px;
     font-family: var(--main-font);
-    line-height: 1.5em;
-    letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
   }
 
   p.medium, .body-medium, .body-medium p,
   ul.medium, .body-medium ul,
   ol.medium, .body-medium ol {
-    font-size: 18px;
     font-family: var(--main-font);
-    line-height: 1.5em;
-    letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
+    font-size: var(--body-medium-size, 18px);
+    line-height: var(--body-medium-line-height, 1.5em);
+    letter-spacing: var(--body-medium-letter-spacing, 0);
+    font-weight: var(--body-medium-weight, 400);
+    font-style: var(--body-medium-style, normal);
+    text-transform: var(--body-medium-transform, none);
   }
 
   p.large, .body-large, .body-large p,
   ul.large, .body-large ul,
   ol.large, .body-large ol {
-    font-size: 20px;
     font-family: var(--main-font);
-    line-height: 1.5em;
-    letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
+    font-size: var(--body-large-size, 20px);
+    line-height: var(--body-large-line-height, 1.5em);
+    letter-spacing: var(--body-large-letter-spacing, 0);
+    font-weight: var(--body-large-weight, 400);
+    font-style: var(--body-large-style, normal);
+    text-transform: var(--body-large-transform, none);
+  }
+
+  blockquote {
+    font-family: var(--main-font);
+    font-size: var(--blockquote-size, 20px);
+    line-height: var(--blockquote-line-height, 1.5em);
+    letter-spacing: var(--blockquote-letter-spacing, 0);
+    font-weight: var(--blockquote-weight, 400);
+    font-style: var(--blockquote-style, italic);
+    text-transform: var(--blockquote-transform, none);
   }
 
   .mono, .mono > p { font-family: var(--mono-font); }
