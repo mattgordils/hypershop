@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "settings": {
@@ -27,7 +36,9 @@
               }
             }
           },
-          "block_order": ["media"]
+          "block_order": [
+            "media"
+          ]
         },
         "slide_2": {
           "type": "_media-slide",
@@ -45,10 +56,15 @@
               }
             }
           },
-          "block_order": ["media"]
+          "block_order": [
+            "media"
+          ]
         }
       },
-      "block_order": ["slide_1", "slide_2"],
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ],
       "name": "Wide Media",
       "settings": {
         "section_height": "h-screen-height",
@@ -98,15 +114,21 @@
                   "type": "_link",
                   "settings": {
                     "label": "Secondary link",
-                    "link": "/",
-                    "new_tab": false
+                    "link": "/"
                   }
                 }
               },
-              "block_order": ["button", "link"]
+              "block_order": [
+                "button",
+                "link"
+              ]
             }
           },
-          "block_order": ["headline", "rich_text", "actions"]
+          "block_order": [
+            "headline",
+            "rich_text",
+            "actions"
+          ]
         }
       },
       "name": "Text Section",
@@ -163,20 +185,25 @@
                   "type": "_link",
                   "settings": {
                     "label": "Secondary link",
-                    "link": "/",
-                    "new_tab": false
+                    "link": "/"
                   }
                 }
               },
-              "block_order": ["button", "link"]
+              "block_order": [
+                "button",
+                "link"
+              ]
             }
           },
-          "block_order": ["headline", "rich_text", "actions"]
+          "block_order": [
+            "headline",
+            "rich_text",
+            "actions"
+          ]
         }
       },
       "name": "Media With Text",
       "settings": {
-        "h_alignment": "justify-center",
         "v_alignment": "items-center",
         "section_spacing": "medium"
       }
@@ -205,7 +232,10 @@
               }
             }
           },
-          "block_order": ["headline", "rich_text"]
+          "block_order": [
+            "headline",
+            "rich_text"
+          ]
         },
         "col_2": {
           "type": "_text-lockup",
@@ -228,7 +258,10 @@
               }
             }
           },
-          "block_order": ["headline", "rich_text"]
+          "block_order": [
+            "headline",
+            "rich_text"
+          ]
         },
         "col_3": {
           "type": "_text-lockup",
@@ -251,10 +284,17 @@
               }
             }
           },
-          "block_order": ["headline", "rich_text"]
+          "block_order": [
+            "headline",
+            "rich_text"
+          ]
         }
       },
-      "block_order": ["col_1", "col_2", "col_3"],
+      "block_order": [
+        "col_1",
+        "col_2",
+        "col_3"
+      ],
       "name": "Columns",
       "settings": {
         "eyebrow": "Eyebrow",
@@ -289,7 +329,11 @@
           }
         }
       },
-      "block_order": ["row_1", "row_2", "row_3"],
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3"
+      ],
       "name": "Accordion",
       "settings": {
         "title": "FAQs",
@@ -304,7 +348,9 @@
           "settings": {}
         }
       },
-      "block_order": ["article_1"],
+      "block_order": [
+        "article_1"
+      ],
       "name": "Blog Post List",
       "settings": {}
     },

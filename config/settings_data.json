@@ -1,46 +1,96 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
+    "font_heading": "archivo_narrow_n7",
+    "font_body": "archivo_narrow_n4",
+    "h1_weight": "700",
+    "h2_weight": "700",
+    "h3_weight": "700",
+    "h4_weight": "700",
+    "h5_weight": "700",
+    "h6_weight": "700",
+    "tiny_size_mobile": 11,
+    "tiny_size_desktop": 11,
+    "tiny_letter_spacing": 1,
+    "tiny_line_height": 130,
+    "small_size_mobile": 12,
+    "small_size_desktop": 12,
+    "small_letter_spacing": 1,
+    "small_line_height": 130,
+    "body_size_mobile": 14,
+    "body_size_desktop": 14,
+    "body_line_height": 130,
+    "medium_size_desktop": 16,
+    "medium_line_height": 130,
+    "large_size_mobile": 18,
+    "large_size_desktop": 18,
+    "large_line_height": 130,
+    "blockquote_size_mobile": 20,
+    "blockquote_size_desktop": 22,
+    "blockquote_weight": "500",
+    "blockquote_line_height": 130,
     "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",
     "checkout_button_color": "#482225",
-    "content_for_index": [
-
-    ],
+    "sections": {
+      "styleguide": {
+        "type": "styleguide",
+        "settings": {}
+      },
+      "page_cart-panel": {
+        "type": "page_cart-panel",
+        "settings": {
+          "text_footer": "",
+          "upsell_collection": "",
+          "text_checkout": "Checkout",
+          "show_discount_input": true,
+          "show_payment_icons": true,
+          "free_shipping": true,
+          "free_shipping_threshold": 300,
+          "free_shipping_met_text": "You've added enough to you bag for free shipping!",
+          "free_shipping_text": "Spend [x] more to get free shipping"
+        }
+      },
+      "page_menu-panel": {
+        "type": "page_menu-panel",
+        "settings": {
+          "menu": "main-menu",
+          "secondary_menu": "main-menu"
+        }
+      }
+    },
+    "content_for_index": [],
     "color_schemes": {
       "theme-default": {
         "settings": {
           "background": "#ffffff",
-          "background_gradient": "",
-          "text": "#000",
-          "button": "#000",
-          "button_label": "",
-          "secondary_button": "#c6c1bb",
-          "secondary_button_label": "",
-          "shadow": ""
+          "text": "#000000",
+          "accent": "#000000",
+          "button_label": "#FFFFFF"
         }
       },
       "theme-light-grey": {
         "settings": {
           "background": "#f2f2f2",
-          "background_gradient": "",
-          "text": "#000",
-          "button": "#000",
-          "button_label": "",
-          "secondary_button": "#c6c1bb",
-          "secondary_button_label": "",
-          "shadow": ""
+          "text": "#000000",
+          "accent": "#000000",
+          "button_label": "#FFFFFF"
         }
       },
       "theme-dark": {
         "settings": {
-          "background": "#000",
-          "background_gradient": "",
-          "text": "#fff",
-          "button": "#fff",
-          "button_label": "",
-          "secondary_button": "#c6c1bb",
-          "secondary_button_label": "",
-          "shadow": ""
+          "background": "#000000",
+          "text": "#ffffff",
+          "accent": "#000000",
+          "button_label": "#FFFFFF"
         }
       }
     }
