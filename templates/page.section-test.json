@@ -33,7 +33,17 @@
                 "media_type": "image",
                 "image": "shopify://shop_images/needle-on-record.jpg",
                 "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4"
-              }
+              },
+              "blocks": {}
+            },
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "center",
+                "media_max_width": 2000
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -53,7 +63,17 @@
               "settings": {
                 "media_type": "image",
                 "image": "shopify://shop_images/needle-on-record.jpg"
-              }
+              },
+              "blocks": {}
+            },
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "center",
+                "media_max_width": 2000
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -70,69 +90,27 @@
         "section_height": "h-screen-height",
         "section_width": "full",
         "section_spacing": "medium",
-        "slideshow_autoplay": false
+        "slideshow_autoplay": false,
+        "slideshow_autoplay_speed": 6
       }
     },
     "text_section": {
       "type": "text-section",
       "blocks": {
-        "text_lockup": {
+        "text-lockup": {
           "type": "_text-lockup",
           "static": true,
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
-          "blocks": {
-            "headline": {
-              "type": "_headline",
-              "settings": {
-                "text": "Text section headline",
-                "style": "h2",
-                "element": "h2"
-              }
-            },
-            "rich_text": {
-              "type": "_rich-text",
-              "settings": {
-                "text": "<p>Rich text body placeholder. Replace with real copy.</p>"
-              }
-            },
-            "actions": {
-              "type": "_actions",
-              "settings": {},
-              "blocks": {
-                "button": {
-                  "type": "_button",
-                  "settings": {
-                    "label": "Primary button",
-                    "link": "/",
-                    "new_tab": false,
-                    "style": "primary"
-                  }
-                },
-                "link": {
-                  "type": "_link",
-                  "settings": {
-                    "label": "Secondary link",
-                    "link": "/"
-                  }
-                }
-              },
-              "block_order": [
-                "button",
-                "link"
-              ]
-            }
-          },
-          "block_order": [
-            "headline",
-            "rich_text",
-            "actions"
-          ]
+          "blocks": {}
         }
       },
       "name": "Text Section",
       "settings": {
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
@@ -145,66 +123,27 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/Yony5f73544f8c51285f73544f8c749.169399275f73544f8c749.jpg"
-          }
+          },
+          "blocks": {}
         },
-        "text_lockup": {
+        "text-lockup": {
           "type": "_text-lockup",
           "static": true,
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
-          "blocks": {
-            "headline": {
-              "type": "_headline",
-              "settings": {
-                "text": "Media with text headline",
-                "style": "h2",
-                "element": "h2"
-              }
-            },
-            "rich_text": {
-              "type": "_rich-text",
-              "settings": {
-                "text": "<p>Side-by-side media and text placeholder copy.</p>"
-              }
-            },
-            "actions": {
-              "type": "_actions",
-              "settings": {},
-              "blocks": {
-                "button": {
-                  "type": "_button",
-                  "settings": {
-                    "label": "Primary button",
-                    "link": "shopify://products/camp-collar-shirt-with-piping-5",
-                    "new_tab": false,
-                    "style": "primary"
-                  }
-                },
-                "link": {
-                  "type": "_link",
-                  "settings": {
-                    "label": "Secondary link",
-                    "link": "/"
-                  }
-                }
-              },
-              "block_order": [
-                "button",
-                "link"
-              ]
-            }
-          },
-          "block_order": [
-            "headline",
-            "rich_text",
-            "actions"
-          ]
+          "blocks": {}
         }
       },
       "name": "Media With Text",
       "settings": {
+        "media_placement": "left",
         "v_alignment": "items-center",
+        "edge_to_edge": false,
+        "media_placement_mobile": "top",
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
@@ -214,7 +153,8 @@
         "col_1": {
           "type": "_text-lockup",
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
           "blocks": {
             "headline": {
@@ -223,13 +163,16 @@
                 "text": "Column one",
                 "style": "h3",
                 "element": "h3"
-              }
+              },
+              "blocks": {}
             },
             "rich_text": {
               "type": "_rich-text",
               "settings": {
-                "text": "<p>Column placeholder text.</p>"
-              }
+                "text": "<p>Column placeholder text.</p>",
+                "size": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -240,7 +183,8 @@
         "col_2": {
           "type": "_text-lockup",
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
           "blocks": {
             "headline": {
@@ -249,13 +193,16 @@
                 "text": "Column two",
                 "style": "h3",
                 "element": "h3"
-              }
+              },
+              "blocks": {}
             },
             "rich_text": {
               "type": "_rich-text",
               "settings": {
-                "text": "<p>Column placeholder text.</p>"
-              }
+                "text": "<p>Column placeholder text.</p>",
+                "size": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -266,7 +213,8 @@
         "col_3": {
           "type": "_text-lockup",
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
           "blocks": {
             "headline": {
@@ -275,13 +223,16 @@
                 "text": "Column three",
                 "style": "h3",
                 "element": "h3"
-              }
+              },
+              "blocks": {}
             },
             "rich_text": {
               "type": "_rich-text",
               "settings": {
-                "text": "<p>Column placeholder text.</p>"
-              }
+                "text": "<p>Column placeholder text.</p>",
+                "size": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -301,7 +252,15 @@
         "headline": "Columns section headline",
         "headline_size": "h2",
         "text": "Optional supporting text under the headline.",
-        "alignment": "center"
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 3,
+        "tablet_columns": 3,
+        "mobile_slideshow": false,
+        "mobile_columns": 1,
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
       }
     },
     "accordion": {
@@ -337,6 +296,8 @@
       "name": "Accordion",
       "settings": {
         "title": "FAQs",
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
@@ -345,27 +306,43 @@
       "blocks": {
         "article_1": {
           "type": "article",
-          "settings": {}
+          "settings": {
+            "article": ""
+          }
         }
       },
       "block_order": [
         "article_1"
       ],
       "name": "Blog Post List",
-      "settings": {}
+      "settings": {
+        "blog": "",
+        "feature_first_item": true,
+        "show_date": false,
+        "show_excerpt": true,
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
     },
     "product_grid": {
       "type": "product-grid",
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
+        "products": [],
         "section_spacing": "medium"
       }
     },
     "product_recommendations": {
       "type": "product-recommendations",
       "name": "Product Recommendations",
-      "settings": {}
+      "settings": {
+        "heading": "You may also like",
+        "min_products": 4,
+        "max_products": 8,
+        "hide_sold_out": true,
+        "section_spacing": "medium"
+      }
     }
   },
   "order": [
