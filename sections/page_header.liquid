@@ -1,21 +1,31 @@
 <script src="{{ 'nav.js' | asset_url }}" defer></script>
 
 <style>
-  #shopify-section-page_header {
+  .section-header {
     position: sticky;
     top: 0;
     z-index: 5;
-    margin-bottom: var(--header-offset);
   }
   
   header {
     color: var(--header-color);
     border-color: transparent;
-    background: var(--header-bg);
+    background: var(--color-bg);
   }
 
-  #shopify-section-page_header.scrolled header,
-  #shopify-section-page_header:has(.menu-item.has-sublinks:hover) header {
+  .section-header:not(.scrolled) header {
+    background: transparent;
+  }
+
+  :root {
+    &:has(.page-sections .header-overlap) {
+      --header-color: var(--color-light);
+      --header-offset: var(--spacing-header-banner-height);
+    }
+  }
+
+  .section-header.scrolled header,
+  .section-header:has(.menu-item.has-sublinks:hover) header {
     color: var(--text-color);
     background: var(--bg-color);
     border-color: var(--hr-color);
@@ -251,7 +261,7 @@
 {% schema %}
 {
   "name": "Header",
-  "class": "section-header",
+  "class": "section-header relative z-6",
   "enabled_on": {
     "groups": ["header"]
   },

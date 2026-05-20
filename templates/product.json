@@ -19,7 +19,7 @@
           "name": "Headline",
           "settings": {
             "text": "{{ closest.product.title }}",
-            "style": "h1",
+            "style": "h2",
             "element": "h1"
           },
           "blocks": {

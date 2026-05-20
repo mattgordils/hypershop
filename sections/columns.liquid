@@ -37,7 +37,7 @@
         >
           {%- for column in section.blocks -%}
             <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] md:w-[var(--tablet-cols)] xl:w-[var(--desktop-cols)] px-half-gutter">
-              <div class="flex flex-col h-full text-balance max-w-[500px]">
+              <div class="flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
                 {% render column %}
               </div>
             </div>

@@ -8,7 +8,7 @@ class StickyHeader extends HTMLElement {
   }
 
   connectedCallback() {
-    this.header = document.getElementById('shopify-section-page_header');
+    this.header = document.querySelector('.section-header:has(sticky-header)');
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
 
@@ -39,6 +39,8 @@ class StickyHeader extends HTMLElement {
 
   updateHeader() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    console.log('update')
 
     if (scrollTop > this.scrollThreshold) {
       this.header?.classList.add('scrolled');

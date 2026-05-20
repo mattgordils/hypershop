@@ -10,7 +10,7 @@
   endif
 -%}
 
-<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner">
+<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner{% if section.settings.header_overlap %} header-overlap{% endif %}">
   <div class="relative h-full{% if section.settings.section_width == 'margins' %} mx-margin{% endif %}">
     {% if section.blocks.size > 1 %}
     <slide-show
@@ -120,6 +120,13 @@
           "value": "large"
         }
       ]
+    },
+    {
+      "type": "checkbox",
+      "id": "header_overlap",
+      "label": "Header Overlap",
+      "info": "Overlap the site header on top of this section",
+      "default": false
     },
     {
       "type": "header",

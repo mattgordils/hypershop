@@ -1,11 +1,15 @@
 .page-sections {
-  & section.shopify-section {
+  & .shopify-section {
     &:first-of-type {
-      &.section-wide-media .section-inner {
-        --content-padding: calc(var(--header-offset) * -1) !important;
+      /* If first section, adjust the definition of "full screen height" */
+      & .h-screen-height {
+        height: calc(100svh - var(--spacing-full-header-height));
       }
-      & .block-media-slide .media {
-        top: calc(var(--header-banner-height) - 1px) !important;
+      &:has(.header-overlap) {
+        .h-screen-height {
+          height: calc(100svh - var(--header-offset));
+        }
+        margin-top: calc(var(--spacing-header-height) * -1);
       }
     }
   }

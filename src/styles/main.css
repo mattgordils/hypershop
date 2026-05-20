@@ -18,6 +18,8 @@
 @theme inline {
   /* Colors */
   --color-true-black: #000000;
+  --color-light: var(--bg-color);
+  --color-dark: var(--text-color);
   --color-bg: var(--bg-color);
   --color-main: var(--main-color);
   --color-text-color: var(--text-color);
