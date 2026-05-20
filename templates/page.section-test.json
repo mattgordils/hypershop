@@ -341,7 +341,8 @@
         "min_products": 4,
         "max_products": 8,
         "hide_sold_out": true,
-        "section_spacing": "medium"
+        "section_spacing": "medium",
+        "product": "camp-collar-shirt-with-piping-5"
       }
     }
   },

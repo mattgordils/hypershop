@@ -4,15 +4,22 @@
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
+{%-liquid
+  assign section_product = product
+  if section.settings.product
+    assign section_product = section.settings.product
+  endif
+-%}
+
 <div class="px-margin overflow-hidden {{ spacing_class }}">
   <product-recommendations
     class="product-recommendations"
-    data-product-handle="{{ product.handle }}"
-    data-product-id="{{ product.id }}"
-    {% if product.collections.size > 0 %}
-    data-collection-handle="{{ product.collections.first.handle }}"
+    data-product-handle="{{ section_product.handle }}"
+    data-product-id="{{ section_product.id }}"
+    {% if section_product.collections.size > 0 %}
+    data-collection-handle="{{ section_product.collections.first.handle }}"
     {% endif %}
-    data-product-tags="{{ product.tags | join: ',' }}"
+    data-product-tags="{{ section_product.tags | join: ',' }}"
     data-min-products="{{ section.settings.min_products }}"
     data-max-products="{{ section.settings.max_products }}"
     data-hide-sold-out="{{ section.settings.hide_sold_out }}"
@@ -45,6 +52,12 @@
       "id": "heading",
       "default": "You may also like",
       "label": "Heading"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "defaults to current product page if on a product detail page"
     },
     {
       "type": "range",
