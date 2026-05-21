@@ -413,9 +413,9 @@
         "tablet_columns": 3,
         "mobile_slideshow": false,
         "mobile_columns": 2,
-        "contain_square": false,
-        "limit_media_width": false,
-        "media_max_width": 400,
+        "contain_square": true,
+        "limit_media_width": true,
+        "media_max_width": 1000,
         "color_scheme": "",
         "section_padding": "none",
         "section_spacing": "medium"
