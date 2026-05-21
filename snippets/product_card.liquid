@@ -4,43 +4,73 @@
   if product.selected_or_first_available_variant.image != blank
     assign card_image = product.selected_or_first_available_variant.image
   endif
+
+  assign media_radius = ''
+  if settings.card_border_radius
+    assign media_radius = ' overflow-hidden rounded-[var(--base-border-radius)]'
+  endif
 -%}
 
+{%- comment -%}
+  data-product-id / data-product-handle are stable hooks so review/app widgets
+  (app blocks or app embeds) can find each card and inject content like star ratings.
+{%- endcomment -%}
 <article
   class="product-card flex flex-col"
   data-product-update="product-{{ product.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle }}"
   itemscope
   itemtype="https://schema.org/Product"
 >
-  <a
-    href="{{ product.url }}"
-    class="aspect-3/4 relative block group"
-    aria-label="View {{ product.title }}"
-  >
-    <div class="absolute top-0 left-0 w-full p-4 z-3">
-      {% render 'product-badges' with product: product %}
-    </div>
-    {% render 'image' with
-      src: card_image,
-      sizes: '640px',
-      ratio: 0.75,
-      layout: 'cover',
-      loading: 'lazy',
-      alt: product.title,
-      class: 'z-1 relative'
-    %}
-    {% if card_hover_image != blank %}
-      <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        {% render 'image' with
-          src: card_hover_image,
-          sizes: '640px',
-          ratio: 0.75,
-          layout: 'cover',
-          alt: product.title | append: ' - alternate view'
-        %}
+  <div class="relative group">
+    <a
+      href="{{ product.url }}"
+      class="aspect-3/4 relative block{{ media_radius }}"
+      aria-label="View {{ product.title }}"
+    >
+      <div class="absolute top-0 left-0 w-full p-4 z-3">
+        {% render 'product-badges' with product: product %}
       </div>
+      {% render 'image' with
+        src: card_image,
+        sizes: '640px',
+        ratio: 0.75,
+        layout: 'cover',
+        loading: 'lazy',
+        alt: product.title,
+        class: 'z-1 relative'
+      %}
+      {% if card_hover_image != blank %}
+        <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          {% render 'image' with
+            src: card_hover_image,
+            sizes: '640px',
+            ratio: 0.75,
+            layout: 'cover',
+            alt: product.title | append: ' - alternate view'
+          %}
+        </div>
+      {% endif %}
+    </a>
+
+    {%- comment -%}
+      Quick view trigger — hook only for now. A follow-up will open a modal using
+      data-product-handle; until then this button is hidden unless enabled in
+      Theme settings → Product Card.
+    {%- endcomment -%}
+    {% if settings.card_quick_action == 'quick_view' %}
+      <button
+        type="button"
+        data-quick-view-trigger
+        data-product-handle="{{ product.handle }}"
+        aria-label="Quick view {{ product.title }}"
+        class="button small absolute bottom-4 left-1/2 -translate-x-1/2 z-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+      >
+        Quick view
+      </button>
     {% endif %}
-  </a>
+  </div>
 
   <div class="pb-gutter flex justify-between gap-gutter">
     <h3 class="body grow">
@@ -58,18 +88,20 @@
     </div>
   </div>
 
-  <add-to-cart-form>
-    <div>
-      {% render 'product_option_form' with
-        product: product,
-        section_context: context,
-        class: "pb-gutter items-center",
-        label_class: "text-center pb-1 block"
-      %}
-      {% render 'add_to_cart_button' with
-        class: "w-full",
-        product: product
-      %}
-    </div>
-  </add-to-cart-form>
+  {% if settings.card_quick_action == 'quick_add' %}
+    <add-to-cart-form>
+      <div>
+        {% render 'product_option_form' with
+          product: product,
+          section_context: context,
+          class: "pb-gutter items-center",
+          label_class: "text-center pb-1 block"
+        %}
+        {% render 'add_to_cart_button' with
+          class: "w-full",
+          product: product
+        %}
+      </div>
+    </add-to-cart-form>
+  {% endif %}
 </article>

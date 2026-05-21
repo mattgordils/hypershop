@@ -307,6 +307,18 @@
     ]
   },
   {
+    "name": "Product Card",
+    "settings": [
+      { "type": "checkbox", "id": "card_border_radius", "label": "Rounded corners", "info": "Rounds the card media using the base border radius.", "default": false },
+      { "type": "select", "id": "card_quick_action", "label": "Quick action", "default": "quick_add", "info": "Quick add shows the inline add-to-cart; Quick view shows a quick view button on hover.", "options": [
+        { "value": "none", "label": "No quick action" },
+        { "value": "quick_add", "label": "Quick add" },
+        { "value": "quick_view", "label": "Quick view" }
+      ]},
+      { "type": "paragraph", "content": "Review/app widgets (e.g. star ratings) can be injected by a review app's app embed — each card exposes data-product-id and data-product-handle for that." }
+    ]
+  },
+  {
     "name": "Layout",
     "settings": [
       { "type": "header", "content": "Grid — Mobile" },
