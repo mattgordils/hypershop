@@ -1,6 +1,7 @@
 {%- liquid
   assign heading_font = settings.font_heading
   assign body_font    = settings.font_body
+  assign button_font  = settings.font_button
   assign heading_font_bold   = heading_font | font_modify: 'weight', 'bolder'
   assign body_font_bold      = body_font    | font_modify: 'weight', 'bolder'
   assign body_font_italic    = body_font    | font_modify: 'style',  'italic'
@@ -12,6 +13,9 @@
 {%- unless body_font.system? -%}
   {{ body_font | font_url: 'woff2' | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {%- endunless -%}
+{%- unless button_font.system? -%}
+  {{ button_font | font_url: 'woff2' | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{%- endunless -%}
 
 {% style %}
   {{ heading_font | font_face: font_display: 'swap' }}
@@ -19,6 +23,7 @@
   {{ body_font | font_face: font_display: 'swap' }}
   {%- if body_font_bold -%}{{ body_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
   {%- if body_font_italic -%}{{ body_font_italic | font_face: font_display: 'swap' }}{%- endif -%}
+  {%- unless button_font.system? -%}{{ button_font | font_face: font_display: 'swap' }}{%- endunless -%}
 
   :root {
     /* Colors */
@@ -34,11 +39,16 @@
     /* Fonts */
     --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};
     --secondary-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+    --button-font: {{ button_font.family }}, {{ button_font.fallback_families }};
 
     /* Layout */
     --site-max-width: {{ settings.site_max_width }};
     --base-border-radius: {{ settings.border_radius }}px;
     --button-border-radius: {{ settings.button_border_radius }}px;
+    --button-height-tiny: {{ settings.button_height_tiny }}px;
+    --button-height-small: {{ settings.button_height_small }}px;
+    --button-height: {{ settings.button_height }}px;
+    --button-height-large: {{ settings.button_height_large }}px;
     --header-height: {{ settings.header_height }}px;
 
     /* Grid — fluid clamp from 400px → 1440px viewport */
@@ -166,5 +176,15 @@
     --blockquote-transform: {{ settings.blockquote_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --blockquote-letter-spacing: {{ settings.blockquote_letter_spacing | times: 0.01 }}em;
     --blockquote-line-height: {{ settings.blockquote_line_height | times: 0.01 }}em;
+
+    /* Buttons — fluid clamp from 400px → 1440px viewport */
+    --button-size-mobile: {{ settings.button_size_mobile }};
+    --button-size-desktop: {{ settings.button_size_desktop }};
+    --button-size: clamp(calc(var(--button-size-mobile) * 1px), calc(var(--button-size-mobile) * 1px + (var(--button-size-desktop) - var(--button-size-mobile)) * ((100vw - 400px) / 1040)), calc(var(--button-size-desktop) * 1px));
+    --button-weight: {{ settings.button_weight }};
+    --button-style: {{ settings.button_style }};
+    --button-transform: {{ settings.button_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
+    --button-letter-spacing: {{ settings.button_letter_spacing | times: 0.01 }}em;
+    --button-line-height: {{ settings.button_line_height | times: 0.01 }}em;
   }
 {% endstyle %}

@@ -258,14 +258,7 @@
     },
     "blog_list": {
       "type": "blog-list",
-      "blocks": {
-        "article_1": {
-          "type": "article",
-          "settings": {
-            "article": ""
-          }
-        }
-      },
+      "blocks": {},
       "block_order": [
         "article_1"
       ],

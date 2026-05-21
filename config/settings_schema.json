@@ -64,7 +64,8 @@
     "name": "Typography",
     "settings": [
       { "type": "font_picker", "id": "font_heading", "label": "Headings font", "default": "assistant_n4" },
-      { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "assistant_n4" }
+      { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "assistant_n4" },
+      { "type": "font_picker", "id": "font_button", "label": "Button font", "default": "assistant_n4" }
     ]
   },
   {
@@ -277,6 +278,32 @@
       { "type": "checkbox", "id": "blockquote_uppercase", "label": "Uppercase", "default": false },
       { "type": "range", "id": "blockquote_letter_spacing", "label": "Letter spacing", "info": "10 = 0.1em, 0 = 0em", "min": -5, "max": 20, "step": 1, "unit": "%", "default": 0 },
       { "type": "range", "id": "blockquote_line_height", "label": "Line height", "info": "100 = 1em, 150 = 1.5em", "min": 80, "max": 220, "step": 5, "unit": "%", "default": 150 }
+    ]
+  },
+  {
+    "name": "Buttons",
+    "settings": [
+      { "type": "range", "id": "button_size_mobile", "label": "Mobile size", "min": 10, "max": 28, "step": 1, "unit": "px", "default": 14 },
+      { "type": "range", "id": "button_size_desktop", "label": "Desktop size", "min": 10, "max": 28, "step": 1, "unit": "px", "default": 14 },
+      { "type": "select", "id": "button_weight", "label": "Weight", "default": "500", "options": [
+        { "value": "100", "label": "100 — Thin" }, { "value": "200", "label": "200 — Extra Light" },
+        { "value": "300", "label": "300 — Light" }, { "value": "400", "label": "400 — Regular" },
+        { "value": "500", "label": "500 — Medium" }, { "value": "600", "label": "600 — Semi Bold" },
+        { "value": "700", "label": "700 — Bold" }, { "value": "800", "label": "800 — Extra Bold" },
+        { "value": "900", "label": "900 — Black" }
+      ]},
+      { "type": "select", "id": "button_style", "label": "Style", "default": "normal", "options": [
+        { "value": "normal", "label": "Normal" }, { "value": "italic", "label": "Italic" }
+      ]},
+      { "type": "checkbox", "id": "button_uppercase", "label": "Uppercase", "default": false },
+      { "type": "range", "id": "button_letter_spacing", "label": "Letter spacing", "info": "10 = 0.1em, 0 = 0em", "min": -5, "max": 30, "step": 1, "unit": "%", "default": 0 },
+      { "type": "range", "id": "button_line_height", "label": "Line height", "info": "100 = 1em, 150 = 1.5em", "min": 80, "max": 220, "step": 5, "unit": "%", "default": 100 },
+
+      { "type": "header", "content": "Heights" },
+      { "type": "range", "id": "button_height_tiny", "label": "Tiny", "min": 16, "max": 60, "step": 1, "unit": "px", "default": 26 },
+      { "type": "range", "id": "button_height_small", "label": "Small", "min": 20, "max": 70, "step": 1, "unit": "px", "default": 30 },
+      { "type": "range", "id": "button_height", "label": "Default", "min": 28, "max": 90, "step": 1, "unit": "px", "default": 42 },
+      { "type": "range", "id": "button_height_large", "label": "Large", "min": 40, "max": 120, "step": 1, "unit": "px", "default": 70 }
     ]
   },
   {

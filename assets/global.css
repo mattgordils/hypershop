@@ -955,9 +955,6 @@
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
-  .px-\[\.4em\] {
-    padding-inline: .4em;
-  }
   .px-\[\.75em\] {
     padding-inline: .75em;
   }
@@ -1020,6 +1017,12 @@
   }
   .pt-2 {
     padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-3 {
+    padding-top: calc(var(--spacing) * 3);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
   }
   .pt-\[\.1em\] {
     padding-top: .1em;
@@ -1144,8 +1147,131 @@
   .align-top {
     vertical-align: top;
   }
-  .font-\[inherit\] {
-    font-family: inherit;
+  .body-large {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-large-size, 20px);
+    line-height: var(--body-large-line-height, 1.5em);
+    letter-spacing: var(--body-large-letter-spacing, 0);
+    font-weight: var(--body-large-weight, 400);
+    font-style: var(--body-large-style, normal);
+    text-transform: var(--body-large-transform, none);
+  }
+  .body-medium {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-medium-size, 18px);
+    line-height: var(--body-medium-line-height, 1.5em);
+    letter-spacing: var(--body-medium-letter-spacing, 0);
+    font-weight: var(--body-medium-weight, 400);
+    font-style: var(--body-medium-style, normal);
+    text-transform: var(--body-medium-transform, none);
+  }
+  .body-small {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-small-size, 14px);
+    line-height: var(--body-small-line-height, 1.5em);
+    letter-spacing: var(--body-small-letter-spacing, 0);
+    font-weight: var(--body-small-weight, 400);
+    font-style: var(--body-small-style, normal);
+    text-transform: var(--body-small-transform, none);
+  }
+  .body-tiny {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-tiny-size, 12px);
+    line-height: var(--body-tiny-line-height, 1.5em);
+    letter-spacing: var(--body-tiny-letter-spacing, 0);
+    font-weight: var(--body-tiny-weight, 400);
+    font-style: var(--body-tiny-style, normal);
+    text-transform: var(--body-tiny-transform, none);
+  }
+  .body {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+  }
+  .h1 {
+    font-family: var(--secondary-font);
+    font-size: var(--h1-size, 36px);
+    line-height: var(--h1-line-height, 1em);
+    letter-spacing: var(--h1-letter-spacing, -0.04em);
+    font-weight: var(--h1-weight, 400);
+    font-style: var(--h1-style, normal);
+    text-transform: var(--h1-transform, none);
+  }
+  .h2 {
+    font-family: var(--secondary-font);
+    font-size: var(--h2-size, 42px);
+    line-height: var(--h2-line-height, 1.2em);
+    letter-spacing: var(--h2-letter-spacing, -0.02em);
+    font-weight: var(--h2-weight, 400);
+    font-style: var(--h2-style, normal);
+    text-transform: var(--h2-transform, none);
+  }
+  .h3 {
+    font-family: var(--secondary-font);
+    font-size: var(--h3-size, 32px);
+    line-height: var(--h3-line-height, 1.2em);
+    letter-spacing: var(--h3-letter-spacing, -0.02em);
+    font-weight: var(--h3-weight, 400);
+    font-style: var(--h3-style, normal);
+    text-transform: var(--h3-transform, none);
+  }
+  .h4 {
+    font-family: var(--secondary-font);
+    font-size: var(--h4-size, 24px);
+    line-height: var(--h4-line-height, 1.2em);
+    letter-spacing: var(--h4-letter-spacing, -0.02em);
+    font-weight: var(--h4-weight, 400);
+    font-style: var(--h4-style, normal);
+    text-transform: var(--h4-transform, none);
+  }
+  .h5 {
+    font-family: var(--secondary-font);
+    font-size: var(--h5-size, 20px);
+    line-height: var(--h5-line-height, 1em);
+    letter-spacing: var(--h5-letter-spacing, -0.02em);
+    font-weight: var(--h5-weight, 400);
+    font-style: var(--h5-style, normal);
+    text-transform: var(--h5-transform, none);
+  }
+  .h6 {
+    font-family: var(--main-font);
+    font-size: var(--h6-size, 11px);
+    line-height: var(--h6-line-height, 1.2em);
+    letter-spacing: var(--h6-letter-spacing, 0.06em);
+    font-weight: var(--h6-weight, 500);
+    font-style: var(--h6-style, normal);
+    text-transform: var(--h6-transform, uppercase);
+  }
+  .mono {
+    font-family: var(--mono-font);
   }
   .text-\[1\.2em\] {
     font-size: 1.2em;
@@ -1173,6 +1299,9 @@
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
+  .bold {
+    font-weight: var(--bold);
+  }
   .tracking-normal {
     --tw-tracking: var(--tracking-normal);
     letter-spacing: var(--tracking-normal);
@@ -1182,9 +1311,6 @@
   }
   .whitespace-nowrap {
     white-space: nowrap;
-  }
-  .text-\[inherit\] {
-    color: inherit;
   }
   .text-current {
     color: currentcolor;
@@ -1649,6 +1775,17 @@
       flex-direction: row;
     }
   }
+  .md\:body {
+    @media (width >= 48rem) {
+      font-family: var(--main-font);
+      font-size: var(--body-size, 16px);
+      line-height: var(--body-line-height, 1.5em);
+      letter-spacing: var(--body-letter-spacing, 0);
+      font-weight: var(--body-weight, 400);
+      font-style: var(--body-style, normal);
+      text-transform: var(--body-transform, none);
+    }
+  }
   .lg\:sticky {
     @media (width >= 64rem) {
       position: sticky;
@@ -1827,8 +1964,6 @@
 }
 @layer base {
   :root {
-    --site-gutters: 12px;
-    --site-margins: 16px;
     --vertical-spacing: clamp(40px, calc(16.923px + 5.769vw), 100px);
     @media (min-width: 1440px) {
       --vertical-spacing: clamp(100px, calc(70px + 2.083vw), 120px);
@@ -1852,19 +1987,9 @@
     }
     --dark-color: #000;
     --light-color: #fff;
-    --bg-color: #fff;
-    --bg-color-rgb: 255, 255, 255;
-    --text-color: #000;
-    --text-color-rgb: 0, 0, 0;
-    --main-color: blue;
     --light-text-color: rgba(var(--text-color-rgb), .5);
-    --light-grey: #f2f2f2;
     --hr-color: rgba(var(--text-color-rgb), .15);
-    --error: red;
-    --success: green;
     --alert: yellow;
-    --main-font: sans-serif;
-    --secondary-font: serif;
     --mono-font: monospace;
     --normal: normal;
     --light: 300;
@@ -1875,16 +2000,8 @@
     --slow-speed: .6s;
     --stagger-time: .05s;
     --vh: 1vh;
-    --site-max-width: 100%;
     --narrow-width: 800px;
-    --button-height-tiny: 26px;
-    --button-height-small: 30px;
-    --button-height: 42px;
-    --button-height-large: 70px;
-    --base-border-radius: 10px;
-    --button-border-radius: var(--base-border-radius);
     --header-banner-height: 0px;
-    --header-height: 60px;
     --full-header-height: calc(var(--header-height) + var(--header-banner-height));
     --sticky-top: calc(var(--site-gutters) + var(--header-height));
   }
@@ -1897,79 +2014,61 @@
     text-decoration: none;
     border-bottom: 1px solid currentColor;
   }
-  h1, .h1, .h1 p {
-    font-size: var(--h1-size, 36px);
+  h1, .h1 p {
     font-family: var(--secondary-font);
+    font-size: var(--h1-size, 36px);
     line-height: var(--h1-line-height, 1em);
     letter-spacing: var(--h1-letter-spacing, -0.04em);
     font-weight: var(--h1-weight, 400);
     font-style: var(--h1-style, normal);
     text-transform: var(--h1-transform, none);
   }
-  h2, .h2, .h2 p {
-    font-size: var(--h2-size, 42px);
+  h2, .h2 p {
     font-family: var(--secondary-font);
+    font-size: var(--h2-size, 42px);
     line-height: var(--h2-line-height, 1.2em);
     letter-spacing: var(--h2-letter-spacing, -0.02em);
     font-weight: var(--h2-weight, 400);
     font-style: var(--h2-style, normal);
     text-transform: var(--h2-transform, none);
   }
-  h3, .h3, .h3 p {
-    font-size: var(--h3-size, 32px);
+  h3, .h3 p {
     font-family: var(--secondary-font);
+    font-size: var(--h3-size, 32px);
     line-height: var(--h3-line-height, 1.2em);
     letter-spacing: var(--h3-letter-spacing, -0.02em);
     font-weight: var(--h3-weight, 400);
     font-style: var(--h3-style, normal);
     text-transform: var(--h3-transform, none);
   }
-  h4, .h4, .h4 p {
-    font-size: var(--h4-size, 24px);
+  h4, .h4 p {
     font-family: var(--secondary-font);
+    font-size: var(--h4-size, 24px);
     line-height: var(--h4-line-height, 1.2em);
     letter-spacing: var(--h4-letter-spacing, -0.02em);
     font-weight: var(--h4-weight, 400);
     font-style: var(--h4-style, normal);
     text-transform: var(--h4-transform, none);
   }
-  h5, .h5, .h5 p {
-    font-size: var(--h5-size, 20px);
+  h5, .h5 p {
     font-family: var(--secondary-font);
+    font-size: var(--h5-size, 20px);
     line-height: var(--h5-line-height, 1em);
     letter-spacing: var(--h5-letter-spacing, -0.02em);
     font-weight: var(--h5-weight, 400);
     font-style: var(--h5-style, normal);
     text-transform: var(--h5-transform, none);
   }
-  h6, .h6, .h6 p, .caption, figcaption, .eyebrow {
-    font-size: var(--h6-size, 11px);
+  h6, .caption, figcaption, .eyebrow, .h6 p {
     font-family: var(--main-font);
+    font-size: var(--h6-size, 11px);
     line-height: var(--h6-line-height, 1.2em);
     letter-spacing: var(--h6-letter-spacing, 0.06em);
     font-weight: var(--h6-weight, 500);
     font-style: var(--h6-style, normal);
     text-transform: var(--h6-transform, uppercase);
   }
-  p.tiny, .body-tiny, .body-tiny p, ul.tiny, .body-tiny ul, ol.tiny, .body-tiny ol {
-    font-family: var(--main-font);
-    font-size: var(--body-tiny-size, 12px);
-    line-height: var(--body-tiny-line-height, 1.5em);
-    letter-spacing: var(--body-tiny-letter-spacing, 0);
-    font-weight: var(--body-tiny-weight, 400);
-    font-style: var(--body-tiny-style, normal);
-    text-transform: var(--body-tiny-transform, none);
-  }
-  p.small, .body-small, .body-small p, ul.small, .body-small ul, ol.small, .body-small ol {
-    font-family: var(--main-font);
-    font-size: var(--body-small-size, 14px);
-    line-height: var(--body-small-line-height, 1.5em);
-    letter-spacing: var(--body-small-letter-spacing, 0);
-    font-weight: var(--body-small-weight, 400);
-    font-style: var(--body-small-style, normal);
-    text-transform: var(--body-small-transform, none);
-  }
-  p, .body, .body p, .body ul, .body ol {
+  p, .body p, .body ul, .body ol {
     font-family: var(--main-font);
     font-size: var(--body-size, 16px);
     line-height: var(--body-line-height, 1.5em);
@@ -1978,8 +2077,44 @@
     font-style: var(--body-style, normal);
     text-transform: var(--body-transform, none);
   }
-  p.medium, .body-medium, .body-medium p, ul.medium, .body-medium ul, ol.medium, .body-medium ol {
+  p.tiny, .body-tiny p, ul.tiny, .body-tiny ul, ol.tiny, .body-tiny ol {
     font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-tiny-size, 12px);
+    line-height: var(--body-tiny-line-height, 1.5em);
+    letter-spacing: var(--body-tiny-letter-spacing, 0);
+    font-weight: var(--body-tiny-weight, 400);
+    font-style: var(--body-tiny-style, normal);
+    text-transform: var(--body-tiny-transform, none);
+  }
+  p.small, .body-small p, ul.small, .body-small ul, ol.small, .body-small ol {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
+    font-size: var(--body-small-size, 14px);
+    line-height: var(--body-small-line-height, 1.5em);
+    letter-spacing: var(--body-small-letter-spacing, 0);
+    font-weight: var(--body-small-weight, 400);
+    font-style: var(--body-small-style, normal);
+    text-transform: var(--body-small-transform, none);
+  }
+  p.medium, .body-medium p, ul.medium, .body-medium ul, ol.medium, .body-medium ol {
+    font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
     font-size: var(--body-medium-size, 18px);
     line-height: var(--body-medium-line-height, 1.5em);
     letter-spacing: var(--body-medium-letter-spacing, 0);
@@ -1987,8 +2122,14 @@
     font-style: var(--body-medium-style, normal);
     text-transform: var(--body-medium-transform, none);
   }
-  p.large, .body-large, .body-large p, ul.large, .body-large ul, ol.large, .body-large ol {
+  p.large, .body-large p, ul.large, .body-large ul, ol.large, .body-large ol {
     font-family: var(--main-font);
+    font-size: var(--body-size, 16px);
+    line-height: var(--body-line-height, 1.5em);
+    letter-spacing: var(--body-letter-spacing, 0);
+    font-weight: var(--body-weight, 400);
+    font-style: var(--body-style, normal);
+    text-transform: var(--body-transform, none);
     font-size: var(--body-large-size, 20px);
     line-height: var(--body-large-line-height, 1.5em);
     letter-spacing: var(--body-large-letter-spacing, 0);
@@ -1996,7 +2137,7 @@
     font-style: var(--body-large-style, normal);
     text-transform: var(--body-large-transform, none);
   }
-  blockquote {
+  blockquote, .blockquote p {
     font-family: var(--main-font);
     font-size: var(--blockquote-size, 20px);
     line-height: var(--blockquote-line-height, 1.5em);
@@ -2005,11 +2146,8 @@
     font-style: var(--blockquote-style, italic);
     text-transform: var(--blockquote-transform, none);
   }
-  .mono, .mono > p {
+  .mono > p {
     font-family: var(--mono-font);
-  }
-  strong, b, .bold {
-    font-weight: var(--bold);
   }
   a, button, .button, .link {
     cursor: pointer;
@@ -2023,12 +2161,7 @@
     appearance: none;
     cursor: pointer;
     height: var(--input-height);
-    text-transform: none;
-    font-family: var(--main-font);
-    font-size: 16px;
     letter-spacing: 0;
-    font-weight: normal;
-    font-style: normal;
     text-align: left;
     line-height: 1em;
     display: block;
@@ -2065,6 +2198,11 @@
   }
   hr {
     border-color: var(--hr-color);
+  }
+}
+@layer utilities {
+  strong, b {
+    font-weight: var(--bold);
   }
 }
 #productPrice s {
@@ -2263,13 +2401,14 @@ parallax-view .parallax-item {
   --button-hover-bg: var(--main-color);
   --button-hover-color: var(--bg-color);
   --button-hover-border: var(--button-hover-bg);
-  --button-h-padding: calc(var(--button-height) * .3);
-  font-family: var(--main-font);
-  font-size: 10px;
-  line-height: 1.5em;
-  letter-spacing: 0;
-  font-weight: normal;
-  font-style: normal;
+  --button-h-padding: calc(var(--button-height) / 3);
+  font-family: var(--button-font);
+  font-size: var(--button-size, 16px);
+  line-height: var(--button-line-height, 1.5em);
+  letter-spacing: var(--button-letter-spacing, 0);
+  font-weight: var(--button-weight, 400);
+  font-style: var(--button-style, normal);
+  text-transform: var(--button-transform, none);
   height: var(--button-height);
   padding: 0 var(--button-h-padding);
   display: inline-flex;
