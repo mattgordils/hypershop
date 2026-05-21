@@ -1654,6 +1654,11 @@
       width: 66.666%;
     }
   }
+  .sm\:w-\[var\(--tablet-cols\)\] {
+    @media (width >= 40rem) {
+      width: var(--tablet-cols);
+    }
+  }
   .sm\:-translate-x-full {
     @media (width >= 40rem) {
       --tw-translate-x: -100%;
@@ -1879,6 +1884,16 @@
   .lg\:w-\[100px\] {
     @media (width >= 64rem) {
       width: 100px;
+    }
+  }
+  .lg\:w-\[var\(--desktop-cols\)\] {
+    @media (width >= 64rem) {
+      width: var(--desktop-cols);
+    }
+  }
+  .lg\:w-\[var\(--tablet-cols\)\] {
+    @media (width >= 64rem) {
+      width: var(--tablet-cols);
     }
   }
   .lg\:grid-cols-3 {

@@ -21,11 +21,6 @@
 -%}
 
 {% stylesheet %}
-  /* Cap the media width within each column */
-  .columns--limit-media .block-media {
-    max-width: var(--column-media-max-width, 100%);
-  }
-
   /* Contain the media to a square — letterboxed with object-fit: contain */
   .columns--media-square .block-media {
     width: 100%;
@@ -40,6 +35,9 @@
 
   .columns--media-square .block-media img,
   .columns--media-square .block-media video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -48,49 +46,47 @@
 
 <div
   class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}{% if section.settings.limit_media_width %} columns--limit-media{% endif %}"
-  {% if section.settings.limit_media_width %}style="--column-media-max-width: {{ section.settings.media_max_width }}px;"{% endif %}
 >
-    {% if section.settings.slideshow == false %}
-      <div class="px-margin">
-        <div class="mx-auto max-w-site-max-w w-full">
-          <div
-            style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
-            class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
-          >
-            {%- for column in section.blocks -%}
-              <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] md:w-[var(--tablet-cols)] xl:w-[var(--desktop-cols)] px-half-gutter">
-                <div class="{{ alignment_class }} flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
-                  {% render column %}
-                </div>
+  {% if section.settings.slideshow == false %}
+    <div class="px-margin">
+      <div class="mx-auto max-w-site-max-w w-full">
+        <div
+          style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
+          class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
+        >
+          {%- for column in section.blocks -%}
+            <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] sm:w-[var(--tablet-cols)] lg:w-[var(--desktop-cols)] px-half-gutter">
+              <div class="{{ alignment_class }} flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
+                {% render column %}
               </div>
-            {%- endfor -%}
-          </div>
+            </div>
+          {%- endfor -%}
         </div>
       </div>
-    {% endif %}
-    
-    {% if section.settings.mobile_slideshow or section.settings.slideshow %}
-      <div class="overflow-hidden">
-      <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full">
-        <slide-show
-          class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin overflow-visible"
-          data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
-        >
-          <div class="slider-container px-margin">
-            {%- for column in section.blocks -%}
-              <div class="slider-slide">
-                <div class="flex flex-col h-full text-balance max-w-[500px]">
-                  {% render column %}
-                </div>
+    </div>
+  {% endif %}
+  
+  {% if section.settings.mobile_slideshow or section.settings.slideshow %}
+    <div class="overflow-hidden">
+    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full">
+      <slide-show
+        class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin overflow-visible"
+        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
+      >
+        <div class="slider-container px-margin">
+          {%- for column in section.blocks -%}
+            <div class="slider-slide">
+              <div class="flex flex-col h-full text-balance max-w-[500px]">
+                {% render column %}
               </div>
-            {%- endfor -%}
-          </div>
-          <div class="slider-dots text-light-text-color mt-6"></div>
-        </slide-show>
-      </div>
-      </div>
-    {% endif %}
-    
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="slider-dots text-light-text-color mt-6"></div>
+      </slide-show>
+    </div>
+    </div>
+  {% endif %}
 </div>
 
 {% schema %}

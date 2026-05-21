@@ -13,8 +13,17 @@
   endif
 %}
 
+{% stylesheet %}
+  .block-text-lockup .block-media {
+    max-width: var(--media-max-width, 100%);
+  }
+{% endstylesheet %}
+
 {% if block.blocks.size > 0 %}
-  <in-view class="flex flex-col gap-4 {{ wrapper_class }}">
+  <in-view
+    class="flex flex-col gap-4 {{ wrapper_class }}"
+    style="--media-max-width: {{ block.settings.media_max_width }}px"
+  >
     {% for block in block.blocks %}
       {% render block %}
     {% endfor %}
