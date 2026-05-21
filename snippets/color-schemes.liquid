@@ -1,5 +1,5 @@
 {%- if settings.color_schemes != blank -%}
-<style>
+{% style %}
   {%- for scheme in settings.color_schemes -%}
     {%- liquid
       assign sc_bg     = scheme.settings.background
@@ -25,5 +25,5 @@
       --button-hover-border: {{ sc_text }};
     }
   {%- endfor -%}
-</style>
+{% endstyle %}
 {%- endif -%}

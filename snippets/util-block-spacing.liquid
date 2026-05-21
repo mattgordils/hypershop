@@ -1,0 +1,30 @@
+{% comment %}
+  Returns a margin-bottom utility class for a block's "Space Below" setting.
+  Mirrors util-section-spacing but at a block-level (smaller) scale.
+
+  @param {string} space - one of: none, small, medium, large, xl
+
+  @example
+  {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+  <div class="{{ space_below | strip }}">…</div>
+{% endcomment %}
+{% liquid
+  assign space_class = ''
+
+  if space == 'small'
+    assign space_class = 'mb-2'
+  endif
+
+  if space == 'medium'
+    assign space_class = 'mb-4'
+  endif
+
+  if space == 'large'
+    assign space_class = 'mb-6'
+  endif
+
+  if space == 'xl'
+    assign space_class = 'mb-10'
+  endif
+%}
+{{ space_class }}

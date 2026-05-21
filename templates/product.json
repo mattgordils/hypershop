@@ -9,9 +9,17 @@
           "type": "_product-badges",
           "name": "Product Badges",
           "settings": {
-            "product": "{{ product }}"
+            "product": "{{ product }}",
+            "space_below": "small"
           },
-          "blocks": {
+          "blocks": {}
+        },
+        "price": {
+          "type": "_product-price",
+          "name": "Price",
+          "settings": {
+            "percentage_off": true,
+            "space_below": "medium"
           }
         },
         "headline_rJ4aXQ": {
@@ -20,35 +28,33 @@
           "settings": {
             "text": "{{ closest.product.title }}",
             "style": "h2",
-            "element": "h1"
+            "element": "h1",
+            "space_below": "small"
           },
-          "blocks": {
-          }
-        },
-        "product_qty_input_RgDwba": {
-          "type": "_product-qty-input",
-          "name": "Quantity Input",
-          "settings": {
-          },
-          "blocks": {
-          }
+          "blocks": {}
         },
         "product_variant_selector_fGXUeW": {
           "type": "_product-variant-selector",
           "name": "Variant Selector",
           "settings": {
+            "space_below": "medium"
           },
-          "blocks": {
-          }
+          "blocks": {}
+        },
+        "spacer_5": {
+          "type": "_spacer",
+          "name": "Spacer",
+          "settings": {}
         },
         "product_buy_buttons_3BnDx3": {
           "type": "_product-buy-buttons",
           "name": "Buy Buttons",
           "settings": {
-            "show_price": true
+            "show_price": true,
+            "space_below": "medium",
+            "button_size": "default"
           },
-          "blocks": {
-          }
+          "blocks": {}
         },
         "accordion_Jb48mz": {
           "type": "_accordion",
@@ -58,40 +64,37 @@
           },
           "blocks": {
             "title_w_text_idmxLp": {
-              "type": "_title-w-text",
-              "name": "Title & Text",
+              "type": "_accordion-row",
+              "name": "Row",
               "settings": {
                 "title": "Description",
                 "title_size": "body bold",
                 "text": "{{ closest.product.description }}",
                 "text_size": "body-small"
               },
-              "blocks": {
-              }
+              "blocks": {}
             },
             "title_w_text_W4tETC": {
-              "type": "_title-w-text",
-              "name": "Title & Text",
+              "type": "_accordion-row",
+              "name": "Row",
               "settings": {
                 "title": "Sizing",
                 "title_size": "body bold",
                 "text": "<p>Size guide. Maybe need a new block for these situations?</p>",
                 "text_size": "body-small"
               },
-              "blocks": {
-              }
+              "blocks": {}
             },
             "title_w_text_MVYccA": {
-              "type": "_title-w-text",
-              "name": "Title & Text",
+              "type": "_accordion-row",
+              "name": "Row",
               "settings": {
                 "title": "Returns",
                 "title_size": "body bold",
                 "text": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p><p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>",
                 "text_size": "body-tiny"
               },
-              "blocks": {
-              }
+              "blocks": {}
             }
           },
           "block_order": [
@@ -104,8 +107,9 @@
       "block_order": [
         "badges",
         "headline_rJ4aXQ",
-        "product_qty_input_RgDwba",
+        "price",
         "product_variant_selector_fGXUeW",
+        "spacer_5",
         "product_buy_buttons_3BnDx3",
         "accordion_Jb48mz"
       ],

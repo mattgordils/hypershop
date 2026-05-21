@@ -16,55 +16,52 @@
   assign eyebrow = section.settings.eyebrow
   assign headline = section.settings.headline
   assign text = section.settings.text
+
+  assign alignment_class = 'lockup-' | append: alignment
 -%}
 
-<div class="{{ spacing_class }} {{ padding_class }} w-full px-margin overflow-hidden md:grid md:grid-cols-12 md:gap-x-gutter {{ section.settings.color_scheme }}">
-  <div class="mx-auto md:col-span-10 md:col-start-2 w-full">
-    
-    {% if eyebrow != blank or headline != blank or text != blank %}
-      <in-view class="{% if section.settings.slideshow %}hidden lg:flex{% else %}flex{% endif %} mb-v-space-sm text-{{ alignment }} w-full flex-col items-{{ alignment }} justify-start gap-gutter">
-        {% if eyebrow != blank %}<div class="h6 text-light-text-color">{{ eyebrow }}</div>{% endif %}
-        {% if headline != blank %}<div class="pb-[.3em] {{ section.settings.headline_size }}">{{ headline }}</div>{% endif %}
-        {% if text != blank %}<div class="body">{{ text }}</div>{% endif %}
-      </in-view>
-    {% endif %}
-
+<div class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}">
     {% if section.settings.slideshow == false %}
-      <div>
-        <div
-          style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
-          class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
-        >
-          {%- for column in section.blocks -%}
-            <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] md:w-[var(--tablet-cols)] xl:w-[var(--desktop-cols)] px-half-gutter">
-              <div class="flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
-                {% render column %}
+      <div class="px-margin">
+        <div class="mx-auto max-w-site-max-w w-full">
+          <div
+            style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
+            class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
+          >
+            {%- for column in section.blocks -%}
+              <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] md:w-[var(--tablet-cols)] xl:w-[var(--desktop-cols)] px-half-gutter">
+                <div class="{{ alignment_class }} flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
+                  {% render column %}
+                </div>
               </div>
-            </div>
-          {%- endfor -%}
+            {%- endfor -%}
+          </div>
         </div>
       </div>
     {% endif %}
     
     {% if section.settings.mobile_slideshow or section.settings.slideshow %}
-      <slide-show
-        class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin"
-        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
-      >
-        <div class="slider-container">
-          {%- for column in section.blocks -%}
-            <div class="slider-slide">
-              <div class="flex flex-col h-full text-balance max-w-[500px]">
-                {% render column %}
+      <div class="overflow-hidden">
+      <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full">
+        <slide-show
+          class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin overflow-visible"
+          data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
+        >
+          <div class="slider-container px-margin">
+            {%- for column in section.blocks -%}
+              <div class="slider-slide">
+                <div class="flex flex-col h-full text-balance max-w-[500px]">
+                  {% render column %}
+                </div>
               </div>
-            </div>
-          {%- endfor -%}
-        </div>
-        <div class="slider-dots text-light-text-color mt-6"></div>
-      </slide-show>
+            {%- endfor -%}
+          </div>
+          <div class="slider-dots text-light-text-color mt-6"></div>
+        </slide-show>
+      </div>
+      </div>
     {% endif %}
     
-  </div>
 </div>
 
 {% schema %}
@@ -72,45 +69,6 @@
   "name": "Columns",
   "class": "section-columns",
   "settings": [
-    {
-      "type": "header",
-      "content": "Section Options"
-    },
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "headline",
-      "label": "Headline"
-    },
-    {
-      "type": "select",
-      "id": "headline_size",
-      "default": "h3",
-      "label": "Headline Size",
-      "options": [
-        {
-          "label": "H1",
-          "value": "h1"
-        },
-        {
-          "label": "H2",
-          "value": "h2"
-        },
-        {
-          "label": "H3",
-          "value": "h3"
-        }
-      ]
-    },
-    {
-      "type": "inline_richtext",
-      "id": "text",
-      "label": "Text"
-    },
     {
       "type": "text_alignment",
       "id": "alignment",

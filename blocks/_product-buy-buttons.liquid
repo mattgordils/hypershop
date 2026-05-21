@@ -1,9 +1,21 @@
-<div data-dynamic-content>
-  {% render 'add_to_cart_button' with
-    class: "w-full large",
-    product: product,
-    show_price: block.settings.show_price
-  %}
+{%-liquid
+  assign button_class = 'w-full ' | append: block.settings.button_size
+-%}
+
+{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+<div class="flex w-full gap-gutter {{ space_below | strip }}">
+  <div class="grow-0 shrink-0 button bg-transparent! border-hr-color! {{ block.settings.button_size }}">
+    {% render 'quantity_adjust' with
+      item: product.selected_or_first_available_variant
+    %}
+  </div>
+  <div data-dynamic-content class="grow">
+    {% render 'add_to_cart_button' with
+      class: button_class,
+      product: product,
+      show_price: block.settings.show_price
+    %}
+  </div>
 </div>
 
 {% schema %}
@@ -16,6 +28,34 @@
       "id": "show_price",
       "default": true,
       "label": "Show Price in Button"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "default": "default",
+      "options": [
+        { "label": "small", "value": "small" },
+        { "label": "Medium", "value": "default" },
+        { "label": "Large", "value": "large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
     }
   ],
   "blocks": [

@@ -57,6 +57,7 @@
   --spacing-screen-height: calc(100 * var(--vh));
   --spacing-screen-small: 50vh;
   --spacing-screen-medium: 75vh;
+  --spacing-site-max-w: var(--site-max-width);
 
   /* Max Width */
   --max-w-site-max-w: var(--site-max-width);
@@ -81,10 +82,10 @@
   --z-6: 6;
 
   /* Aspect Ratio */
-  --aspect-3-2: 3 / 2;
-  --aspect-2-3: 2 / 3;
-  --aspect-3-4: 3 / 4;
-  --aspect-4-3: 4 / 3;
+  --aspect-3/2: 3 / 2;
+  --aspect-2/3: 2 / 3;
+  --aspect-3/4: 3 / 4;
+  --aspect-4/3: 4 / 3;
 }
 
 /* Custom transition-property utilities */
@@ -151,7 +152,10 @@
     --vh: 1vh;
     --site-max-width: 100%;
     --narrow-width: 800px;
+    --button-height-tiny: 26px;
+    --button-height-small: 30px;
     --button-height: 42px;
+    --button-height-large: 70px;
     --base-border-radius: 10px;
     --button-border-radius: var(--base-border-radius);
     --header-banner-height: 0px;

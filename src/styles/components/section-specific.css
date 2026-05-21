@@ -14,3 +14,24 @@
     }
   }
 }
+
+.lockup-left .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-left items-start mx-auto;
+  }
+}
+
+.lockup-center .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-center items-center mx-auto;
+  }
+}
+
+.lockup-right .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-right items-end mx-auto;
+  }
+}

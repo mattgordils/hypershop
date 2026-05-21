@@ -1,17 +1,16 @@
 .button,
 button.shopify-payment-button__button,
 .shopify-cleanslate [role='button'] {
-  --button-height: 40px;
   --button-bg: var(--text-color);
   --button-color: var(--bg-color);
   --button-border: var(--button-bg);
   --button-hover-bg: var(--main-color);
   --button-hover-color: var(--bg-color);
   --button-hover-border: var(--button-hover-bg);
-  --button-h-padding: 1.2em;
+  --button-h-padding: calc(var(--button-height) * .3);
 
   font-family: var(--main-font);
-  font-size: 16px;
+  font-size: 10px;
   line-height: 1.5em;
   letter-spacing: 0;
   font-weight: normal;
@@ -74,9 +73,9 @@ button.shopify-payment-button__button,
     --button-hover-border: transparent;
   }
 
-  &.large { --button-height: 70px; }
-  &.small { --button-height: 30px; }
-  &.tiny  { --button-height: 26px; }
+  &.large { --button-height: var(--button-height-large); }
+  &.small { --button-height: var(--button-height-small); }
+  &.tiny  { --button-height: var(--button-height-tiny); }
 
   &.unpadd {
     margin: -12px calc(var(--button-h-padding) * -1);

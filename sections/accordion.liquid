@@ -10,14 +10,23 @@
 
   <div class="px-margin relative">
 
-    <div class="text-center">
+    <div class="text-center mx-auto max-w-site-max-w mb-v-space-sm">
       <h3 class="h2">
-        <div class="text-dark">{{ section.settings.title }}</div>
+        {% content_for 'block',
+          type: '_text-lockup',
+          id: 'text-lockup',
+          classname: 'max-w-narrow text-balance'
+        %}
       </h3>
     </div>
 
-    <div class="grid sm:grid-cols-12 gap-gutter">
-      <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4 pt-v-space-sm">
+    <div class="grid sm:grid-cols-12 gap-gutter mx-auto max-w-site-max-w">
+      <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4">
+        {% content_for 'block',
+          type: '_accordion',
+          id: 'accordion'
+        %}
+
         <accordion-list class="block border-b border-hr-color">
           {% for row in section.blocks %}
             <collapsible-item class="border-t border-hr-color" id="{{ row.id }}" {{ row.shopify_attributes }}>
@@ -50,12 +59,6 @@
     {
       "type": "header",
       "content": "Accordion Section"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Headline",
-      "default": "FAQs"
     },
     {
       "type": "header",
@@ -123,50 +126,20 @@
       ]
     }
   ],
-  "blocks": [
-    {
-      "type": "row",
-      "name": "Row",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Lorem ipsum dolor sit amet, consectetur"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining unchanged.</p>"
-        }
-      ]
-    }
-  ],
+  "blocks": [],
   "presets": [
     {
       "name": "Accordion",
       "blocks": [
         {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.</p>"
-          }
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
         },
         {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.</p>"
-          }
-        },
-        {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.</p>"
-          }
+          "id": "accordion",
+          "type": "_accordion",
+          "static": true
         }
       ]
     }

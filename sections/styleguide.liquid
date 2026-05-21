@@ -2,210 +2,201 @@
   assign lorem_short = 'This is an example of what text and buttons will look like on this background color option.'
   assign lorem_long = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
-  assign acc_r = settings.color_accent | color_extract: 'red'
-  assign acc_g = settings.color_accent | color_extract: 'green'
-  assign acc_b = settings.color_accent | color_extract: 'blue'
+  assign column_class = "bg-linear-to-b from-error rounded-t opacity-25"
 -%}
 
-<div class="py-v-space">
+<div class="py-v-space px-margin">
+  <div class="max-w-site-max-w mx-auto">
 
-  {%- comment -%} ═══ TYPOGRAPHY ═══ {%- endcomment -%}
-  <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">Desktop Typography</strong>
-  </div>
-
-  <div class="px-margin grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm mb-v-space-lg">
-    <div>
-      <h1 class="mb-v-space-sm">Header Style Number 1</h1>
-      <h2 class="mb-v-space-sm">Header Style Number 2</h2>
-      <h3 class="mb-v-space-sm">Header Style Number 3</h3>
-      <h4 class="mb-v-space-sm">Header Style Number 4</h4>
-      <p class="h5 mb-v-space-sm"><strong>Header Style<br>Number 5</strong></p>
-      <p class="h6">Header Style Number 6</p>
+    {%- comment -%} ═══ TYPOGRAPHY ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Desktop Typography</strong>
     </div>
 
-    <div>
-      <div class="mb-v-space-sm">
-        <p class="eyebrow text-light-text-color mb-gutter">Body Tiny</p>
-        <p class="body-tiny">{{ lorem_long }}</p>
-      </div>
-      <div class="mb-v-space-sm">
-        <p class="eyebrow text-light-text-color mb-gutter">Body Small</p>
-        <p class="body-small">{{ lorem_long }}</p>
-      </div>
-      <div class="mb-v-space-sm">
-        <p class="eyebrow text-light-text-color mb-gutter">Body (Default)</p>
-        <p>{{ lorem_long }}</p>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm mb-v-space-lg">
       <div>
-        <p class="eyebrow text-light-text-color mb-gutter">Body Medium</p>
-        <p class="body-medium">{{ lorem_long }}</p>
+        <h1 class="mb-v-space-sm">Header Style Number 1</h1>
+        <h2 class="mb-v-space-sm">Header Style Number 2</h2>
+        <h3 class="mb-v-space-sm">Header Style Number 3</h3>
+        <h4 class="mb-v-space-sm">Header Style Number 4</h4>
+        <p class="h5 mb-v-space-sm"><strong>Header Style<br>Number 5</strong></p>
+        <p class="h6">Header Style Number 6</p>
       </div>
-    </div>
 
-    <div>
-      <div class="mb-v-space-sm">
-        <p class="eyebrow text-light-text-color mb-gutter">Body Large</p>
-        <p class="body-large">{{ lorem_long }}</p>
-      </div>
       <div>
-        <p class="eyebrow text-light-text-color mb-gutter">Blockquote</p>
-        <blockquote class="body-large">{{ lorem_long }}</blockquote>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Tiny</p>
+          <p class="body-tiny">{{ lorem_long }}</p>
+        </div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Small</p>
+          <p class="body-small">{{ lorem_long }}</p>
+        </div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body (Default)</p>
+          <p>{{ lorem_long }}</p>
+        </div>
+        <div>
+          <p class="eyebrow text-light-text-color mb-gutter">Body Medium</p>
+          <p class="body-medium">{{ lorem_long }}</p>
+        </div>
       </div>
-    </div>
-  </div>
 
-  {%- comment -%} ═══ COLORS ═══ {%- endcomment -%}
-  <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">Colors</strong>
-  </div>
-
-  <div class="px-margin grid grid-cols-3 md:grid-cols-6 gap-gutter mb-v-space-lg">
-    {%- assign sg_color_vars   = '--bg-color,--text-color,--main-color,--light-text-color,--hr-color,--light-grey,--error,--success' | split: ',' -%}
-    {%- assign sg_color_labels = settings.color_background | append: ',' | append: settings.color_text | append: ',' | append: settings.color_accent | append: ',computed,computed,' | append: settings.color_light_grey | append: ',' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
-    {%- for var in sg_color_vars -%}
       <div>
-        <div class="w-full rounded mb-2 border border-hr-color" style="aspect-ratio: 3/2; background: var({{ var }})"></div>
-        <p class="body-tiny mono">{{ var }}</p>
-        <p class="body-tiny text-light-text-color">{{ sg_color_labels[forloop.index0] }}</p>
-      </div>
-    {%- endfor -%}
-  </div>
-
-  {%- comment -%} ═══ GRID ═══ {%- endcomment -%}
-  <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">Grid</strong>
-  </div>
-
-  <div class="mb-v-space-lg">
-    <div class="px-margin flex items-center gap-gutter mb-2">
-      <span class="eyebrow" style="color: var(--error)">Desktop Grid</span>
-      <span class="body-tiny text-light-text-color">Columns: 12</span>
-      <span class="body-tiny text-light-text-color ml-auto">Gutters: var(--site-gutters)</span>
-      <span class="body-tiny text-light-text-color">Margins: var(--site-margins)</span>
-    </div>
-    <div class="relative" style="background: var(--light-grey); height: 180px;">
-      <div class="absolute inset-0 px-margin" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--site-gutters);">
-        {%- for i in (1..12) -%}
-          <div style="background: rgba({{ acc_r }},{{ acc_g }},{{ acc_b }}, 0.12); border-left: 1px dashed rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.3); border-right: 1px dashed rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.3); position: relative;">
-            <span style="position:absolute;top:6px;left:5px;font-size:10px;font-family:var(--main-font);color:var(--error);opacity:.7">{{ i }}</span>
-          </div>
-        {%- endfor -%}
-      </div>
-    </div>
-
-    <div class="px-margin mt-v-space-sm flex justify-center">
-      <div style="width: 300px; border: 2px solid rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.35); border-radius: 28px; padding: 20px;">
-        <div class="eyebrow mb-1" style="color: var(--error)">Mobile Grid</div>
-        <div class="body-tiny mb-3 text-light-text-color">Columns: 6 &nbsp;|&nbsp; Margins &amp; Gutters: var(--site-margins)</div>
-        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--site-gutters); height: 100px;">
-          {%- for i in (1..6) -%}
-            <div style="background: rgba({{ acc_r }},{{ acc_g }},{{ acc_b }}, 0.12); border-left: 1px dashed rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.3); border-right: 1px dashed rgba({{ acc_r }},{{ acc_g }},{{ acc_b }},.3);"></div>
-          {%- endfor -%}
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Large</p>
+          <p class="body-large">{{ lorem_long }}</p>
+        </div>
+        <div>
+          <p class="eyebrow text-light-text-color mb-gutter">Blockquote</p>
+          <blockquote class="body-large">{{ lorem_long }}</blockquote>
         </div>
       </div>
     </div>
-  </div>
 
-  {%- comment -%} ═══ UI ELEMENTS ═══ {%- endcomment -%}
-  <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">UI Elements</strong>
-  </div>
-
-  <div class="px-margin grid grid-cols-1 md:grid-cols-2 gap-gutter mb-v-space-lg relative">
-    <div>
-      <p class="eyebrow text-light-text-color mb-gutter">Button Primary (Default)</p>
-      <div class="flex flex-col items-start gap-gutter mb-v-space-sm">
-        <button class="button small">Button Small</button>
-        <button class="button">Button</button>
-        <button class="button large">Button Large</button>
-      </div>
-      <p class="eyebrow text-light-text-color mb-gutter">Button Secondary</p>
-      <div class="flex flex-col items-start gap-gutter">
-        <button class="button secondary">Button</button>
-        <button class="button" disabled>Button Disabled</button>
-      </div>
+    {%- comment -%} ═══ COLORS ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Colors</strong>
     </div>
 
-    <div>
-      <p class="eyebrow text-light-text-color mb-gutter">Input</p>
-      <div class="flex flex-col gap-gutter mb-v-space-sm" style="max-width: 400px;">
-        <input type="text" placeholder="Text">
-        <input type="text" placeholder="Label" value="Focus">
-      </div>
-      <p class="eyebrow text-light-text-color mb-gutter">Select</p>
-      <div style="max-width: 400px; position: relative;">
-        <select style="width: 100%;">
-          <option>Option</option>
-          <option>Option 2</option>
-          <option>Option 3</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
-  <div class="border-t border-hr-color mx-margin pt-gutter mb-v-space">
-    <strong class="h6">Color Schemes</strong>
-  </div>
-
-  {%- if settings.color_schemes != blank -%}
-    <div class="px-margin grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
-      {%- for scheme in settings.color_schemes -%}
-        {%- liquid
-          assign sc_bg     = scheme.settings.background
-          assign sc_text   = scheme.settings.text
-          assign sc_accent = scheme.settings.accent
-          assign sc_label  = scheme.settings.button_label
-          assign sc_r = sc_text | color_extract: 'red'
-          assign sc_g = sc_text | color_extract: 'green'
-          assign sc_b = sc_text | color_extract: 'blue'
-        -%}
-        <div class="relative">
-          <div class="absolute inset-0 border border-current rounded opacity-7"></div>
-          <div
-            class="rounded color-scheme-{{ scheme.id }} p-gutter"
-            style="background: var(--bg-color); color: var(--text-color);"
-          >
-            <p class="eyebrow text-light-text-color mb-3">Color Scheme Example</p>
-            <h2 style="margin-bottom: 12px;">Scheme {{ forloop.index }}</h2>
-            <p class="body-small" style="margin-bottom: 24px;">{{ lorem_short }}</p>
-            <div class="flex flex-wrap gap-3" style="margin-bottom: 16px;">
-              <button class="button small">Get Started</button>
-              <button class="button secondary small">Learn More</button>
-              <button class="button small" disabled>Disabled</button>
-              <a href="#" class="h6" style="color: var(--text-color);">Text Link</a>
-            </div>
-            <hr class="mt-v-space-sm">
-            <h6 href="#" class="mb-4 mt-2">Colors</h6>
-            <div class=" flex gap-x-2 gap-y-4 flex-wrap">
-              <div class="w-1 grow min-w-[100px]">
-                <div class="w-full h-[100px] rounded" style="background: {{ sc_bg }}; border: 1px solid var(--hr-color);"></div>
-                <p class="body-tiny" style="color: var(--light-text-color);">Background</p>
-              </div>
-              <div class="w-1 grow min-w-[100px]">
-                <div class="w-full h-[100px] rounded" style="background: {{ sc_text }};"></div>
-                <p class="body-tiny" style="color: var(--light-text-color);">Text</p>
-              </div>
-              <div class="w-1 grow min-w-[100px]">
-                <div class="w-full h-[100px] rounded" style="background: {{ sc_accent }};"></div>
-                <p class="body-tiny" style="color: var(--light-text-color);">Accent</p>
-              </div>
-              <div class="w-1 grow min-w-[100px]">
-                <div class="w-full h-[100px] rounded" style="background: {{ sc_label }}; border: 1px solid var(--hr-color);"></div>
-                <p class="body-tiny" style="color: var(--light-text-color);">Label</p>
-              </div>
-            </div>
-          </div>
+    <div class="grid grid-cols-3 md:grid-cols-6 gap-gutter mb-v-space-lg">
+      {%- assign sg_color_vars   = '--bg-color,--text-color,--main-color,--light-text-color,--hr-color,--light-grey,--error,--success' | split: ',' -%}
+      {%- assign sg_color_labels = settings.color_background | append: ',' | append: settings.color_text | append: ',' | append: settings.color_accent | append: ',computed,computed,' | append: settings.color_light_grey | append: ',' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
+      {%- for var in sg_color_vars -%}
+        <div>
+          <div class="w-full aspect-3/2 rounded mb-2 border border-hr-color" style="background: var({{ var }})"></div>
+          <p class="body-tiny mono">{{ var }}</p>
+          <p class="body-tiny text-light-text-color">{{ sg_color_labels[forloop.index0] }}</p>
         </div>
       {%- endfor -%}
     </div>
-  {%- else -%}
-    <div class="px-margin mb-v-space-lg">
-      <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
-    </div>
-  {%- endif -%}
 
+    {%- comment -%} ═══ GRID ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Grid</strong>
+    </div>
+
+    <div class="mb-v-space-lg">
+      <div class="flex items-center gap-gutter mb-2">
+        <span class="eyebrow text-error">Desktop Grid</span>
+        <span class="body-tiny text-light-text-color">Columns: 12</span>
+        <span class="body-tiny text-light-text-color ml-auto">Gutters: var(--site-gutters)</span>
+        <span class="body-tiny text-light-text-color">Margins: var(--site-margins)</span>
+      </div>
+      <div class="grid gap-gutter grid-cols-6 md:grid-cols-12 h-[75vh]">
+        {%- for i in (1..12) -%}
+          <div class="{{ column_class }}{% if forloop.index > 6 %} hidden md:block{% endif %}"></div>
+        {%- endfor -%}
+      </div>
+
+      <div class="mt-v-space-sm flex justify-center">
+        <div class="py-12 px-[calc(var(--site-margins-mobile)*1px)] rounded-[50px] w-full max-w-[400px] relative aspect-[9/16] flex flex-col bg-bg -mt-[40vh]">
+          <div class="absolute inset-0 rounded-[50px] border border-error opacity-20"></div>
+          <div class="eyebrow mb-1 w-full grow-0 shrink-0 text-error">Mobile Grid</div>
+          <div class="body-tiny mb-3 text-light-text-color w-full grow-0 shrink-0">Columns: 6 &nbsp;|&nbsp; Margins &amp; Gutters: var(--site-margins)</div>
+          <div class="grid gap-[calc(var(--site-gutters-mobile)*1px)] grid-cols-6 w-full grow">
+            {%- for i in (1..6) -%}
+              <div class="{{ column_class }}"></div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ═══ UI ELEMENTS ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">UI Elements</strong>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-v-space-lg relative">
+      <div>
+        <p class="eyebrow text-light-text-color mb-gutter">Button Primary (Default)</p>
+        <div class="flex flex-col items-start gap-gutter mb-v-space-sm">
+          <button class="button small">Button Small</button>
+          <button class="button">Button</button>
+          <button class="button large">Button Large</button>
+        </div>
+        <p class="eyebrow text-light-text-color mb-gutter">Button Secondary</p>
+        <div class="flex flex-col items-start gap-gutter">
+          <button class="button secondary">Button</button>
+          <button class="button" disabled>Button Disabled</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow text-light-text-color mb-gutter">Input</p>
+        <div class="flex flex-col gap-gutter mb-v-space-sm max-w-[400px]">
+          <input type="text" placeholder="Text">
+          <input type="text" placeholder="Label" value="Focus">
+        </div>
+        <p class="eyebrow text-light-text-color mb-gutter">Select</p>
+        <div class="relative max-w-[400px]">
+          <select class="w-full">
+            <option>Option</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Color Schemes</strong>
+    </div>
+
+    {%- if settings.color_schemes != blank -%}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
+        {%- for scheme in settings.color_schemes -%}
+          {%- liquid
+            assign sc_bg     = scheme.settings.background
+            assign sc_text   = scheme.settings.text
+            assign sc_accent = scheme.settings.accent
+            assign sc_label  = scheme.settings.button_label
+          -%}
+          <div class="relative">
+            <div class="absolute inset-0 border border-current rounded opacity-7"></div>
+            <div class="rounded color-scheme-{{ scheme.id }} p-gutter bg-bg text-text-color">
+              <p class="eyebrow text-light-text-color mb-3">Color Scheme Example</p>
+              <h2 class="mb-3">Scheme {{ forloop.index }}</h2>
+              <p class="body-small mb-6">{{ lorem_short }}</p>
+              <div class="flex flex-wrap gap-3 mb-4">
+                <button class="button small">Get Started</button>
+                <button class="button secondary small">Learn More</button>
+                <button class="button small" disabled>Disabled</button>
+                <a href="#" class="h6">Text Link</a>
+              </div>
+              <hr class="mt-v-space-sm">
+              <h6 class="mb-4 mt-2">Colors</h6>
+              <div class="grid grid-cols-4 gap-gutter">
+                <div>
+                  <div class="aspect-square rounded border border-hr-color" style="background: {{ sc_bg }};"></div>
+                  <p class="body-small text-light-text-color mt-1">Background</p>
+                </div>
+                <div>
+                  <div class="aspect-square rounded" style="background: {{ sc_text }};"></div>
+                  <p class="body-small text-light-text-color mt-1">Text</p>
+                </div>
+                <div>
+                  <div class="aspect-square rounded" style="background: {{ sc_accent }};"></div>
+                  <p class="body-small text-light-text-color mt-1">Accent</p>
+                </div>
+                <div>
+                  <div class="aspect-square rounded border border-hr-color" style="background: {{ sc_label }};"></div>
+                  <p class="body-small text-light-text-color mt-1">Label</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="mb-v-space-lg">
+        <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
+      </div>
+    {%- endif -%}
+
+  </div>
 </div>
 
 {% schema %}

@@ -9,6 +9,15 @@
 	assign media_sizes = '(min-width: 768px) 50vw, 100vw'
 %}
 
+{% stylesheet %}
+  :root {
+    --pdp-info-height: calc(100svh - var(--spacing-full-header-height) - var(--spacing-margin));
+    body:has(.section-header.scrolled) {
+      --pdp-info-height: calc(100svh - var(--spacing-header-height) - var(--spacing-margin));
+    }
+  }
+{% endstylesheet %}
+
 <div
 	id="mainPDP"
 	data-product-update="{{ section.id }}"
@@ -33,15 +42,13 @@
   </div>
 
   <div class="px-margin">
-    <div class="flex flex-col gap-y-v-space-sm sticky top-sticky-top items-center">
-			<add-to-cart-form class="pdp-blocks flex flex-col gap-y-4 max-w-[600px]">
-				{%- if section.blocks != blank and section.blocks.size > 0 -%}
-					{% for block in section.blocks %}
-						{% render block %}
-					{% endfor %}
-				{%- endif -%}
-			</add-to-cart-form>
-    </div>
+    <add-to-cart-form class="pt-margin pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:h-(--pdp-info-height) transition-[height]">
+      {%- if section.blocks != blank and section.blocks.size > 0 -%}
+        {% for block in section.blocks %}
+          {% render block %}
+        {% endfor %}
+      {%- endif -%}
+    </add-to-cart-form>
   </div>
 </div>
 
@@ -80,6 +87,9 @@
     },
     {
       "type": "_accordion"
+    },
+    {
+      "type": "_spacer"
     }
   ],
   "settings": [

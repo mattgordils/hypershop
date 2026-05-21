@@ -94,6 +94,14 @@
         {{ section.settings['text_checkout'] }}&nbsp;<span class="opacity-50 hidden xs:inline-block">{{ cart.item_count }} Items</span>
       </div>
     </button>
+    {% if section.settings.show_accelerated_payment_buttons %}
+      <div class="pt-[8px]">
+        {% comment %}
+        Use class .additional-checkout-buttons--vertical to force the vertical stack
+        {% endcomment %}
+        {{ content_for_additional_checkout_buttons }}
+      </div>
+    {% endif %}
     <input type="hidden" name="checkout" value="Checkout">
   </form>
 </div>

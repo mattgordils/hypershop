@@ -1,12 +1,5 @@
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {
-        "header_color": "var(--text-color)",
-        "header_overlap": false
-      }
-    },
     "main": {
       "type": "blog-list",
       "settings": {
@@ -20,7 +13,6 @@
     }
   },
   "order": [
-    "settings",
     "main"
   ]
 }

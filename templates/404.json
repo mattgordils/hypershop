@@ -1,10 +1,5 @@
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {
-      }
-    },
     "main": {
       "type": "main-404",
       "blocks": {
@@ -50,7 +45,6 @@
     }
   },
   "order": [
-    "settings",
     "main"
   ]
 }

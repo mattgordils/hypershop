@@ -9,8 +9,11 @@ class StickyHeader extends HTMLElement {
 
   connectedCallback() {
     this.header = document.querySelector('.section-header:has(sticky-header)');
+    this.scrollThreshold = document.querySelector('.section-notification-banner').offsetHeight || 40;
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
+
+    console.log('scrollThreshold', this.scrollThreshold)
 
     // Use passive listener for better performance
     window.addEventListener('scroll', this.onScrollHandler, { passive: true });
@@ -39,8 +42,6 @@ class StickyHeader extends HTMLElement {
 
   updateHeader() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-    console.log('update')
 
     if (scrollTop > this.scrollThreshold) {
       this.header?.classList.add('scrolled');

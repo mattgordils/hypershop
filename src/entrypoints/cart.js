@@ -2,7 +2,7 @@
 const updateCartCount = () => {
   const cartCountItems = document.querySelectorAll('#cartCount')
   cartCountItems.forEach(item => {
-    const newCartCount = document.querySelector('#cartHeader').dataset.cartCount
+    const newCartCount = document.querySelector('#cartHeader')?.dataset.cartCount
     let prependContent = ''
     let appendContent = ''
     if (newCartCount > 0) {
@@ -25,59 +25,61 @@ const updateCartCount = () => {
   });
 }
 
-export const refreshCart = (fullRefresh = false) => {
-  const sectionTitle = 'page_cart-panel'
-  const cartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
-  if (!cartDrawer) {
-    // Don't run if no cart drawer section is found
+// Refresh a single cart surface (the cart drawer or the cart page) in place.
+// Every query is scoped to the section wrapper so the drawer and the cart page
+// can coexist on the cart page without colliding, even though they share the
+// same #cartContent / #cartLineItem / #cartUpdate hooks.
+const refreshCartSection = (sectionTitle, fullRefresh = false) => {
+  const scope = '#shopify-section-' + sectionTitle
+  if (!document.querySelector(scope + ' #cartContent')) {
+    // This cart surface isn't on the current page — nothing to refresh
     return false
   }
 
-  fetch(window.Shopify.routes.root + "?sections=" + sectionTitle)
+  return fetch(window.Shopify.routes.root + "?sections=" + sectionTitle)
     .then(res => res.json())
     .then(res => {
-      const currentCartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
+      const currentCartContent = document.querySelector(scope + ' #cartContent')
 
-      var el = document.createElement( 'div' );
+      const el = document.createElement('div')
       el.innerHTML = res[sectionTitle]
-      const oldCartCount = document.querySelector('#shopify-section-' + sectionTitle + ' #cartHeader').dataset.cartCount
-      const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
 
-      const oldlineCount = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
-      const newlineCount = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
+      const oldCartCount = document.querySelector(scope + ' #cartHeader')?.dataset.cartCount
+      const newCartCount = el.querySelector('#cartHeader')?.dataset.cartCount
 
-      if (newCartCount == 0 || oldCartCount == 0 || (oldlineCount !== newlineCount)) {
+      const oldLineCount = document.querySelectorAll(scope + ' #cartLineItem')?.length
+      const newLineCount = el.querySelectorAll('#cartLineItem')?.length
+
+      if (newCartCount == 0 || oldCartCount == 0 || oldCartCount == null || (oldLineCount !== newLineCount)) {
         fullRefresh = true
       }
 
       if (fullRefresh) {
-        // Full Cart Refresh
-        const cartContent = el.querySelector('#cartContent')
-        const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        
-        currentCartDrawer.outerHTML = cartContent.outerHTML
-        updateItems?.forEach((item, index) => {
-          if (updatedItems[index]?.innerHTML && item) {
-            item.innerHTML = updatedItems[index].innerHTML
-          }
-        });
-
-        updateCartCount()
-      } else {
-        // Update Cart Pieces
-        const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        
-        updateItems?.forEach((item, index) => {
-          if (updatedItems[index]?.innerHTML && item) {
-            item.innerHTML = updatedItems[index].innerHTML
-          }
-        });
-
-        updateCartCount()
+        const newCartContent = el.querySelector('#cartContent')
+        if (newCartContent && currentCartContent) {
+          currentCartContent.outerHTML = newCartContent.outerHTML
+        }
       }
+
+      // Update the partial pieces that live outside #cartContent or need
+      // syncing after a partial change (header count, shipping meter, totals).
+      const updateItems = document.querySelectorAll(scope + ' #cartUpdate')
+      const updatedItems = el.querySelectorAll('#cartUpdate')
+      updateItems?.forEach((item, index) => {
+        if (updatedItems[index]?.innerHTML && item) {
+          item.innerHTML = updatedItems[index].innerHTML
+        }
+      });
+
+      updateCartCount()
     })
+}
+
+// Refresh every cart surface present on the page. The drawer is always rendered
+// via the header group; the cart page additionally renders `main_cart`.
+export const refreshCart = (fullRefresh = false) => {
+  refreshCartSection('page_cart-panel', fullRefresh)
+  refreshCartSection('main_cart', fullRefresh)
 }
 
 // Remove Cart Item

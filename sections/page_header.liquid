@@ -1,24 +1,24 @@
 <script src="{{ 'nav.js' | asset_url }}" defer></script>
 
-<style>
+{% stylesheet %}
   .section-header {
     position: sticky;
     top: 0;
     z-index: 5;
   }
-  
+
   header {
     color: var(--header-color);
     border-color: transparent;
-    background: var(--color-bg);
-  }
-
-  .section-header:not(.scrolled) header {
-    background: transparent;
+    background: var(--header-bg);
   }
 
   :root {
+    --header-bg: var(--color-bg);
+    --header-color: var(--color-text);
+    --header-offset: 0;
     &:has(.page-sections .header-overlap) {
+      --header-bg: var(--color-transparent);
       --header-color: var(--color-light);
       --header-offset: var(--spacing-header-banner-height);
     }
@@ -30,7 +30,39 @@
     background: var(--bg-color);
     border-color: var(--hr-color);
   }
-</style>
+{% endstylesheet %}
+
+{%- comment -%}
+  Style hooks for the hosted-customer-account web component. Pulls from global
+  theme settings: colors from Color scheme 1, fonts and radii from the global
+  typography / layout settings.
+{%- endcomment -%}
+{%- assign account_scheme = settings.color_schemes.first -%}
+{% style %}
+  .section-header shopify-account {
+    {% if account_scheme != blank %}
+      --shopify-account-color-background: {{ account_scheme.settings.background }};
+      --shopify-account-color-text: {{ account_scheme.settings.text }};
+      --shopify-account-color-accent: {{ account_scheme.settings.accent }};
+    {% else %}
+      --shopify-account-color-background: var(--bg-color);
+      --shopify-account-color-text: var(--text-color);
+      --shopify-account-color-accent: var(--main-color);
+    {% endif %}
+    --shopify-account-font-heading: {{ settings.font_heading }};
+    --shopify-account-font-heading-weight: var(--h3-weight);
+    --shopify-account-font-heading-transform: var(--h3-transform);
+    --font-size-md: var(--h3-size);
+
+    --shopify-account-font-body: var(--main-font);
+    --shopify-account-font-heading: var(--secondary-font);
+    --shopify-account-radius-base: var(--base-border-radius);
+    --shopify-account-radius-input: var(--base-border-radius);
+    --shopify-account-radius-button: var(--button-border-radius);
+    --shopify-account-radius-button-small: var(--button-border-radius);
+    --shopify-account-dialog-position-top: var(--header-height);
+  }
+{% endstyle %}
 
 <sticky-header>
   <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center justify-between border-b">
@@ -172,72 +204,19 @@
           </ul>
         {% endif %}
 
+        {%- comment -%}
+          Hosted (new) customer accounts. The web component renders the avatar and
+          an account sheet for sign-in / account links on both mobile and desktop.
+          The signed-out avatar keeps the theme's person icon via the slot.
+        {%- endcomment -%}
         {% if shop.customer_accounts_enabled %}
-          <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center md:relative group/account-item">
-            <a
-              href="{{ routes.account_url }}"
-              aria-label="Account"
-              class="flex h-full items-center"
+          <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center">
+            <shopify-account
+              menu="customer-account-main-menu"
+              class="account-component flex h-full items-center"
             >
-              <div class="material-icon text-[18px]">person_outline</div>
-            </a>
-            <div class="
-                bg-bg
-                p-margin
-                absolute
-                left-0
-                top-0
-                md:left-[unset]
-                pt-header-height
-                z-[-1]
-                md:p-gutter
-                md:top-full
-                right-0
-                whitespace-nowrap
-                invisible
-                opacity-0
-                transition-[opacity,visibility]
-                group-hover/account-item:visible
-                group-hover/account-item:opacity-100
-              "
-            >
-              <ul class='pt-margin md:pt-0'>
-                {% if customer %}
-                  <li>
-                    <a href="{{ routes.account_url }}">Account</a>
-                  </li>
-                  <li>
-                    <a href="{{ routes.account_logout_url }}">Log Out</a>
-                  </li>
-                {% else %}
-                  <li>
-                    <a href="{{ routes.account_login_url }}">Log In</a>
-                  </li>
-                  {% if shop.customer_accounts_optional %}
-                    <li>
-                      <a href="{{ routes.account_register_url }}" aria-label="Create an account">Create an account</a>
-                    </li>
-                  {% endif %}
-                {% endif %}
-              </ul>
-            </div>
-            <div
-              class="
-                pointer-events-none
-                fixed
-                z-[-2]
-                bg-current
-                top-(--header-banner-height)
-                left-0
-                w-full
-                bottom-0
-                transition-[visibility,opacity]
-                invisible
-                group-hover/account-item:visible
-                group-hover/account-item:opacity-20
-                opacity-0
-              "
-            ></div>
+              <span slot="signed-out-avatar" class="material-icon text-[18px] block" aria-hidden="true">person_outline</span>
+            </shopify-account>
           </div>
         {% endif %}
 

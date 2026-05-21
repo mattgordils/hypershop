@@ -1,0 +1,217 @@
+{% comment %}
+  Cart page. Reuses the same snippets as the cart drawer (page_cart-panel) so the
+  two surfaces stay in sync: cart_item, cart_footer, cart_upsell and the free
+  shipping meter. The #cartContent / #cartUpdate / #cartLineItem / #cartHeader
+  hooks let assets/cart.js refresh this page in place, scoped to this section.
+{% endcomment %}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+{% liquid
+  assign cart_subtotal = cart.items_subtotal_price | divided_by: 100.00
+  assign shipping_level = cart_subtotal | divided_by: section.settings.free_shipping_threshold
+  if shipping_level > 1
+    assign shipping_level = 1
+  endif
+  assign spend_x_more = section.settings.free_shipping_threshold | times: 100.00 | minus: cart.items_subtotal_price | money
+%}
+
+<div class="cart-container {{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
+  <div class="max-w-site-max-w mx-auto">
+    {% comment %} Heading lives in a #cartUpdate so the count refreshes with the cart {% endcomment %}
+    <div id="cartUpdate" class="py-v-space-sm flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-hr-color">
+      <div id="cartHeader" data-cart-count="{{ cart.item_count }}" class="contents">
+        <h1 class="h2">{{ section.settings.heading | default: 'Your Bag' }}</h1>
+        {% if cart.item_count > 0 %}
+          <span class="h5 text-light-text-color">
+            {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="cartContent">
+      {% if cart.item_count < 1 %}
+        <div class="flex flex-col gap-6 justify-center items-center text-center py-v-space-lg">
+          <p class="h3">Your cart is empty</p>
+          {% render 'button', to: '/collections/all', label: 'Continue Shopping' %}
+        </div>
+      {% else %}
+        {% comment %}
+          No wrapping <form>: quantity/remove are AJAX web components and the
+          checkout button lives in its own form inside cart_footer (matches the drawer).
+        {% endcomment %}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-gutter gap-y-v-space-sm py-(--cart-padding)">
+          {% comment %} Line items {% endcomment %}
+          <div class="lg:col-span-7 xl:col-span-8">
+            <div class="cart-items flex flex-col gap-(--cart-padding)">
+              {% for item in cart.items %}
+                {% if forloop.index0 != 0 %}<hr class="m-0 border-hr-color">{% endif %}
+                {% render 'cart_item' with item: item %}
+              {% endfor %}
+            </div>
+          </div>
+
+          {% comment %} Order summary — reuses the drawer footer + shipping meter {% endcomment %}
+          <div class="lg:col-span-5 xl:col-span-4">
+            <div class="lg:sticky lg:top-[calc(var(--header-height)+var(--site-gutters))] theme-light-grey rounded">
+              {% if section.settings.free_shipping %}
+                <div id="cartUpdate" class="p-(--cart-padding) pb-0">
+                  {% if shipping_level == 1 %}
+                    <p class="body bold pb-1">
+                      {{ section.settings.free_shipping_met_text }}
+                    </p>
+                  {% else %}
+                    <p class="body bold pb-1">
+                      {{ section.settings.free_shipping_text | replace: '[x]', spend_x_more }}
+                    </p>
+                  {% endif %}
+                  <div class="h-1 w-full bg-[rgba(0,0,0,.1)] rounded">
+                    <div style="--width: {{ shipping_level | times: 100 }}%;" class="rounded bg-success h-full w-(--width)"></div>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% render 'cart_footer' %}
+            </div>
+          </div>
+        </div>
+
+        {% render 'cart_upsell' with product_list: section.settings.upsell_collection.products %}
+      {% endif %}
+    </div>
+
+    {% comment %} Optional merchant content (trust badges, promos, etc.) {% endcomment %}
+    {%- if section.blocks.size > 0 -%}
+      <div class="pt-v-space-sm flex flex-col gap-gutter">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+            {%- else -%}
+              {% render block %}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section-main-cart",
+  "blocks": [
+    { "type": "@app" },
+    { "type": "_headline" },
+    { "type": "_rich-text" },
+    { "type": "_spacer" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Bag"
+    },
+    {
+      "type": "text",
+      "id": "text_footer",
+      "label": "Footer Text"
+    },
+    {
+      "type": "collection",
+      "id": "upsell_collection",
+      "label": "Cart Upsell Collection"
+    },
+    {
+      "type": "text",
+      "id": "text_checkout",
+      "label": "Checkout Link Text",
+      "default": "Checkout"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_input",
+      "label": "Show Discount Code Input",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show Payment Icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Shipping Meter",
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "free_shipping",
+      "label": "Show Free Shipping Meter",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free Shipping Threshold",
+      "info": "In dollars",
+      "default": 300,
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_met_text",
+      "label": "Free Shipping Met Text",
+      "info": "Visible when the free shipping threshold is met.",
+      "default": "You've added enough to your bag for free shipping!",
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "free_shipping_text",
+      "label": "Free Shipping Text",
+      "info": "[x] will be replaced with the amount necessary to meet the free shipping threshold",
+      "default": "Spend [x] more to get free shipping",
+      "visible_if": "{{ section.settings.free_shipping }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ]
+}
+{% endschema %}

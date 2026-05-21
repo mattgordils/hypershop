@@ -51,7 +51,7 @@
             <div class="flex flex-col max-h-[100%]">
               <div class="py-(--cart-padding) space-y-(--cart-padding)">
                 {% for item in cart.items %}
-                  {% if forloop.index0 != 0 %}<hr class="m-0 border-hr-color">{% endif %}
+                  {% if forloop.index0 != 0 %}<hr class="border-hr-color">{% endif %}
                   {% render 'cart_item' with item: item %}
                 {% endfor %}
               </div>
@@ -120,6 +120,12 @@
       "type": "checkbox",
       "id": "show_discount_input",
       "label": "Show Discount Code Input",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accelerated_payment_buttons",
+      "label": "Show accelerated payment buttons",
       "default": true
     },
     {

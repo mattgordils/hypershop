@@ -15,7 +15,7 @@
     "webpack:watch": "webpack watch",
     "webpack:build": "webpack build",
     "// THEME //": "",
-    "theme:dev": "shopify theme dev -e def",
+    "theme:dev": "NODE_OPTIONS='--dns-result-order=ipv4first --network-family-autoselection-attempt-timeout=250' shopify theme dev -e def",
     "theme:push:all": "npm run build && shopify theme push",
     "theme:push:theme": "npm run build && shopify theme push -x 'templates/*.json' -x 'config/settings_schema.json'",
     "theme:pull:all": "shopify theme pull --nodelete",

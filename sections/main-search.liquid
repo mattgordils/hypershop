@@ -1,0 +1,164 @@
+{% comment %}
+  Search results page. Renders product results in the same grid + product_card as
+  the collection page. Restricted to products via the hidden `type` input so the
+  grid stays product-focused; falls back to a chosen collection when there are no
+  results. A predictive search drawer is planned as a separate enhancement.
+{% endcomment %}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+<div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
+  <div class="max-w-site-max-w mx-auto py-v-space-sm">
+    <div class="text-center pb-v-space-sm flex flex-col items-center gap-gutter">
+      <h1 class="h2">{{ section.settings.heading | default: 'Search' }}</h1>
+
+      <search class="w-full max-w-narrow block">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="flex gap-2">
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
+          <label class="sr-only" for="SearchPageInput">Search</label>
+          <input
+            type="search"
+            id="SearchPageInput"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ section.settings.placeholder | default: 'Search products' }}"
+            class="grow"
+            autocomplete="off"
+          >
+          <button type="submit" class="button shrink-0">Search</button>
+        </form>
+      </search>
+    </div>
+
+    {% if search.performed %}
+      {% if search.results_count > 0 %}
+        <p class="body text-light-text-color text-center pb-gutter" aria-live="polite">
+          {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for &ldquo;{{ search.terms }}&rdquo;
+        </p>
+
+        {% paginate search.results by section.settings.products_per_page %}
+          <div class="max-w-site-max-w mx-auto relative z-1">
+            <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
+              {% for item in search.results %}
+                {% if item.object_type == 'product' %}
+                  <div>
+                    {% render 'product_card' with product: item %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </in-view>
+          </div>
+          {% render 'paginate-nav', class: 'pt-v-space-sm', paginate: paginate %}
+        {% endpaginate %}
+      {% else %}
+        <div class="text-center py-v-space-lg flex flex-col items-center gap-gutter">
+          <p class="h4">No results found for &ldquo;{{ search.terms }}&rdquo;</p>
+          {% if section.settings.no_results_collection.products.size > 0 %}
+            <p class="body text-light-text-color">
+              {{ section.settings.no_results_text | default: 'You might like these instead' }}
+            </p>
+            <div class="w-full max-w-site-max-w mx-auto pt-gutter">
+              <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
+                {% for product in section.settings.no_results_collection.products limit: 6 %}
+                  <div>
+                    {% render 'product_card' with product: product %}
+                  </div>
+                {% endfor %}
+              </in-view>
+            </div>
+          {% else %}
+            {% render 'button', to: '/collections/all', label: 'Shop all' %}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% elsif section.settings.no_results_collection.products.size > 0 %}
+      {% comment %} No query yet — show a default collection {% endcomment %}
+      <div class="w-full max-w-site-max-w mx-auto">
+        {% if section.settings.no_results_text != blank %}
+          <p class="body text-light-text-color text-center pb-gutter">{{ section.settings.no_results_text }}</p>
+        {% endif %}
+        <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
+          {% for product in section.settings.no_results_collection.products limit: 6 %}
+            <div>
+              {% render 'product_card' with product: product %}
+            </div>
+          {% endfor %}
+        </in-view>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "section-main-search",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Search"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input Placeholder",
+      "default": "Search products"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 48,
+      "step": 6,
+      "label": "Products Per Page",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Empty / No Results"
+    },
+    {
+      "type": "collection",
+      "id": "no_results_collection",
+      "label": "Fallback Collection",
+      "info": "Shown before a search and when a search returns nothing"
+    },
+    {
+      "type": "text",
+      "id": "no_results_text",
+      "label": "Fallback Heading",
+      "default": "You might like these instead"
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ]
+}
+{% endschema %}

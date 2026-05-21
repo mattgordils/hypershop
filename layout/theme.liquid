@@ -56,7 +56,7 @@
     <main id="main-content" role="main">
       <div class="page-sections">
         {{ content_for_layout }}
-        {%- if request.design_mode -%}
+        {% comment %} {%- if request.design_mode -%} {% endcomment %}
           <details>
             <summary class="z-10 fixed bottom-0 left-0 w-full p-4 pointer-events-none flex items-center justify-center">
               <p class="button pointer-events-auto">View Styleguide</p>
@@ -65,7 +65,7 @@
               class="fixed inset-0 z-9 overflow-auto theme-default"
             >{% section 'styleguide' %}</div>
           </details>
-        {%- endif -%}
+        {% comment %} {%- endif -%} {% endcomment %}
       </div>
     </main>
 

@@ -1,0 +1,83 @@
+{% comment %}
+  Standard page. Renders the page title + rich-text content, with optional content
+  blocks for richer layouts.
+{% endcomment %}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+<div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
+  <div class="max-w-narrow mx-auto py-v-space-sm">
+    {% if section.settings.show_title and page.title != blank %}
+      <header class="text-center pb-v-space-sm">
+        <h1 class="h2">{{ page.title }}</h1>
+      </header>
+    {% endif %}
+
+    {% if page.content != blank %}
+      <div class="rte body">
+        {{ page.content }}
+      </div>
+    {% endif %}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="flex flex-col gap-gutter pt-v-space-sm">
+        {%- for block in section.blocks -%}
+          {% render block %}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "section-main-page",
+  "blocks": [
+    { "type": "@app" },
+    { "type": "_headline" },
+    { "type": "_rich-text" },
+    { "type": "_spacer" }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show Page Title",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page"
+    }
+  ]
+}
+{% endschema %}

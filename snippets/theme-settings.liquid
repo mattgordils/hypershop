@@ -13,7 +13,7 @@
   {{ body_font | font_url: 'woff2' | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {%- endunless -%}
 
-<style>
+{% style %}
   {{ heading_font | font_face: font_display: 'swap' }}
   {%- if heading_font_bold -%}{{ heading_font_bold | font_face: font_display: 'swap' }}{%- endif -%}
   {{ body_font | font_face: font_display: 'swap' }}
@@ -167,4 +167,4 @@
     --blockquote-letter-spacing: {{ settings.blockquote_letter_spacing | times: 0.01 }}em;
     --blockquote-line-height: {{ settings.blockquote_line_height | times: 0.01 }}em;
   }
-</style>
+{% endstyle %}

@@ -256,44 +256,6 @@
         "section_spacing": "medium"
       }
     },
-    "accordion": {
-      "type": "accordion",
-      "blocks": {
-        "row_1": {
-          "type": "row",
-          "settings": {
-            "title": "Accordion row one",
-            "text": "<p>Expandable answer placeholder.</p>"
-          }
-        },
-        "row_2": {
-          "type": "row",
-          "settings": {
-            "title": "Accordion row two",
-            "text": "<p>Expandable answer placeholder.</p>"
-          }
-        },
-        "row_3": {
-          "type": "row",
-          "settings": {
-            "title": "Accordion row three",
-            "text": "<p>Expandable answer placeholder.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "row_1",
-        "row_2",
-        "row_3"
-      ],
-      "name": "Accordion",
-      "settings": {
-        "title": "FAQs",
-        "color_scheme": "",
-        "section_padding": "none",
-        "section_spacing": "medium"
-      }
-    },
     "blog_list": {
       "type": "blog-list",
       "blocks": {
@@ -344,7 +306,6 @@
     "text_section",
     "media_w_text",
     "columns",
-    "accordion",
     "blog_list",
     "product_grid",
     "product_recommendations"
