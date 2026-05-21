@@ -20,7 +20,36 @@
   assign alignment_class = 'lockup-' | append: alignment
 -%}
 
-<div class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}">
+{% stylesheet %}
+  /* Cap the media width within each column */
+  .columns--limit-media .block-media {
+    max-width: var(--column-media-max-width, 100%);
+  }
+
+  /* Contain the media to a square — letterboxed with object-fit: contain */
+  .columns--media-square .block-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .columns--media-square .block-media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .columns--media-square .block-media img,
+  .columns--media-square .block-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+{% endstylesheet %}
+
+<div
+  class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}{% if section.settings.limit_media_width %} columns--limit-media{% endif %}"
+  {% if section.settings.limit_media_width %}style="--column-media-max-width: {{ section.settings.media_max_width }}px;"{% endif %}
+>
     {% if section.settings.slideshow == false %}
       <div class="px-margin">
         <div class="mx-auto max-w-site-max-w w-full">
@@ -121,6 +150,34 @@
       "min": 1,
       "max": 6,
       "step": 1
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_square",
+      "label": "Contain media to a square",
+      "info": "Fits each column's image or video inside a square (object-fit: contain).",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "limit_media_width",
+      "label": "Limit media width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "media_max_width",
+      "min": 40,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Media Max Width",
+      "default": 400,
+      "visible_if": "{{ section.settings.limit_media_width }}"
     },
     {
       "type": "header",

@@ -14,7 +14,7 @@
 %}
 
 {% if block.blocks.size > 0 %}
-  <in-view class="flex flex-col gap-gutter {{ wrapper_class }}">
+  <in-view class="flex flex-col gap-4 {{ wrapper_class }}">
     {% for block in block.blocks %}
       {% render block %}
     {% endfor %}
