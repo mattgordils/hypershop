@@ -41,7 +41,7 @@ if (!customElements.get('collection-grid')) {
         this.sectionId = this.section.dataset.sectionId
         this.filters = this.querySelector('#collectionFilters')
         this.pageContent = document.querySelector('#pageContent')
-        this.filterForm = this.filters.querySelector('form')
+        this.filterForm = this.filters?.querySelector('form')
         this.clearAllFilters = this.querySelector('#clearAllFilters')
         this.removeFilterItems = this.querySelectorAll('a.remove-filter')
         this.sortItems = this.querySelector('#sortItems')
@@ -162,26 +162,30 @@ if (!customElements.get('collection-grid')) {
           })
           .filter((item) => item !== undefined && item !== null)
 
-        let pageUrl = this.collectionUrl
-        let sectionId = this.sectionId
+        // collectionUrl may carry a base query string that must persist across
+        // filter/sort changes (e.g. search's ?q=…&type=product). Split it off so
+        // it isn't clobbered, then re-attach it to every URL we build.
+        const [pagePath, baseQuery] = this.collectionUrl.split('?')
+        const basePrefix = baseQuery ? '&' + baseQuery : ''
+        const sectionId = this.sectionId
 
-        let sectionUrl = pageUrl + '?sections=' + sectionId + qs(sfValues, '&')
-        let newPageUrl = pageUrl + qs(sfValues)
+        let sectionUrl = pagePath + '?sections=' + sectionId + basePrefix + qs(sfValues, '&')
+        let newPageUrl = pagePath + (baseQuery ? '?' + baseQuery + qs(sfValues, '&') : qs(sfValues))
 
         if (reset) {
-          sectionUrl = pageUrl + '?sections=' + sectionId
-          newPageUrl = pageUrl
+          sectionUrl = pagePath + '?sections=' + sectionId + basePrefix
+          newPageUrl = pagePath + (baseQuery ? '?' + baseQuery : '')
         }
 
         if (fetchUrl) {
+          // remove-filter / clear links already encode the full desired state
           const newFq = fetchUrl.split('?')[1]
           if (newFq) {
-            sectionUrl = pageUrl + '?sections=' + sectionId + '&' + newFq
-            newPageUrl = pageUrl + '?' + newFq
+            sectionUrl = pagePath + '?sections=' + sectionId + '&' + newFq
+            newPageUrl = pagePath + '?' + newFq
           } else {
-            // reset
-            sectionUrl = pageUrl + '?sections=' + sectionId
-            newPageUrl = pageUrl
+            sectionUrl = pagePath + '?sections=' + sectionId + basePrefix
+            newPageUrl = pagePath + (baseQuery ? '?' + baseQuery : '')
           }
         }
 

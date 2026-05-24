@@ -1,4 +1,5 @@
 {%-liquid
+  assign product = section.settings.product | default: product
   assign show_percentage_off = false
   if product.compare_at_price != blank and product.compare_at_price > product.price and block.settings.percentage_off == true
     assign show_percentage_off = true

@@ -1,95 +1,110 @@
 {% comment %}
-  Search results page. Renders product results in the same grid + product_card as
-  the collection page. Restricted to products via the hidden `type` input so the
-  grid stays product-focused; falls back to a chosen collection when there are no
-  results. A predictive search drawer is planned as a separate enhancement.
+  Search results page. Renders results through the shared product-grid snippet so
+  filters, sort, columns and pagination match the collection grid. Restricted to
+  products via the hidden `type` input; falls back to a chosen collection when
+  there are no results. A predictive search drawer is planned as a separate enhancement.
 {% endcomment %}
 
 {% capture spacing_class %}
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
-<div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
-  <div class="max-w-site-max-w mx-auto py-v-space-sm">
-    <div class="text-center pb-v-space-sm flex flex-col items-center gap-gutter">
-      <h1 class="h2">{{ section.settings.heading | default: 'Search' }}</h1>
+{%- liquid
+  assign has_results = false
+  if search.performed and search.results_count > 0
+    assign has_results = true
+  endif
+-%}
 
-      <search class="w-full max-w-narrow block">
-        <form action="{{ routes.search_url }}" method="get" role="search" class="flex gap-2">
-          <input type="hidden" name="type" value="product">
-          <input type="hidden" name="options[prefix]" value="last">
-          <label class="sr-only" for="SearchPageInput">Search</label>
-          <input
-            type="search"
-            id="SearchPageInput"
-            name="q"
-            value="{{ search.terms | escape }}"
-            placeholder="{{ section.settings.placeholder | default: 'Search products' }}"
-            class="grow"
-            autocomplete="off"
-          >
-          <button type="submit" class="button shrink-0">Search</button>
-        </form>
-      </search>
+<div class="{{ section.settings.color_scheme }} {{ spacing_class }}">
+  {% comment %} Search field + result summary {% endcomment %}
+  <div class="px-margin">
+    <div class="max-w-site-max-w mx-auto pt-v-space-sm{% unless has_results %} pb-v-space-sm{% endunless %}">
+      <div class="text-center flex flex-col items-center gap-gutter">
+        <h1 class="h2">{{ section.settings.heading | default: 'Search' }}</h1>
+
+        <search class="w-full max-w-narrow block">
+          <form action="{{ routes.search_url }}" method="get" role="search" class="flex gap-2">
+            <input type="hidden" name="type" value="product">
+            <input type="hidden" name="options[prefix]" value="last">
+            <label class="sr-only" for="SearchPageInput">Search</label>
+            <input
+              type="search"
+              id="SearchPageInput"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ section.settings.placeholder | default: 'Search products' }}"
+              class="grow"
+              autocomplete="off"
+            >
+            <button type="submit" class="button shrink-0">Search</button>
+          </form>
+        </search>
+
+        {% if has_results %}
+          <p class="body text-light-text-color" aria-live="polite">
+            {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for &ldquo;{{ search.terms }}&rdquo;
+          </p>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-    {% if search.performed %}
-      {% if search.results_count > 0 %}
-        <p class="body text-light-text-color text-center pb-gutter" aria-live="polite">
-          {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for &ldquo;{{ search.terms }}&rdquo;
-        </p>
+  {% if has_results %}
+    {%- capture search_url -%}
+      {{- routes.search_url }}?q={{ search.terms | url_encode }}&type=product&options[prefix]=last
+    {%- endcapture -%}
 
-        {% paginate search.results by section.settings.products_per_page %}
-          <div class="max-w-site-max-w mx-auto relative z-1">
-            <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
-              {% for item in search.results %}
-                {% if item.object_type == 'product' %}
-                  <div>
-                    {% render 'product_card' with product: item %}
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </in-view>
-          </div>
-          {% render 'paginate-nav', class: 'pt-v-space-sm', paginate: paginate %}
-        {% endpaginate %}
-      {% else %}
-        <div class="text-center py-v-space-lg flex flex-col items-center gap-gutter">
-          <p class="h4">No results found for &ldquo;{{ search.terms }}&rdquo;</p>
-          {% if section.settings.no_results_collection.products.size > 0 %}
-            <p class="body text-light-text-color">
-              {{ section.settings.no_results_text | default: 'You might like these instead' }}
-            </p>
-            <div class="w-full max-w-site-max-w mx-auto pt-gutter">
-              <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
-                {% for product in section.settings.no_results_collection.products limit: 6 %}
-                  <div>
-                    {% render 'product_card' with product: product %}
-                  </div>
-                {% endfor %}
-              </in-view>
-            </div>
-          {% else %}
-            {% render 'button', to: '/collections/all', label: 'Shop all' %}
-          {% endif %}
-        </div>
-      {% endif %}
-    {% elsif section.settings.no_results_collection.products.size > 0 %}
-      {% comment %} No query yet — show a default collection {% endcomment %}
-      <div class="w-full max-w-site-max-w mx-auto">
+    {% paginate search.results by section.settings.products_per_page %}
+      {% render 'product-grid',
+        products: search.results,
+        filters: search.filters,
+        sort_options: search.sort_options,
+        sort_by: search.sort_by,
+        results_url: search_url,
+        result_count: search.results_count,
+        section_id: section.id,
+        columns: section.settings.columns,
+        tablet_columns: section.settings.tablet_columns,
+        mobile_columns: section.settings.mobile_columns,
+        paginate: paginate,
+        pagination_style: section.settings.pagination_style
+      %}
+    {% endpaginate %}
+  {% elsif search.performed %}
+    {% comment %} Searched, but nothing found {% endcomment %}
+    <div class="px-margin">
+      <div class="max-w-site-max-w mx-auto text-center pb-v-space-lg flex flex-col items-center gap-gutter">
+        <p class="h4">No results found for &ldquo;{{ search.terms }}&rdquo;</p>
+        {% if section.settings.no_results_collection.products.size > 0 %}
+          <p class="body text-light-text-color">
+            {{ section.settings.no_results_text | default: 'You might like these instead' }}
+          </p>
+          <in-view class="w-full grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm pt-gutter">
+            {% for product in section.settings.no_results_collection.products limit: 6 %}
+              <div>{% render 'product_card' with product: product %}</div>
+            {% endfor %}
+          </in-view>
+        {% else %}
+          {% render 'button', to: '/collections/all', label: 'Shop all' %}
+        {% endif %}
+      </div>
+    </div>
+  {% elsif section.settings.no_results_collection.products.size > 0 %}
+    {% comment %} No query yet — show a default collection {% endcomment %}
+    <div class="px-margin">
+      <div class="max-w-site-max-w mx-auto pb-v-space-sm">
         {% if section.settings.no_results_text != blank %}
           <p class="body text-light-text-color text-center pb-gutter">{{ section.settings.no_results_text }}</p>
         {% endif %}
         <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
           {% for product in section.settings.no_results_collection.products limit: 6 %}
-            <div>
-              {% render 'product_card' with product: product %}
-            </div>
+            <div>{% render 'product_card' with product: product %}</div>
           {% endfor %}
         </in-view>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </div>
 
 {% schema %}
@@ -111,13 +126,59 @@
       "default": "Search products"
     },
     {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Pagination"
+    },
+    {
       "type": "range",
       "id": "products_per_page",
-      "min": 6,
+      "min": 4,
       "max": 48,
-      "step": 6,
-      "label": "Products Per Page",
+      "step": 4,
+      "label": "Products per page",
       "default": 24
+    },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "Pagination style",
+      "default": "numbered",
+      "options": [
+        { "value": "numbered", "label": "Numbered" },
+        { "value": "load_more", "label": "Load more button" },
+        { "value": "infinite", "label": "Infinite scroll" }
+      ]
     },
     {
       "type": "header",

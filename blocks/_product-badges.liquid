@@ -1,5 +1,5 @@
 {% liquid
-  assign block_product = block.settings.product | default: product
+  assign block_product = block.settings.product | default: section.settings.product | default: product
 %}
 
 {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}

@@ -1,0 +1,156 @@
+{% comment %}
+  Promo card for the product grid. A full-bleed media background with a
+  text-lockup overlay. Grid placement (column/row, per breakpoint) is read from
+  this block's settings by sections/product-grid.liquid. When no media is set,
+  the color scheme controls the background and text color.
+
+  Both child blocks are static: a media block (background) and a text-lockup
+  (overlay content). Text alignment is set on the text-lockup block itself.
+{% endcomment %}
+
+{% liquid
+  assign overlay = block.settings.overlay_opacity | times: 0.01
+%}
+
+<div class="block-promo-card relative h-full w-full overflow-clipp {{ block.settings.color_scheme }}{% if settings.card_border_radius %} rounded-[var(--base-border-radius)]{% endif %}">
+  <div class="promo-card__media absolute inset-0 z-0">
+    {% content_for 'block', type: '_media', id: 'media' %}
+  </div>
+
+  {% if overlay > 0 %}
+    <div class="absolute inset-0 z-1 bg-true-black" style="opacity: {{ overlay }};"></div>
+  {% endif %}
+
+  <div class="relative z-2 h-full flex p-margin {{ block.settings.v_alignment }} {{ block.settings.h_alignment }}">
+    <div
+      class="
+        w-full
+        {% if block.settings.v_alignment == 'items-end' %}
+        sticky bottom-margin
+        {% endif %}
+        {% if block.settings.v_alignment == 'items-start' %}
+        sticky top-sticky-top transition-[top]
+        {% endif %}
+      "
+      style="--lockup-max-width: 500px;"
+    >
+      {% content_for 'block', type: '_text-lockup', id: 'text-lockup' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .block-promo-card {
+    height: 100%;
+  }
+
+  /* Fill the card with the background media block */
+  .block-promo-card .promo-card__media .block-media,
+  .block-promo-card .promo-card__media picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .block-promo-card .promo-card__media img,
+  .block-promo-card .promo-card__media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+{% endstylesheet %}
+
+{%- comment -%}
+  Grid placement is applied here (Liquid-aware) to the block's own Shopify wrapper
+  by id, so it lands on the actual grid item and works with multiple promo cards.
+  Mobile spans all columns and uses the tablet row placement.
+{%- endcomment -%}
+{% style %}
+  #shopify-block-{{ block.id }} {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: {{ block.settings.row_start_t }} / span {{ block.settings.row_span_t }};
+  }
+
+  @media (min-width: 640px) {
+    #shopify-block-{{ block.id }} {
+      grid-column: {{ block.settings.col_start_t }} / span {{ block.settings.col_span_t }};
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #shopify-block-{{ block.id }} {
+      grid-column: {{ block.settings.col_start_d }} / span {{ block.settings.col_span_d }};
+      grid-row: {{ block.settings.row_start_d }} / span {{ block.settings.row_span_d }};
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Promo Card",
+  "class": "block-promo-card-wrapper",
+  "settings": [
+    { "type": "header", "content": "Background & Color" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Sets the background and text color when no media is added.",
+      "default": "theme-default"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Media overlay",
+      "info": "Darkens the media so overlay text stays readable.",
+      "default": 0
+    },
+
+    { "type": "header", "content": "Overlay Placement" },
+    {
+      "type": "select",
+      "id": "v_alignment",
+      "label": "Vertical placement",
+      "default": "items-center",
+      "options": [
+        { "value": "items-start", "label": "Top" },
+        { "value": "items-center", "label": "Middle" },
+        { "value": "items-end", "label": "Bottom" }
+      ]
+    },
+    { "type": "paragraph", "content": "Text alignment is set on the Text Lockup block inside this card." },
+
+    { "type": "header", "content": "Placement — Desktop", "info": "Mobile always spans the full width." },
+    { "type": "range", "id": "col_start_d", "min": 1, "max": 6, "step": 1, "label": "Column start", "default": 1 },
+    { "type": "range", "id": "col_span_d", "min": 1, "max": 6, "step": 1, "label": "Column span", "default": 2 },
+    { "type": "range", "id": "row_start_d", "min": 1, "max": 12, "step": 1, "label": "Row start", "default": 1 },
+    { "type": "range", "id": "row_span_d", "min": 1, "max": 4, "step": 1, "label": "Row span", "default": 1 },
+
+    { "type": "header", "content": "Placement — Tablet" },
+    { "type": "range", "id": "col_start_t", "min": 1, "max": 6, "step": 1, "label": "Column start", "default": 1 },
+    { "type": "range", "id": "col_span_t", "min": 1, "max": 6, "step": 1, "label": "Column span", "default": 2 },
+    { "type": "range", "id": "row_start_t", "min": 1, "max": 12, "step": 1, "label": "Row start", "default": 1 },
+    { "type": "range", "id": "row_span_t", "min": 1, "max": 4, "step": 1, "label": "Row span", "default": 1 }
+  ],
+  "blocks": [
+    { "type": "_media" },
+    { "type": "_text-lockup" }
+  ],
+  "presets": [
+    {
+      "name": "Promo Card",
+      "blocks": [
+        { "id": "media", "type": "_media", "static": true },
+        { "id": "text-lockup", "type": "_text-lockup", "static": true }
+      ]
+    }
+  ]
+}
+{% endschema %}

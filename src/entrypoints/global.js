@@ -183,6 +183,13 @@ if (!customElements.get("add-to-cart-form")) {
             ]
           }
 
+          // Clear any previous cart error before trying again
+          const errorEl = this.querySelector("[data-cart-error]");
+          if (errorEl) {
+            errorEl.textContent = "";
+            errorEl.classList.add("hidden");
+          }
+
           fetch(window.Shopify.routes.root + "cart/add.js", {
             method: "POST",
             headers: {
@@ -190,12 +197,30 @@ if (!customElements.get("add-to-cart-form")) {
             },
             body: JSON.stringify(formData)
           })
-          .then(() => {
+          .then(async (response) => {
+            const data = await response.json();
+
+            // A non-2xx response is usually "not enough stock". Surface Shopify's
+            // own (localized) message inline and don't open the cart drawer.
+            if (!response.ok) {
+              const message =
+                data.description || data.message || "Sorry, we couldn't add that to your cart.";
+              if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.remove("hidden");
+              }
+              return;
+            }
+
             refreshCart();
+            openModal("cartDrawer");
           })
-          .then(() => { openModal("cartDrawer") })
           .catch((error) => {
             console.error("Error:", error);
+            if (errorEl) {
+              errorEl.textContent = "Something went wrong. Please try again.";
+              errorEl.classList.remove("hidden");
+            }
           });
         };
 

@@ -1,6 +1,8 @@
+{%- comment -%} `filters` param lets this work for collections AND search; defaults to the collection. {%- endcomment -%}
+{%- assign filter_list = filters | default: collection.filters -%}
 {%- assign hide_these_filters = 'Product Set ID,Is Home Try On,Is Purchasable,Is Rentable,Price,Product type' | split: ',' -%}
 {%- assign has_active_filters = false -%}
-{%- for filter in collection.filters -%}
+{%- for filter in filter_list -%}
   {%- if filter.type == 'price_range' -%}
     {%- if filter.min_value.value != null or filter.max_value.value != null -%}
       {%- assign has_active_filters = true -%}
@@ -21,7 +23,7 @@
       >
         Clear All
       </button>
-      {%- for filter in collection.filters -%}
+      {%- for filter in filter_list -%}
         {%- if filter.type == 'price_range' -%}
           {%- if filter.min_value.value != null or filter.max_value.value != null -%}
             <a
@@ -51,10 +53,44 @@
   {% endif %}
 
   <form>
-    {%- for filter in collection.filters -%}
+    {%- for filter in filter_list -%}
       {%- unless hide_these_filters contains filter.label -%}
         {%- comment -%}for backward compatibiilty with legacy use of product set id filter{%- endcomment -%}
-        {% if filter.type != 'boolean' %}
+        {%- liquid
+          assign is_availability = false
+          assign in_stock_value = null
+          if filter.type == 'list'
+            for fv in filter.values
+              if fv.param_name contains 'availability'
+                assign is_availability = true
+                if fv.value == 1 or fv.value == '1'
+                  assign in_stock_value = fv
+                endif
+              endif
+            endfor
+          endif
+        -%}
+        {% if is_availability and in_stock_value %}
+          {%- comment -%} Availability rendered as a single "Hide out of stock" toggle (applies in-stock only) {%- endcomment -%}
+          <div class='border-b border-hr-color py-4'>
+            <label for='Filter-hide-oos' class='flex items-center justify-start gap-2 cursor-pointer body font-medium'>
+              <input
+                type='checkbox'
+                class='hidden peer'
+                id='Filter-hide-oos'
+                name='{{ in_stock_value.param_name }}'
+                value='{{ in_stock_value.value }}'
+                {% if in_stock_value.active %}checked{% endif %}
+              >
+              <span class='text-transparent peer-checked:text-current'>
+                <div class='flex items-center justify-center w-[10px] h-[10px] rounded-base bg-hr-color{% if in_stock_value.active %} theme-dark{% endif %}'>
+                  <div class='marker -mt-[2px] w-[4px] h-[8px] rounded-base border-r border-b border-current rotate-45'></div>
+                </div>
+              </span>
+              <span>Hide out of stock</span>
+            </label>
+          </div>
+        {% elsif filter.type != 'boolean' %}
           <collapsible-item class='border-b border-hr-color'>
             <summary
               data-collapsible='trigger'

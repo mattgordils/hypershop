@@ -1,0 +1,155 @@
+{% comment %}
+  Shared product results grid. Used by sections/product-grid.liquid (collection)
+  and sections/main-search.liquid (search) so filters, sort, columns, promo cards
+  and pagination behave identically on both.
+
+  @param {object} products       - paginatable list (collection.products or search.results)
+  @param {string} results_url    - base URL for filter/sort AJAX (collection.url, or search URL incl. q & type)
+  @param {string} section_id     - section.id (Section Rendering API + scoping)
+  @param {number} [per_page]     - products per page (default 24)
+  @param {string} [pagination_style] - 'numbered' | 'load_more' | 'infinite' (default 'numbered')
+  @param {number} [columns]      - desktop columns (default 4)
+  @param {number} [tablet_columns] - default 3
+  @param {number} [mobile_columns] - default 2
+  @param {object} [filters]      - filter list (collection.filters / search.filters)
+  @param {object} [sort_options] - sort options
+  @param {string} [sort_by]      - active sort value
+  @param {number} [result_count] - total result count
+  @param {string} [promos]       - pre-rendered promo card HTML (built by the section, collection only)
+  @param {string} [spacing_class]
+{% endcomment %}
+
+{%- liquid
+  assign pagination_style = pagination_style | default: 'numbered'
+  assign columns = columns | default: 4
+  assign tablet_columns = tablet_columns | default: 3
+  assign mobile_columns = mobile_columns | default: 2
+
+  assign filterable = false
+  if filters != blank
+    assign filterable = true
+  endif
+-%}
+
+<collection-grid
+  id="collectionItems"
+  class="block px-margin {{ spacing_class }}"
+  data-url="{{ results_url }}"
+  data-section-id="{{ section_id }}"
+>
+  {% if filterable %}
+    <div class="mb-gutter max-w-site-max-w mx-auto">
+      {% if result_count %}
+        <span class="text-light-text-color">{{ result_count }} Items</span>
+      {% endif %}
+
+      {% if sort_options.size > 0 %}
+        <div id="sortItems" class="relative z-2 inline-block align-top">
+          <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
+            <span class="border-b border-dashed border-hr-color transition group-hover:border-text-color">
+              Sort By
+              {% for option in sort_options %}
+                {% if option.value == sort_by %}
+                  {{ option.name }}
+                {% endif %}
+              {% endfor %}
+            </span>
+            <span class="icon block -mt-[2px] transition">
+              {% render 'icon_material' with icon: 'keyboard_arrow_down', class: 'block' %}
+            </span>
+          </button>
+          <ul
+            id="sortList"
+            class="hidden absolute top-[calc(100%+10px)] left-0 bg-bg flex flex-col items-start justify-start border border-hr-color pl-4 pr-8 py-3"
+          >
+            {% for option in sort_options %}
+              <li class="filter-item">
+                <label
+                  class="cursor-pointer body py-[.1em] flex items-start justify-center gap-x-2 whitespace-nowrap"
+                  for="{{ option.value }}"
+                >
+                  <input
+                    class="hidden peer"
+                    name="sort_by"
+                    type="radio"
+                    value="{{ option.value }}"
+                    id="{{ option.value }}"
+                    {% if option.value == sort_by %}
+                      checked
+                    {% endif %}
+                  >
+                  <div class="text-transparent peer-checked:text-current shrink-0 whitespace-nowrap flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color">
+                    <div class="marker w-[6px] h-[6px] rounded-full bg-current"></div>
+                  </div>
+                  {{ option.name }}
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% render 'filters', filters: filters %}
+    </div>
+  {% endif %}
+
+  <div class="max-w-site-max-w mx-auto relative z-1">
+    {%- comment -%} {% paginate %} runs in the section (paginatable objects can't be passed through {% render %}); we receive the current page + the paginate object {%- endcomment -%}
+    <in-view
+      class="product-grid__grid gap-x-gutter gap-y-v-space-sm"
+      style="--grid-cols-mobile: {{ mobile_columns }}; --grid-cols-tablet: {{ tablet_columns }}; --grid-cols-desktop: {{ columns }};"
+    >
+      {% for product in products %}
+        <div>
+          {% render 'product_card' with product: product %}
+        </div>
+      {% endfor %}
+
+      {%- comment -%} Promo cards: explicitly placed; products auto-flow (dense) around them. Pre-rendered by the section (settings/placement resolved against native section.blocks). {%- endcomment -%}
+      {{ promos }}
+    </in-view>
+
+    {%- if paginate -%}
+      {%- case pagination_style -%}
+        {%- when 'load_more' -%}
+          {%- if paginate.next -%}
+            <load-more data-section-id="{{ section_id }}" data-grid-next="{{ paginate.next.url }}" class="flex justify-center pt-v-space-sm">
+              <button type="button" class="button">Load more</button>
+            </load-more>
+          {%- endif -%}
+        {%- when 'infinite' -%}
+          {%- if paginate.next -%}
+            <infinite-scroll data-section-id="{{ section_id }}" data-grid-next="{{ paginate.next.url }}" class="block w-full h-px" aria-hidden="true"></infinite-scroll>
+          {%- endif -%}
+        {%- else -%}
+          {% render 'paginate-nav', class: 'pt-v-space-sm', paginate: paginate %}
+      {%- endcase -%}
+    {%- endif -%}
+  </div>
+</collection-grid>
+
+{%- if pagination_style == 'load_more' -%}
+  <script src="{{ 'load-more.js' | asset_url }}" defer></script>
+{%- elsif pagination_style == 'infinite' -%}
+  <script src="{{ 'infinite-scroll.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-grid__grid {
+    display: grid;
+    grid-auto-flow: row dense;
+    grid-template-columns: repeat(var(--grid-cols-mobile, 2), minmax(0, 1fr));
+  }
+
+  @media (min-width: 640px) {
+    .product-grid__grid {
+      grid-template-columns: repeat(var(--grid-cols-tablet, 3), minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-grid__grid {
+      grid-template-columns: repeat(var(--grid-cols-desktop, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}

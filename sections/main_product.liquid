@@ -2,11 +2,13 @@
   {% render 'util-section-spacing' with space: section.settings.section_spacing %}
 {% endcapture %}
 
-{{ 'pdp.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'pdp.js' | asset_url }}" defer></script>
-
 {% liquid
 	assign media_sizes = '(min-width: 768px) 50vw, 100vw'
+	comment
+		Use the chosen product when set (so the section can run on any page),
+		otherwise the page's product (normal PDP behaviour).
+	endcomment
+	assign product = section.settings.product | default: product
 %}
 
 {% stylesheet %}
@@ -17,6 +19,10 @@
     }
   }
 {% endstylesheet %}
+
+{% if product != blank %}
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
 <div
 	id="mainPDP"
@@ -37,7 +43,7 @@
 			</div>
 		{% endif %}
 		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
-			{% render 'product_media' %}
+			{% render 'product_media' with product: product %}
 		</div>
   </div>
 
@@ -51,6 +57,7 @@
     </add-to-cart-form>
   </div>
 </div>
+{% endif %}
 
 {% schema %}
 {
@@ -83,6 +90,9 @@
       "type": "_product-buy-buttons"
     },
     {
+      "type": "_stock-count"
+    },
+    {
       "type": "_product-badges"
     },
     {
@@ -93,6 +103,12 @@
     }
   ],
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave blank on a product template to use that product. Pick a product to feature this section on other pages (e.g. the home page)."
+    },
     {
       "type": "header",
       "content": "Product Badges",
@@ -124,6 +140,45 @@
         {
           "label": "Large",
           "value": "large"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "blocks": [
+        {
+          "type": "_product-badges"
+        },
+        {
+          "type": "_headline",
+          "settings": {
+            "text": "{{ closest.product.title }}",
+            "style": "h2",
+            "element": "h1"
+          }
+        },
+        {
+          "type": "_product-variant-selector"
+        },
+        {
+          "type": "_stock-count"
+        },
+        {
+          "type": "_product-buy-buttons"
+        },
+        {
+          "type": "_accordion",
+          "blocks": [
+            {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "Description",
+                "text": "{{ closest.product.description }}"
+              }
+            }
+          ]
         }
       ]
     }

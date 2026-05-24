@@ -72,7 +72,7 @@
     {% endif %}
   </div>
 
-  <div class="pb-gutter flex justify-between gap-gutter">
+  <div class="flex justify-between gap-gutter">
     <h3 class="body grow">
       <a href="{{ product.url }}" itemprop="url" class="pt-3 border-none block text-balance">
         <span itemprop="name">
@@ -89,7 +89,8 @@
   </div>
 
   {% if settings.card_quick_action == 'quick_add' %}
-    <add-to-cart-form>
+    {% comment %} Work In Progress {% endcomment %}
+    <add-to-cart-form class="hidden">
       <div>
         {% render 'product_option_form' with
           product: product,

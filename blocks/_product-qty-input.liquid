@@ -1,3 +1,6 @@
+{%- liquid
+  assign product = section.settings.product | default: product
+-%}
 {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
 <div class="{{ space_below | strip }}">
   {% render 'quantity_adjust' with
