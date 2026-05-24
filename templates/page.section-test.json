@@ -83,7 +83,7 @@
         "section_height": "h-screen-height",
         "section_width": "full",
         "section_spacing": "medium",
-        "header_overlap": false,
+        "header_overlap": true,
         "slideshow_autoplay": false,
         "slideshow_autoplay_speed": 6
       }
@@ -127,7 +127,67 @@
             "alignment": "center",
             "media_max_width": 2000
           },
-          "blocks": {}
+          "blocks": {
+            "headline_LTyQhA": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Headline",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_CApnCN": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "actions_bQnfaD": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {
+                "space_below": "none"
+              },
+              "blocks": {
+                "button_BETJjp": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Shop Now",
+                    "link": "shopify://collections/all",
+                    "new_tab": false,
+                    "style": "primary"
+                  },
+                  "blocks": {}
+                },
+                "link_7g7G3L": {
+                  "type": "_link",
+                  "name": "Link",
+                  "settings": {
+                    "label": "Our Story",
+                    "link": "shopify://pages/section-dump"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_BETJjp",
+                "link_7g7G3L"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_LTyQhA",
+            "rich_text_CApnCN",
+            "actions_bQnfaD"
+          ]
         }
       },
       "name": "Media With Text",
@@ -415,6 +475,7 @@
         "mobile_columns": 2,
         "contain_square": true,
         "limit_media_width": true,
+        "media_max_width": 400,
         "color_scheme": "",
         "section_padding": "none",
         "section_spacing": "medium"
@@ -434,10 +495,84 @@
     },
     "product_grid": {
       "type": "product-grid",
+      "blocks": {
+        "promo_card_8fqtki": {
+          "type": "_promo-card",
+          "name": "Promo Card",
+          "settings": {
+            "color_scheme": "theme-dark",
+            "overlay_opacity": 15,
+            "v_alignment": "items-start",
+            "col_start_d": 1,
+            "col_span_d": 2,
+            "row_start_d": 1,
+            "row_span_d": 1,
+            "col_start_t": 1,
+            "col_span_t": 2,
+            "row_start_t": 1,
+            "row_span_t": 1
+          },
+          "blocks": {
+            "media": {
+              "type": "_media",
+              "static": true,
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/Yony5f73544fa57c945f73544fa595b.345749235f73544fa595b.jpg"
+              },
+              "blocks": {}
+            },
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "left",
+                "media_max_width": 2000
+              },
+              "blocks": {
+                "headline_VeWhde": {
+                  "type": "_headline",
+                  "name": "Headline",
+                  "settings": {
+                    "text": "Dress Real Cool",
+                    "style": "h2",
+                    "element": "h2",
+                    "space_below": "none"
+                  },
+                  "blocks": {}
+                },
+                "rich_text_G4GqzU": {
+                  "type": "_rich-text",
+                  "name": "Text",
+                  "settings": {
+                    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>",
+                    "size": "",
+                    "space_below": "none"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "headline_VeWhde",
+                "rich_text_G4GqzU"
+              ]
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "promo_card_8fqtki"
+      ],
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
         "products": [],
+        "columns": 4,
+        "tablet_columns": 3,
+        "mobile_columns": 2,
+        "products_per_page": 24,
+        "pagination_style": "numbered",
         "section_spacing": "medium"
       }
     },
