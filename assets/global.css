@@ -495,6 +495,9 @@
   .h-\[var\(--icon-weight\)\] {
     height: var(--icon-weight);
   }
+  .h-auto {
+    height: auto;
+  }
   .h-full {
     height: 100%;
   }
@@ -620,6 +623,9 @@
   }
   .max-w-full {
     max-width: 100%;
+  }
+  .max-w-narrow {
+    max-width: var(--narrow-width);
   }
   .max-w-site-max-w {
     max-width: var(--site-max-width);

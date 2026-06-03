@@ -30,6 +30,29 @@
     background: var(--bg-color);
     border-color: var(--hr-color);
   }
+
+  /* Logo crossfade — stack the two logos so they share the same cell */
+  .logo-stack {
+    display: grid;
+  }
+  .logo-stack > .logo-layer {
+    grid-area: 1 / 1;
+  }
+  .logo-stack.has-inverted .logo-layer {
+    transition: opacity var(--fast-speed) ease;
+  }
+  /* Solid header (default) shows the default logo; inverted layer hidden */
+  .logo-stack.has-inverted .logo-layer--inverted {
+    opacity: 0;
+  }
+  /* Transparent header (overlap present, not scrolled, not hovering a sublink)
+     crossfades to the inverted logo */
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(.menu-item.has-sublinks:hover)) .logo-stack.has-inverted .logo-layer--default {
+    opacity: 0;
+  }
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(.menu-item.has-sublinks:hover)) .logo-stack.has-inverted .logo-layer--inverted {
+    opacity: 1;
+  }
 {% endstylesheet %}
 
 {%- comment -%}
@@ -116,15 +139,35 @@
 <sticky-header>
   <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center justify-between border-b">
     <div class="shrink-0">
-      <{% if request.page_type == 'index' %}h1{% else %}div{% endif %} class="body logo">
+      {%- liquid
+        assign logo = section.settings.logo
+        assign logo_inverted = section.settings.logo_inverted
+      -%}
+      {%- capture logo_inner -%}
         <a
           href="{{ routes.root_url }}"
           title="Go to {{ shop.name }} homepage"
-          class='w-[156px] md:w-[104px] block border-0'
+          class="logo-stack block border-0{% if logo != blank %} w-[156px] md:w-[104px]{% endif %}{% if logo_inverted != blank %} has-inverted{% endif %}"
         >
-          {% render 'logo' %}
+          <span class="logo-layer logo-layer--default">
+            {%- if logo != blank -%}
+              {{ logo | image_url: width: 312 | image_tag: widths: '104, 156, 208, 312', alt: shop.name, class: 'w-full h-auto block' }}
+            {%- else -%}
+              {{ shop.name }}
+            {%- endif -%}
+          </span>
+          {%- if logo_inverted != blank -%}
+            <span class="logo-layer logo-layer--inverted" aria-hidden="true">
+              {{ logo_inverted | image_url: width: 312 | image_tag: widths: '104, 156, 208, 312', alt: '', class: 'w-full h-auto block' }}
+            </span>
+          {%- endif -%}
         </a>
-      </{% if request.page_type == 'index' %}h1{% else %}div{% endif %}>
+      {%- endcapture -%}
+      {%- if request.page_type == 'index' -%}
+        <h1 class="body logo">{{ logo_inner }}</h1>
+      {%- else -%}
+        <div class="body logo">{{ logo_inner }}</div>
+      {%- endif -%}
     </div>
     <div class="shrink-0 grow h-full">
       <div class="
@@ -158,17 +201,30 @@
                     {% endif %}
                   "
                 >
-                  <{% if has_sublinks %}div{% else %}a href="{{ link.url }}"{% endif %}
-                    class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
-                    {% if link.active %}aria-current="page"{% endif %}
-                  >
+                  {%- capture menu_item_inner -%}
                     <span class="animate-underline grow-0 shrink-0 leading-none">
                       {{ link.title }}
                     </span>
                     {% if has_sublinks %}
                       <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition-transform">keyboard_arrow_down</div>
                     {% endif %}
-                  </{% if has_sublinks %}div{% else %}a{% endif %}>
+                  {%- endcapture -%}
+                  {%- if has_sublinks -%}
+                    <div
+                      class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+                      {% if link.active %}aria-current="page"{% endif %}
+                    >
+                      {{ menu_item_inner }}
+                    </div>
+                  {%- else -%}
+                    <a
+                      href="{{ link.url }}"
+                      class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+                      {% if link.active %}aria-current="page"{% endif %}
+                    >
+                      {{ menu_item_inner }}
+                    </a>
+                  {%- endif -%}
                   {% if has_sublinks %}
                     <div
                       class="
@@ -297,6 +353,18 @@
     {
       "type": "header",
       "content": "Header"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "If no logo is uploaded, the store name is shown as text."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_inverted",
+      "label": "Inverted logo",
+      "info": "Shown while the header is transparent (overlapping a section). Crossfades to the main logo once the header becomes solid on scroll."
     },
     {
       "type": "link_list",

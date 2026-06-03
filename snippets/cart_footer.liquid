@@ -88,7 +88,7 @@
   </div>
 </div>
 <div class="pt-gutter w-full bg-orange font-xl-sans pb-(--cart-padding) px-(--cart-padding) lg:flex lg:justify-between">
-  <form class="cart__drawer-total w-full" method="post" action="/cart">
+  <form class="cart__drawer-total w-full" method="post" action="{{ routes.cart_url }}">
     <button type="submit" class="button large w-full pt-[15px] lg:pt-0 lg:font-2xl-sans">
       <div class="pl-3">
         {{ section.settings['text_checkout'] }}&nbsp;<span class="opacity-50 hidden xs:inline-block">{{ cart.item_count }} Items</span>

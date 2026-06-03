@@ -58,13 +58,7 @@
   --spacing-screen-small: 50vh;
   --spacing-screen-medium: 75vh;
   --spacing-site-max-w: var(--site-max-width);
-
-  /* Max Width */
-  --max-w-site-max-w: var(--site-max-width);
-  --max-w-narrow: var(--narrow-width);
-  --max-w-half: 50%;
-  --max-w-third: 33.333%;
-  --max-w-quarter: 25%;
+  --spacing-narrow: var(--narrow-width);
 
   /* Transition Duration */
   --duration-slow: var(--slow-speed);
