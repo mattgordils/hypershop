@@ -187,4 +187,52 @@
     --button-letter-spacing: {{ settings.button_letter_spacing | times: 0.01 }}em;
     --button-line-height: {{ settings.button_line_height | times: 0.01 }}em;
   }
+
+  {%- comment -%} CUSTOM_FONTS_START — merchant-uploaded fonts. Strip for Theme Store builds (npm run prep:store). See README-custom-fonts.md {%- endcomment -%}
+  {%- liquid
+    assign custom_heading_url = settings.custom_font_heading_url
+    assign custom_body_url    = settings.custom_font_body_url
+    assign custom_button_url  = settings.custom_font_button_url
+  -%}
+  {%- if custom_heading_url != blank -%}
+    @font-face {
+      font-family: 'custom-heading';
+      src: url('{{ custom_heading_url }}') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+  {%- endif -%}
+  {%- if custom_body_url != blank -%}
+    @font-face {
+      font-family: 'custom-body';
+      src: url('{{ custom_body_url }}') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+  {%- endif -%}
+  {%- if custom_button_url != blank -%}
+    @font-face {
+      font-family: 'custom-button';
+      src: url('{{ custom_button_url }}') format('woff2');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+  {%- endif -%}
+  {%- if custom_heading_url != blank or custom_body_url != blank or custom_button_url != blank -%}
+    :root {
+      {%- if custom_heading_url != blank %}
+      --secondary-font: 'custom-heading', {{ heading_font.fallback_families }};
+      {%- endif %}
+      {%- if custom_body_url != blank %}
+      --main-font: 'custom-body', {{ body_font.fallback_families }};
+      {%- endif %}
+      {%- if custom_button_url != blank %}
+      --button-font: 'custom-button', {{ button_font.fallback_families }};
+      {%- endif %}
+    }
+  {%- endif -%}
+  {%- comment -%} CUSTOM_FONTS_END {%- endcomment -%}
 {% endstyle %}

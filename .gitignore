@@ -11,3 +11,6 @@ Thumbs.db
 node_modules
 yarn.lock
 .claude
+
+# Custom-font strip-script backups (scripts/strip-custom-fonts.js)
+scripts/.custom-fonts-backup
