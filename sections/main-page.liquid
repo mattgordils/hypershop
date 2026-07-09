@@ -10,9 +10,9 @@
 <div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
   <div class="max-w-narrow mx-auto py-v-space-sm">
     {% if section.settings.show_title and page.title != blank %}
-      <header class="text-center pb-v-space-sm">
+      <div class="text-center pb-v-space-sm">
         <h1 class="h2">{{ page.title }}</h1>
-      </header>
+      </div>
     {% endif %}
 
     {% if page.content != blank %}

@@ -1,5 +1,4 @@
 {% comment %}
-  Contact page. Renders the page's rich-text content followed by Shopify's built-in
   contact form ({% form 'contact' %}). Inputs use the theme's global input styling.
 {% endcomment %}
 
@@ -12,12 +11,6 @@
     <header class="text-center pb-v-space-sm">
       <h1 class="h2">{{ page.title }}</h1>
     </header>
-
-    {% if page.content != blank %}
-      <div class="rte body pb-v-space-sm">
-        {{ page.content }}
-      </div>
-    {% endif %}
 
     {%- if section.blocks.size > 0 -%}
       <div class="flex flex-col gap-gutter pb-v-space-sm">

@@ -1360,6 +1360,9 @@
   .whitespace-nowrap {
     white-space: nowrap;
   }
+  .text-\[red\] {
+    color: red;
+  }
   .text-current {
     color: currentcolor;
   }
@@ -1423,6 +1426,9 @@
   }
   .opacity-70 {
     opacity: 70%;
+  }
+  .opacity-100 {
+    opacity: 100%;
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);

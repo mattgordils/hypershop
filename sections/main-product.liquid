@@ -24,39 +24,47 @@
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
-{% render 'breadcrumbs', class: 'mb-gutter' %}
-
-<div
-	id="mainPDP"
-	data-product-update="{{ section.id }}"
-	class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin {{ spacing_class }}"
->
-  <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
-		{% if product.selected_or_first_available_variant.image != blank %}
-			<div class="md:col-span-2">
-				{% render 'image' with
-					src: product.selected_or_first_available_variant.image,
-					loading: 'eager',
-					sizes: media_sizes,
-					ratio: 1,
-					class: 'w-full',
-					fetchpriority: 'high'
-				%}
-			</div>
-		{% endif %}
-		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
-			{% render 'product-media' with product: product %}
-		</div>
+<div class="px-margin">
+  <div class="mx-auto max-w-site-max-w w-full">
+    {% render 'breadcrumbs', class: 'mb-gutter' %}
   </div>
+</div>
 
-  <div class="px-margin">
-    <add-to-cart-form class="pt-margin pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:h-(--pdp-info-height) transition-[height]">
-      {%- if section.blocks != blank and section.blocks.size > 0 -%}
-        {% for block in section.blocks %}
-          {% render block %}
-        {% endfor %}
-      {%- endif -%}
-    </add-to-cart-form>
+<div class="px-margin">
+  <div class="mx-auto max-w-site-max-w w-full">
+    <div
+      id="mainPDP"
+      data-product-update="{{ section.id }}"
+      class="w-full flex flex-col md:grid md:grid-cols-2 gap-y-margin gap-x-gutter {{ spacing_class }}"
+    >
+      <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
+        {% if product.selected_or_first_available_variant.image != blank %}
+          <div class="md:col-span-2">
+            {% render 'image' with
+              src: product.selected_or_first_available_variant.image,
+              loading: 'eager',
+              sizes: media_sizes,
+              ratio: 1,
+              class: 'w-full',
+              fetchpriority: 'high'
+            %}
+          </div>
+        {% endif %}
+        <div class="hidden md:grid md:grid-cols-2 gap-gutter">
+          {% render 'product-media' with product: product %}
+        </div>
+      </div>
+
+      <div>
+        <add-to-cart-form class="pt-margin pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:h-(--pdp-info-height) transition-[height]">
+          {%- if section.blocks != blank and section.blocks.size > 0 -%}
+            {% for block in section.blocks %}
+              {% render block %}
+            {% endfor %}
+          {%- endif -%}
+        </add-to-cart-form>
+      </div>
+    </div>
   </div>
 </div>
 {% endif %}

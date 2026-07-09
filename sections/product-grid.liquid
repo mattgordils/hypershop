@@ -29,7 +29,11 @@
   {%- endfor -%}
 {%- endcapture -%}
 
-{% render 'breadcrumbs', class: 'px-margin pb-gutter' %}
+<div class="px-margin">
+  <div class="mx-auto max-w-site-max-w w-full">
+    {% render 'breadcrumbs', class: 'mb-gutter' %}
+  </div>
+</div>
 
 {% if section_collection.products.size > 0 %}
   {% if paginatable %}

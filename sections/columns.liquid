@@ -56,7 +56,7 @@
         >
           {%- for column in section.blocks -%}
             <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] sm:w-[var(--tablet-cols)] lg:w-[var(--desktop-cols)] px-half-gutter">
-              <div class="{{ alignment_class }} flex flex-col h-full text-balance max-w-[500px]{% if alignment == 'center' %} mx-auto{% endif %}">
+              <div class="{{ alignment_class }} flex flex-col h-full text-balance {% if alignment == 'center' %} mx-auto{% endif %}">
                 {% render column %}
               </div>
             </div>
@@ -76,7 +76,7 @@
         <div class="slider-container px-margin">
           {%- for column in section.blocks -%}
             <div class="slider-slide">
-              <div class="flex flex-col h-full text-balance max-w-[500px]">
+              <div class="flex flex-col h-full text-balance">
                 {% render column %}
               </div>
             </div>
