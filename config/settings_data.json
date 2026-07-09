@@ -46,8 +46,8 @@
         "type": "styleguide",
         "settings": {}
       },
-      "page_cart-panel": {
-        "type": "page_cart-panel",
+      "page-cart-panel": {
+        "type": "page-cart-panel",
         "settings": {
           "text_footer": "",
           "upsell_collection": "",
@@ -60,8 +60,8 @@
           "free_shipping_text": "Spend [x] more to get free shipping"
         }
       },
-      "page_menu-panel": {
-        "type": "page_menu-panel",
+      "page-menu-panel": {
+        "type": "page-menu-panel",
         "settings": {
           "menu": "main-menu",
           "secondary_menu": "main-menu"

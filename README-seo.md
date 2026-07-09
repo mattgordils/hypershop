@@ -9,6 +9,9 @@ The theme reads these through **Theme settings → SEO & structured data**, so t
 merchant maps their own namespaces/keys without touching code. Defaults match
 Shopify's standard conventions.
 
+> For the complete list of every metafield/metaobject the theme depends on (not
+> just SEO), see [README-metafields.md](README-metafields.md).
+
 | Feature | Works automatically? | Admin setup required |
 | --- | --- | --- |
 | Breadcrumbs (visible + JSON-LD) | ✅ Yes | None — just assign products to collections |
@@ -22,7 +25,7 @@ Shopify's standard conventions.
 
 Breadcrumbs are built by [`snippets/breadcrumbs.liquid`](snippets/breadcrumbs.liquid)
 (single source of truth for both the visible `<nav>` and the `BreadcrumbList`
-JSON-LD, which [`snippets/structured_data.liquid`](snippets/structured_data.liquid)
+JSON-LD, which [`snippets/structured-data.liquid`](snippets/structured-data.liquid)
 delegates to).
 
 Product breadcrumbs reflect **the collection the shopper navigated from**, e.g.
@@ -32,7 +35,7 @@ while the same product under "Tees" shows `Home / Tees / Blue shirt`.
 **There is no Shopify admin setting to enable this.** It is native Shopify
 behavior with two moving parts, both already handled in the theme:
 
-1. [`snippets/product_card.liquid`](snippets/product_card.liquid) links products
+1. [`snippets/product-card.liquid`](snippets/product-card.liquid) links products
    **within** the current collection on collection pages
    (`{{ product.url | within: collection }}` → `/collections/blue/products/blue-shirt`).
    That URL is what makes Shopify populate the `collection` object on the product
@@ -91,7 +94,7 @@ and the major review apps sync to it automatically:
 
 ## 3. FAQ rich results — metaobject + metafield
 
-[`snippets/faq_schema.liquid`](snippets/faq_schema.liquid) outputs `FAQPage`
+[`snippets/faq-schema.liquid`](snippets/faq-schema.liquid) outputs `FAQPage`
 JSON-LD when the current **product or page** has a list of Q&A entries. It renders
 nothing otherwise, so it's safe on every page.
 
@@ -122,11 +125,11 @@ different namespace/key, change the two settings above to match.
 ## Where it's wired up
 
 - Global schema + FAQ are rendered once in
-  [`layout/theme.liquid`](layout/theme.liquid) (`{% render 'structured_data' %}`
-  and `{% render 'faq_schema' %}`), so they apply site-wide.
+  [`layout/theme.liquid`](layout/theme.liquid) (`{% render 'structured-data' %}`
+  and `{% render 'faq-schema' %}`), so they apply site-wide.
 - Visible breadcrumbs are rendered per section
   (`{% render 'breadcrumbs' %}`) and can be omitted on any template without
-  affecting the JSON-LD, which is emitted independently by `structured_data.liquid`.
+  affecting the JSON-LD, which is emitted independently by `structured-data.liquid`.
 
 ## Validating
 

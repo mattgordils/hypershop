@@ -76,10 +76,10 @@ const refreshCartSection = (sectionTitle, fullRefresh = false) => {
 }
 
 // Refresh every cart surface present on the page. The drawer is always rendered
-// via the header group; the cart page additionally renders `main_cart`.
+// via the header group; the cart page additionally renders `main-cart`.
 export const refreshCart = (fullRefresh = false) => {
-  refreshCartSection('page_cart-panel', fullRefresh)
-  refreshCartSection('main_cart', fullRefresh)
+  refreshCartSection('page-cart-panel', fullRefresh)
+  refreshCartSection('main-cart', fullRefresh)
 }
 
 // Remove Cart Item

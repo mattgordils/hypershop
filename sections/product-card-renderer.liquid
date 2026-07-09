@@ -9,6 +9,6 @@
 {%- for handle in product_handles -%}
   {%- assign product = all_products[handle] -%}
   {%- if product.id -%}
-    {% render 'product_card', product: product %}
+    {% render 'product-card', product: product %}
   {%- endif -%}
 {%- endfor -%}

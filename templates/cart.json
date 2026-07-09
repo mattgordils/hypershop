@@ -10,7 +10,7 @@
 {
   "sections": {
     "main": {
-      "type": "main_cart",
+      "type": "main-cart",
       "settings": {
         "section_spacing": "medium"
       }

@@ -96,7 +96,7 @@
       <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
       <meta itemprop="priceCurrency" content="{{ shop.currency }}">
       <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
-      {% render 'product_price' with item: product.selected_or_first_available_variant %}
+      {% render 'product-price' with item: product.selected_or_first_available_variant %}
     </div>
   </div>
 
@@ -104,13 +104,13 @@
     {% comment %} Work In Progress {% endcomment %}
     <add-to-cart-form class="hidden">
       <div>
-        {% render 'product_option_form' with
+        {% render 'product-option-form' with
           product: product,
           section_context: context,
           class: "pb-gutter items-center",
           label_class: "text-center pb-1 block"
         %}
-        {% render 'add_to_cart_button' with
+        {% render 'add-to-cart-button' with
           class: "w-full",
           product: product
         %}

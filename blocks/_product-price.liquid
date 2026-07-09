@@ -10,7 +10,7 @@
 {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
 
 <div class="flex items-baseline {{ space_below | strip }}">
-  {% render 'product_price' with
+  {% render 'product-price' with
     item: product.selected_or_first_available_variant,
     classname: block.settings.size
   %}

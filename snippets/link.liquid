@@ -7,14 +7,14 @@
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon-material' with icon: icon %}
       {% endif %}
       {% if icon_svg != blank %}
         {{ icon_svg }}
       {% endif %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon-material' with icon: icon %}
       {% endif %}
       {% if icon_svg != blank %}
         {{ icon_svg }}

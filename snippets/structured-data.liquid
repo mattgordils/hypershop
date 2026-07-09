@@ -42,7 +42,7 @@
       assign gtin_prop = 'gtin8'
     endif
 
-    comment Availability mapping. endcomment
+    # Availability mapping.
     if current_variant.available
       assign availability = 'https://schema.org/InStock'
     elsif current_variant.inventory_policy == 'continue'
@@ -51,7 +51,7 @@
       assign availability = 'https://schema.org/OutOfStock'
     endif
 
-    comment Review data (optional, app-agnostic via metafields). endcomment
+    # Review data (optional, app-agnostic via metafields).
     assign rating_field = product.metafields[rev_ns][rev_rating_key]
     assign count_field = product.metafields[rev_ns][rev_count_key]
     assign rating_value = rating_field.value.rating | default: rating_field.value

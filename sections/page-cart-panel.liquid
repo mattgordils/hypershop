@@ -4,7 +4,7 @@
   >
     <div class="flex flex-col theme-white h-full">
       <div class="shrink-0">
-        {% render 'cart_header' %}
+        {% render 'cart-header' %}
       </div>
 
       {% if section.settings.free_shipping %}
@@ -52,7 +52,7 @@
               <div class="py-(--cart-padding) space-y-(--cart-padding)">
                 {% for item in cart.items %}
                   {% if forloop.index0 != 0 %}<hr class="border-hr-color">{% endif %}
-                  {% render 'cart_item' with item: item %}
+                  {% render 'cart-item' with item: item %}
                 {% endfor %}
               </div>
             </div>
@@ -67,12 +67,12 @@
             {%- endfor -%}
           {%- endif -%}
 
-          {% render 'cart_upsell' with product_list: section.settings.upsell_collection.products %}
+          {% render 'cart-upsell' with product_list: section.settings.upsell_collection.products %}
 
         </div>
         {% if cart.item_count > 0 %}
           <div class="cart-footer w-full shrink-0">
-            {% render 'cart_footer' %}
+            {% render 'cart-footer' %}
           </div>
         {% endif %}
       </div>

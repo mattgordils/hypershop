@@ -24,7 +24,7 @@
 {% enddoc %}
 
 {%- liquid
-  comment Build the trail as `Title{sep}url` pairs joined by {item_sep}; last pair is the current page. endcomment
+  # Build the trail as Title/url pairs joined by item_sep; the last pair is the current page.
   assign sep = '~|~'
   assign item_sep = '~~'
 
@@ -33,7 +33,7 @@
 
     case template.name
       when 'product'
-        comment Prefer the collection the shopper navigated from; else an assigned one. endcomment
+        # Prefer the collection the shopper navigated from; else an assigned one.
         assign bc_collection = product.collections.first
         if collection.handle
           assign bc_collection = collection

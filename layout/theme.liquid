@@ -26,16 +26,16 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    {% render 'meta_tags' %}
-    {% render 'structured_data' %}
-    {% render 'faq_schema' %}
+    {% render 'meta-tags' %}
+    {% render 'structured-data' %}
+    {% render 'faq-schema' %}
 
     {{ content_for_header }}
 
     {% render 'theme-settings' %}
     {% render 'color-schemes' %}
 
-    {% render 'integrations_before_head_close' %}
+    {% render 'integrations-before-head-close' %}
   </head>
 
   <body {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
@@ -43,14 +43,14 @@
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#footer">Skip to footer</a>
 
-    {% render 'integrations_after_body_open' %}
+    {% render 'integrations-after-body-open' %}
     
     {% comment %} <div class="sticky top-0 w-full z-6"> {% endcomment %}
       {% sections 'header-group' %}
     {% comment %} </div> {% endcomment %}
     
     {% comment %}
-    {% section 'page_age-gate' %}
+    {% section 'page-age-gate' %}
     {% endcomment %}
     
     <main id="main-content" role="main">
@@ -69,7 +69,7 @@
       </div>
     </main>
 
-    {% section 'page_cart-panel' %}
+    {% section 'page-cart-panel' %}
     {% sections 'footer-group' %}
 
     <script src="{{ 'global.js' | asset_url }}" defer></script>
@@ -79,9 +79,9 @@
       <script src="{{ 'shopify-editor.js' | asset_url }}" defer></script>
     {%- endif -%}
 
-    {% section 'page_menu-panel' %}
+    {% section 'page-menu-panel' %}
 
-    {% render 'integrations_before_body_close' %}
+    {% render 'integrations-before-body-close' %}
 
   </body>
 </html>

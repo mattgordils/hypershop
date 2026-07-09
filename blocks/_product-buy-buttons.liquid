@@ -7,12 +7,12 @@
 <div class="{{ space_below | strip }}">
   <div class="flex w-full gap-4">
     <div class="grow-0 shrink-0 button bg-transparent! border-hr-color! {{ block.settings.button_size }}">
-      {% render 'quantity_adjust' with
+      {% render 'quantity-adjust' with
         item: product.selected_or_first_available_variant
       %}
     </div>
     <div data-dynamic-content class="grow">
-      {% render 'add_to_cart_button' with
+      {% render 'add-to-cart-button' with
         class: button_class,
         product: product,
         show_price: block.settings.show_price

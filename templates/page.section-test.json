@@ -481,6 +481,93 @@
         "section_spacing": "medium"
       }
     },
+    "accordion": {
+      "type": "accordion",
+      "blocks": {
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "headline": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Frequently asked questions",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "headline"
+          ]
+        },
+        "accordion": {
+          "type": "_accordion",
+          "static": true,
+          "settings": {
+            "first_open": true,
+            "space_below": "none"
+          },
+          "blocks": {
+            "row_1": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "What is your return policy?",
+                "title_size": "body bold",
+                "text": "<p>We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in their original packaging.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "row_2": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "How long does shipping take?",
+                "title_size": "body bold",
+                "text": "<p>Standard shipping takes 3–5 business days. Expedited and express options are available at checkout.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "row_3": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "Do you ship internationally?",
+                "title_size": "body bold",
+                "text": "<p>Yes, we ship to most countries worldwide. Any applicable duties and taxes are calculated at checkout.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "row_1",
+            "row_2",
+            "row_3"
+          ]
+        }
+      },
+      "block_order": [
+        "text-lockup",
+        "accordion"
+      ],
+      "name": "Accordion",
+      "settings": {
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
     "blog_list": {
       "type": "blog-list",
       "name": "Blog Post List",
@@ -594,6 +681,7 @@
     "text_section",
     "media_w_text",
     "columns",
+    "accordion",
     "blog_list",
     "product_grid",
     "product_recommendations"

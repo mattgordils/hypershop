@@ -82,7 +82,7 @@
           </p>
           <in-view class="w-full grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm pt-gutter">
             {% for product in section.settings.no_results_collection.products limit: 6 %}
-              <div>{% render 'product_card' with product: product %}</div>
+              <div>{% render 'product-card' with product: product %}</div>
             {% endfor %}
           </in-view>
         {% else %}
@@ -99,7 +99,7 @@
         {% endif %}
         <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
           {% for product in section.settings.no_results_collection.products limit: 6 %}
-            <div>{% render 'product_card' with product: product %}</div>
+            <div>{% render 'product-card' with product: product %}</div>
           {% endfor %}
         </in-view>
       </div>

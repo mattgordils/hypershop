@@ -1,1 +1,1 @@
-[] `shopify-account` styling (page_header.liquid component)
+[] `shopify-account` styling (page-header.liquid component)

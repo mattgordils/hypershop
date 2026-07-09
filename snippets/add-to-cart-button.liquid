@@ -31,15 +31,15 @@
     "
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon_material' with icon: icon %}
+      {% render 'icon-material' with icon: icon %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon-material' with icon: icon %}
       {% endif %}
       {{ button_text }}
     {% endif %}
     {% if show_price %}
-      {% render 'product_price' with
+      {% render 'product-price' with
         item: product.selected_or_first_available_variant,
         compare_price_class: 'opacity-50'
       %}

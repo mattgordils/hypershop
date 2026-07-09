@@ -32,7 +32,7 @@
       </a>
       <div class="shrink-0">
         <div>
-          {% render 'product_price' with
+          {% render 'product-price' with
             item: item.variant,
             times: item.quantity
           %}
@@ -47,7 +47,7 @@
     {% if qty != false %}
       <div class="flex justify-between items-center">
         <div>
-          {% render 'cart_item_quantity_adjust' with item: item %}
+          {% render 'cart-item-quantity-adjust' with item: item %}
         </div>
         <cart-remove-item>
           <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>

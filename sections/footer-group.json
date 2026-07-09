@@ -12,7 +12,7 @@
   "name": "Footer group",
   "sections": {
     "footer": {
-      "type": "page_footer",
+      "type": "page-footer",
       "settings": {}
     }
   },

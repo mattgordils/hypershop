@@ -10,7 +10,7 @@
 {
   "sections": {
     "main": {
-      "type": "main_product",
+      "type": "main-product",
       "blocks": {
         "badges": {
           "type": "_product-badges",

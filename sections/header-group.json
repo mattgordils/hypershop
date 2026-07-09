@@ -12,11 +12,11 @@
   "name": "Header group",
   "sections": {
     "notification-banner": {
-      "type": "page_notification-banner",
+      "type": "page-notification-banner",
       "settings": {}
     },
     "header": {
-      "type": "page_header",
+      "type": "page-header",
       "settings": {}
     }
   },

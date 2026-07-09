@@ -23,7 +23,7 @@
             {{ product.title }}
           </div>
           <div class="body-small" id="cardPrice">
-            {% render 'product_price' with item: product.first_available_variant %}
+            {% render 'product-price' with item: product.first_available_variant %}
           </div>
 
           <div id="add-to-cart-form" class="add-to-cart-form" data-url="{{ product.url }}">
@@ -78,7 +78,7 @@
 
         </div>
         <div class="flex flex-col items-center justify-start gap-y-2">
-          {% render 'add_to_cart_button' with
+          {% render 'add-to-cart-button' with
             text: "Add to Cart",
             icon: 'add',
             class: "circle",
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      {% comment %} {%- render 'product_option_form' with product: product, section_context: 'cart-upsell' -%} {% endcomment %}
+      {% comment %} {%- render 'product-option-form' with product: product, section_context: 'cart-upsell' -%} {% endcomment %}
     </div>
   </add-to-cart-form>
 </div>

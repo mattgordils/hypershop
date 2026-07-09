@@ -4,11 +4,16 @@
 
 {%-liquid
   assign section_collection = section.settings.collection | default: collection
-  assign manual_list = false
+  assign paginatable = true
 
   if section.settings.products != blank
+    # Manual product list: a plain (capped) array, not paginatable.
     assign section_collection = section.settings
-    assign manual_list = true
+    assign paginatable = false
+  elsif section.settings.collection != blank
+    # A collection chosen via a section setting is a plain (max-50) array.
+    # Only the current collection template's `collection` object is paginatable.
+    assign paginatable = false
   endif
 
   assign result_count = section_collection.products_count | default: section_collection.products.size
@@ -27,19 +32,7 @@
 {% render 'breadcrumbs', class: 'px-margin pb-gutter' %}
 
 {% if section_collection.products.size > 0 %}
-  {% if manual_list %}
-    {%- comment -%} A manual product list is a plain array — not paginatable {%- endcomment -%}
-    {% render 'product-grid',
-      products: section_collection.products,
-      result_count: result_count,
-      section_id: section.id,
-      promos: promos,
-      columns: section.settings.columns,
-      tablet_columns: section.settings.tablet_columns,
-      mobile_columns: section.settings.mobile_columns,
-      spacing_class: spacing_class
-    %}
-  {% else %}
+  {% if paginatable %}
     {% paginate section_collection.products by section.settings.products_per_page %}
       {% render 'product-grid',
         products: section_collection.products,
@@ -58,6 +51,18 @@
         spacing_class: spacing_class
       %}
     {% endpaginate %}
+  {% else %}
+    {%- comment -%} Manual list or a settings-referenced collection: a plain array, not paginatable. {%- endcomment -%}
+    {% render 'product-grid',
+      products: section_collection.products,
+      result_count: result_count,
+      section_id: section.id,
+      promos: promos,
+      columns: section.settings.columns,
+      tablet_columns: section.settings.tablet_columns,
+      mobile_columns: section.settings.mobile_columns,
+      spacing_class: spacing_class
+    %}
   {% endif %}
 {% endif %}
 

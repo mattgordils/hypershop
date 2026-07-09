@@ -1,6 +1,6 @@
 {% comment %}
-  Cart page. Reuses the same snippets as the cart drawer (page_cart-panel) so the
-  two surfaces stay in sync: cart_item, cart_footer, cart_upsell and the free
+  Cart page. Reuses the same snippets as the cart drawer (page-cart-panel) so the
+  two surfaces stay in sync: cart-item, cart-footer, cart-upsell and the free
   shipping meter. The #cartContent / #cartUpdate / #cartLineItem / #cartHeader
   hooks let assets/cart.js refresh this page in place, scoped to this section.
 {% endcomment %}
@@ -49,7 +49,7 @@
             <div class="cart-items flex flex-col gap-(--cart-padding)">
               {% for item in cart.items %}
                 {% if forloop.index0 != 0 %}<hr class="m-0 border-hr-color">{% endif %}
-                {% render 'cart_item' with item: item %}
+                {% render 'cart-item' with item: item %}
               {% endfor %}
             </div>
           </div>
@@ -74,12 +74,12 @@
                 </div>
               {% endif %}
 
-              {% render 'cart_footer' %}
+              {% render 'cart-footer' %}
             </div>
           </div>
         </div>
 
-        {% render 'cart_upsell' with product_list: section.settings.upsell_collection.products %}
+        {% render 'cart-upsell' with product_list: section.settings.upsell_collection.products %}
       {% endif %}
     </div>
 

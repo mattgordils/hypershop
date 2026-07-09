@@ -12,7 +12,7 @@
 
 {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
 <div data-dynamic-content class="{{ space_below | strip }}">
-  {% render 'product_option_form' with
+  {% render 'product-option-form' with
     product: product,
     context: variant_context
   %}
