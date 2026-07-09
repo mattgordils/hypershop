@@ -481,6 +481,120 @@
         "section_spacing": "medium"
       }
     },
+    "columns_cQyTMT": {
+      "type": "columns",
+      "blocks": {
+        "text_lockup_HETzqh": {
+          "type": "_text-lockup",
+          "name": "Text Lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "media_i9Ypra": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg"
+              },
+              "blocks": {}
+            },
+            "headline_7MQqCh": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "The Best Arouound",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_HLTXFd": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Nothings ever gonna bring you down</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_i9Ypra",
+            "headline_7MQqCh",
+            "rich_text_HLTXFd"
+          ]
+        },
+        "text_lockup_wDrHUC": {
+          "type": "_text-lockup",
+          "name": "Text Lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "media_LVjFb7": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg"
+              },
+              "blocks": {}
+            },
+            "headline_qqUAtV": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "The Best Arouound",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_hnbe8C": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Nothings ever gonna bring you down</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_LVjFb7",
+            "headline_qqUAtV",
+            "rich_text_hnbe8C"
+          ]
+        }
+      },
+      "block_order": [
+        "text_lockup_HETzqh",
+        "text_lockup_wDrHUC"
+      ],
+      "name": "Columns",
+      "settings": {
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 2,
+        "tablet_columns": 2,
+        "mobile_slideshow": false,
+        "mobile_columns": 1,
+        "contain_square": false,
+        "limit_media_width": false,
+        "media_max_width": 1000,
+        "color_scheme": "theme-light-grey",
+        "section_padding": "medium",
+        "section_spacing": "medium"
+      }
+    },
     "accordion": {
       "type": "accordion",
       "blocks": {
@@ -557,10 +671,6 @@
           ]
         }
       },
-      "block_order": [
-        "text-lockup",
-        "accordion"
-      ],
       "name": "Accordion",
       "settings": {
         "color_scheme": "",
@@ -674,6 +784,137 @@
         "hide_sold_out": true,
         "section_spacing": "medium"
       }
+    },
+    "main_contact_PdUKiV": {
+      "type": "main-contact",
+      "blocks": {
+        "headline_JtKkWN": {
+          "type": "_headline",
+          "name": "Headline",
+          "settings": {
+            "text": "Headline",
+            "style": "h2",
+            "element": "h2",
+            "space_below": "none"
+          },
+          "blocks": {}
+        },
+        "rich_text_9prbxM": {
+          "type": "_rich-text",
+          "name": "Text",
+          "settings": {
+            "text": "<p>Some text to go with the form</p>",
+            "size": "",
+            "space_below": "none"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "headline_JtKkWN",
+        "rich_text_9prbxM"
+      ],
+      "name": "Contact Form",
+      "settings": {
+        "button_label": "Send",
+        "success_message": "Thanks for reaching out — we will be in touch soon.",
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
+    },
+    "main_page_jaP7aG": {
+      "type": "main-page",
+      "name": "Page",
+      "settings": {
+        "show_title": true,
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
+    },
+    "main_product_KYJzwf": {
+      "type": "main-product",
+      "blocks": {
+        "product_badges_BTM8Vc": {
+          "type": "_product-badges",
+          "settings": {
+            "product": "",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "headline_RYgmGa": {
+          "type": "_headline",
+          "settings": {
+            "text": "{{ closest.product.title }}",
+            "style": "h2",
+            "element": "h1",
+            "space_below": "none"
+          },
+          "blocks": {}
+        },
+        "product_variant_selector_NpR8DJ": {
+          "type": "_product-variant-selector",
+          "settings": {
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "stock_count_EkkaaU": {
+          "type": "_stock-count",
+          "settings": {
+            "threshold": 10,
+            "message": "Only [count] left",
+            "show_dot": true,
+            "text_size": "body-small",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "product_buy_buttons_cgzK6e": {
+          "type": "_product-buy-buttons",
+          "settings": {
+            "show_price": true,
+            "button_size": "default",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "accordion_6XwdRG": {
+          "type": "_accordion",
+          "settings": {
+            "first_open": true,
+            "space_below": "none"
+          },
+          "blocks": {
+            "accordion_row_CrtM6E": {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "Description",
+                "title_size": "body",
+                "text": "{{ closest.product.description }}",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "accordion_row_CrtM6E"
+          ]
+        }
+      },
+      "block_order": [
+        "product_badges_BTM8Vc",
+        "headline_RYgmGa",
+        "product_variant_selector_NpR8DJ",
+        "stock_count_EkkaaU",
+        "product_buy_buttons_cgzK6e",
+        "accordion_6XwdRG"
+      ],
+      "name": "Product",
+      "settings": {
+        "product": "camp-collar-shirt-with-piping",
+        "section_spacing": "medium"
+      }
     }
   },
   "order": [
@@ -681,9 +922,13 @@
     "text_section",
     "media_w_text",
     "columns",
+    "columns_cQyTMT",
     "accordion",
     "blog_list",
     "product_grid",
-    "product_recommendations"
+    "product_recommendations",
+    "main_contact_PdUKiV",
+    "main_page_jaP7aG",
+    "main_product_KYJzwf"
   ]
 }
