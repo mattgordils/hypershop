@@ -551,8 +551,8 @@
               "name": "Headline",
               "settings": {
                 "text": "The Best Arouound",
-                "style": "h2",
-                "element": "h2",
+                "style": "h3",
+                "element": "h1",
                 "space_below": "none"
               },
               "blocks": {}
