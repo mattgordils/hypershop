@@ -24,6 +24,8 @@
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
+{% render 'breadcrumbs', class: 'mb-gutter' %}
+
 <div
 	id="mainPDP"
 	data-product-update="{{ section.id }}"

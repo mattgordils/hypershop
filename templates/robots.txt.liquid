@@ -1,0 +1,33 @@
+{% comment %}
+  Custom robots.txt.
+
+  Renders Shopify's default crawl rules (storefront-safe disallows + sitemap),
+  then explicitly addresses AI / answer-engine crawlers so the store is eligible
+  to appear in AI search and assistants. Each AI bot gets the SAME path rules as
+  the default crawler, so checkout, cart and account stay disallowed.
+
+  To opt a crawler out, change its rule below from "Allow: /" to "Disallow: /".
+{% endcomment %}
+{%- capture default_rules -%}
+{%- for group in robots.default_groups -%}
+{%- if group.user_agent.value == '*' -%}
+{%- for rule in group.rules -%}{{ rule }}
+{% endfor -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- for group in robots.default_groups -%}
+{{ group.user_agent }}
+{%- for rule in group.rules -%}
+{{ rule }}
+{%- endfor -%}
+{%- if group.sitemap != blank %}
+{{ group.sitemap }}
+{%- endif %}
+
+{% endfor -%}
+{%- assign ai_agents = 'GPTBot,OAI-SearchBot,ChatGPT-User,ClaudeBot,Claude-Web,anthropic-ai,PerplexityBot,Perplexity-User,Google-Extended,Applebot-Extended,CCBot,Amazonbot,Meta-ExternalAgent,cohere-ai,YouBot,DuckAssistBot' | split: ',' -%}
+{%- for agent in ai_agents -%}
+User-agent: {{ agent }}
+{{ default_rules }}
+{% endfor -%}

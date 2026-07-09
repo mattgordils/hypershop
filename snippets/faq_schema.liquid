@@ -1,0 +1,57 @@
+{% doc %}
+  FAQPage JSON-LD — a strong AEO (AI answer engine) and rich-result signal.
+
+  App-/merchant-agnostic: reads a metaobject-list metafield on the current
+  product or page. Renders nothing unless that metafield exists and has entries,
+  so it is safe to call on every page.
+
+  Setup (no theme changes needed afterwards):
+    1. Create a metaobject definition with two fields:
+         - `question` (single line text)
+         - `answer`   (rich text or multi-line text)
+    2. Add a metafield of type "list of <that metaobject>" to Product and/or Page.
+       Namespace/key default to custom.faqs — change in Theme settings > SEO.
+
+  @example
+  {% render 'faq_schema' %}
+{% enddoc %}
+
+{%- liquid
+  assign faq_ns = settings.seo_faq_namespace | default: 'custom'
+  assign faq_key = settings.seo_faq_key | default: 'faqs'
+
+  assign faqs = null
+  if template.name == 'product'
+    assign faqs = product.metafields[faq_ns][faq_key].value
+  elsif template.name == 'page'
+    assign faqs = page.metafields[faq_ns][faq_key].value
+  endif
+-%}
+
+{%- if faqs != blank and faqs != null and faqs.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign emitted = false -%}
+    {%- for entry in faqs -%}
+      {%- assign q = entry.question.value | default: entry.question -%}
+      {%- assign a = entry.answer.value | default: entry.answer | strip_html -%}
+      {%- if q != blank and a != blank -%}
+      {%- if emitted -%},{%- endif -%}
+      {
+        "@type": "Question",
+        "name": {{ q | strip_html | json }},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{ a | json }}
+        }
+      }
+      {%- assign emitted = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}

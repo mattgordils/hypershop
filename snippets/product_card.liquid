@@ -9,6 +9,18 @@
   if settings.card_border_radius
     assign media_radius = ' overflow-hidden rounded-[var(--base-border-radius)]'
   endif
+
+  comment
+    On a collection page, link within the current collection so Shopify exposes
+    the `collection` object on the product page. That lets breadcrumbs (visible +
+    JSON-LD) reflect the path the shopper took. Canonical URL stays /products/x,
+    so no duplicate-content risk. Elsewhere (home, search, related) keep the
+    plain product URL — there's no meaningful collection context to carry.
+  endcomment
+  assign card_url = product.url
+  if template.name == 'collection' and collection.handle
+    assign card_url = product.url | within: collection
+  endif
 -%}
 
 {%- comment -%}
@@ -25,7 +37,7 @@
 >
   <div class="relative group">
     <a
-      href="{{ product.url }}"
+      href="{{ card_url }}"
       class="aspect-3/4 relative block{{ media_radius }}"
       aria-label="View {{ product.title }}"
     >
@@ -74,7 +86,7 @@
 
   <div class="flex justify-between gap-gutter">
     <h3 class="body grow">
-      <a href="{{ product.url }}" itemprop="url" class="pt-3 border-none block text-balance">
+      <a href="{{ card_url }}" itemprop="url" class="pt-3 border-none block text-balance">
         <span itemprop="name">
           {{ product.title }}
         </span>

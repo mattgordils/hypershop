@@ -359,5 +359,28 @@
       { "type": "url", "id": "social_tiktok_link", "label": "TikTok", "info": "https://www.tiktok.com/@shopify" },
       { "type": "url", "id": "social_youtube_link", "label": "YouTube", "info": "https://www.youtube.com/shopify" }
     ]
+  },
+  {
+    "name": "SEO & structured data",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Product star ratings are pulled from metafields so any review app (Judge.me, Loox, Okendo, Yotpo) or manual data appears in search results. Defaults match Shopify's standard reviews metafields — only change these if your app uses different ones."
+      },
+      { "type": "header", "content": "Product reviews" },
+      { "type": "text", "id": "seo_reviews_namespace", "label": "Rating metafield namespace", "default": "reviews" },
+      { "type": "text", "id": "seo_reviews_rating_key", "label": "Average rating key", "default": "rating" },
+      { "type": "text", "id": "seo_reviews_count_key", "label": "Rating count key", "default": "rating_count" },
+      {
+        "type": "header",
+        "content": "FAQ schema"
+      },
+      {
+        "type": "paragraph",
+        "content": "Add a metaobject-list metafield of questions/answers to products or pages to output FAQ rich results. Set the namespace/key below to match it."
+      },
+      { "type": "text", "id": "seo_faq_namespace", "label": "FAQ metafield namespace", "default": "custom" },
+      { "type": "text", "id": "seo_faq_key", "label": "FAQ metafield key", "default": "faqs" }
+    ]
   }
 ]

@@ -24,6 +24,8 @@
   {%- endfor -%}
 {%- endcapture -%}
 
+{% render 'breadcrumbs', class: 'px-margin pb-gutter' %}
+
 {% if section_collection.products.size > 0 %}
   {% if manual_list %}
     {%- comment -%} A manual product list is a plain array — not paginatable {%- endcomment -%}

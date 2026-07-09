@@ -12,6 +12,9 @@
   itemscope
   itemtype="https://schema.org/BlogPosting"
 >
+  <div class="max-w-narrow mx-auto pt-v-space-sm">
+    {% render 'breadcrumbs' %}
+  </div>
   <div class="max-w-narrow mx-auto py-v-space-sm">
     <header class="text-center flex flex-col gap-gutter pb-v-space-sm">
       <a href="{{ blog.url }}" class="body-small animate-underline underlined self-center">{{ blog.title }}</a>
