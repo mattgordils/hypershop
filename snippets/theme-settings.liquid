@@ -5,6 +5,19 @@
   assign heading_font_bold   = heading_font | font_modify: 'weight', 'bolder'
   assign body_font_bold      = body_font    | font_modify: 'weight', 'bolder'
   assign body_font_italic    = body_font    | font_modify: 'style',  'italic'
+
+  # Grab the FIRST color scheme — it's the site default that :root cascades from.
+  # (Loop with limit:1, not `.first`, which is unreliable on a color_scheme_group.)
+  assign ds = nil
+  for s in settings.color_schemes limit: 1
+    assign ds = s.settings
+  endfor
+  assign ds_bg    = ds.background | default: '#ffffff'
+  assign ds_text  = ds.text | default: '#000000'
+  assign ds_light_grey = ds.light_grey
+  if ds_light_grey == blank
+    assign ds_light_grey = ds_bg | color_mix: ds_text, 95
+  endif
 -%}
 
 {%- unless heading_font.system? -%}
@@ -26,15 +39,20 @@
   {%- unless button_font.system? -%}{{ button_font | font_face: font_display: 'swap' }}{%- endunless -%}
 
   :root {
-    /* Colors */
-    --bg-color: {{ settings.color_background }};
-    --bg-color-rgb: {{ settings.color_background | color_extract: 'red' }}, {{ settings.color_background | color_extract: 'green' }}, {{ settings.color_background | color_extract: 'blue' }};
-    --text-color: {{ settings.color_text }};
-    --text-color-rgb: {{ settings.color_text | color_extract: 'red' }}, {{ settings.color_text | color_extract: 'green' }}, {{ settings.color_text | color_extract: 'blue' }};
-    --main-color: {{ settings.color_accent }};
-    --error: {{ settings.color_error }};
-    --success: {{ settings.color_success }};
-    --light-grey: {{ settings.color_light_grey }};
+    /* Site defaults = the FIRST color scheme. Everything cascades from here;
+       a section applying a scheme class (color-schemes.liquid) overrides it.
+       --light-text-color / --hr-color derive from --text-color-rgb in main.css. */
+    --bg-color: {{ ds_bg }};
+    --bg-color-rgb: {{ ds_bg | color_extract: 'red' }}, {{ ds_bg | color_extract: 'green' }}, {{ ds_bg | color_extract: 'blue' }};
+    --text-color: {{ ds_text }};
+    --text-color-rgb: {{ ds_text | color_extract: 'red' }}, {{ ds_text | color_extract: 'green' }}, {{ ds_text | color_extract: 'blue' }};
+    --main-color: {{ ds.accent | default: '#000000' }};
+    --light-grey: {{ ds_light_grey }};
+    {%- if ds.hr != blank %}
+    --hr-color: {{ ds.hr }};
+    {%- endif %}
+    --error: {{ ds.error | default: settings.color_error }};
+    --success: {{ ds.success | default: settings.color_success }};
 
     /* Fonts */
     --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};

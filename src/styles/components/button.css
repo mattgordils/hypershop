@@ -1,9 +1,12 @@
 .button,
 button.shopify-payment-button__button,
 .shopify-cleanslate [role='button'] {
-  --button-bg: var(--text-color);
-  --button-color: var(--bg-color);
-  --button-border: var(--button-bg);
+  /* Primary. Per-scheme --primary-button-* (from color-schemes.liquid) win when
+     set; otherwise fall back to the derived look. --button-* stay the resolved
+     vars so components can still override them inline (e.g. quantity steppers). */
+  --button-bg: var(--primary-button-bg, var(--text-color));
+  --button-color: var(--primary-button-color, var(--bg-color));
+  --button-border: var(--primary-button-border, var(--button-bg));
   --button-hover-bg: var(--main-color);
   --button-hover-color: var(--bg-color);
   --button-hover-border: var(--button-hover-bg);
@@ -53,9 +56,9 @@ button.shopify-payment-button__button,
 
   &.hollow,
   &.secondary {
-    --button-bg: transparent;
-    --button-color: var(--text-color);
-    --button-border: var(--text-color);
+    --button-bg: var(--secondary-button-bg, transparent);
+    --button-color: var(--secondary-button-color, var(--text-color));
+    --button-border: var(--secondary-button-border, var(--text-color));
     --button-hover-bg: var(--main-color);
     --button-hover-color: var(--bg-color);
     --button-hover-border: var(--main-color);

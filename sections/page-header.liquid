@@ -60,7 +60,7 @@
   theme settings: colors from Color scheme 1, fonts and radii from the global
   typography / layout settings.
 {%- endcomment -%}
-{%- assign account_scheme = settings.color_schemes.first -%}
+{%- assign account_scheme = nil -%}{%- for scheme in settings.color_schemes limit: 1 -%}{%- assign account_scheme = scheme -%}{%- endfor -%}
 {% style %}
   .dialog {
     --shopify-account-dialog-position-top: 200px;

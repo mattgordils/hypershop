@@ -8,6 +8,19 @@
     "theme_support_email": "matt@hyperlinknyc.com"
   },
   {
+    "name": "Overview",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Theme settings control your store's global styles — colors, color schemes, and typography — which cascade across every page of your site."
+      },
+      {
+        "type": "paragraph",
+        "content": "To preview them live as you edit, create a page using the “Styleguide” template and open it in the editor. It updates in real time as you change settings here."
+      }
+    ]
+  },
+  {
     "name": "Favicon",
     "settings": [
       {
@@ -21,10 +34,10 @@
   {
     "name": "Colors",
     "settings": [
-      { "type": "color", "id": "color_background", "label": "Background", "default": "#ffffff" },
-      { "type": "color", "id": "color_text", "label": "Text", "default": "#000000" },
-      { "type": "color", "id": "color_accent", "label": "Accent", "info": "Used for buttons, links, and highlights.", "default": "#000000" },
-      { "type": "color", "id": "color_light_grey", "label": "Light grey", "info": "Used for subtle backgrounds and alternate section fills.", "default": "#f2f2f2" },
+      {
+        "type": "paragraph",
+        "content": "Background, text, and accent colors come from your color schemes below — the first scheme is the site-wide default. These two are global status colors (each scheme can override them)."
+      },
       { "type": "color", "id": "color_error", "label": "Error", "default": "#cc0000" },
       { "type": "color", "id": "color_success", "label": "Success", "default": "#008000" }
     ]
@@ -41,19 +54,29 @@
         "id": "color_schemes",
         "definition": [
           { "type": "color", "id": "background", "label": "Background", "default": "#FFFFFF" },
+          { "type": "color_background", "id": "background_gradient", "label": "Background gradient", "info": "Optional. When set, overrides the solid background with a gradient." },
           { "type": "color", "id": "text", "label": "Text", "default": "#000000" },
-          { "type": "color", "id": "accent", "label": "Accent", "info": "Used for buttons and highlights.", "default": "#000000" },
-          { "type": "color", "id": "button_label", "label": "Button label", "default": "#FFFFFF" }
+          { "type": "color", "id": "accent", "label": "Accent", "info": "Links and highlights.", "default": "#000000" },
+          { "type": "color", "id": "hr", "label": "Line / border", "info": "Optional. Dividers and borders. Defaults to a subtle tint of the text color." },
+          { "type": "color", "id": "light_grey", "label": "Subtle background", "info": "Optional. Alternate section fills. Defaults to a mix of background and text." },
+          { "type": "color", "id": "error", "label": "Error override", "info": "Optional. Falls back to the global Error color." },
+          { "type": "color", "id": "success", "label": "Success override", "info": "Optional. Falls back to the global Success color." },
+          { "type": "color", "id": "primary_button_background", "label": "Primary button — background", "info": "Optional. Defaults to the Text color." },
+          { "type": "color", "id": "primary_button_label", "label": "Primary button — label", "info": "Optional. Defaults to the Background color." },
+          { "type": "color", "id": "primary_button_border", "label": "Primary button — border", "info": "Optional. Defaults to the button background." },
+          { "type": "color", "id": "secondary_button_background", "label": "Secondary button — background", "info": "Optional. Defaults to transparent." },
+          { "type": "color", "id": "secondary_button_label", "label": "Secondary button — label", "info": "Optional. Defaults to the Text color." },
+          { "type": "color", "id": "secondary_button_border", "label": "Secondary button — border", "info": "Optional. Defaults to the Text color." }
         ],
         "role": {
-          "background": "background",
+          "background": { "solid": "background", "gradient": "background_gradient" },
           "text": "text",
-          "primary_button": "accent",
-          "on_primary_button": "button_label",
-          "primary_button_border": "accent",
-          "secondary_button": "background",
-          "on_secondary_button": "text",
-          "secondary_button_border": "text",
+          "primary_button": "primary_button_background",
+          "on_primary_button": "primary_button_label",
+          "primary_button_border": "primary_button_border",
+          "secondary_button": "secondary_button_background",
+          "on_secondary_button": "secondary_button_label",
+          "secondary_button_border": "secondary_button_border",
           "links": "accent",
           "icons": "text"
         }
@@ -344,9 +367,9 @@
           { "value": "100%", "label": "Full width" }
         ]
       },
-      { "type": "range", "id": "border_radius", "label": "Border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
+      { "type": "range", "id": "border_radius", "label": "Base border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
       { "type": "range", "id": "button_border_radius", "label": "Button border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
-      { "type": "range", "id": "header_height", "label": "Header height", "min": 48, "max": 120, "step": 4, "unit": "px", "default": 60 }
+      { "type": "range", "id": "header_height", "label": "Header height", "min": 8, "max": 120, "step": 4, "unit": "px", "default": 60 }
     ]
   },
   {

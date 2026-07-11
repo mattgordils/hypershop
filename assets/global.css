@@ -181,9 +181,6 @@
   }
 }
 @layer utilities {
-  .pointer-events-auto {
-    pointer-events: auto;
-  }
   .pointer-events-none {
     pointer-events: none;
   }
@@ -279,12 +276,6 @@
   .z-6 {
     z-index: 6;
   }
-  .z-9 {
-    z-index: 9;
-  }
-  .z-10 {
-    z-index: 10;
-  }
   .z-\[-1\] {
     z-index: -1;
   }
@@ -324,6 +315,9 @@
   .m-auto {
     margin: auto;
   }
+  .-mx-gutter {
+    margin-inline: calc(var(--site-gutters) * -1);
+  }
   .-mx-half-gutter {
     margin-inline: calc(calc(var(--site-gutters) / 2) * -1);
   }
@@ -344,6 +338,9 @@
   }
   .-mt-\[40vh\] {
     margin-top: calc(40vh * -1);
+  }
+  .-mt-gutter {
+    margin-top: calc(var(--site-gutters) * -1);
   }
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
@@ -461,9 +458,6 @@
   }
   .h-6 {
     height: calc(var(--spacing) * 6);
-  }
-  .h-\[1\.125em\] {
-    height: 1.125em;
   }
   .h-\[1em\] {
     height: 1em;
@@ -612,11 +606,11 @@
   .max-w-\[400px\] {
     max-width: 400px;
   }
-  .max-w-\[500px\] {
-    max-width: 500px;
-  }
   .max-w-\[600px\] {
     max-width: 600px;
+  }
+  .max-w-\[750px\] {
+    max-width: 750px;
   }
   .max-w-\[calc\(var\(--spacing-site-max-w\)\+var\(--spacing-margin\)\*2\)\] {
     max-width: calc(var(--spacing-site-max-w) + var(--spacing-margin) * 2);
@@ -781,6 +775,13 @@
       margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
+  .space-y-6 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 6) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
   .gap-x-2 {
     column-gap: calc(var(--spacing) * 2);
   }
@@ -824,9 +825,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .overflow-auto {
-    overflow: auto;
   }
   .overflow-hidden {
     overflow: hidden;
@@ -943,6 +941,9 @@
   }
   .bg-hr-color {
     background-color: var(--hr-color);
+  }
+  .bg-light-grey {
+    background-color: var(--light-grey);
   }
   .bg-success {
     background-color: var(--success);
@@ -1074,9 +1075,6 @@
   }
   .pt-\[\.15em\] {
     padding-top: .15em;
-  }
-  .pt-\[\.125em\] {
-    padding-top: .125em;
   }
   .pt-\[\.175em\] {
     padding-top: .175em;
@@ -1360,9 +1358,6 @@
   .whitespace-nowrap {
     white-space: nowrap;
   }
-  .text-\[red\] {
-    color: red;
-  }
   .text-current {
     color: currentcolor;
   }
@@ -1426,9 +1421,6 @@
   }
   .opacity-70 {
     opacity: 70%;
-  }
-  .opacity-100 {
-    opacity: 100%;
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
@@ -2297,14 +2289,6 @@
   color: var(--text-color);
   background: var(--bg-color);
 }
-.theme-light-grey {
-  --text-color: var(--dark-color);
-  --bg-color: var(--light-grey);
-}
-.theme-dark {
-  --text-color: var(--light-color);
-  --bg-color: var(--dark-color);
-}
 @layer base {
   .animate-underline {
     text-decoration: none;
@@ -2463,9 +2447,9 @@ parallax-view .parallax-item {
   transform: translate3d( 0, calc(var(--percentage, 0) * (var(--end-y, 0) - var(--start-y, 0)) + var(--start-y, 0)), 0 ) rotate( calc(1deg * var(--percentage, 0) * (var(--end-rotate, 0) - var(--start-rotate, 0)) + var(--start-rotate, 0)) );
 }
 .button, button.shopify-payment-button__button, .shopify-cleanslate [role='button'] {
-  --button-bg: var(--text-color);
-  --button-color: var(--bg-color);
-  --button-border: var(--button-bg);
+  --button-bg: var(--primary-button-bg, var(--text-color));
+  --button-color: var(--primary-button-color, var(--bg-color));
+  --button-border: var(--primary-button-border, var(--button-bg));
   --button-hover-bg: var(--main-color);
   --button-hover-color: var(--bg-color);
   --button-hover-border: var(--button-hover-bg);
@@ -2502,9 +2486,9 @@ parallax-view .parallax-item {
     transition: background var(--md-speed) ease-in-out, border var(--md-speed) ease-in-out, color var(--md-speed) ease-in-out, opacity var(--md-speed) ease-in-out;
   }
   &.hollow, &.secondary {
-    --button-bg: transparent;
-    --button-color: var(--text-color);
-    --button-border: var(--text-color);
+    --button-bg: var(--secondary-button-bg, transparent);
+    --button-color: var(--secondary-button-color, var(--text-color));
+    --button-border: var(--secondary-button-border, var(--text-color));
     --button-hover-bg: var(--main-color);
     --button-hover-color: var(--bg-color);
     --button-hover-border: var(--main-color);

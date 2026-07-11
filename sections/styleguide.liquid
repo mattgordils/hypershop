@@ -7,6 +7,15 @@
 
 <div class="py-v-space px-margin">
   <div class="max-w-site-max-w mx-auto">
+    <div class="max-w-[750px] text-balance space-y-6 mb-v-space">
+      <h1>Site Styleguide</h1>
+      <p class="h5">Everything below — type scales, colors, color schemes, buttons, inputs, and the grid — is defined once in your <strong>Theme settings</strong> and cascades across every page of your store. This page is only a live preview: change a value in Theme settings and it updates here and everywhere it's used.</p>
+      {%- if request.design_mode -%}
+        <p class="body">To edit any of it, open <strong>Theme settings</strong> — the gear icon at the bottom of the editor sidebar.</p>
+      {%- else -%}
+        <p class="body">To edit any of it, open <a href="https://{{ shop.permanent_domain }}/admin/themes/current/editor" class="animate-underline underlined">Theme settings</a> (Shopify admin → Online Store → Themes → Customize → Theme settings).</p>
+      {%- endif -%}
+    </div>
 
     {%- comment -%} ═══ TYPOGRAPHY ═══ {%- endcomment -%}
     <div class="border-t border-hr-color pt-gutter mb-v-space">
@@ -49,7 +58,7 @@
         </div>
         <div>
           <p class="eyebrow text-light-text-color mb-gutter">Blockquote</p>
-          <blockquote class="body-large">{{ lorem_long }}</blockquote>
+          <blockquote>{{ lorem_long }}</blockquote>
         </div>
       </div>
     </div>
@@ -60,8 +69,9 @@
     </div>
 
     <div class="grid grid-cols-3 md:grid-cols-6 gap-gutter mb-v-space-lg">
+      {%- assign sg_default = nil -%}{%- for scheme in settings.color_schemes limit: 1 -%}{%- assign sg_default = scheme.settings -%}{%- endfor -%}
       {%- assign sg_color_vars   = '--bg-color,--text-color,--main-color,--light-text-color,--hr-color,--light-grey,--error,--success' | split: ',' -%}
-      {%- assign sg_color_labels = settings.color_background | append: ',' | append: settings.color_text | append: ',' | append: settings.color_accent | append: ',computed,computed,' | append: settings.color_light_grey | append: ',' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
+      {%- assign sg_color_labels = sg_default.background | append: ',' | append: sg_default.text | append: ',' | append: sg_default.accent | append: ',computed,computed,computed,' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
       {%- for var in sg_color_vars -%}
         <div>
           <div class="w-full aspect-3/2 rounded mb-2 border border-hr-color" style="background: var({{ var }})"></div>
@@ -153,18 +163,17 @@
             assign sc_bg     = scheme.settings.background
             assign sc_text   = scheme.settings.text
             assign sc_accent = scheme.settings.accent
-            assign sc_label  = scheme.settings.button_label
           -%}
           <div class="relative">
-            <div class="absolute inset-0 border border-current rounded opacity-7"></div>
-            <div class="rounded color-scheme-{{ scheme.id }} p-gutter bg-bg text-text-color">
-              <p class="eyebrow text-light-text-color mb-3">Color Scheme Example</p>
+            <div class="absolute inset-0 border border-current rounded opacity-7 pointer-events-none"></div>
+            <div class="rounded {{ scheme.id }} p-gutter bg-bg text-text-color">
+              <p class="eyebrow text-light-text-color mb-3 bg-light-grey -mx-gutter -mt-gutter p-gutter rounded-t">Color Scheme Example</p>
               <h2 class="mb-3">Scheme {{ forloop.index }}</h2>
               <p class="body-small mb-6">{{ lorem_short }}</p>
-              <div class="flex flex-wrap gap-3 mb-4">
-                <button class="button small">Get Started</button>
-                <button class="button secondary small">Learn More</button>
-                <button class="button small" disabled>Disabled</button>
+              <div class="flex flex-wrap gap-3 mb-4 items-center">
+                <button class="button">Get Started</button>
+                <button class="button secondary">Learn More</button>
+                <button class="button" disabled>Disabled</button>
                 <a href="#" class="h6">Text Link</a>
               </div>
               <hr class="mt-v-space-sm">
@@ -183,8 +192,16 @@
                   <p class="body-small text-light-text-color mt-1">Accent</p>
                 </div>
                 <div>
-                  <div class="aspect-square rounded border border-hr-color" style="background: {{ sc_label }};"></div>
-                  <p class="body-small text-light-text-color mt-1">Label</p>
+                  <div class="aspect-square rounded border border-hr-color" style="background: var(--hr-color);"></div>
+                  <p class="body-small text-light-text-color mt-1">Line</p>
+                </div>
+                <div>
+                  <div class="aspect-square rounded border border-hr-color" style="background: var(--success);"></div>
+                  <p class="body-small text-light-text-color mt-1">Success</p>
+                </div>
+                <div>
+                  <div class="aspect-square rounded border border-hr-color" style="background: var(--error);"></div>
+                  <p class="body-small text-light-text-color mt-1">Error</p>
                 </div>
               </div>
             </div>
@@ -205,6 +222,19 @@
   "name": "Styleguide",
   "tag": "div",
   "class": "section-styleguide",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global styles preview"
+    },
+    {
+      "type": "paragraph",
+      "content": "This section previews your theme's global styles — typography, colors, color schemes, buttons, inputs, and grid. It has no settings of its own."
+    },
+    {
+      "type": "paragraph",
+      "content": "Everything shown here is controlled in Theme settings and cascades across your entire site. To change any of it, open Theme settings (the gear icon at the bottom of the editor sidebar)."
+    }
+  ]
 }
 {% endschema %}

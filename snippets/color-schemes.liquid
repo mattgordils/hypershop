@@ -1,28 +1,84 @@
+{%- comment -%}
+  Single source of truth for color schemes.
+
+  Every scheme in the theme's color system becomes a `.{scheme.id}` class here,
+  whether it was added in code (settings_data.json → color_schemes) or visually
+  in the theme editor. Both paths flow through this generator, so a new scheme
+  works with no code change either way. Sections apply the class via
+  `{{ section.settings.color_scheme }}` (the value is the scheme id).
+
+  The site-wide default (:root) is seeded from the FIRST scheme in
+  theme-settings.liquid — that block reliably applies in the theme editor. This
+  snippet generates the per-scheme classes that sections apply on top.
+
+  Most vars are derived from a few base colors (background, text, accent). The
+  optional fields — line color, subtle background, error/success overrides, and
+  the primary/secondary button colors — fall back to the derived look when left
+  blank, so a simple scheme only needs background + text + accent.
+
+  Note: one base class per scheme; no responsive variants (write a `md:` media
+  query by hand in a section's CSS on the rare occasions you need one).
+{%- endcomment -%}
 {%- if settings.color_schemes != blank -%}
 {% style %}
   {%- for scheme in settings.color_schemes -%}
     {%- liquid
-      assign sc_bg     = scheme.settings.background
-      assign sc_text   = scheme.settings.text
-      assign sc_accent = scheme.settings.accent
-      assign sc_label  = scheme.settings.button_label
+      assign sc_bg      = scheme.settings.background
+      assign sc_bg_grad = scheme.settings.background_gradient | default: scheme.settings.background
+      assign sc_text    = scheme.settings.text
+      assign sc_accent  = scheme.settings.accent
       assign sc_r = sc_text | color_extract: 'red'
       assign sc_g = sc_text | color_extract: 'green'
       assign sc_b = sc_text | color_extract: 'blue'
+
+      # Line color: explicit override, else a subtle tint of the text color.
+      assign sc_hr = scheme.settings.hr
+      if sc_hr == blank
+        capture sc_hr
+          echo 'rgba(' | append: sc_r | append: ', ' | append: sc_g | append: ', ' | append: sc_b | append: ', 0.15)'
+        endcapture
+      endif
+
+      # Subtle background: explicit override, else background mixed toward text.
+      assign sc_light_grey = scheme.settings.light_grey
+      if sc_light_grey == blank
+        assign sc_light_grey = sc_bg | color_mix: sc_text, 95
+      endif
     -%}
-    .color-scheme-{{ scheme.id }} {
+    .{{ scheme.id }} {
       --bg-color: {{ sc_bg }};
+      --bg-gradient: {{ sc_bg_grad }};
       --text-color: {{ sc_text }};
       --main-color: {{ sc_accent }};
       --light-text-color: rgba({{ sc_r }}, {{ sc_g }}, {{ sc_b }}, 0.5);
-      --hr-color: rgba({{ sc_r }}, {{ sc_g }}, {{ sc_b }}, 0.15);
-      --light-grey: {{ sc_bg | color_mix: sc_text, 95 }};
-      --button-bg: {{ sc_accent }};
-      --button-color: {{ sc_label }};
-      --button-border: {{ sc_accent }};
-      --button-hover-bg: {{ sc_text }};
-      --button-hover-color: {{ sc_bg }};
-      --button-hover-border: {{ sc_text }};
+      --hr-color: {{ sc_hr }};
+      --light-grey: {{ sc_light_grey }};
+      {%- if scheme.settings.error != blank %}
+      --error: {{ scheme.settings.error }};
+      {%- endif %}
+      {%- if scheme.settings.success != blank %}
+      --success: {{ scheme.settings.success }};
+      {%- endif %}
+      {%- if scheme.settings.primary_button_background != blank %}
+      --primary-button-bg: {{ scheme.settings.primary_button_background }};
+      {%- endif %}
+      {%- if scheme.settings.primary_button_label != blank %}
+      --primary-button-color: {{ scheme.settings.primary_button_label }};
+      {%- endif %}
+      {%- if scheme.settings.primary_button_border != blank %}
+      --primary-button-border: {{ scheme.settings.primary_button_border }};
+      {%- endif %}
+      {%- if scheme.settings.secondary_button_background != blank %}
+      --secondary-button-bg: {{ scheme.settings.secondary_button_background }};
+      {%- endif %}
+      {%- if scheme.settings.secondary_button_label != blank %}
+      --secondary-button-color: {{ scheme.settings.secondary_button_label }};
+      {%- endif %}
+      {%- if scheme.settings.secondary_button_border != blank %}
+      --secondary-button-border: {{ scheme.settings.secondary_button_border }};
+      {%- endif %}
+      color: var(--text-color);
+      background: var(--bg-gradient);
     }
   {%- endfor -%}
 {% endstyle %}

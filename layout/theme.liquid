@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="{{ settings.color_background | default: '#ffffff' }}">
+    <meta name="theme-color" content="{{ settings.color_schemes.first.settings.background | default: '#ffffff' }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.shopify.com">
@@ -56,16 +56,6 @@
     <main id="main-content" role="main">
       <div class="page-sections">
         {{ content_for_layout }}
-        {% comment %} {%- if request.design_mode -%} {% endcomment %}
-          <details>
-            <summary class="z-10 fixed bottom-0 left-0 w-full p-4 pointer-events-none flex items-center justify-center">
-              <p class="button pointer-events-auto">View Styleguide</p>
-            </summary>
-            <div
-              class="fixed inset-0 z-9 overflow-auto theme-default"
-            >{% section 'styleguide' %}</div>
-          </details>
-        {% comment %} {%- endif -%} {% endcomment %}
       </div>
     </main>
 
