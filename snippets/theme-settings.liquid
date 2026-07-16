@@ -217,46 +217,73 @@
 
   {%- comment -%} CUSTOM_FONTS_START — merchant-uploaded fonts. Strip for Theme Store builds (npm run prep:store). See README-custom-fonts.md {%- endcomment -%}
   {%- liquid
-    assign custom_heading_url = settings.custom_font_heading_url
-    assign custom_body_url    = settings.custom_font_body_url
-    assign custom_button_url  = settings.custom_font_button_url
+    assign use_custom_heading = settings.use_uploaded_font_heading
+    assign use_custom_body    = settings.use_uploaded_font_body
+    assign use_custom_button  = settings.use_uploaded_font_button
   -%}
-  {%- if custom_heading_url != blank -%}
-    @font-face {
-      font-family: 'custom-heading';
-      src: url('{{ custom_heading_url }}') format('woff2');
-      font-weight: 100 900;
-      font-style: normal;
-      font-display: swap;
-    }
+  {%- if use_custom_heading -%}
+    {%- assign u_regular     = settings.custom_font_heading_url -%}
+    {%- assign u_italic      = settings.custom_font_heading_italic_url -%}
+    {%- assign u_bold        = settings.custom_font_heading_bold_url -%}
+    {%- assign u_bold_italic = settings.custom_font_heading_bold_italic_url -%}
+    {%- if u_regular != blank -%}
+      @font-face { font-family: 'custom-heading'; src: url('{{ u_regular }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_italic != blank -%}
+      @font-face { font-family: 'custom-heading'; src: url('{{ u_italic }}') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold != blank -%}
+      @font-face { font-family: 'custom-heading'; src: url('{{ u_bold }}') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold_italic != blank -%}
+      @font-face { font-family: 'custom-heading'; src: url('{{ u_bold_italic }}') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
+    {%- endif -%}
   {%- endif -%}
-  {%- if custom_body_url != blank -%}
-    @font-face {
-      font-family: 'custom-body';
-      src: url('{{ custom_body_url }}') format('woff2');
-      font-weight: 100 900;
-      font-style: normal;
-      font-display: swap;
-    }
+  {%- if use_custom_body -%}
+    {%- assign u_regular     = settings.custom_font_body_url -%}
+    {%- assign u_italic      = settings.custom_font_body_italic_url -%}
+    {%- assign u_bold        = settings.custom_font_body_bold_url -%}
+    {%- assign u_bold_italic = settings.custom_font_body_bold_italic_url -%}
+    {%- if u_regular != blank -%}
+      @font-face { font-family: 'custom-body'; src: url('{{ u_regular }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_italic != blank -%}
+      @font-face { font-family: 'custom-body'; src: url('{{ u_italic }}') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold != blank -%}
+      @font-face { font-family: 'custom-body'; src: url('{{ u_bold }}') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold_italic != blank -%}
+      @font-face { font-family: 'custom-body'; src: url('{{ u_bold_italic }}') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
+    {%- endif -%}
   {%- endif -%}
-  {%- if custom_button_url != blank -%}
-    @font-face {
-      font-family: 'custom-button';
-      src: url('{{ custom_button_url }}') format('woff2');
-      font-weight: 100 900;
-      font-style: normal;
-      font-display: swap;
-    }
+  {%- if use_custom_button -%}
+    {%- assign u_regular     = settings.custom_font_button_url -%}
+    {%- assign u_italic      = settings.custom_font_button_italic_url -%}
+    {%- assign u_bold        = settings.custom_font_button_bold_url -%}
+    {%- assign u_bold_italic = settings.custom_font_button_bold_italic_url -%}
+    {%- if u_regular != blank -%}
+      @font-face { font-family: 'custom-button'; src: url('{{ u_regular }}') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_italic != blank -%}
+      @font-face { font-family: 'custom-button'; src: url('{{ u_italic }}') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold != blank -%}
+      @font-face { font-family: 'custom-button'; src: url('{{ u_bold }}') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    {%- endif -%}
+    {%- if u_bold_italic != blank -%}
+      @font-face { font-family: 'custom-button'; src: url('{{ u_bold_italic }}') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
+    {%- endif -%}
   {%- endif -%}
-  {%- if custom_heading_url != blank or custom_body_url != blank or custom_button_url != blank -%}
+  {%- if use_custom_heading or use_custom_body or use_custom_button -%}
     :root {
-      {%- if custom_heading_url != blank %}
+      {%- if use_custom_heading %}
       --secondary-font: 'custom-heading', {{ heading_font.fallback_families }};
       {%- endif %}
-      {%- if custom_body_url != blank %}
+      {%- if use_custom_body %}
       --main-font: 'custom-body', {{ body_font.fallback_families }};
       {%- endif %}
-      {%- if custom_button_url != blank %}
+      {%- if use_custom_button %}
       --button-font: 'custom-button', {{ button_font.fallback_families }};
       {%- endif %}
     }

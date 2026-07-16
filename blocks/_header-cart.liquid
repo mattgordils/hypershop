@@ -16,7 +16,7 @@
 
 <modal-trigger
   data-modal-id="cartDrawer"
-  class="cart-trigger flex items-center gap-2 cursor-pointer leading-none"
+  class="header-trigger cart-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center gap-2 whitespace-nowrap cursor-pointer leading-none"
   role="button"
   tabindex="0"
   title="{{ a11y_title }}"
@@ -26,22 +26,22 @@
   {%- if symbol == 'circle' -%}
     <span
       id="cartCount"
-      class="body-small w-6 h-6 flex items-center justify-center rounded-full theme-dark text-center"
+      class="shrink-0 body-small w-6 h-6 flex items-center justify-center rounded-full theme-dark text-center"
       data-empty-hide="true"
     >
       {{ cart.item_count }}
     </span>
   {%- elsif symbol == 'icon' or symbol == 'custom' -%}
-    <span class="relative flex items-center">
+    <span class="shrink-0 relative flex items-center">
       {%- if symbol == 'custom' and custom_icon != blank -%}
         {{ custom_icon | image_url: width: 72 | image_tag:
           widths: '24, 48, 72',
           alt: '',
-          class: 'block h-[18px] w-auto object-contain',
+          class: 'shrink-0 block h-[18px] w-auto object-contain',
           loading: 'lazy'
         }}
       {%- else -%}
-        <span class="material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+        <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
       {%- endif -%}
       {%- if count_appearance == 'bubble' -%}
         <span
@@ -56,17 +56,17 @@
   {%- endif -%}
 
   {%- if label != blank -%}
-    <span class="body-small md:body">{{ label }}</span>
+    <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
   {%- endif -%}
 
   {%- if symbol != 'circle' and count_appearance == 'superscript' -%}
-    <sup id="cartCount" class="body-small leading-none -translate-y-1" data-empty-hide="true">
+    <sup id="cartCount" class="shrink-0 body-small leading-none -translate-y-1" data-empty-hide="true">
       {{ cart.item_count }}
     </sup>
   {%- elsif symbol != 'circle' and count_appearance == 'text' -%}
     <span
       id="cartCount"
-      class="body-small md:body"
+      class="shrink-0 body-small md:body"
       data-prepend="{{ count_prepend }}"
       data-append="{{ count_append }}"
       data-empty-hide="true"
@@ -79,7 +79,7 @@
 {% schema %}
 {
   "name": "Header Cart",
-  "class": "block-header-cart",
+  "class": "block-header-cart h-full",
   "settings": [
     {
       "type": "select",

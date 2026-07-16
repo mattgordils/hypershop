@@ -61,18 +61,30 @@ function strip() {
   }
   fs.writeFileSync(liquidFile, liquidAfter);
 
-  // settings_schema.json — drop the custom_font_* setting lines.
-  // They use leading-comma JSON style so removal keeps the file valid.
+  // settings_schema.json — drop the setting DEFINITION lines whose "id" starts
+  // with a custom-font prefix (custom_font_… URL fields and the use_uploaded_font_…
+  // toggles). Lines that only REFERENCE those ids in visible_if survive because
+  // the match requires the "id": prefix, so the surviving font_picker rules keep
+  // their visible_if — which safely evaluates to "true" (i.e. picker visible)
+  // when the referenced toggle is missing (nil != true = true). The leading-comma
+  // JSON style ensures removing entries keeps the file valid.
   const schemaFile = TARGETS[1];
+  const stripIdPattern = /"id"\s*:\s*"(custom_font_|use_uploaded_font_)/;
+  // Also strip visible_if attributes that reference the toggles we're removing —
+  // otherwise the surviving font_picker lines fail theme-check's ValidVisibleIf
+  // (variable-not-found) after strip, which can trip up Theme Store review.
+  const stripVisibleIfPattern = /\s*,\s*"visible_if"\s*:\s*"[^"]*use_uploaded_font_[^"]*"/g;
   const lines = fs.readFileSync(schemaFile, 'utf8').split('\n');
-  const kept = lines.filter((l) => !l.includes('custom_font_'));
+  const kept = lines
+    .filter((l) => !stripIdPattern.test(l))
+    .map((l) => l.replace(stripVisibleIfPattern, ''));
   const removed = lines.length - kept.length;
   const schemaAfter = kept.join('\n');
   JSON.parse(schemaAfter); // fail loudly if we produced invalid JSON
   fs.writeFileSync(schemaFile, schemaAfter);
 
   console.log(`Stripped ${START}…${END} region from ${rel(liquidFile)}`);
-  console.log(`Removed ${removed} custom_font_* line(s) from ${rel(schemaFile)}`);
+  console.log(`Removed ${removed} custom-font setting line(s) from ${rel(schemaFile)}`);
   console.log('✓ Store-safe state ready. Run "npm run restore:custom-fonts" when done pushing.');
 }
 

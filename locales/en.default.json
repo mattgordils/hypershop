@@ -6,5 +6,12 @@
       "one": "{{ count }} item",
       "other": "{{ count }} items"
     }
+  },
+  "general": {
+    "search": {
+      "search": "Search",
+      "placeholder": "Search for anything",
+      "close": "Close"
+    }
   }
 }

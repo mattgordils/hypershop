@@ -1,6 +1,6 @@
 {%- liquid
-  assign lorem_short = 'This is an example of what text and buttons will look like on this background color option.'
-  assign lorem_long = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+  assign lorem_short = 'This is an <b>example</b> of what text and <i>buttons</i> will look <strong><i>like on this</i></strong> background color option.'
+  assign lorem_long = 'Lorem ipsum dolor sit amet, <strong>consectetur adipiscing</strong> elit, sed do eiusmod tempor incididunt ut <em>labore et dolore <b>magna aliqua</b></em>. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
   assign column_class = "bg-linear-to-b from-error rounded-t opacity-25"
 -%}
@@ -66,23 +66,57 @@
       </div>
     </div>
 
-    {%- comment -%} ═══ COLORS ═══ {%- endcomment -%}
+    {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
     <div class="border-t border-hr-color pt-gutter mb-v-space">
-      <strong class="h6">Colors</strong>
+      <strong class="h6">Color Schemes</strong>
     </div>
 
-    <div class="grid grid-cols-3 md:grid-cols-6 gap-gutter mb-v-space-lg">
-      {%- assign sg_default = nil -%}{%- for scheme in settings.color_schemes limit: 1 -%}{%- assign sg_default = scheme.settings -%}{%- endfor -%}
-      {%- assign sg_color_vars   = '--bg-color,--text-color,--main-color,--light-text-color,--hr-color,--light-grey,--error,--success' | split: ',' -%}
-      {%- assign sg_color_labels = sg_default.background | append: ',' | append: sg_default.text | append: ',' | append: sg_default.accent | append: ',computed,computed,computed,' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
-      {%- for var in sg_color_vars -%}
-        <div style="--color: var({{ var }})">
-          {{ swatch }}
-          <p class="body-tiny mono mt-2">{{ var }}</p>
-          <p class="body-tiny text-light-text-color">{{ sg_color_labels[forloop.index0] }}</p>
-        </div>
-      {%- endfor -%}
-    </div>
+    {%- if settings.color_schemes != blank -%}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
+        {%- for scheme in settings.color_schemes -%}
+          {%- liquid
+            assign sc_bg     = scheme.settings.background
+            assign sc_text   = scheme.settings.text
+            assign sc_accent = scheme.settings.accent
+          -%}
+
+          <div class="relative">
+            <div class="absolute inset-0 border border-current rounded opacity-7 pointer-events-none"></div>
+            <div class="rounded {{ scheme.id }} p-gutter bg-bg text-text-color">
+              <p class="eyebrow mb-3 bg-light-grey -mx-gutter -mt-gutter p-gutter rounded-t {% if forloop.index0 == 0  %}text-error{% else %}text-light-text-color{% endif %}">
+                {% if forloop.index0 == 0  %}
+                  Default Color Schme
+                {% else %}
+                  Color Scheme Example
+                {% endif %}
+              </p>
+              <h2 class="mb-3">Scheme {{ forloop.index }}</h2>
+              <p class="body-small mb-6">{{ lorem_short }}</p>
+              <div class="flex flex-wrap gap-3 mb-4 items-center">
+                <button class="button">Get Started</button>
+                <button class="button secondary">Learn More</button>
+                <button class="button" disabled>Disabled</button>
+                <a href="#" class="button-text">Text Link</a>
+              </div>
+              <hr class="mt-v-space-sm">
+              <h6 class="mb-4 mt-2">Colors</h6>
+              <div class="grid grid-cols-4 gap-x-3 gap-y-5">
+                <div style="--color: {{ sc_bg }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Background</p></div>
+                <div style="--color: {{ sc_text }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Text</p></div>
+                <div style="--color: {{ sc_accent }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Accent</p></div>
+                <div style="--color: var(--hr-color)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Line</p></div>
+                <div style="--color: var(--success)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Success</p></div>
+                <div style="--color: var(--error)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Error</p></div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="mb-v-space-lg">
+        <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
+      </div>
+    {%- endif -%}
 
     {%- comment -%} ═══ GRID ═══ {%- endcomment -%}
     <div class="border-t border-hr-color pt-gutter mb-v-space">
@@ -102,7 +136,7 @@
         {%- endfor -%}
       </div>
 
-      <div class="mt-v-space-sm flex justify-center">
+      <div class="mt-v-space-sm justify-center hidden md:flex">
         <div class="py-12 px-[calc(var(--site-margins-mobile)*1px)] rounded-[50px] w-full max-w-[400px] relative aspect-[9/16] flex flex-col bg-bg -mt-[40vh]">
           <div class="absolute inset-0 rounded-[50px] border border-error opacity-20"></div>
           <div class="eyebrow mb-1 w-full grow-0 shrink-0 text-error">Mobile Grid</div>
@@ -153,52 +187,6 @@
         </div>
       </div>
     </div>
-
-    {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
-    <div class="border-t border-hr-color pt-gutter mb-v-space">
-      <strong class="h6">Color Schemes</strong>
-    </div>
-
-    {%- if settings.color_schemes != blank -%}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
-        {%- for scheme in settings.color_schemes -%}
-          {%- liquid
-            assign sc_bg     = scheme.settings.background
-            assign sc_text   = scheme.settings.text
-            assign sc_accent = scheme.settings.accent
-          -%}
-
-          <div class="relative">
-            <div class="absolute inset-0 border border-current rounded opacity-7 pointer-events-none"></div>
-            <div class="rounded {{ scheme.id }} p-gutter bg-bg text-text-color">
-              <p class="eyebrow text-light-text-color mb-3 bg-light-grey -mx-gutter -mt-gutter p-gutter rounded-t">Color Scheme Example</p>
-              <h2 class="mb-3">Scheme {{ forloop.index }}</h2>
-              <p class="body-small mb-6">{{ lorem_short }}</p>
-              <div class="flex flex-wrap gap-3 mb-4 items-center">
-                <button class="button">Get Started</button>
-                <button class="button secondary">Learn More</button>
-                <button class="button" disabled>Disabled</button>
-                <a href="#" class="button-text">Text Link</a>
-              </div>
-              <hr class="mt-v-space-sm">
-              <h6 class="mb-4 mt-2">Colors</h6>
-              <div class="grid grid-cols-4 gap-x-3 gap-y-5">
-                <div style="--color: {{ sc_bg }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Background</p></div>
-                <div style="--color: {{ sc_text }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Text</p></div>
-                <div style="--color: {{ sc_accent }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Accent</p></div>
-                <div style="--color: var(--hr-color)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Line</p></div>
-                <div style="--color: var(--success)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Success</p></div>
-                <div style="--color: var(--error)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Error</p></div>
-              </div>
-            </div>
-          </div>
-        {%- endfor -%}
-      </div>
-    {%- else -%}
-      <div class="mb-v-space-lg">
-        <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
-      </div>
-    {%- endif -%}
 
   </div>
 </div>

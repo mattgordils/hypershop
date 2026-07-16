@@ -7,7 +7,7 @@
 -%}
 
 {%- if shop.customer_accounts_enabled -%}
-  <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center" {{ block.shopify_attributes }}>
+  <div class="header-trigger account-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center whitespace-nowrap leading-none" {{ block.shopify_attributes }}>
     <shopify-account
       menu="customer-account-main-menu"
       class="account-component flex h-full items-center gap-2"
@@ -17,14 +17,14 @@
           {{ custom_icon | image_url: width: 72 | image_tag:
             widths: '24, 48, 72',
             alt: '',
-            class: 'block h-[18px] w-auto object-contain',
+            class: 'shrink-0 block h-[18px] w-auto object-contain',
             loading: 'lazy'
           }}
         {%- elsif symbol == 'icon' -%}
-          <span class="material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+          <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
         {%- endif -%}
         {%- if label != blank -%}
-          <span class="body-small md:body leading-none">{{ label }}</span>
+          <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
         {%- endif -%}
       </span>
     </shopify-account>
@@ -34,8 +34,12 @@
 {% schema %}
 {
   "name": "Header Account",
-  "class": "block-header-account",
+  "class": "block-header-account h-full",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "Only appears when customer accounts are enabled (Admin → Settings → Customer accounts). It's automatically hidden otherwise."
+    },
     {
       "type": "select",
       "id": "symbol",

@@ -1,0 +1,79 @@
+{%- liquid
+  assign symbol = block.settings.symbol
+  assign label = block.settings.label
+  assign custom_icon = block.settings.custom_icon
+  assign default_icon = block.settings.icon
+  assign a11y_title = 'general.search.search' | t | default: 'Search'
+
+  assign has_symbol = false
+  if symbol == 'icon' or symbol == 'custom'
+    assign has_symbol = true
+  endif
+-%}
+
+{%- if has_symbol or label != blank -%}
+  <modal-trigger
+    data-modal-id="searchDrawer"
+    class="header-trigger search-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center gap-2 whitespace-nowrap cursor-pointer leading-none"
+    role="button"
+    tabindex="0"
+    title="{{ a11y_title }}"
+    aria-label="{{ a11y_title }}"
+    {% comment %} {{ block.shopify_attributes }} {% endcomment %}
+  >
+    {%- if symbol == 'custom' and custom_icon != blank -%}
+      {{ custom_icon | image_url: width: 72 | image_tag:
+        widths: '24, 48, 72',
+        alt: '',
+        class: 'shrink-0 block h-[18px] w-auto object-contain',
+        loading: 'lazy'
+      }}
+    {%- elsif symbol == 'icon' -%}
+      <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+    {%- endif -%}
+    {%- if label != blank -%}
+      <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
+    {%- endif -%}
+  </modal-trigger>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Header Search",
+  "class": "block-header-search h-full",
+  "settings": [
+    {
+      "type": "select",
+      "id": "symbol",
+      "label": "Symbol",
+      "default": "icon",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Icon", "value": "icon" },
+        { "label": "Custom Icon", "value": "custom" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Material icon name",
+      "default": "search",
+      "info": "Any Material Symbols name (e.g. search, search_outlined).",
+      "visible_if": "{{ block.settings.symbol == 'icon' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Uploaded SVG or PNG.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave blank to hide. Override the default \"Search\" wording — accessibility text always uses the translated default. Set Symbol to \"None\" and clear this to remove the trigger entirely."
+    }
+  ]
+}
+{% endschema %}

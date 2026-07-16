@@ -31,6 +31,24 @@
     border-color: var(--hr-color);
   }
 
+  /* Shared trigger + label styling for the search / account / cart / hamburger
+     buttons. Each trigger wrapper gets .header-trigger, each label span gets
+     .header-trigger-label. The label picks up an animated currentColor underline
+     on hover of its enclosing trigger — same behavior as the top-level nav items,
+     just centralized here so all four triggers stay visually consistent. */
+  .header-trigger-label {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size var(--slow-speed);
+  }
+  .header-trigger:hover .header-trigger-label,
+  .header-trigger.active .header-trigger-label {
+    background-size: 100% 1px;
+    background-position: 0% 100%;
+  }
+
   /* Logo crossfade — stack the two logos so they share the same cell */
   .logo-stack {
     display: grid;
@@ -171,19 +189,18 @@
         {% render 'header-menu' with menu: section.settings.menu %}
       {%- endif -%}
 
+      {% content_for 'block', type: '_header-search', id: 'header-search' %}
       {% content_for 'block', type: '_header-account', id: 'header-account' %}
 
-      <div class="flex gap-gutter pl-[calc(var(--site-gutters)/2)] items-center">
-        <modal-trigger
-          data-modal-id="menuPanel"
-          class="md:hidden"
-          role="button"
-          aria-label="Open navigation menu"
-          tabindex="0"
-        >Menu</modal-trigger>
+      <modal-trigger
+        data-modal-id="menuPanel"
+        class="header-trigger md:hidden shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center whitespace-nowrap leading-none cursor-pointer"
+        role="button"
+        aria-label="Open navigation menu"
+        tabindex="0"
+      ><span class="header-trigger-label shrink-0 body-small md:body">Menu</span></modal-trigger>
 
-        {% content_for 'block', type: '_header-cart', id: 'header-cart' %}
-      </div>
+      {% content_for 'block', type: '_header-cart', id: 'header-cart' %}
     </div>
   </header>
 </sticky-header>
@@ -250,10 +267,6 @@
       "label": "Secondary menu",
       "info": "Optional. When set, sits to the right of the logo (next to the account and cart)."
     }
-  ],
-  "blocks": [
-    { "type": "_header-account" },
-    { "type": "_header-cart" }
   ]
 }
 {% endschema %}

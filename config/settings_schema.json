@@ -106,12 +106,28 @@
   {
     "name": "Typography",
     "settings": [
-      { "type": "font_picker", "id": "font_heading", "label": "Headings font", "default": "assistant_n4" },
-      { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "assistant_n4" },
-      { "type": "font_picker", "id": "font_button", "label": "Button font", "default": "assistant_n4" }
-      , { "type": "url", "id": "custom_font_heading_url", "label": "Custom headings font (.woff2 URL)", "info": "Non–Theme-Store builds only. Upload a .woff2 to Content → Files and paste its URL to override the headings font above. See README-custom-fonts.md." }
-      , { "type": "url", "id": "custom_font_body_url", "label": "Custom body font (.woff2 URL)", "info": "Non–Theme-Store builds only. Overrides the body font with a .woff2 uploaded to Content → Files." }
-      , { "type": "url", "id": "custom_font_button_url", "label": "Custom button font (.woff2 URL)", "info": "Non–Theme-Store builds only. Overrides the button font with a .woff2 uploaded to Content → Files." }
+      { "type": "paragraph", "content": "To get the font URL, upload .woff2 files under Content → Files, then paste each URL below." },
+      { "type": "header", "content": "Headline Typeface" },
+      { "type": "font_picker", "id": "font_heading", "label": "Headings font", "default": "assistant_n4", "visible_if": "{{ settings.use_uploaded_font_heading != true }}" },
+      { "type": "checkbox", "id": "use_uploaded_font_heading", "label": "Use custom headings font", "default": false },
+      { "type": "url", "id": "custom_font_heading_url", "label": "Headings — Regular (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_heading }}" },
+      { "type": "url", "id": "custom_font_heading_italic_url", "label": "Headings — Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_heading }}" },
+      { "type": "url", "id": "custom_font_heading_bold_url", "label": "Headings — Bold (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_heading }}" },
+      { "type": "url", "id": "custom_font_heading_bold_italic_url", "label": "Headings — Bold Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_heading }}" },
+      { "type": "header", "content": "Body Typeface" },
+      { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "assistant_n4", "visible_if": "{{ settings.use_uploaded_font_body != true }}" },
+      { "type": "checkbox", "id": "use_uploaded_font_body", "label": "Use custom body font", "default": false },
+      { "type": "url", "id": "custom_font_body_url", "label": "Body — Regular (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_body }}" },
+      { "type": "url", "id": "custom_font_body_italic_url", "label": "Body — Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_body }}" },
+      { "type": "url", "id": "custom_font_body_bold_url", "label": "Body — Bold (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_body }}" },
+      { "type": "url", "id": "custom_font_body_bold_italic_url", "label": "Body — Bold Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_body }}" },
+      { "type": "header", "content": "Button Typeface" },
+      { "type": "font_picker", "id": "font_button", "label": "Button font", "default": "assistant_n4", "visible_if": "{{ settings.use_uploaded_font_button != true }}" },
+      { "type": "checkbox", "id": "use_uploaded_font_button", "label": "Use custom button font", "default": false },
+      { "type": "url", "id": "custom_font_button_url", "label": "Button — Regular (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_button }}" },
+      { "type": "url", "id": "custom_font_button_italic_url", "label": "Button — Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_button }}" },
+      { "type": "url", "id": "custom_font_button_bold_url", "label": "Button — Bold (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_button }}" },
+      { "type": "url", "id": "custom_font_button_bold_italic_url", "label": "Button — Bold Italic (.woff2 URL)", "visible_if": "{{ settings.use_uploaded_font_button }}" }
     ]
   },
   {

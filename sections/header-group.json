@@ -18,6 +18,11 @@
     "header": {
       "type": "page-header",
       "blocks": {
+        "header-search": {
+          "type": "_header-search",
+          "static": true,
+          "settings": {}
+        },
         "header-account": {
           "type": "_header-account",
           "static": true,

@@ -16,6 +16,8 @@
     text color to `--button-hover-color` on hover.
   - Make sure it degrades gracefully for `.secondary` / `.circle` / `.square`
     variants and respects `prefers-reduced-motion`.
+- Header dropdowns on click instead
+- Add options on search section to show all types. Product, Pages, Blog Posts. or just select 1 or 2. Probably just 3 toggles to toggle on the ones that we want to include i the search.
 
   ## Questions
   - Does shopify have a native newsletter signup? I would like the option for a newsletter signup on the site but want to make sure it integrates well with shopify or any other apps people may use. what do other premium themes usually do?
