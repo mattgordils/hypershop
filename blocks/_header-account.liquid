@@ -1,0 +1,73 @@
+{%- liquid
+  assign symbol = block.settings.symbol
+  assign label = block.settings.label
+  assign custom_icon = block.settings.custom_icon
+  assign default_icon = block.settings.icon
+  assign a11y_title = 'header.account_label' | t
+-%}
+
+{%- if shop.customer_accounts_enabled -%}
+  <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center" {{ block.shopify_attributes }}>
+    <shopify-account
+      menu="customer-account-main-menu"
+      class="account-component flex h-full items-center gap-2"
+    >
+      <span slot="signed-out-avatar" class="flex items-center gap-2" title="{{ a11y_title }}" aria-label="{{ a11y_title }}">
+        {%- if symbol == 'custom' and custom_icon != blank -%}
+          {{ custom_icon | image_url: width: 72 | image_tag:
+            widths: '24, 48, 72',
+            alt: '',
+            class: 'block h-[18px] w-auto object-contain',
+            loading: 'lazy'
+          }}
+        {%- elsif symbol == 'icon' -%}
+          <span class="material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+        {%- endif -%}
+        {%- if label != blank -%}
+          <span class="body-small md:body leading-none">{{ label }}</span>
+        {%- endif -%}
+      </span>
+    </shopify-account>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Header Account",
+  "class": "block-header-account",
+  "settings": [
+    {
+      "type": "select",
+      "id": "symbol",
+      "label": "Symbol",
+      "default": "icon",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Icon", "value": "icon" },
+        { "label": "Custom Icon", "value": "custom" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Material icon name",
+      "default": "person_outline",
+      "info": "Any Material Symbols name (e.g. person, account_circle).",
+      "visible_if": "{{ block.settings.symbol == 'icon' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Uploaded SVG or PNG. Falls back to the default icon if empty.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave blank to hide. Override the default \"Account\" wording — accessibility text always uses the translated default."
+    }
+  ]
+}
+{% endschema %}

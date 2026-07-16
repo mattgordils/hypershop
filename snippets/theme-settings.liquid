@@ -12,12 +12,19 @@
   for s in settings.color_schemes limit: 1
     assign ds = s.settings
   endfor
-  assign ds_bg    = ds.background | default: '#ffffff'
-  assign ds_text  = ds.text | default: '#000000'
-  assign ds_light_grey = ds.light_grey
-  if ds_light_grey == blank
-    assign ds_light_grey = ds_bg | color_mix: ds_text, 95
-  endif
+
+  # Whether the first scheme sets its optional line / subtle-bg colors — tested
+  # HERE, outside the style tag, where an unset color is empty. (Inside a style
+  # tag the editor swaps every color for a non-empty placeholder, so the check
+  # must happen out here; we still output the raw value inside for live preview.)
+  capture ds_hr_raw
+    echo ds.hr
+  endcapture
+  assign ds_hr_set = ds_hr_raw | strip
+  capture ds_lg_raw
+    echo ds.light_grey
+  endcapture
+  assign ds_lg_set = ds_lg_raw | strip
 -%}
 
 {%- unless heading_font.system? -%}
@@ -39,20 +46,22 @@
   {%- unless button_font.system? -%}{{ button_font | font_face: font_display: 'swap' }}{%- endunless -%}
 
   :root {
-    /* Site defaults = the FIRST color scheme. Everything cascades from here;
-       a section applying a scheme class (color-schemes.liquid) overrides it.
-       --light-text-color / --hr-color derive from --text-color-rgb in main.css. */
-    --bg-color: {{ ds_bg }};
-    --bg-color-rgb: {{ ds_bg | color_extract: 'red' }}, {{ ds_bg | color_extract: 'green' }}, {{ ds_bg | color_extract: 'blue' }};
-    --text-color: {{ ds_text }};
-    --text-color-rgb: {{ ds_text | color_extract: 'red' }}, {{ ds_text | color_extract: 'green' }}, {{ ds_text | color_extract: 'blue' }};
-    --main-color: {{ ds.accent | default: '#000000' }};
-    --light-grey: {{ ds_light_grey }};
-    {%- if ds.hr != blank %}
+    /* Site defaults = the FIRST color scheme. Everything cascades from here; a
+       section applying a scheme class (color-schemes.liquid) overrides it. Raw
+       color output only — NO Liquid color filters (they break the editor's live
+       preview). Derived colors (--light-text-color/--hr-color/--light-grey) are
+       computed in CSS in main.css. */
+    --bg-color: {{ ds.background }};
+    --text-color: {{ ds.text }};
+    --main-color: {{ ds.accent }};
+    {%- if ds_hr_set != blank %}
     --hr-color: {{ ds.hr }};
     {%- endif %}
-    --error: {{ ds.error | default: settings.color_error }};
-    --success: {{ ds.success | default: settings.color_success }};
+    {%- if ds_lg_set != blank %}
+    --light-grey: {{ ds.light_grey }};
+    {%- endif %}
+    --error: {{ settings.color_error }};
+    --success: {{ settings.color_success }};
 
     /* Fonts */
     --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};

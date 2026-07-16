@@ -12,7 +12,12 @@
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.favicon | image_url: width: 32 }}">
-      <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.favicon | image_url: width: 180 }}">
+    {%- endif -%}
+    {%- assign touch_icon = settings.touch_icon | default: settings.favicon -%}
+    {%- if touch_icon != blank -%}
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ touch_icon | image_url: width: 180, height: 180 }}">
+      <link rel="icon" type="image/png" sizes="192x192" href="{{ touch_icon | image_url: width: 192, height: 192 }}">
+      <link rel="icon" type="image/png" sizes="512x512" href="{{ touch_icon | image_url: width: 512, height: 512 }}">
     {%- endif -%}
 
     <title>
@@ -38,7 +43,7 @@
     {% render 'integrations-before-head-close' %}
   </head>
 
-  <body {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
+  <body data-button-hover="{{ settings.button_hover_effect | default: 'simple' }}"{% if request.design_mode %} data-shopify-editor="true"{% endif %}>
     <!-- Skip Links for Accessibility -->
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#footer">Skip to footer</a>

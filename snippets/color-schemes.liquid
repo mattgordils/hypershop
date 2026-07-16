@@ -3,82 +3,67 @@
 
   Every scheme in the theme's color system becomes a `.{scheme.id}` class here,
   whether it was added in code (settings_data.json → color_schemes) or visually
-  in the theme editor. Both paths flow through this generator, so a new scheme
-  works with no code change either way. Sections apply the class via
-  `{{ section.settings.color_scheme }}` (the value is the scheme id).
+  in the theme editor. Sections apply the class via
+  `{{ section.settings.color_scheme }}` (the value is the scheme id). The site
+  default (:root) is seeded from the FIRST scheme in theme-settings.liquid.
 
-  The site-wide default (:root) is seeded from the FIRST scheme in
-  theme-settings.liquid — that block reliably applies in the theme editor. This
-  snippet generates the per-scheme classes that sections apply on top.
+  Two rules keep this working in BOTH the storefront and the theme editor:
 
-  Most vars are derived from a few base colors (background, text, accent). The
-  optional fields — line color, subtle background, error/success overrides, and
-  the primary/secondary button colors — fall back to the derived look when left
-  blank, so a simple scheme only needs background + text + accent.
+  1. Output RAW colors only — never a Liquid color filter (color_extract,
+     color_mix…). In the editor, colors inside {% style %} become live-preview
+     placeholders and a filter run on a placeholder breaks. Derived colors
+     (--light-text-color/--hr-color/--light-grey) are computed in CSS with
+     color-mix() in main.css, adapting to --text-color/--bg-color.
 
-  Note: one base class per scheme; no responsive variants (write a `md:` media
-  query by hand in a section's CSS on the rare occasions you need one).
+  2. Decide whether an OPTIONAL field is set by checking it OUTSIDE {% style %},
+     where an unset color is truly empty. (Inside {% style %} the editor swaps
+     every color — even unset ones — for a NON-empty placeholder, so `!= blank`
+     there is always true and would emit an empty `--var:` that clobbers the
+     inherited value.) We precompute the set-fields list below, then only output
+     the raw setting (a placeholder in the editor → live preview) when it's set.
+
+  So a scheme only needs background + text + accent; every optional field falls
+  back to the inherited / CSS-derived look when blank.
 {%- endcomment -%}
 {%- if settings.color_schemes != blank -%}
+{%- liquid
+  # optional scheme field → CSS custom property (field:var pairs, split by |)
+  assign optional_vars = 'background_gradient:--bg-gradient|hr:--hr-color|light_grey:--light-grey|error:--error|success:--success|primary_button_background:--primary-button-bg|primary_button_label:--primary-button-color|primary_button_border:--primary-button-border|primary_button_hover_background:--primary-button-hover-bg|primary_button_hover_label:--primary-button-hover-color|primary_button_hover_border:--primary-button-hover-border|secondary_button_background:--secondary-button-bg|secondary_button_label:--secondary-button-color|secondary_button_border:--secondary-button-border|secondary_button_hover_background:--secondary-button-hover-bg|secondary_button_hover_label:--secondary-button-hover-color|secondary_button_hover_border:--secondary-button-hover-border' | split: '|'
+
+  # Build a ",schemeId:field," list of fields that actually have a value, tested
+  # here OUTSIDE the style tag where unset colors are empty.
+  assign set_fields = ','
+  for scheme in settings.color_schemes
+    for pair in optional_vars
+      assign field = pair | split: ':' | first
+      capture raw
+        echo scheme.settings[field]
+      endcapture
+      assign raw = raw | strip
+      unless raw == blank
+        assign set_fields = set_fields | append: scheme.id | append: ':' | append: field | append: ','
+      endunless
+    endfor
+  endfor
+-%}
 {% style %}
   {%- for scheme in settings.color_schemes -%}
-    {%- liquid
-      assign sc_bg      = scheme.settings.background
-      assign sc_bg_grad = scheme.settings.background_gradient | default: scheme.settings.background
-      assign sc_text    = scheme.settings.text
-      assign sc_accent  = scheme.settings.accent
-      assign sc_r = sc_text | color_extract: 'red'
-      assign sc_g = sc_text | color_extract: 'green'
-      assign sc_b = sc_text | color_extract: 'blue'
-
-      # Line color: explicit override, else a subtle tint of the text color.
-      assign sc_hr = scheme.settings.hr
-      if sc_hr == blank
-        capture sc_hr
-          echo 'rgba(' | append: sc_r | append: ', ' | append: sc_g | append: ', ' | append: sc_b | append: ', 0.15)'
-        endcapture
-      endif
-
-      # Subtle background: explicit override, else background mixed toward text.
-      assign sc_light_grey = scheme.settings.light_grey
-      if sc_light_grey == blank
-        assign sc_light_grey = sc_bg | color_mix: sc_text, 95
-      endif
-    -%}
     .{{ scheme.id }} {
-      --bg-color: {{ sc_bg }};
-      --bg-gradient: {{ sc_bg_grad }};
-      --text-color: {{ sc_text }};
-      --main-color: {{ sc_accent }};
-      --light-text-color: rgba({{ sc_r }}, {{ sc_g }}, {{ sc_b }}, 0.5);
-      --hr-color: {{ sc_hr }};
-      --light-grey: {{ sc_light_grey }};
-      {%- if scheme.settings.error != blank %}
-      --error: {{ scheme.settings.error }};
-      {%- endif %}
-      {%- if scheme.settings.success != blank %}
-      --success: {{ scheme.settings.success }};
-      {%- endif %}
-      {%- if scheme.settings.primary_button_background != blank %}
-      --primary-button-bg: {{ scheme.settings.primary_button_background }};
-      {%- endif %}
-      {%- if scheme.settings.primary_button_label != blank %}
-      --primary-button-color: {{ scheme.settings.primary_button_label }};
-      {%- endif %}
-      {%- if scheme.settings.primary_button_border != blank %}
-      --primary-button-border: {{ scheme.settings.primary_button_border }};
-      {%- endif %}
-      {%- if scheme.settings.secondary_button_background != blank %}
-      --secondary-button-bg: {{ scheme.settings.secondary_button_background }};
-      {%- endif %}
-      {%- if scheme.settings.secondary_button_label != blank %}
-      --secondary-button-color: {{ scheme.settings.secondary_button_label }};
-      {%- endif %}
-      {%- if scheme.settings.secondary_button_border != blank %}
-      --secondary-button-border: {{ scheme.settings.secondary_button_border }};
-      {%- endif %}
+      --bg-color: {{ scheme.settings.background }};
+      --text-color: {{ scheme.settings.text }};
+      --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+      --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+      --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
+      --main-color: {{ scheme.settings.accent }};
+      {%- for pair in optional_vars -%}
+        {%- assign kv = pair | split: ':' -%}
+        {%- assign lookup = ',' | append: scheme.id | append: ':' | append: kv[0] | append: ',' -%}
+        {%- if set_fields contains lookup %}
+      {{ kv[1] }}: {{ scheme.settings[kv[0]] }};
+        {%- endif -%}
+      {%- endfor %}
       color: var(--text-color);
-      background: var(--bg-gradient);
+      background: var(--bg-gradient, var(--bg-color));
     }
   {%- endfor -%}
 {% endstyle %}

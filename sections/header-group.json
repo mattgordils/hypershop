@@ -17,6 +17,18 @@
     },
     "header": {
       "type": "page-header",
+      "blocks": {
+        "header-account": {
+          "type": "_header-account",
+          "static": true,
+          "settings": {}
+        },
+        "header-cart": {
+          "type": "_header-cart",
+          "static": true,
+          "settings": {}
+        }
+      },
       "settings": {}
     }
   },

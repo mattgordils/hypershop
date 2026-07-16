@@ -1,0 +1,120 @@
+{%- comment -%}
+  Renders a header navigation menu (used for both the primary and secondary
+  menus). Accepts:
+    menu — a link_list drop
+{%- endcomment -%}
+
+{%- if menu.links.size > 0 -%}
+  <ul class="h-full hidden md:flex items-center">
+    {%- for link in menu.links -%}
+      {%- assign has_sublinks = false -%}
+      {%- if link.links.size > 0 -%}{%- assign has_sublinks = true -%}{%- endif -%}
+      <li class="h-full">
+        <div
+          class="
+            h-full
+            group/menu-item
+            menu-item
+            {% if link.active %}active{% endif %}
+            {% if has_sublinks %}has-sublinks{% endif %}
+          "
+        >
+          {%- capture menu_item_inner -%}
+            <span class="animate-underline grow-0 shrink-0 leading-none">{{ link.title }}</span>
+            {% if has_sublinks %}
+              <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition-transform">keyboard_arrow_down</div>
+            {% endif %}
+          {%- endcapture -%}
+          {%- if has_sublinks -%}
+            <div
+              class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+              {% if link.active %}aria-current="page"{% endif %}
+            >
+              {{ menu_item_inner }}
+            </div>
+          {%- else -%}
+            <a
+              href="{{ link.url }}"
+              class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+              {% if link.active %}aria-current="page"{% endif %}
+            >
+              {{ menu_item_inner }}
+            </a>
+          {%- endif -%}
+          {%- if has_sublinks -%}
+            <div
+              class="
+                transition-[visibility,opacity]
+                invisible
+                pointer-events-none
+                group-hover/menu-item:visible
+                group-hover/menu-item:opacity-100
+                group-hover/menu-item:delay-[0s]
+                group-hover/menu-item:pointer-events-auto
+                delay-[.2s]
+                opacity-0
+                absolute
+                top-0
+                left-0
+                w-full
+                bg-bg
+                z-[-1]
+                pt-header-height
+              "
+            >
+              <div class="px-margin py-gutter min-h-[300px]">
+                <ul class="sublinks scroll-entrance">
+                  {%- for sublink in link.links -%}
+                    {%- assign has_sub_sublinks = false -%}
+                    {%- if sublink.links.size > 0 -%}{%- assign has_sub_sublinks = true -%}{%- endif -%}
+                    <li>
+                      <a
+                        href="{{ sublink.url }}"
+                        class="h3 group inline-block vertical-align-top{% if sublink.active %} active{% endif %}"
+                        {% if sublink.active %}aria-current="page"{% endif %}
+                      >
+                        <span class="animate-underline grow-0 shrink-0 leading-none">{{ sublink.title }}</span>
+                      </a>
+                      {%- if has_sub_sublinks -%}
+                        <ul>
+                          {%- for subsublink in sublink.links -%}
+                            <li class="pl-6">
+                              <a
+                                href="{{ subsublink.url }}"
+                                class="h3 group inline-block vertical-align-top{% if subsublink.active %} active{% endif %}"
+                                {% if subsublink.active %}aria-current="page"{% endif %}
+                              >
+                                <span class="animate-underline grow-0 shrink-0 leading-none">{{ subsublink.title }}</span>
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+            <div
+              class="
+                pointer-events-none
+                fixed
+                z-[-2]
+                bg-current
+                top-(--header-banner-height)
+                left-0
+                w-full
+                bottom-0
+                transition-[visibility,opacity]
+                invisible
+                group-hover/menu-item:visible
+                group-hover/menu-item:opacity-20
+                opacity-0
+              "
+            ></div>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

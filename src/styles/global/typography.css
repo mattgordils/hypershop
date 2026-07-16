@@ -70,6 +70,16 @@
   text-transform: var(--h6-transform, uppercase);
 }
 
+@utility button-text {
+  font-family: var(--button-font);
+  font-size: var(--button-size, 16px);
+  line-height: var(--button-line-height, 1.5em);
+  letter-spacing: var(--button-letter-spacing, 0);
+  font-weight: var(--button-weight, 400);
+  font-style: var(--button-style, normal);
+  text-transform: var(--button-transform, none);
+}
+
 @utility body {
   font-family: var(--main-font);
   font-size: var(--body-size, 16px);
@@ -192,6 +202,7 @@
   input[type="time"],
   input[type="url"],
   input[type="week"],
+  textarea,
   select {
     --input-bg: var(--light-grey);
     --input-color: var(--text-color);
@@ -222,6 +233,12 @@
   input[type="number"]::-webkit-inner-spin-button {
     appearance: none;
     margin: 0;
+  }
+
+  textarea {
+    height: calc(var(--input-height) * 4);
+    padding-top: calc((var(--input-height) - 1em) / 2);
+    padding-bottom: calc((var(--input-height) - 1em) / 2);
   }
 
   select { line-height: calc(var(--input-height) - 1px); }

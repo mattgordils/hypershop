@@ -27,46 +27,59 @@
         "type": "image_picker",
         "id": "favicon",
         "label": "Favicon",
-        "info": "128×128px PNG recommended."
+        "info": "128×128px PNG recommended. Shown in browser tabs and bookmarks."
+      },
+      {
+        "type": "image_picker",
+        "id": "touch_icon",
+        "label": "Touch icon (iOS / PWA)",
+        "info": "Square opaque PNG, 512×512px recommended. Used when the site is added to a mobile home screen. Falls back to the favicon if empty."
       }
     ]
   },
   {
-    "name": "Colors",
+    "name": "Color Schemes",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Background, text, and accent colors come from your color schemes below — the first scheme is the site-wide default. These two are global status colors (each scheme can override them)."
-      },
-      { "type": "color", "id": "color_error", "label": "Error", "default": "#cc0000" },
-      { "type": "color", "id": "color_success", "label": "Success", "default": "#008000" }
-    ]
-  },
-  {
-    "name": "Schemes",
-    "settings": [
-      {
-        "type": "paragraph",
-        "content": "Color schemes can be applied to sections throughout your store. Add as many schemes as you need."
+        "content": "The first scheme is the site-wide default. Color schemes can be applied to sections throughout your store. Add as many schemes as you need."
       },
       {
         "type": "color_scheme_group",
         "id": "color_schemes",
         "definition": [
           { "type": "color", "id": "background", "label": "Background", "default": "#FFFFFF" },
-          { "type": "color_background", "id": "background_gradient", "label": "Background gradient", "info": "Optional. When set, overrides the solid background with a gradient." },
+          { "type": "color_background", "id": "background_gradient", "label": "Background gradient", "info": "Optional. Overrides the solid background with a gradient." },
           { "type": "color", "id": "text", "label": "Text", "default": "#000000" },
           { "type": "color", "id": "accent", "label": "Accent", "info": "Links and highlights.", "default": "#000000" },
-          { "type": "color", "id": "hr", "label": "Line / border", "info": "Optional. Dividers and borders. Defaults to a subtle tint of the text color." },
-          { "type": "color", "id": "light_grey", "label": "Subtle background", "info": "Optional. Alternate section fills. Defaults to a mix of background and text." },
-          { "type": "color", "id": "error", "label": "Error override", "info": "Optional. Falls back to the global Error color." },
-          { "type": "color", "id": "success", "label": "Success override", "info": "Optional. Falls back to the global Success color." },
-          { "type": "color", "id": "primary_button_background", "label": "Primary button — background", "info": "Optional. Defaults to the Text color." },
-          { "type": "color", "id": "primary_button_label", "label": "Primary button — label", "info": "Optional. Defaults to the Background color." },
-          { "type": "color", "id": "primary_button_border", "label": "Primary button — border", "info": "Optional. Defaults to the button background." },
-          { "type": "color", "id": "secondary_button_background", "label": "Secondary button — background", "info": "Optional. Defaults to transparent." },
-          { "type": "color", "id": "secondary_button_label", "label": "Secondary button — label", "info": "Optional. Defaults to the Text color." },
-          { "type": "color", "id": "secondary_button_border", "label": "Secondary button — border", "info": "Optional. Defaults to the Text color." }
+
+          { "type": "header", "content": "Line & Subtle Background", "info": "Optional — leave blank to auto-derive from the Text and Background colors." },
+          { "type": "color", "id": "hr", "label": "Line / border" },
+          { "type": "color", "id": "light_grey", "label": "Subtle background" },
+
+          { "type": "header", "content": "Status Colors", "info": "Optional — each falls back to the global Error / Success color in Theme settings → Colors." },
+          { "type": "color", "id": "error", "label": "Error" },
+          { "type": "color", "id": "success", "label": "Success" },
+
+          { "type": "header", "content": "Primary Button", "info": "Set per scheme." },
+          { "type": "color", "id": "primary_button_background", "label": "Background", "default": "#000000" },
+          { "type": "color", "id": "primary_button_label", "label": "Label", "default": "#FFFFFF" },
+          { "type": "color", "id": "primary_button_border", "label": "Border", "default": "#000000" },
+
+          { "type": "header", "content": "Primary Button Hover", "info": "Optional — leave blank to fade toward the Accent color." },
+          { "type": "color", "id": "primary_button_hover_background", "label": "Background" },
+          { "type": "color", "id": "primary_button_hover_label", "label": "Label" },
+          { "type": "color", "id": "primary_button_hover_border", "label": "Border" },
+
+          { "type": "header", "content": "Secondary Button", "info": "Set per scheme. Leave Background blank for a transparent (outlined) button." },
+          { "type": "color", "id": "secondary_button_background", "label": "Background" },
+          { "type": "color", "id": "secondary_button_label", "label": "Label", "default": "#000000" },
+          { "type": "color", "id": "secondary_button_border", "label": "Border", "default": "#000000" },
+
+          { "type": "header", "content": "Secondary Button Hover", "info": "Optional — leave blank to fade toward the Accent color." },
+          { "type": "color", "id": "secondary_button_hover_background", "label": "Background" },
+          { "type": "color", "id": "secondary_button_hover_label", "label": "Label" },
+          { "type": "color", "id": "secondary_button_hover_border", "label": "Border" }
         ],
         "role": {
           "background": { "solid": "background", "gradient": "background_gradient" },
@@ -80,7 +93,14 @@
           "links": "accent",
           "icons": "text"
         }
-      }
+      },
+      {
+        "type": "header",
+        "content": "Global Colors",
+        "info": "These two are global status colors (each color scheme can override them)."
+      },
+      { "type": "color", "id": "color_error", "label": "Error", "default": "#cc0000" },
+      { "type": "color", "id": "color_success", "label": "Success", "default": "#008000" }
     ]
   },
   {
@@ -329,7 +349,17 @@
       { "type": "range", "id": "button_height_tiny", "label": "Tiny", "min": 16, "max": 60, "step": 1, "unit": "px", "default": 26 },
       { "type": "range", "id": "button_height_small", "label": "Small", "min": 20, "max": 70, "step": 1, "unit": "px", "default": 30 },
       { "type": "range", "id": "button_height", "label": "Default", "min": 28, "max": 90, "step": 1, "unit": "px", "default": 42 },
-      { "type": "range", "id": "button_height_large", "label": "Large", "min": 40, "max": 120, "step": 1, "unit": "px", "default": 70 }
+      { "type": "range", "id": "button_height_large", "label": "Large", "min": 40, "max": 120, "step": 1, "unit": "px", "default": 70 },
+
+      { "type": "header", "content": "Shape & Hover" },
+      { "type": "range", "id": "button_border_radius", "label": "Border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
+      { "type": "select", "id": "button_hover_effect", "label": "Hover effect", "default": "simple", "info": "How buttons animate on hover. Wipe effects are on the roadmap — for now they behave like Simple.", "options": [
+        { "value": "none", "label": "No transition" },
+        { "value": "simple", "label": "Simple — fade colors" },
+        { "value": "wipe-up", "label": "Wipe up" },
+        { "value": "wipe-right", "label": "Wipe right" },
+        { "value": "wipe-down", "label": "Wipe down" }
+      ]}
     ]
   },
   {
@@ -368,7 +398,6 @@
         ]
       },
       { "type": "range", "id": "border_radius", "label": "Base border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
-      { "type": "range", "id": "button_border_radius", "label": "Button border radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
       { "type": "range", "id": "header_height", "label": "Header height", "min": 8, "max": 120, "step": 4, "unit": "px", "default": 60 }
     ]
   },
@@ -390,13 +419,13 @@
         "type": "paragraph",
         "content": "Product star ratings are pulled from metafields so any review app (Judge.me, Loox, Okendo, Yotpo) or manual data appears in search results. Defaults match Shopify's standard reviews metafields — only change these if your app uses different ones."
       },
-      { "type": "header", "content": "Product reviews" },
+      { "type": "header", "content": "Product Reviews" },
       { "type": "text", "id": "seo_reviews_namespace", "label": "Rating metafield namespace", "default": "reviews" },
       { "type": "text", "id": "seo_reviews_rating_key", "label": "Average rating key", "default": "rating" },
       { "type": "text", "id": "seo_reviews_count_key", "label": "Rating count key", "default": "rating_count" },
       {
         "type": "header",
-        "content": "FAQ schema"
+        "content": "FAQ Schema"
       },
       {
         "type": "paragraph",

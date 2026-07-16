@@ -5,6 +5,9 @@
   assign column_class = "bg-linear-to-b from-error rounded-t opacity-25"
 -%}
 
+{%- comment -%} Reusable swatch: set --color on any wrapper and this fills with it. {%- endcomment -%}
+{%- capture swatch -%}<div class="aspect-square rounded relative" style="background: var(--color)"><div class="absolute inset-0 rounded border border-current opacity-15"></div></div>{%- endcapture -%}
+
 <div class="py-v-space px-margin">
   <div class="max-w-site-max-w mx-auto">
     <div class="max-w-[750px] text-balance space-y-6 mb-v-space">
@@ -73,9 +76,9 @@
       {%- assign sg_color_vars   = '--bg-color,--text-color,--main-color,--light-text-color,--hr-color,--light-grey,--error,--success' | split: ',' -%}
       {%- assign sg_color_labels = sg_default.background | append: ',' | append: sg_default.text | append: ',' | append: sg_default.accent | append: ',computed,computed,computed,' | append: settings.color_error | append: ',' | append: settings.color_success | split: ',' -%}
       {%- for var in sg_color_vars -%}
-        <div>
-          <div class="w-full aspect-3/2 rounded mb-2 border border-hr-color" style="background: var({{ var }})"></div>
-          <p class="body-tiny mono">{{ var }}</p>
+        <div style="--color: var({{ var }})">
+          {{ swatch }}
+          <p class="body-tiny mono mt-2">{{ var }}</p>
           <p class="body-tiny text-light-text-color">{{ sg_color_labels[forloop.index0] }}</p>
         </div>
       {%- endfor -%}
@@ -164,6 +167,7 @@
             assign sc_text   = scheme.settings.text
             assign sc_accent = scheme.settings.accent
           -%}
+
           <div class="relative">
             <div class="absolute inset-0 border border-current rounded opacity-7 pointer-events-none"></div>
             <div class="rounded {{ scheme.id }} p-gutter bg-bg text-text-color">
@@ -174,35 +178,17 @@
                 <button class="button">Get Started</button>
                 <button class="button secondary">Learn More</button>
                 <button class="button" disabled>Disabled</button>
-                <a href="#" class="h6">Text Link</a>
+                <a href="#" class="button-text">Text Link</a>
               </div>
               <hr class="mt-v-space-sm">
               <h6 class="mb-4 mt-2">Colors</h6>
-              <div class="grid grid-cols-4 gap-gutter">
-                <div>
-                  <div class="aspect-square rounded border border-hr-color" style="background: {{ sc_bg }};"></div>
-                  <p class="body-small text-light-text-color mt-1">Background</p>
-                </div>
-                <div>
-                  <div class="aspect-square rounded" style="background: {{ sc_text }};"></div>
-                  <p class="body-small text-light-text-color mt-1">Text</p>
-                </div>
-                <div>
-                  <div class="aspect-square rounded" style="background: {{ sc_accent }};"></div>
-                  <p class="body-small text-light-text-color mt-1">Accent</p>
-                </div>
-                <div>
-                  <div class="aspect-square rounded border border-hr-color" style="background: var(--hr-color);"></div>
-                  <p class="body-small text-light-text-color mt-1">Line</p>
-                </div>
-                <div>
-                  <div class="aspect-square rounded border border-hr-color" style="background: var(--success);"></div>
-                  <p class="body-small text-light-text-color mt-1">Success</p>
-                </div>
-                <div>
-                  <div class="aspect-square rounded border border-hr-color" style="background: var(--error);"></div>
-                  <p class="body-small text-light-text-color mt-1">Error</p>
-                </div>
+              <div class="grid grid-cols-4 gap-x-3 gap-y-5">
+                <div style="--color: {{ sc_bg }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Background</p></div>
+                <div style="--color: {{ sc_text }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Text</p></div>
+                <div style="--color: {{ sc_accent }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Accent</p></div>
+                <div style="--color: var(--hr-color)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Line</p></div>
+                <div style="--color: var(--success)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Success</p></div>
+                <div style="--color: var(--error)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Error</p></div>
               </div>
             </div>
           </div>
@@ -216,25 +202,3 @@
 
   </div>
 </div>
-
-{% schema %}
-{
-  "name": "Styleguide",
-  "tag": "div",
-  "class": "section-styleguide",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Global styles preview"
-    },
-    {
-      "type": "paragraph",
-      "content": "This section previews your theme's global styles — typography, colors, color schemes, buttons, inputs, and grid. It has no settings of its own."
-    },
-    {
-      "type": "paragraph",
-      "content": "Everything shown here is controlled in Theme settings and cascades across your entire site. To change any of it, open Theme settings (the gear icon at the bottom of the editor sidebar)."
-    }
-  ]
-}
-{% endschema %}

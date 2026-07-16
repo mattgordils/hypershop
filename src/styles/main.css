@@ -113,10 +113,13 @@
     --dark-color: #000;
     --light-color: #fff;
 
-    /* Colors derived from the base text color (--text-color-rgb, set in :root by
-       theme-settings.liquid from the first scheme). */
-    --light-text-color: rgba(var(--text-color-rgb), .5);
-    --hr-color: rgba(var(--text-color-rgb), .15);
+    /* Derived colors — computed in CSS (not Liquid) from --text-color/--bg-color,
+       so they adapt to whatever scheme is in scope. Doing this in CSS avoids
+       Liquid color filters, which break the theme editor's live preview. A scheme
+       can still override any of these explicitly. */
+    --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+    --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+    --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
     --alert: yellow;
 
     /* Typography constants */

@@ -39,7 +39,7 @@
     grid-area: 1 / 1;
   }
   .logo-stack.has-inverted .logo-layer {
-    transition: opacity var(--fast-speed) ease;
+    transition: opacity var(--md-speed) ease;
   }
   /* Solid header (default) shows the default logo; inverted layer hidden */
   .logo-stack.has-inverted .logo-layer--inverted {
@@ -56,17 +56,22 @@
 {% endstylesheet %}
 
 {%- comment -%}
-  Style hooks for the hosted-customer-account web component. Pulls from global
-  theme settings: colors from Color scheme 1, fonts and radii from the global
-  typography / layout settings.
+  Style hooks for the hosted-customer-account web component. Colors come from
+  the first color scheme (site default); fonts, radii, and header offset come
+  from the global theme settings. `.dialog` is the portalled account sheet
+  (rendered outside the header), so it needs the same offset applied directly.
 {%- endcomment -%}
-{%- assign account_scheme = nil -%}{%- for scheme in settings.color_schemes limit: 1 -%}{%- assign account_scheme = scheme -%}{%- endfor -%}
+{%- assign account_scheme = nil -%}
+{%- for scheme in settings.color_schemes limit: 1 -%}
+  {%- assign account_scheme = scheme -%}
+{%- endfor -%}
 {% style %}
-  .dialog {
-    --shopify-account-dialog-position-top: 200px;
-  }
+  .dialog,
   .section-header shopify-account {
-    --shopify-account-dialog-position-top: 200px;
+    --shopify-account-dialog-position-top: var(--full-header-height);
+  }
+
+  .section-header shopify-account {
     {% if account_scheme != blank %}
       --shopify-account-color-background: {{ account_scheme.settings.background }};
       --shopify-account-color-text: {{ account_scheme.settings.text }};
@@ -76,29 +81,10 @@
       --shopify-account-color-text: var(--text-color);
       --shopify-account-color-accent: var(--main-color);
     {% endif %}
-    --shopify-account-font-heading: {{ settings.font_heading }};
-    --shopify-account-font-heading-weight: var(--h3-weight);
-    --shopify-account-font-heading-transform: var(--h3-transform);
-    --font-size-md: var(--h3-size);
-
-    --shopify-account-font-body: var(--main-font);
-    --shopify-account-font-heading: var(--secondary-font);
-    --shopify-account-radius-base: var(--base-border-radius);
-    --shopify-account-radius-input: var(--base-border-radius);
-    --shopify-account-radius-button: var(--button-border-radius);
-    --shopify-account-radius-button-small: var(--button-border-radius);
-    --shopify-account-dialog-position-top: var(--header-height);
-
-
-    /*  */
-    --shopify-account-radius-button-small: 2px;
-    --shopify-account-radius-dialog: var(--base-border-radius);
-    --shopify-account-radius-button: var(--button-border-radius);
-    --shopify-account-radius-input: var(--base-border-radius);
-    --shopify-account-color-border:  var(--hr-color);
+    --shopify-account-color-accent-hover: var(--main-color);
+    --shopify-account-color-border: var(--hr-color);
     --shopify-account-color-background-subdued: var(--light-grey);
-    --shopify-account-color-text-subdued: var(--color-light-text-color);
-    --shopify-account-color-accent-hover: var(--color-main);
+    --shopify-account-color-text-subdued: var(--light-text-color);
     --shopify-account-color-shadow: rgb(from var(--shopify-account-color-text) r g b / .05);
     --shopify-account-color-control-background: color-mix(in srgb, var(--shopify-account-color-background) 90%, #ffffff 10%);
     --shopify-account-color-control-text: var(--shopify-account-color-text);
@@ -106,236 +92,97 @@
     --shopify-account-color-card-text: var(--shopify-account-color-text);
     --shopify-account-signed-in-avatar-color-background: var(--shopify-account-color-accent);
     --shopify-account-signed-in-avatar-color-text: var(--shopify-account-color-accent-text);
-  }
-
-  .section-header shopify-account {
-    --shopify-account-color-accent: rgb(var(--color-foreground));
-    --shopify-account-color-accent-hover: rgba(var(--color-foreground), 0.8);
-    --shopify-account-color-accent-text: rgb(var(--color-background));
-    --shopify-account-color-background: rgb(var(--color-background));
-    --shopify-account-color-background-subdued: rgb(var(--color-background-secondary));
-    --shopify-account-color-border: rgb(var(--color-border));
-    --shopify-account-color-card-background: rgb(var(--color-background));
-    --shopify-account-color-control-background: rgb(var(--color-background));
-    --shopify-account-color-shadow: 0px 8px 14px 0px rgba(var(--color-shadow), 0.08);
-    --shopify-account-color-text: rgb(var(--color-foreground));
-    --shopify-account-color-text-subdued: rgb(var(--color-foreground));
-    --shopify-account-dialog-position-top: var(--spacing-full-header-height);
-    --shopify-account-font-body: var(--font-body-family);
-    --shopify-account-font-body-weight: var(--font-body-weight);
-    --shopify-account-font-heading: var(--font-heading-family);
-    --shopify-account-font-heading-weight: var(--font-heading-weight);
-    --shopify-account-radius-base: var(--border-radius-media);
-    --shopify-account-radius-button: max(var(--border-radius-button), 0.2rem);
-    --shopify-account-radius-button-small: min(var(--border-radius-button), 0.4rem);
-    --shopify-account-radius-dialog: max(var(--border-radius-button), 0.2rem);
-    --shopify-account-radius-input: var(--border-radius-media);
-    --shopify-account-signed-in-avatar-color-background: transparent;
-    --shopify-account-signed-in-avatar-color-text: rgb(var(--color-foreground));
     --shopify-account-signed-in-avatar-size: 28px;
+
+    --shopify-account-font-body: var(--main-font);
+    --shopify-account-font-heading: var(--secondary-font);
+    --shopify-account-font-heading-weight: var(--h3-weight);
+    --shopify-account-font-heading-transform: var(--h3-transform);
+
+    --shopify-account-radius-base: var(--base-border-radius);
+    --shopify-account-radius-input: var(--base-border-radius);
+    --shopify-account-radius-button: var(--button-border-radius);
+    --shopify-account-radius-button-small: 2px;
+    --shopify-account-radius-dialog: var(--base-border-radius);
   }
 {% endstyle %}
 
+{%- liquid
+  assign logo = section.settings.logo
+  assign logo_inverted = section.settings.logo_inverted
+  assign has_secondary = false
+  if section.settings.secondary_menu.links.size > 0
+    assign has_secondary = true
+  endif
+
+  assign lw_mobile = section.settings.logo_width_mobile
+  assign lw_desktop = section.settings.logo_width_desktop
+-%}
+
+{%- capture logo_html -%}
+  {%- capture logo_inner -%}
+    <a
+      href="{{ routes.root_url }}"
+      title="Go to {{ shop.name }} homepage"
+      class="logo-stack block border-0 w-(--logo-width){% if logo_inverted != blank %} has-inverted{% endif %}"
+      style="--logo-width: clamp(min({{ lw_mobile }}px, {{ lw_desktop }}px), calc({{ lw_mobile }}px + ({{ lw_desktop }} - {{ lw_mobile }}) * ((100vw - 400px) / 1040)), max({{ lw_mobile }}px, {{ lw_desktop }}px));"
+    >
+      <span class="logo-layer logo-layer--default">
+        {%- if logo != blank -%}
+          {{ logo | image_url: width: 624 | image_tag: widths: '104, 156, 208, 312, 468, 624', alt: shop.name, class: 'w-full h-auto block' }}
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </span>
+      {%- if logo_inverted != blank -%}
+        <span class="logo-layer logo-layer--inverted relative" aria-hidden="true">
+          {{ logo_inverted | image_url: width: 624 | image_tag: widths: '104, 156, 208, 312, 468, 624', alt: '', class: 'absolute w-full h-full block object-contain' }}
+        </span>
+      {%- endif -%}
+    </a>
+  {%- endcapture -%}
+  {%- if request.page_type == 'index' -%}
+    <h1 class="body logo">{{ logo_inner }}</h1>
+  {%- else -%}
+    <div class="body logo">{{ logo_inner }}</div>
+  {%- endif -%}
+{%- endcapture -%}
+
 <sticky-header>
-  <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center justify-between border-b">
-    <div class="shrink-0">
-      {%- liquid
-        assign logo = section.settings.logo
-        assign logo_inverted = section.settings.logo_inverted
-      -%}
-      {%- capture logo_inner -%}
-        <a
-          href="{{ routes.root_url }}"
-          title="Go to {{ shop.name }} homepage"
-          class="logo-stack block border-0{% if logo != blank %} w-[156px] md:w-[104px]{% endif %}{% if logo_inverted != blank %} has-inverted{% endif %}"
-        >
-          <span class="logo-layer logo-layer--default">
-            {%- if logo != blank -%}
-              {{ logo | image_url: width: 312 | image_tag: widths: '104, 156, 208, 312', alt: shop.name, class: 'w-full h-auto block' }}
-            {%- else -%}
-              {{ shop.name }}
-            {%- endif -%}
-          </span>
-          {%- if logo_inverted != blank -%}
-            <span class="logo-layer logo-layer--inverted" aria-hidden="true">
-              {{ logo_inverted | image_url: width: 312 | image_tag: widths: '104, 156, 208, 312', alt: '', class: 'w-full h-auto block' }}
-            </span>
-          {%- endif -%}
-        </a>
-      {%- endcapture -%}
-      {%- if request.page_type == 'index' -%}
-        <h1 class="body logo">{{ logo_inner }}</h1>
-      {%- else -%}
-        <div class="body logo">{{ logo_inner }}</div>
+  <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center border-b">
+    {%- comment -%} Left region — primary menu when a secondary menu is set {%- endcomment -%}
+    <div class="h-full flex items-center {% if has_secondary %}grow shrink basis-0{% endif %}">
+      {%- if has_secondary -%}
+        {% render 'header-menu' with menu: section.settings.menu %}
       {%- endif -%}
     </div>
-    <div class="shrink-0 grow h-full">
-      <div class="
-          flex
-          justify-end
-          w-full
-          items-center
-          h-[calc(100%+1px)] {% comment %} + 1px to compensate for the header border {% endcomment %}
-        "
-      >
-        {% if section.settings.menu.links.size > 0 %}
-          <ul class="h-full hidden md:flex items-center">
-            {% for link in section.settings.menu.links %}
-              {%-liquid
-                assign has_sublinks = false
-                if link.links.size > 0
-                  assign has_sublinks = true
-                endif
-              %}
-              <li class="h-full">
-                <div
-                  class="
-                    h-full
-                    group/menu-item
-                    menu-item
-                    {% if link.active %}
-                      active
-                    {% endif %}
-                    {% if has_sublinks %}
-                      has-sublinks
-                    {% endif %}
-                  "
-                >
-                  {%- capture menu_item_inner -%}
-                    <span class="animate-underline grow-0 shrink-0 leading-none">
-                      {{ link.title }}
-                    </span>
-                    {% if has_sublinks %}
-                      <div class="material-icon text-[18px] group-hover/menu-item:rotate-180 group-hover/menu-item:translate-y-[-1px] transition-transform">keyboard_arrow_down</div>
-                    {% endif %}
-                  {%- endcapture -%}
-                  {%- if has_sublinks -%}
-                    <div
-                      class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
-                      {% if link.active %}aria-current="page"{% endif %}
-                    >
-                      {{ menu_item_inner }}
-                    </div>
-                  {%- else -%}
-                    <a
-                      href="{{ link.url }}"
-                      class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
-                      {% if link.active %}aria-current="page"{% endif %}
-                    >
-                      {{ menu_item_inner }}
-                    </a>
-                  {%- endif -%}
-                  {% if has_sublinks %}
-                    <div
-                      class="
-                        transition-[visibility,opacity]
-                        invisible
-                        pointer-events-none
-                        group-hover/menu-item:visible
-                        group-hover/menu-item:opacity-100
-                        group-hover/menu-item:delay-[0s]
-                        group-hover/menu-item:pointer-events-auto
-                        delay-[.2s]
-                        opacity-0
-                        absolute
-                        top-0
-                        left-0
-                        w-full
-                        bg-bg
-                        z-[-1]
-                        pt-header-height
-                      "
-                    >
-                      <div class="px-margin py-gutter min-h-[300px]">
-                        <ul class="sublinks scroll-entrance">
-                          {% for sublink in link.links %}
-                            {%-liquid
-                              assign has_sub_sublinks = false
-                              if sublink.links.size > 0
-                                assign has_sub_sublinks = true
-                              endif
-                            %}
-                            <li>
-                              <a
-                                href="{{ sublink.url }}"
-                                class="h3 group inline-block vertical-align-top{% if sublink.active %} active{% endif %}"
-                                {% if sublink.active %}aria-current="page"{% endif %}>
-                                <span class="animate-underline grow-0 shrink-0 leading-none">
-                                  {{ sublink.title }}
-                                </span>
-                              </a>
-                              {% if has_sub_sublinks %}
-                                <ul>
-                                  {% for subsublink in sublink.links %}
-                                    <li class="pl-6">
-                                      <a
-                                        href="{{ subsublink.url }}"
-                                        class="h3 group inline-block vertical-align-top{% if subsublink.active %} active{% endif %}"
-                                        {% if subsublink.active %}aria-current="page"{% endif %}>
-                                        <span class="animate-underline grow-0 shrink-0 leading-none">
-                                          {{ subsublink.title }}
-                                        </span>
-                                      </a>
-                                    </li>
-                                  {% endfor %}
-                                </ul>
-                              {% endif %}
-                            </li>
-                          {% endfor %}
-                        </ul>
-                      </div>
-                    </div>
-                    <div
-                      class="
-                        pointer-events-none
-                        fixed
-                        z-[-2]
-                        bg-current
-                        top-(--header-banner-height)
-                        left-0
-                        w-full
-                        bottom-0
-                        transition-[visibility,opacity]
-                        invisible
-                        group-hover/menu-item:visible
-                        group-hover/menu-item:opacity-20
-                        opacity-0
-                      "
-                    ></div>
-                  {% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
 
-        {%- comment -%}
-          Hosted (new) customer accounts. The web component renders the avatar and
-          an account sheet for sign-in / account links on both mobile and desktop.
-          The signed-out avatar keeps the theme's person icon via the slot.
-        {%- endcomment -%}
-        {% if shop.customer_accounts_enabled %}
-          <div class="px-[calc(var(--site-gutters)/2)] h-full flex items-center">
-            <shopify-account
-              menu="customer-account-main-menu"
-              class="account-component flex h-full items-center"
-            >
-              <span slot="signed-out-avatar" class="material-icon text-[18px] block" aria-hidden="true">person_outline</span>
-            </shopify-account>
-          </div>
-        {% endif %}
+    {%- comment -%} Center region — logo. Hugs the left when there is no secondary menu. {%- endcomment -%}
+    <div class="shrink-0{% unless has_secondary %} mr-auto{% endunless %}">
+      {{ logo_html }}
+    </div>
 
-        <div class="flex gap-gutter pl-[calc(var(--site-gutters)/2)]">
-          <modal-trigger
-            data-modal-id="menuPanel"
-            class="md:hidden"
-            role="button"
-            aria-label="Open navigation menu"
-            tabindex="0"
-          >Menu</modal-trigger>
+    {%- comment -%} Right region — menu (secondary if set, else primary) + account + cart + mobile hamburger {%- endcomment -%}
+    <div class="flex items-center justify-end grow shrink basis-0 h-[calc(100%+1px)]">
+      {%- comment -%} + 1px to compensate for the header border {%- endcomment -%}
+      {%- if has_secondary -%}
+        {% render 'header-menu' with menu: section.settings.secondary_menu %}
+      {%- else -%}
+        {% render 'header-menu' with menu: section.settings.menu %}
+      {%- endif -%}
 
-          {% render 'cart-thumbnail' %}
-        </div>
+      {% content_for 'block', type: '_header-account', id: 'header-account' %}
+
+      <div class="flex gap-gutter pl-[calc(var(--site-gutters)/2)] items-center">
+        <modal-trigger
+          data-modal-id="menuPanel"
+          class="md:hidden"
+          role="button"
+          aria-label="Open navigation menu"
+          tabindex="0"
+        >Menu</modal-trigger>
+
+        {% content_for 'block', type: '_header-cart', id: 'header-cart' %}
       </div>
     </div>
   </header>
@@ -352,7 +199,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Header"
+      "content": "Logo"
     },
     {
       "type": "image_picker",
@@ -367,11 +214,46 @@
       "info": "Shown while the header is transparent (overlapping a section). Crossfades to the main logo once the header becomes solid on scroll."
     },
     {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width (mobile)",
+      "min": 40,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width (desktop)",
+      "min": 40,
+      "max": 400,
+      "step": 4,
+      "unit": "px",
+      "default": 156
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
       "type": "link_list",
       "id": "menu",
       "default": "main-menu",
-      "label": "Navigation Menu"
+      "label": "Navigation Menu",
+      "info": "When a secondary menu is set, this menu moves to the left of the logo."
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "Secondary menu",
+      "info": "Optional. When set, sits to the right of the logo (next to the account and cart)."
     }
+  ],
+  "blocks": [
+    { "type": "_header-account" },
+    { "type": "_header-cart" }
   ]
 }
 {% endschema %}

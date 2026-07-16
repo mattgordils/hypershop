@@ -1,2 +1,10 @@
 {
+  "header": {
+    "account_label": "Account",
+    "cart_label": "Cart",
+    "cart_item_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    }
+  }
 }

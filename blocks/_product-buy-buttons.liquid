@@ -1,17 +1,37 @@
 {%-liquid
   assign product = section.settings.product | default: product
-  assign button_class = 'w-full ' | append: block.settings.button_size
+
+  assign show_qty = block.settings.show_qty
+  assign qty_layout = block.settings.qty_layout
+  assign button_full_width = block.settings.button_full_width
+
+  assign button_class = block.settings.button_size
+  if button_full_width
+    assign button_class = button_class | append: ' w-full'
+  endif
+
+  assign wrapper_class = 'flex-col items-stretch'
+  if qty_layout == 'inline' or show_qty == false
+    assign wrapper_class = 'flex-row items-stretch'
+  endif
+
+  assign button_wrapper_class = 'shrink-0'
+  if button_full_width
+    assign button_wrapper_class = 'grow'
+  endif
 -%}
 
 {% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
 <div class="{{ space_below | strip }}">
-  <div class="flex w-full gap-4">
-    <div class="grow-0 shrink-0 button bg-transparent! border-hr-color! {{ block.settings.button_size }}">
-      {% render 'quantity-adjust' with
-        item: product.selected_or_first_available_variant
-      %}
-    </div>
-    <div data-dynamic-content class="grow">
+  <div class="flex w-full gap-4 {{ wrapper_class }}">
+    {%- if show_qty -%}
+      <div class="grow-0 shrink-0 button bg-transparent! border-hr-color! {{ block.settings.button_size }}">
+        {% render 'quantity-adjust' with
+          item: product.selected_or_first_available_variant
+        %}
+      </div>
+    {%- endif -%}
+    <div data-dynamic-content class="{{ button_wrapper_class }}">
       {% render 'add-to-cart-button' with
         class: button_class,
         product: product,
@@ -33,6 +53,37 @@
       "id": "show_price",
       "default": true,
       "label": "Show Price in Button"
+    },
+    {
+      "type": "header",
+      "content": "Quantity"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_qty",
+      "default": true,
+      "label": "Show quantity input"
+    },
+    {
+      "type": "select",
+      "id": "qty_layout",
+      "label": "Quantity layout",
+      "default": "inline",
+      "visible_if": "{{ block.settings.show_qty }}",
+      "options": [
+        { "label": "Inline with Add to Cart", "value": "inline" },
+        { "label": "Stacked above Add to Cart", "value": "stacked" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_full_width",
+      "default": true,
+      "label": "Full-width button"
     },
     {
       "type": "header",

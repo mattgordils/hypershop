@@ -7,18 +7,13 @@ button.shopify-payment-button__button,
   --button-bg: var(--primary-button-bg, var(--text-color));
   --button-color: var(--primary-button-color, var(--bg-color));
   --button-border: var(--primary-button-border, var(--button-bg));
-  --button-hover-bg: var(--main-color);
-  --button-hover-color: var(--bg-color);
-  --button-hover-border: var(--button-hover-bg);
+  /* Per-scheme hover colors (from color-schemes.liquid); fall back to the accent fade. */
+  --button-hover-bg: var(--primary-button-hover-bg, var(--main-color));
+  --button-hover-color: var(--primary-button-hover-color, var(--bg-color));
+  --button-hover-border: var(--primary-button-hover-border, var(--button-hover-bg));
   --button-h-padding: calc(var(--button-height) / 3);
 
-  font-family: var(--button-font);
-  font-size: var(--button-size, 16px);
-  line-height: var(--button-line-height, 1.5em);
-  letter-spacing: var(--button-letter-spacing, 0);
-  font-weight: var(--button-weight, 400);
-  font-style: var(--button-style, normal);
-  text-transform: var(--button-transform, none);
+  @apply button-text;
 
   height: var(--button-height);
   padding: 0 var(--button-h-padding);
@@ -59,9 +54,9 @@ button.shopify-payment-button__button,
     --button-bg: var(--secondary-button-bg, transparent);
     --button-color: var(--secondary-button-color, var(--text-color));
     --button-border: var(--secondary-button-border, var(--text-color));
-    --button-hover-bg: var(--main-color);
-    --button-hover-color: var(--bg-color);
-    --button-hover-border: var(--main-color);
+    --button-hover-bg: var(--secondary-button-hover-bg, var(--main-color));
+    --button-hover-color: var(--secondary-button-hover-color, var(--bg-color));
+    --button-hover-border: var(--secondary-button-hover-border, var(--button-hover-bg));
   }
 
   & .button-content {
@@ -105,6 +100,19 @@ button.shopify-payment-button__button,
     fill: currentColor;
   }
 }
+
+/* Global button hover effect — set on <body data-button-hover> from
+   Theme settings → Buttons → Hover effect. The default (Simple) uses the color
+   transition declared on .button above. */
+
+/* "No transition": drop the colour fade (keep opacity so disabled still fades). */
+[data-button-hover="none"] .button:not([class*="transition"]) {
+  transition: opacity var(--md-speed) ease-in-out;
+}
+
+/* TODO: "wipe-up" / "wipe-right" / "wipe-down" — animated background wipe.
+   Needs an overlay element inside the button; until then these behave like
+   Simple (the .button color transition). See TODO.md. */
 
 .shopify-payment-button__button--hidden {
   display: none !important;
