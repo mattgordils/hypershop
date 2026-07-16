@@ -16,7 +16,6 @@
     text color to `--button-hover-color` on hover.
   - Make sure it degrades gracefully for `.secondary` / `.circle` / `.square`
     variants and respects `prefers-reduced-motion`.
-- Header dropdowns on click instead
 - Add options on search section to show all types. Product, Pages, Blog Posts. or just select 1 or 2. Probably just 3 toggles to toggle on the ones that we want to include i the search.
 
   ## Questions

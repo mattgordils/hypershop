@@ -346,9 +346,6 @@
   .-mt-\[40vh\] {
     margin-top: calc(40vh * -1);
   }
-  .-mt-\[calc\(var\(--button-height\)\/2\)\] {
-    margin-top: calc(calc(var(--button-height) / 2) * -1);
-  }
   .-mt-gutter {
     margin-top: calc(var(--site-gutters) * -1);
   }
@@ -378,9 +375,6 @@
   }
   .mr-auto {
     margin-right: auto;
-  }
-  .-mb-\[calc\(var\(--button-height\)\/2\)\] {
-    margin-bottom: calc(calc(var(--button-height) / 2) * -1);
   }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
@@ -508,14 +502,8 @@
   .h-\[calc\(100vh-var\(--full-header-height\)\)\] {
     height: calc(100vh - var(--full-header-height));
   }
-  .h-\[calc\(var\(--button-height\)\/2\+var\(--site-gutter\)\)\] {
-    height: calc(var(--button-height) / 2 + var(--site-gutter));
-  }
   .h-\[calc\(var\(--button-height\)\/2\+var\(--site-gutters\)\)\] {
     height: calc(var(--button-height) / 2 + var(--site-gutters));
-  }
-  .h-\[calc\(var\(--button-height\)\/2\+var\(var\(--site-gutters\)\)\)\] {
-    height: calc(var(--button-height) / 2 + var(var(--site-gutters)));
   }
   .h-\[var\(--icon-weight\)\] {
     height: var(--icon-weight);
@@ -1002,9 +990,6 @@
   .\!bg-transparent {
     background-color: transparent !important;
   }
-  .bg-\[\#ccc\] {
-    background-color: #ccc;
-  }
   .bg-\[rgba\(0\,0\,0\,\.1\)\] {
     background-color: rgba(0,0,0,.1);
   }
@@ -1258,9 +1243,6 @@
   }
   .pl-\[calc\(var\(--input-height\)\*0\.2\)\] {
     padding-left: calc(var(--input-height) * 0.2);
-  }
-  .pl-\[calc\(var\(--site-gutters\)\/2\)\] {
-    padding-left: calc(var(--site-gutters) / 2);
   }
   .pl-margin {
     padding-left: var(--site-margins);
@@ -1576,6 +1558,10 @@
   .delay-\[\.2s\] {
     transition-delay: .2s;
   }
+  .duration-\(--md-speed\) {
+    --tw-duration: var(--md-speed);
+    transition-duration: var(--md-speed);
+  }
   .outline-none {
     --tw-outline-style: none;
     outline-style: none;
@@ -1615,54 +1601,40 @@
       }
     }
   }
-  .group-hover\/menu-item\:pointer-events-auto {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        pointer-events: auto;
-      }
+  .group-data-\[open\=true\]\/menu\:pointer-events-auto {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      pointer-events: auto;
     }
   }
-  .group-hover\/menu-item\:visible {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        visibility: visible;
-      }
+  .group-data-\[open\=true\]\/menu\:visible {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      visibility: visible;
     }
   }
-  .group-hover\/menu-item\:translate-y-\[-1px\] {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        --tw-translate-y: -1px;
-        translate: var(--tw-translate-x) var(--tw-translate-y);
-      }
+  .group-data-\[open\=true\]\/menu\:translate-y-\[-1px\] {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      --tw-translate-y: -1px;
+      translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
-  .group-hover\/menu-item\:rotate-180 {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        rotate: 180deg;
-      }
+  .group-data-\[open\=true\]\/menu\:rotate-180 {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      rotate: 180deg;
     }
   }
-  .group-hover\/menu-item\:opacity-20 {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        opacity: 20%;
-      }
+  .group-data-\[open\=true\]\/menu\:opacity-20 {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      opacity: 20%;
     }
   }
-  .group-hover\/menu-item\:opacity-100 {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        opacity: 100%;
-      }
+  .group-data-\[open\=true\]\/menu\:opacity-100 {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      opacity: 100%;
     }
   }
-  .group-hover\/menu-item\:delay-\[0s\] {
-    &:is(:where(.group\/menu-item):hover *) {
-      @media (hover: hover) {
-        transition-delay: 0s;
-      }
+  .group-data-\[open\=true\]\/menu\:delay-\[0s\] {
+    &:is(:where(.group\/menu)[data-open="true"] *) {
+      transition-delay: 0s;
     }
   }
   .peer-checked\:border-current {
@@ -2580,7 +2552,7 @@ body:not([data-shopify-editor]) {
     opacity: 0;
     transition: opacity var(--speed) var(--timing), transform var(--speed) var(--timing);
   }
-  & in-view.in-view > *, & .scroll-entrance[data-in-view='true'] > *, & .menu-item:hover ul.sublinks.scroll-entrance > * {
+  & in-view.in-view > *, & .scroll-entrance[data-in-view='true'] > *, & menu-item[data-open="true"] ul.sublinks.scroll-entrance > * {
     transform: none;
     opacity: 1;
     &:nth-child(1) {
@@ -3256,6 +3228,10 @@ svg:not(.full-color) * {
   syntax: "*";
   inherits: false;
 }
+@property --tw-duration {
+  syntax: "*";
+  inherits: false;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -3295,6 +3271,7 @@ svg:not(.full-color) * {
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
+      --tw-duration: initial;
     }
   }
 }

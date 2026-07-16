@@ -25,7 +25,7 @@
   }
 
   .section-header.scrolled header,
-  .section-header:has(.menu-item.has-sublinks:hover) header {
+  .section-header:has(menu-item[data-open="true"]) header {
     color: var(--text-color);
     background: var(--bg-color);
     border-color: var(--hr-color);
@@ -63,12 +63,12 @@
   .logo-stack.has-inverted .logo-layer--inverted {
     opacity: 0;
   }
-  /* Transparent header (overlap present, not scrolled, not hovering a sublink)
+  /* Transparent header (overlap present, not scrolled, no dropdown open)
      crossfades to the inverted logo */
-  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(.menu-item.has-sublinks:hover)) .logo-stack.has-inverted .logo-layer--default {
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--default {
     opacity: 0;
   }
-  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(.menu-item.has-sublinks:hover)) .logo-stack.has-inverted .logo-layer--inverted {
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--inverted {
     opacity: 1;
   }
 {% endstylesheet %}
