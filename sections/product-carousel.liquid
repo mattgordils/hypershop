@@ -1,0 +1,176 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+{% endcapture %}
+
+{% capture padding_class %}
+  {% render 'util-section-padding' with space: section.settings.section_padding %}
+{% endcapture %}
+
+{%- liquid
+  assign section_collection = section.settings.collection
+  assign manual_products = section.settings.products
+
+  assign carousel_products = null
+  if manual_products != blank
+    assign carousel_products = manual_products
+  elsif section_collection != blank
+    assign carousel_products = section_collection.products
+  endif
+-%}
+
+{%- assign carousel_id = 'product-carousel-' | append: section.id -%}
+
+{%- if carousel_products != blank and carousel_products.size > 0 -%}
+  <div class="w-full {{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} overflow-hidden">
+    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
+      {%- if section.settings.heading != blank or section.settings.show_arrows -%}
+        <div class="mb-v-space-sm flex items-end justify-between gap-gutter">
+          <h2 class="h3 grow text-balance">{{ section.settings.heading }}</h2>
+          {%- if section.settings.show_arrows -%}
+            <div class="hidden md:block shrink-0">
+              {% render 'slider-arrows' with for: carousel_id %}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <slide-show
+        id="{{ carousel_id }}"
+        class="block overflow-visible"
+        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.desktop_columns }}"
+        data-align="start"
+      >
+        <div class="slider-container">
+          {%- for product in carousel_products -%}
+            <div class="slider-slide">
+              {% render 'product-card' with product: product %}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.show_dots -%}
+          {% render 'slider-dots' with class: 'text-light-text-color mt-v-space-sm' %}
+        {%- endif -%}
+      </slide-show>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "tag": "section",
+  "class": "section-product-carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to hide."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "Overrides the selected collection."
+    },
+    {
+      "type": "header",
+      "content": "Columns",
+      "info": "Fractional values (e.g. 2.5) will show a partial slide on the edge to hint at more content."
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 6,
+      "step": 0.5,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "default": 2.5
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "default": "none",
+      "label": "Section Padding",
+      "info": "Equal space added above and below the section",
+      "visible_if": "{{ section.settings.color_scheme != 'theme-default' }}",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel"
+    }
+  ]
+}
+{% endschema %}

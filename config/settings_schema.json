@@ -391,6 +391,30 @@
     ]
   },
   {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "select",
+        "id": "search_layout",
+        "label": "Layout",
+        "default": "side",
+        "info": "\"Top\" is not styled yet — leave on \"Side\" for now.",
+        "options": [
+          { "value": "side", "label": "Side drawer" },
+          { "value": "top", "label": "Top panel" }
+        ]
+      },
+      { "type": "header", "content": "Search Scope", "info": "Choose what the search drawer looks through." },
+      { "type": "checkbox", "id": "search_products", "label": "Products", "default": true },
+      { "type": "checkbox", "id": "search_pages", "label": "Pages", "default": false },
+      { "type": "checkbox", "id": "search_articles", "label": "Blog posts", "default": false },
+      { "type": "range", "id": "search_results_limit", "label": "Results per type", "min": 2, "max": 10, "step": 1, "default": 6 },
+      { "type": "header", "content": "Initial State" },
+      { "type": "collection", "id": "search_initial_collection", "label": "Initial collection", "info": "Products shown in the drawer before the shopper types anything." },
+      { "type": "checkbox", "id": "search_hide_sold_out", "label": "Hide sold-out products from the initial collection", "default": false }
+    ]
+  },
+  {
     "name": "Layout",
     "settings": [
       { "type": "header", "content": "Grid — Mobile" },

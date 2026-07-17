@@ -1,7 +1,9 @@
 {% if label != blank and to != blank %}
   <a
     href="{{ to }}"
+    {% if target %}
     target="{{ target }}"
+    {% endif %}
     class="{{ class }}"
     title="{{ label }}"
   >

@@ -1,0 +1,21 @@
+{%- comment -%}
+  Dots container for <slide-show>. Two placements are supported:
+
+  1. Inside the <slide-show> — no extra args needed. slideshow.js finds it
+     via this.querySelector('.slider-dots') and fills it on init.
+  2. Outside the <slide-show> — pass `for: '<slide-show id>'`. The container
+     gets `data-slider="<id>"` and slideshow.js falls back to a document-level
+     lookup keyed on the id.
+
+  The JS also toggles !hidden on the container when the track isn't scrollable.
+  Styling for the dots themselves lives in src/styles/components/slideshow.css.
+
+  Optional args:
+    class — extra classes on the wrapper (e.g. spacing, color)
+    for   — slide-show id, only needed when the dots live outside the slide-show
+{%- endcomment -%}
+{%- assign target_attr = '' -%}
+{%- if for != blank -%}
+  {%- assign target_attr = ' data-slider="' | append: for | append: '"' -%}
+{%- endif -%}
+<div class="slider-dots {{ class }}"{{ target_attr }}></div>

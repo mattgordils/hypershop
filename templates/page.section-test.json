@@ -88,6 +88,23 @@
         "slideshow_autoplay_speed": 6
       }
     },
+    "product_carousel": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "heading": "Featured products",
+        "collection": "frontpage",
+        "products": [],
+        "desktop_columns": 4,
+        "tablet_columns": 2.5,
+        "mobile_columns": 1.5,
+        "show_arrows": true,
+        "show_dots": false,
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
     "text_section": {
       "type": "text-section",
       "blocks": {
@@ -595,6 +612,286 @@
         "section_spacing": "medium"
       }
     },
+    "columns-2": {
+      "type": "columns",
+      "blocks": {
+        "col_1": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_3Rfq4J": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/tangerine_600x_dd70ad42-ff5e-4238-90ef-780623cb0187.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Tangerine Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A microbial substrate that has a positive impact on the oral environment</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_3Rfq4J",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_2": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HaCBEd": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/grapefruit_600x_c2bde855-dcf2-4689-9432-c0663853fc36.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin C",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A powerful antioxidant that fights decay and gingivitis</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HaCBEd",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_3": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_ecpbHL": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/seaweed_600x_d4a77a4c-fa44-4baa-87dd-0b453e533da3.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Crispus Chondrus",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Prebiotic that balances oral ecology and contains minerals for strong teeth</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_ecpbHL",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "text_lockup_G94H3G": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_dU3NVN": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/papaya_600x_9e823953-b20b-4e54-ad5f-c378fbc9bd1d.avif"
+              },
+              "blocks": {}
+            },
+            "headline_KXGVrp": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin E",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_jUJMF9": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Supports tissue repair and combats oxidative stress</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_dU3NVN",
+            "headline_KXGVrp",
+            "rich_text_jUJMF9"
+          ]
+        },
+        "text_lockup_dYUYWp": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_QPD9Qc": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/crans_600x_681de5fc-5794-44a7-8ffe-3bf30778a36f.webp"
+              },
+              "blocks": {}
+            },
+            "headline_U9Lcyk": {
+              "type": "_headline",
+              "settings": {
+                "text": "Cranberry Seed Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_xMJWpX": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Inflammation calming prebiotic nutrient with essential fatty acids</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_QPD9Qc",
+            "headline_U9Lcyk",
+            "rich_text_xMJWpX"
+          ]
+        },
+        "text_lockup_WJfpFQ": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HLLMkE": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/lemon_600x_3ee51094-f574-412f-9dfa-067dec2bcb5e.webp"
+              },
+              "blocks": {}
+            },
+            "headline_yXjacB": {
+              "type": "_headline",
+              "settings": {
+                "text": "CoQ10",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_gCwcbk": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Cell-energy enhancer for healthy mitochondrial function</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HLLMkE",
+            "headline_yXjacB",
+            "rich_text_gCwcbk"
+          ]
+        }
+      },
+      "block_order": [
+        "col_1",
+        "col_2",
+        "col_3",
+        "text_lockup_G94H3G",
+        "text_lockup_dYUYWp",
+        "text_lockup_WJfpFQ"
+      ],
+      "name": "Columns",
+      "settings": {
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 4,
+        "tablet_columns": 3,
+        "mobile_slideshow": true,
+        "mobile_columns": 2,
+        "contain_square": true,
+        "limit_media_width": true,
+        "media_max_width": 400,
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
     "accordion": {
       "type": "accordion",
       "blocks": {
@@ -919,10 +1216,12 @@
   },
   "order": [
     "wide_media",
+    "product_carousel",
     "text_section",
     "media_w_text",
     "columns",
     "columns_cQyTMT",
+    "columns-2",
     "accordion",
     "blog_list",
     "product_grid",

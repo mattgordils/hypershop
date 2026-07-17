@@ -33,7 +33,7 @@
           "type": "_headline",
           "name": "Headline",
           "settings": {
-            "text": "{{ closest.product.title }}",
+            "text": "{{ product.title }}",
             "style": "h2",
             "element": "h1",
             "space_below": "small"
@@ -76,7 +76,7 @@
               "settings": {
                 "title": "Description",
                 "title_size": "body bold",
-                "text": "{{ closest.product.description }}",
+                "text": "{{ product.description }}",
                 "text_size": "body-small"
               },
               "blocks": {}

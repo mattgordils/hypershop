@@ -72,7 +72,6 @@ class MenuItem extends HTMLElement {
   connectedCallback() {
     this.trigger = this.querySelector('[data-menu-trigger]');
     this.trigger?.addEventListener('click', this.onTriggerClick.bind(this));
-    this.querySelector('[data-menu-backdrop]')?.addEventListener('click', () => this.close());
     document.addEventListener('click', this.onDocumentClick);
     document.addEventListener('keydown', this.onKeydown);
   }

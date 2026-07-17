@@ -67,24 +67,24 @@
   {% endif %}
   
   {% if section.settings.mobile_slideshow or section.settings.slideshow %}
-    <div class="overflow-hidden">
-    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full">
-      <slide-show
-        class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin overflow-visible"
-        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
-      >
-        <div class="slider-container px-margin">
-          {%- for column in section.blocks -%}
-            <div class="slider-slide">
-              <div class="flex flex-col h-full text-balance">
-                {% render column %}
+    <div class="overflow-hidden{% if section.settings.slideshow == false %} lg:hidden{% endif %}">
+      <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
+        <slide-show
+          class="block overflow-visible"
+          data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
+        >
+          <div class="slider-container">
+            {%- for column in section.blocks -%}
+              <div class="slider-slide">
+                <div class="flex flex-col h-full text-balance">
+                  {% render column %}
+                </div>
               </div>
-            </div>
-          {%- endfor -%}
-        </div>
-        <div class="slider-dots text-light-text-color mt-6"></div>
-      </slide-show>
-    </div>
+            {%- endfor -%}
+          </div>
+          {% render 'slider-dots' with class: 'text-light-text-color mt-6' %}
+        </slide-show>
+      </div>
     </div>
   {% endif %}
 </div>

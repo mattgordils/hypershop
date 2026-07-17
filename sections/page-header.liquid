@@ -31,6 +31,42 @@
     border-color: var(--hr-color);
   }
 
+  /* Shared page overlay behind any open dropdown. One element in the header
+     that fades in when any <menu-item> is open. Clicking it triggers the
+     document-level outside-click handler in nav.js which closes the open
+     menu-item (the overlay is a sibling of the menu-items, so the click is
+     "outside" from the menu-item's perspective — no extra JS needed). */
+  .menu-overlay {
+    position: fixed;
+    top: var(--header-banner-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -2;
+    background: currentColor;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    transition: visibility var(--md-speed), opacity var(--md-speed);
+    transition-behavior: allow-discrete;
+  }
+  .section-header:has(menu-item[data-open="true"]) .menu-overlay {
+    visibility: visible;
+    opacity: 0.2;
+    pointer-events: auto;
+  }
+
+  /* Dropdown panel — kept `invisible` when closed so sublinks aren't in the
+     tab order, but `transition-behavior: allow-discrete` defers the visibility
+     flip to the end of the close animation so the grid-rows height transition
+     plays out fully. Height animation itself lives on the inner grid via
+     Tailwind (grid-rows-[0fr] → group-data-[open=true]/menu:grid-rows-[1fr]). */
+  [data-menu-panel] {
+    transition: visibility var(--md-speed);
+    transition-behavior: allow-discrete;
+  }
+
   /* Shared trigger + label styling for the search / account / cart / hamburger
      buttons. Each trigger wrapper gets .header-trigger, each label span gets
      .header-trigger-label. The label picks up an animated currentColor underline
@@ -167,6 +203,8 @@
 {%- endcapture -%}
 
 <sticky-header>
+  {%- comment -%} Single shared overlay behind any open dropdown — styling in the {% stylesheet %} above. {%- endcomment -%}
+  <div class="menu-overlay" aria-hidden="true"></div>
   <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center border-b">
     {%- comment -%} Left region — primary menu when a secondary menu is set {%- endcomment -%}
     <div class="h-full flex items-center {% if has_secondary %}grow shrink basis-0{% endif %}">

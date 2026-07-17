@@ -26,6 +26,14 @@ if (!customElements.get('slide-show')) {
         this.dotItems = false
         this.arrowNext = this.querySelector('.slider-next')
         this.arrowPrev = this.querySelector('.slider-prev')
+        // Arrows and dots can also live outside the slide-show DOM tree — look
+        // them up by data-slider="<slide-show id>" as a fallback. Cheap: a few
+        // ID-scoped querySelectors per instance, once at construct time.
+        if ((!this.arrowNext || !this.arrowPrev || !this.dots) && this.id) {
+          this.arrowNext = this.arrowNext || document.querySelector(`.slider-next[data-slider="${this.id}"]`)
+          this.arrowPrev = this.arrowPrev || document.querySelector(`.slider-prev[data-slider="${this.id}"]`)
+          this.dots = this.dots || document.querySelector(`.slider-dots[data-slider="${this.id}"]`)
+        }
         this.slides = this.querySelectorAll('.slider-slide') || []
         this.navs = this.querySelectorAll('.slider-nav')
         this.currentSlide = 0

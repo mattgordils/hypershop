@@ -1,8 +1,10 @@
 {%- comment -%}
   Predictive search drawer. Triggered from the header search block
   (`_header-search`, data-modal-id="searchDrawer"). The <predictive-search> web
-  component (assets/predictive-search.js) hydrates the data-* hooks + <template>s
-  below from Shopify's /search/suggest.json. Ported from the denim-tears theme.
+  component (assets/predictive-search.js) fetches the `predictive-search` SECTION
+  via the Section Rendering API and swaps its markup into [data-predictive-results],
+  so results render with the real product-card component. Scope (products / pages /
+  blog posts) + layout come from Theme settings → Search (settings.search_*).
 {%- endcomment -%}
 <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
 
@@ -10,9 +12,17 @@
 {%- assign default_scheme = '' -%}
 {%- for s in settings.color_schemes limit: 1 -%}{%- assign default_scheme = s.id -%}{%- endfor -%}
 
-<modal-component id="searchDrawer" class="search-container drawer">
+<modal-component id="searchDrawer" class="search-container drawer search-position-{{ settings.search_layout }}">
   <div class="modal-content w-full md:w-[30vw] 2xl:w-[25vw] max-w-full md:min-w-[600px] {{ default_scheme }} z-1">
-    <predictive-search class="flex flex-col {{ default_scheme }} h-full overflow-y-auto" data-currency="{{ cart.currency.iso_code }}">
+    <predictive-search
+      class="flex flex-col {{ default_scheme }} h-full overflow-y-auto"
+      data-search-url="{{ routes.predictive_search_url }}"
+      data-search-page-url="{{ routes.search_url }}"
+      data-search-products="{{ settings.search_products }}"
+      data-search-pages="{{ settings.search_pages }}"
+      data-search-articles="{{ settings.search_articles }}"
+      data-limit="{{ settings.search_results_limit }}"
+    >
       {%- comment -%} Header: input + close {%- endcomment -%}
       <div class="sticky top-0 bg-bg z-2 px-margin w-full flex justify-between items-baseline gap-gutter shrink-0">
         <div class="grow h-header-height flex items-center justify-stretch">
@@ -38,27 +48,23 @@
         </modal-trigger>
       </div>
 
-      {%- comment -%} Results {%- endcomment -%}
-      <div data-search-results class="flex-1 px-margin flex flex-col justify-start items-stretch">
-        <div data-search-empty class="hidden">
-          <p class="body text-light-text-color">No results found for "<span data-search-query></span>"</p>
-        </div>
-
+      {%- comment -%} Results region {%- endcomment -%}
+      <div class="flex-1 px-margin flex flex-col justify-start items-stretch">
         <div data-search-error class="hidden">
-          <p class="body text-light-text-color">Something went wrong. Please try again.</p>
+          <p class="body text-light-text-color py-3">Something went wrong. Please try again.</p>
         </div>
 
         {%- comment -%} Initial state — a featured collection before typing {%- endcomment -%}
         <div data-search-initial class="w-full grow pb-gutter flex flex-col justify-end items-stretch z-1">
-          {% if section.settings.initial_collection != blank %}
-            <div class="body mb-4">{{ section.settings.initial_collection.title }}</div>
+          {% if settings.search_initial_collection != blank %}
+            <div class="body mb-4">{{ settings.search_initial_collection.title }}</div>
             <div class="grid grid-cols-2 gap-gutter w-full">
               {%- liquid
                 assign shown_count = 0
                 assign max_products = 4
-                assign hide_sold_out = section.settings.hide_sold_out
+                assign hide_sold_out = settings.search_hide_sold_out
               -%}
-              {% for product in section.settings.initial_collection.products %}
+              {% for product in settings.search_initial_collection.products %}
                 {%- liquid
                   assign show_product = true
                   if hide_sold_out and product.available == false
@@ -75,24 +81,8 @@
           {% endif %}
         </div>
 
-        <div data-search-products class="hidden pb-v-space-sm">
-          <div data-search-products-list class="grid grid-cols-2 gap-gutter"></div>
-        </div>
-
-        <div data-search-collections class="hidden pb-v-space-sm">
-          <div class="px-margin py-2 border-b border-hr-color"><span class="h6">Collections</span></div>
-          <div data-search-collections-list class="divide-y divide-hr-color"></div>
-        </div>
-
-        <div data-search-pages class="hidden pb-v-space-sm">
-          <div class="px-margin py-2 border-b border-hr-color"><span class="h6">Pages</span></div>
-          <div data-search-pages-list class="divide-y divide-hr-color"></div>
-        </div>
-
-        <div data-search-articles class="hidden">
-          <div class="px-margin py-2 border-b border-hr-color"><span class="h6">Articles</span></div>
-          <div data-search-articles-list class="divide-y divide-hr-color"></div>
-        </div>
+        {%- comment -%} Live results — server-rendered `predictive-search` section swapped in here {%- endcomment -%}
+        <div data-predictive-results></div>
       </div>
 
       {%- comment -%} View all {%- endcomment -%}
@@ -106,66 +96,9 @@
   <modal-trigger class="overlay bg-text-color opacity-50"></modal-trigger>
 </modal-component>
 
-{%- comment -%} ===== Result templates (cloned by predictive-search.js) ===== {%- endcomment -%}
-<template data-template-product>
-  <a href="" data-product-link class="block space-y-3 group">
-    <div class="aspect-3/4 relative w-full bg-light-grey overflow-hidden">
-      <img alt="" width="300" height="400" data-product-image class="absolute inset-0 w-full h-full object-cover group-hover:opacity-0" loading="lazy">
-      <img alt="" width="300" height="400" data-product-hover-image class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100" loading="lazy">
-    </div>
-    <div class="flex flex-col justify-center gap-1 min-w-0">
-      <div class="flex justify-between gap-3 items-baseline">
-        <span data-product-title class="body text-balance"></span>
-        <span data-product-price class="body shrink-0"></span>
-      </div>
-    </div>
-  </a>
-</template>
-
-<template data-template-collection>
-  <a href="" data-collection-link class="flex gap-x-3 px-margin py-3 hover:bg-light-grey transition-colors">
-    <div class="w-[60px] h-[60px] bg-light-grey shrink-0 relative">
-      <img alt="" width="60" height="60" data-collection-image class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-    </div>
-    <div class="flex flex-col justify-center min-w-0"><span data-collection-title class="body truncate"></span></div>
-  </a>
-</template>
-
-<template data-template-page>
-  <a href="" data-page-link class="block px-margin py-3 hover:bg-light-grey transition-colors">
-    <span data-page-title class="body"></span>
-  </a>
-</template>
-
-<template data-template-article>
-  <a href="" data-article-link class="flex gap-x-3 px-margin py-3 hover:bg-light-grey transition-colors">
-    <div class="w-[60px] h-[60px] bg-light-grey shrink-0 relative">
-      <img alt="" width="60" height="60" data-article-image class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-    </div>
-    <div class="flex flex-col justify-center min-w-0">
-      <span data-article-title class="body truncate"></span>
-      <span data-article-date class="body-small text-light-text-color"></span>
-    </div>
-  </a>
-</template>
-
 {% schema %}
 {
   "name": "Search",
-  "class": "section-search-panel",
-  "settings": [
-    {
-      "type": "collection",
-      "id": "initial_collection",
-      "label": "Initial collection",
-      "info": "Products shown in the search drawer before the shopper types anything."
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_sold_out",
-      "label": "Hide sold-out products from the initial collection",
-      "default": false
-    }
-  ]
+  "class": "section-search-panel"
 }
 {% endschema %}
