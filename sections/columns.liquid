@@ -8,16 +8,30 @@
 
 {%-liquid
   assign alignment = section.settings.alignment
-
-  assign mobile_cols = 100.00 | divided_by: section.settings.mobile_columns
-  assign tablet_cols = 100.00 | divided_by: section.settings.tablet_columns
-  assign desktop_cols = 100.00 | divided_by: section.settings.columns
-
-  assign eyebrow = section.settings.eyebrow
-  assign headline = section.settings.headline
-  assign text = section.settings.text
-
   assign alignment_class = 'lockup-' | append: alignment
+
+  # Decide the initial embla state and any breakpoint override so a single
+  # <slide-show> element covers all four grid/slideshow combinations without
+  # duplicating markup. `active: false` at a breakpoint drops the carousel
+  # into the responsive grid fallback defined in slideshow.css.
+  assign desktop_slideshow = section.settings.slideshow
+  assign mobile_slideshow  = section.settings.mobile_slideshow
+  assign initial_active = 'false'
+  assign breakpoints_json = ''
+
+  if desktop_slideshow and mobile_slideshow
+    assign initial_active = 'true'
+  elsif desktop_slideshow == false and mobile_slideshow == false
+    assign initial_active = 'false'
+  elsif desktop_slideshow and mobile_slideshow == false
+    # Grid on mobile, slideshow at lg+
+    assign initial_active = 'false'
+    assign breakpoints_json = '{"(min-width: 1024px)": {"active": true}}'
+  else
+    # Slideshow on mobile, grid at lg+
+    assign initial_active = 'true'
+    assign breakpoints_json = '{"(min-width: 1024px)": {"active": false}}'
+  endif
 -%}
 
 {% stylesheet %}
@@ -47,46 +61,28 @@
 <div
   class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}{% if section.settings.limit_media_width %} columns--limit-media{% endif %}"
 >
-  {% if section.settings.slideshow == false %}
-    <div class="px-margin">
-      <div class="mx-auto max-w-site-max-w w-full">
-        <div
-          style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
-          class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
-        >
+  <div class="overflow-hidden">
+    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
+      <slide-show
+        class="block overflow-visible"
+        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
+        data-active="{{ initial_active }}"
+        data-align="{% if alignment == 'left' %}start{% else %}center{% endif %}"
+        {% if breakpoints_json != blank %}data-breakpoints='{{ breakpoints_json }}'{% endif %}
+      >
+        <div class="slider-container {% if alignment == 'left' %}justify-start{% else %}justify-center{% endif %}">
           {%- for column in section.blocks -%}
-            <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] sm:w-[var(--tablet-cols)] lg:w-[var(--desktop-cols)] px-half-gutter">
-              <div class="{{ alignment_class }} flex flex-col h-full text-balance {% if alignment == 'center' %} mx-auto{% endif %}">
+            <div class="slider-slide">
+              <div class="{{ alignment_class }} flex flex-col h-full text-balance{% if alignment == 'center' %} mx-auto{% endif %}">
                 {% render column %}
               </div>
             </div>
           {%- endfor -%}
         </div>
-      </div>
+        {% render 'slider-dots' with class: 'mt-6', color_scheme: section.settings.dots_color_scheme %}
+      </slide-show>
     </div>
-  {% endif %}
-  
-  {% if section.settings.mobile_slideshow or section.settings.slideshow %}
-    <div class="overflow-hidden{% if section.settings.slideshow == false %} lg:hidden{% endif %}">
-      <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
-        <slide-show
-          class="block overflow-visible"
-          data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
-        >
-          <div class="slider-container">
-            {%- for column in section.blocks -%}
-              <div class="slider-slide">
-                <div class="flex flex-col h-full text-balance">
-                  {% render column %}
-                </div>
-              </div>
-            {%- endfor -%}
-          </div>
-          {% render 'slider-dots' with class: 'text-light-text-color mt-6' %}
-        </slide-show>
-      </div>
-    </div>
-  {% endif %}
+  </div>
 </div>
 
 {% schema %}
@@ -146,6 +142,13 @@
       "min": 1,
       "max": 6,
       "step": 1
+    },
+    {
+      "type": "color_scheme",
+      "id": "dots_color_scheme",
+      "label": "Dots color scheme",
+      "info": "Applied to the slideshow dots. Leave blank to inherit from the section.",
+      "visible_if": "{{ section.settings.slideshow or section.settings.mobile_slideshow }}"
     },
     {
       "type": "header",

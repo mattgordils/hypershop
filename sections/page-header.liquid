@@ -67,6 +67,21 @@
     transition-behavior: allow-discrete;
   }
 
+  /* Cart count "circle" mode — inverts against the current header state.
+     Default (solid header, whether from being scrolled, from a solid scheme,
+     or from a dropdown-open background flip): bg = text-color, text = bg-color.
+     Transparent header (overlap present, not scrolled, no dropdown open):
+     bg = white, text = dark, so the pill stays legible against arbitrary
+     imagery behind the header. */
+  .cart-count-circle {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+  }
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .cart-count-circle {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+  }
+
   /* Shared trigger + label styling for the search / account / cart / hamburger
      buttons. Each trigger wrapper gets .header-trigger, each label span gets
      .header-trigger-label. The label picks up an animated currentColor underline
@@ -146,7 +161,11 @@
     --shopify-account-color-card-text: var(--shopify-account-color-text);
     --shopify-account-signed-in-avatar-color-background: var(--shopify-account-color-accent);
     --shopify-account-signed-in-avatar-color-text: var(--shopify-account-color-accent-text);
-    --shopify-account-signed-in-avatar-size: 28px;
+    /* Let both signed-in and signed-out avatars size to their slot content —
+       we render our own custom avatar for both states in _header-account.liquid.
+       Setting `auto` prevents Shopify from reserving a fixed 28px box around
+       the slot, which was making the signed-out trigger look padded. */
+    --shopify-account-signed-in-avatar-size: auto;
 
     --shopify-account-font-body: var(--main-font);
     --shopify-account-font-heading: var(--secondary-font);
@@ -219,7 +238,7 @@
     </div>
 
     {%- comment -%} Right region — menu (secondary if set, else primary) + account + cart + mobile hamburger {%- endcomment -%}
-    <div class="flex items-center justify-end grow shrink basis-0 h-[calc(100%+1px)]">
+    <div class="flex items-center justify-end grow shrink basis-0 h-[calc(100%+1px)] -mr-[calc(var(--site-gutters)/2)]">
       {%- comment -%} + 1px to compensate for the header border {%- endcomment -%}
       {%- if has_secondary -%}
         {% render 'header-menu' with menu: section.settings.secondary_menu %}

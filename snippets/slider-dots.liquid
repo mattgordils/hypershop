@@ -11,11 +11,14 @@
   Styling for the dots themselves lives in src/styles/components/slideshow.css.
 
   Optional args:
-    class — extra classes on the wrapper (e.g. spacing, color)
-    for   — slide-show id, only needed when the dots live outside the slide-show
+    class        — extra classes on the wrapper (e.g. spacing)
+    for          — slide-show id, only needed when the dots live outside the slide-show
+    color_scheme — color scheme id to apply (e.g. 'theme-dark', 'theme-light-grey').
+                   Sets --text-color / --bg-color on the container so dot borders
+                   and fills pick up the scheme instead of inheriting from context.
 {%- endcomment -%}
 {%- assign target_attr = '' -%}
 {%- if for != blank -%}
   {%- assign target_attr = ' data-slider="' | append: for | append: '"' -%}
 {%- endif -%}
-<div class="slider-dots {{ class }}"{{ target_attr }}></div>
+<div class="slider-dots type-progress_strip {{ color_scheme }} {{ class }}"{{ target_attr }}></div>

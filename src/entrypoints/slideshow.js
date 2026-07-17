@@ -16,6 +16,10 @@ if (!customElements.get('slide-show')) {
         this.loop = this.dataset.loop === 'true' ? true : false
         this.axis = this.dataset.axis || 'x'
         this.align = this.dataset.align || 'center'
+        // Initial `active` state — sections that want to be a grid at load time
+        // (e.g. "no slideshow on desktop") pass data-active="false" and let a
+        // breakpoint override flip it to true on other viewports.
+        this.active = this.dataset.active === 'false' ? false : true
         this.autoplay = this.dataset.autoplay === 'true' ? true : false
         this.autoplaySpeed = this?.dataset?.autoplaySpeed
           ? parseInt(this.dataset.autoplaySpeed)
@@ -108,6 +112,7 @@ if (!customElements.get('slide-show')) {
           align: this.align,
           watchDrag: this.drag,
           containScroll: 'trimSnaps',
+          active: this.active,
           breakpoints: this.breakpoints
         }
 
@@ -131,9 +136,12 @@ if (!customElements.get('slide-show')) {
 
         const toggleActiveWhenScrollable = () => {
           setTimeout(() => {
-            let isScrollable = embla.internalEngine().scrollSnaps.length > 1
+            // Hide controls if embla itself is inactive (grid-fallback mode) OR
+            // if the track has nothing to scroll to. Covers external arrows/dots
+            // bound via data-slider — those don't get the .inactive CSS scope.
+            const isActive = embla.internalEngine()?.options?.active
+            const isScrollable = isActive && embla.internalEngine().scrollSnaps.length > 1
 
-            // Hide controls if not scrollable
             if (!isScrollable) {
               this?.arrowNext?.classList.add('!hidden')
               this?.arrowPrev?.classList.add('!hidden')

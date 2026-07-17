@@ -48,8 +48,17 @@
           {%- endfor -%}
         </div>
 
-        {%- if section.settings.show_dots -%}
-          {% render 'slider-dots' with class: 'text-light-text-color mt-v-space-sm' %}
+        {%- if section.settings.show_pager or section.settings.show_arrows -%}
+          <div class="flex justify-between items-center">
+            {%- if section.settings.show_pager -%}
+              {% render 'slider-dots' with class: 'mt-v-space-sm', type: section.settings.pager_style %}
+            {%- endif -%}
+            {%- if section.settings.show_arrows -%}
+              <div class="block md:hidden shrink-0 mt-v-space-sm">
+                {% render 'slider-arrows' with for: carousel_id %}
+              </div>
+            {%- endif -%}
+          </div>
         {%- endif -%}
       </slide-show>
     </div>
@@ -123,9 +132,20 @@
     },
     {
       "type": "checkbox",
-      "id": "show_dots",
-      "label": "Show dots",
+      "id": "show_pager",
+      "label": "Show pager",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "pager_style",
+      "label": "Pager style",
+      "options": [
+        { "label": "Dots", "value": "dots" },
+        { "label": "Dots with pill", "value": "dots_pill" },
+        { "label": "Progress Strip", "value": "progress_strip" }
+      ],
+      "visible_if": "{{ section.settings.show_pager }}"
     },
     {
       "type": "header",

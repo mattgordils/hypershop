@@ -24,11 +24,13 @@
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
-<div class="px-margin">
-  <div class="mx-auto max-w-site-max-w w-full">
-    {% render 'breadcrumbs', class: 'mb-gutter' %}
+{%- if section.settings.show_breadcrumbs -%}
+  <div class="px-margin">
+    <div class="mx-auto max-w-site-max-w w-full">
+      {% render 'breadcrumbs', class: 'mb-gutter' %}
+    </div>
   </div>
-</div>
+{%- endif -%}
 
 <div class="px-margin">
   <div class="mx-auto max-w-site-max-w w-full">
@@ -120,9 +122,10 @@
       "info": "Leave blank on a product template to use that product. Pick a product to feature this section on other pages (e.g. the home page)."
     },
     {
-      "type": "header",
-      "content": "Product Badges",
-      "info": "To get badges like “Best Seller” to appear, when editing the product add a tag of “badge-Best Seller”"
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
     },
     {
       "type": "select",

@@ -6,6 +6,22 @@
   assign a11y_title = 'header.account_label' | t
 -%}
 
+{%- capture avatar_content -%}
+  {%- if symbol == 'custom' and custom_icon != blank -%}
+    {{ custom_icon | image_url: width: 72 | image_tag:
+      widths: '24, 48, 72',
+      alt: '',
+      class: 'shrink-0 block h-[18px] w-auto object-contain',
+      loading: 'lazy'
+    }}
+  {%- elsif symbol == 'icon' -%}
+    <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+  {%- endif -%}
+  {%- if label != blank -%}
+    <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
+  {%- endif -%}
+{%- endcapture -%}
+
 {%- if shop.customer_accounts_enabled -%}
   <div class="header-trigger account-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center whitespace-nowrap leading-none" {{ block.shopify_attributes }}>
     <shopify-account
@@ -13,19 +29,10 @@
       class="account-component flex h-full items-center gap-2"
     >
       <span slot="signed-out-avatar" class="flex items-center gap-2" title="{{ a11y_title }}" aria-label="{{ a11y_title }}">
-        {%- if symbol == 'custom' and custom_icon != blank -%}
-          {{ custom_icon | image_url: width: 72 | image_tag:
-            widths: '24, 48, 72',
-            alt: '',
-            class: 'shrink-0 block h-[18px] w-auto object-contain',
-            loading: 'lazy'
-          }}
-        {%- elsif symbol == 'icon' -%}
-          <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
-        {%- endif -%}
-        {%- if label != blank -%}
-          <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
-        {%- endif -%}
+        {{ avatar_content }}
+      </span>
+      <span slot="signed-in-avatar" class="flex items-center gap-2" title="{{ a11y_title }}" aria-label="{{ a11y_title }}">
+        {{ avatar_content }}
       </span>
     </shopify-account>
   </div>

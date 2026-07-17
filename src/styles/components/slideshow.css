@@ -1,3 +1,44 @@
+/* Inactive mode — the slide-show is a plain responsive grid. Column counts
+   flow from the same --slides-xs / --slides-sm / --slides-lg custom properties
+   that the JS sets from data-slides-to-show, so a section can flip between
+   slideshow and grid at breakpoints without duplicating the DOM. */
+slide-show.inactive {
+  display: block;
+
+  & .slider-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-v-space-sm) var(--slide-gap, var(--site-gutters));
+  }
+
+  & .slider-slide {
+    width: calc(
+      (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-xs, 1) - 1))
+      / var(--slides-xs, 1)
+    );
+
+    @media (min-width: 640px) {
+      width: calc(
+        (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-sm, 1) - 1))
+        / var(--slides-sm, 1)
+      );
+    }
+    @media (min-width: 1024px) {
+      width: calc(
+        (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-lg, 1) - 1))
+        / var(--slides-lg, 1)
+      );
+    }
+  }
+
+  /* Grid mode has no need for slideshow chrome — hides nested dots/arrows/nav.
+     External controls (bound via data-slider="<id>") are hidden by the JS's
+     toggleActiveWhenScrollable branch, which sees embla is inactive. */
+  & :is(.slider-dots, .slider-arrows, .slider-nav) {
+    display: none;
+  }
+}
+
 slide-show:not(.inactive) {
   display: block;
   --slide-gap: var(--site-gutters);
@@ -71,7 +112,7 @@ slide-show:not(.inactive) {
     display: flex;
     justify-content: center;
     & button {
-      padding: 3px;
+      padding: 2px;
       & > span {
         display: block;
         width: 6px;
@@ -83,6 +124,43 @@ slide-show:not(.inactive) {
         transition: all var(--md-speed) ease-in-out;
       }
       &.active > span { background-color: currentColor; }
+    }
+    &.type-dots_pill {
+      & button {
+        padding: 3px;
+        & > span {
+          display: block;
+          width: 6px;
+          height: 6px;
+          text-indent: -200px;
+          overflow: hidden;
+          background-color: currentColor;
+          opacity: .3;
+          border-radius: 100px;
+          transition: all var(--md-speed) ease-in-out;
+        }
+        &.active > span { opacity: 1; width: 15px; }
+      }
+    }
+    &.type-progress_strip {
+      width: 100%;
+      & button {
+        padding: 3px 0;
+        flex-grow: 1;
+        & > span {
+          display: block;
+          width: 100%;
+          height: 2px;
+          background-color: var(--hr-color);
+          text-indent: -200px;
+          overflow: hidden;
+          background-color: currentColor;
+          opacity: .1;
+          border-radius: 100px;
+          transition: all var(--md-speed) ease-in-out;
+        }
+        &.active > span { opacity: 1; }
+      }
     }
   }
 

@@ -234,9 +234,9 @@
       padding-right: 0;
       background-color: transparent;
       border: none;
-      &::placeholder {
-        color: var(--light-text-color);
-      }
+    }
+    &::placeholder {
+      color: var(--light-text-color);
     }
   }
 

@@ -29,11 +29,13 @@
   {%- endfor -%}
 {%- endcapture -%}
 
-<div class="px-margin">
-  <div class="mx-auto max-w-site-max-w w-full">
-    {% render 'breadcrumbs', class: 'mb-gutter' %}
+{%- if section.settings.show_breadcrumbs -%}
+  <div class="px-margin">
+    <div class="mx-auto max-w-site-max-w w-full">
+      {% render 'breadcrumbs', class: 'mb-gutter' %}
+    </div>
   </div>
-</div>
+{%- endif -%}
 
 {% if section_collection.products.size > 0 %}
   {% if paginatable %}
@@ -86,6 +88,12 @@
       "id": "products",
       "label": "Products",
       "info": "This will override the selected collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
     },
     {
       "type": "header",
