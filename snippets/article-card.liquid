@@ -22,7 +22,7 @@
 >
   <div class="relative aspect-[4/5]{% if featured %} md:aspect-[1.63] 2xl:aspect-[1.6175]{% else %}{% endif %}">
     {% if has_media %}
-      {% render 'image' with
+      {% render 'image',
         src: article_image,
         sizes: '800px',
         layout: 'cover',

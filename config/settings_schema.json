@@ -21,7 +21,7 @@
     ]
   },
   {
-    "name": "Favicon",
+    "name": "Icons & Sharing",
     "settings": [
       {
         "type": "image_picker",
@@ -34,6 +34,13 @@
         "id": "touch_icon",
         "label": "Touch icon (iOS / PWA)",
         "info": "Square opaque PNG, 512×512px recommended. Used when the site is added to a mobile home screen. Falls back to the favicon if empty."
+      },
+      { "type": "header", "content": "Social Sharing" },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default share image",
+        "info": "1200×630px recommended. Used when a page has no image of its own — products, articles and pages with a featured image use theirs instead."
       }
     ]
   },
@@ -387,6 +394,91 @@
         { "value": "quick_add", "label": "Quick add" },
         { "value": "quick_view", "label": "Quick view" }
       ]},
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Image shape",
+      "default": "4/5",
+      "options": [
+        { "value": "2/3", "label": "Tall (2:3)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "1/1", "label": "Square" },
+        { "value": "5/4", "label": "Landscape (5:4)" },
+        { "value": "3/2", "label": "Wide (3:2)" }
+      ]
+    },
+    { "type": "header", "content": "Hover" },
+    {
+      "type": "checkbox",
+      "id": "card_show_hover_image",
+      "label": "Show second image on hover",
+      "info": "Uses the product's second image, where it has one.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_hover_effect",
+      "label": "Hover effect",
+      "default": "none",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "scale", "label": "Scale image" },
+        { "value": "darken", "label": "Darken" },
+        { "value": "lighten", "label": "Lighten" }
+      ]
+    },
+    { "type": "header", "content": "Text" },
+    {
+      "type": "checkbox",
+      "id": "card_text_over_image",
+      "label": "Place text over the image",
+      "info": "Sits the title and price at the bottom of the image instead of below it. Pair with a hover effect or a dark image for legibility.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "card_title_class",
+      "label": "Title size",
+      "default": "body",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "body-tiny", "label": "Body tiny" },
+        { "value": "body-small", "label": "Body small" },
+        { "value": "body", "label": "Body" },
+        { "value": "body-medium", "label": "Body medium" },
+        { "value": "body-large", "label": "Body large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_price_class",
+      "label": "Price size",
+      "default": "body",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "body-tiny", "label": "Body tiny" },
+        { "value": "body-small", "label": "Body small" },
+        { "value": "body", "label": "Body" },
+        { "value": "body-medium", "label": "Body medium" },
+        { "value": "body-large", "label": "Body large" }
+      ]
+    },
+    { "type": "header", "content": "Overlay Padding", "info": "Inset for the badges and the quick action sitting over the image." },
+    { "type": "range", "id": "card_badge_padding_mobile", "label": "Badges — mobile", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "card_badge_padding_desktop", "label": "Badges — desktop", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "card_action_padding_mobile", "label": "Quick action — mobile", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "card_action_padding_desktop", "label": "Quick action — desktop", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+
       { "type": "paragraph", "content": "Review/app widgets (e.g. star ratings) can be injected by a review app's app embed — each card exposes data-product-id and data-product-handle for that." }
     ]
   },
@@ -412,6 +504,60 @@
       { "type": "header", "content": "Initial State" },
       { "type": "collection", "id": "search_initial_collection", "label": "Initial collection", "info": "Products shown in the drawer before the shopper types anything." },
       { "type": "checkbox", "id": "search_hide_sold_out", "label": "Hide sold-out products from the initial collection", "default": false }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "default": "drawer",
+        "info": "Drawer: adding to cart slides the full cart out. Page: adding shows a short confirmation and the cart lives at its own page.",
+        "options": [
+          { "value": "drawer", "label": "Cart drawer" },
+          { "value": "page", "label": "Cart page" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Filters",
+    "settings": [
+      {
+        "type": "select",
+        "id": "filter_layout",
+        "label": "Layout",
+        "default": "sidebar",
+        "info": "Filters always open in a drawer on mobile. \"Sidebar\" adds a persistent column on large screens.",
+        "options": [
+          { "value": "drawer", "label": "Drawer only" },
+          { "value": "sidebar", "label": "Sidebar" }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "filter_collapsible",
+        "label": "Collapsible filter groups",
+        "info": "On: each filter is an accordion, collapsed until opened. Off: every filter list stays open.",
+        "default": true
+      },
+      { "type": "header", "content": "Price" },
+      {
+        "type": "select",
+        "id": "filter_price_style",
+        "label": "Style",
+        "default": "slider",
+        "options": [
+          { "value": "inputs", "label": "Two inputs (from / to)" },
+          { "value": "list", "label": "List of ranges" },
+          { "value": "slider", "label": "Slider" }
+        ]
+      },
+      { "type": "range", "id": "filter_price_range_count", "label": "Number of ranges", "info": "Ranges are built from the highest price in the results and snapped to round numbers, so this is a target rather than an exact count.", "min": 3, "max": 8, "step": 1, "default": 5, "visible_if": "{{ settings.filter_price_style == 'list' }}" },
+      { "type": "header", "content": "Advanced" },
+      { "type": "text", "id": "filter_hidden_labels", "label": "Hidden filters", "info": "Comma-separated filter names to hide from shoppers, e.g. Product type, Vendor." }
     ]
   },
   {

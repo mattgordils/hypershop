@@ -27,7 +27,7 @@
   assign message = block.settings.message | replace: '[count]', qty
 -%}
 
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 
 <div data-dynamic-content {{ block.shopify_attributes }}>
   {% if show_message %}

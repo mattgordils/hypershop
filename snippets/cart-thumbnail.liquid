@@ -1,7 +1,9 @@
-<modal-trigger
-  data-modal-id="cartDrawer"
-  class="min-w-2 min-h-2 cart-thumbnail flex items-center justify-center leading-none cursor-pointer text-center rounded-full theme-dark"
->
+{%- assign cart_thumb_class = 'min-w-2 min-h-2 cart-thumbnail flex items-center justify-center leading-none cursor-pointer text-center rounded-full theme-dark' -%}
+{%- if settings.cart_type == 'page' -%}
+<a href="{{ routes.cart_url }}" class="{{ cart_thumb_class }} border-none" aria-label="{{ 'header.cart_label' | t }}">
+{%- else -%}
+<modal-trigger data-modal-id="cartDrawer" class="{{ cart_thumb_class }}">
+{%- endif -%}
   <span
     id="cartCount"
     class="body-small w-6 h-6 flex items-center justify-center"
@@ -9,4 +11,4 @@
   >
     {{ cart.item_count }}
   </span>
-</modal-trigger>
+{%- if settings.cart_type == 'page' -%}</a>{%- else -%}</modal-trigger>{%- endif -%}

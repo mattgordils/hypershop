@@ -3,18 +3,47 @@
   if item.image
     assign image = item.image
   endif
+
+  comment
+    Aspect ratio: the class has to be a literal for Tailwind's scanner to emit it, so
+    the setting maps to a fixed class here rather than being interpolated. `card_ratio`
+    is the same shape passed to the image snippet, which crops the srcset to match.
+  endcomment
+  assign card_ratio = settings.card_aspect_ratio | default: '4/5'
+  case card_ratio
+    when '2/3'
+      assign card_aspect_class = 'aspect-2/3'
+    when '1/1'
+      assign card_aspect_class = 'aspect-square'
+    when '5/4'
+      assign card_aspect_class = 'aspect-5/4'
+    when '3/2'
+      assign card_aspect_class = 'aspect-3/2'
+    else
+      assign card_ratio = '4/5'
+      assign card_aspect_class = 'aspect-4/5'
+  endcase
 -%}
 
-<div id="cartLineItem" class="flex gap-x-gutter">
+{%- comment -%}
+  @param {object} item
+  @param {boolean} [qty]     - false renders a Remove link instead of the quantity stepper
+  @param {boolean} [compact] - drop both, for read-only contexts like the mini cart
+
+  data-line-key is the line item key, so a specific line can be picked out of freshly
+  rendered section markup.
+{%- endcomment -%}
+<div id="cartLineItem" data-line-key="{{ item.key }}" class="flex gap-x-gutter">
   <div class="w-24">
-    <div class="aspect-square relative w-full rounded overflow-hidden">
-      {% render 'image' with 
+    <div class="{{ card_aspect_class }} relative w-full rounded overflow-hidden">
+      {%- comment -%} sizes: the thumbnail column is w-24, i.e. 96px; srcset covers the DPR. {%- endcomment -%}
+      {% render 'image',
         src: image,
         layout: 'cover',
         loading: 'eager',
-        sizes: 200,
-        width: 100,
-        height: 100
+        ratio: card_ratio,
+        sizes: '96px',
+        width: 100
       %}
     </div>
   </div>
@@ -32,22 +61,22 @@
       </a>
       <div class="shrink-0">
         <div>
-          {% render 'product-price' with
+          {% render 'product-price',
             item: item.variant,
             times: item.quantity
           %}
         </div>
-        {% if qty == false %}
+        {% if qty == false and compact != true %}
           <cart-remove-item>
             <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
           </cart-remove-item>
         {% endif %}
       </div>
     </div>
-    {% if qty != false %}
+    {% if qty != false and compact != true %}
       <div class="flex justify-between items-center">
         <div>
-          {% render 'cart-item-quantity-adjust' with item: item %}
+          {% render 'cart-item-quantity-adjust', item: item %}
         </div>
         <cart-remove-item>
           <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>

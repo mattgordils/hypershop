@@ -43,7 +43,7 @@ class PredictiveSearch extends HTMLElement {
       this.input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const q = this.input.value.trim()
-          if (q) window.location.href = `${this.searchPageUrl}?q=${encodeURIComponent(q)}`
+          if (q) window.location.href = this.resultsPageUrl(q)
         }
       })
     }
@@ -58,6 +58,14 @@ class PredictiveSearch extends HTMLElement {
       })
       this.modalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] })
     }
+  }
+
+  // The predictive endpoint prefix-matches the final term, so "camp co" finds
+  // "Camp Collar Shirt". The results page only does that when asked, via
+  // options[prefix]=last — without it the same query returns nothing. `type=product`
+  // matches what the results page itself submits.
+  resultsPageUrl(query) {
+    return `${this.searchPageUrl}?q=${encodeURIComponent(query)}&type=product&options%5Bprefix%5D=last`
   }
 
   onInput() {
@@ -104,7 +112,7 @@ class PredictiveSearch extends HTMLElement {
       if (this.resultsTarget) {
         this.resultsTarget.innerHTML = inner ? inner.innerHTML : ''
       }
-      if (this.viewAllLink) this.viewAllLink.href = `${this.searchPageUrl}?q=${encodeURIComponent(query)}`
+      if (this.viewAllLink) this.viewAllLink.href = this.resultsPageUrl(query)
       this.viewAll?.classList.remove('hidden')
     } catch (err) {
       if (err.name === 'AbortError') return

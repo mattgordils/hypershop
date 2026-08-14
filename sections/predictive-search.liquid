@@ -21,7 +21,7 @@
         <div class="pb-v-space-sm">
           <div class="grid grid-cols-2 gap-gutter">
             {%- for product in r_products -%}
-              <div>{% render 'product-card' with product: product %}</div>
+              <div>{% render 'product-card', product: product %}</div>
             {%- endfor -%}
           </div>
         </div>

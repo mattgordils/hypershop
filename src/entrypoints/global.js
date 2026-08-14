@@ -8,6 +8,8 @@ import './collapsible';
 import './inView';
 import './slideshow';
 import './sort-filter';
+import './price-slider';
+import './mini-cart';
 
 // Utils
 function isMobileOrTablet() {
@@ -183,6 +185,15 @@ if (!customElements.get("add-to-cart-form")) {
             ]
           }
 
+          // In "cart page" mode, ask Shopify to re-render the mini cart in this same
+          // request — the response then carries the added line as real cart-item markup,
+          // so nothing has to be rebuilt in JS.
+          const miniCart = document.querySelector("mini-cart");
+          if (miniCart?.dataset.sectionId) {
+            formData.sections = miniCart.dataset.sectionId;
+            formData.sections_url = window.location.pathname;
+          }
+
           // Clear any previous cart error before trying again
           const errorEl = this.querySelector("[data-cart-error]");
           if (errorEl) {
@@ -213,7 +224,13 @@ if (!customElements.get("add-to-cart-form")) {
             }
 
             refreshCart();
-            openModal("cartDrawer");
+
+            // The mini cart replaces the drawer in "cart page" mode
+            if (miniCart) {
+              miniCart.show(data);
+            } else {
+              openModal("cartDrawer");
+            }
           })
           .catch((error) => {
             console.error("Error:", error);

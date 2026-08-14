@@ -58,13 +58,19 @@
     {% section 'page-age-gate' %}
     {% endcomment %}
     
-    <main id="main-content" role="main">
+    <main id="main-content" role="main" class="min-h-[calc(100vh-var(--spacing-full-header-height))]">
       <div class="page-sections">
         {{ content_for_layout }}
       </div>
     </main>
 
-    {% section 'page-cart-panel' %}
+    {%- comment -%}
+      Theme settings → Cart. In "page" mode the drawer isn't rendered at all; the mini cart
+      confirmation (a block in the header) takes its place and the cart lives at /cart.
+    {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'page-cart-panel' %}
+    {%- endif -%}
     {% section 'page-search-panel' %}
     {% sections 'footer-group' %}
 

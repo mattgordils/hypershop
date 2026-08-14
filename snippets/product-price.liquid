@@ -3,8 +3,15 @@
     assign times = 1
   endif
 
+  comment
+    `price` / `compare_at_price` override `item`, so previews built from sample data
+    (see mock-product) can reuse this markup instead of duplicating it.
+  endcomment
+  assign display_price = price | default: item.price
+  assign display_compare_at_price = compare_at_price | default: item.compare_at_price
+
   assign show_compare_price = false
-  if item.compare_at_price != blank and item.compare_at_price > item.price
+  if display_compare_at_price != blank and display_compare_at_price > display_price
     assign show_compare_price = true
   endif
 
@@ -13,8 +20,8 @@
 
 <div id="productPrice" class={{ classname }}>
   {% if show_compare_price %}
-    <s class="{{ og_price_class }}" data-price-compare>{{ item.compare_at_price | times: times | money }}</s> <span data-variant-price>{{ item.price | times: times | money }}</span>
+    <s class="{{ og_price_class }}" data-price-compare>{{ display_compare_at_price | times: times | money }}</s> <span data-variant-price>{{ display_price | times: times | money }}</span>
   {% else %}
-    <span data-variant-price>{{ item.price | times: times | money }}</span>
+    <span data-variant-price>{{ display_price | times: times | money }}</span>
   {% endif %}
 </div>

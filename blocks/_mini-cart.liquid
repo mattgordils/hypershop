@@ -1,0 +1,104 @@
+{%- comment -%}
+  Mini cart confirmation, shown after adding to cart when Theme settings → Cart is set to
+  "Cart page". Adding shows just the line that was added, rather than sliding out the
+  whole cart; the full cart lives at /cart.
+
+  It's a block in the header rather than its own section so it can be positioned against
+  the header: .section-header is `position: sticky`, so absolute positioning here resolves
+  to it — the panel sits below the header, moves with it, and clears a notification banner
+  without measuring anything in JS. Being a block also puts its copy in the header's own
+  settings panel.
+
+  How the "just added" line gets here: /cart/add.js is asked to re-render the header in
+  the same request (see mini-cart.js), and the response carries the fresh markup. Every
+  line is tagged data-line-key, so the one matching the added item can be picked out —
+  which keeps all the markup (prices, images, variant titles) in Liquid, rendered by the
+  same cart-item snippet the drawer and cart page use.
+
+  Visibility is a plain data-visible="true|false" toggle rather than modal-component, so
+  the reveal can be styled however you like. Defaults live in
+  src/styles/components/mini-cart.css and are meant to be replaced.
+{%- endcomment -%}
+
+{%- if settings.cart_type == 'page' -%}
+  {%- liquid
+    assign confirmation = block.settings.header_text | default: 'Added to your basket'
+    assign checkout_label = block.settings.text_checkout | default: 'Go to Checkout'
+    assign view_cart_label = block.settings.view_cart_text | default: 'View your basket'
+  -%}
+
+  <mini-cart
+    id="miniCart"
+    data-visible="false"
+    aria-label="{{ confirmation | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="mini-cart__panel bg-bg border border-hr-color rounded overflow-hidden">
+      <div class="shrink-0 h-header-height px-margin md:px-gutter w-full flex justify-between items-center theme-success">
+        <p class="h5 !font-semibold">{{ confirmation }}</p>
+        <button
+          type="button"
+          data-mini-cart-close
+          class="button circle transparent -mr-[18px]"
+          aria-label="Close"
+        >
+          <div class="icon material-icon text-[18px]">close</div>
+        </button>
+      </div>
+
+      {%- comment -%}
+        Every line renders; mini-cart.js keeps only the one that was just added. On first
+        page load nothing has been added yet, so the slot starts empty.
+      {%- endcomment -%}
+      <div class="px-margin md:px-gutter py-(--cart-padding)">
+        <div data-mini-cart-line aria-live="polite"></div>
+
+        <div hidden data-mini-cart-source>
+          {%- for item in cart.items -%}
+            {% render 'cart-item', item: item, compact: true %}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="px-margin md:px-gutter pb-margin md:pb-gutter flex flex-col items-center gap-3">
+        <form class="w-full" method="post" action="{{ routes.cart_url }}">
+          <input type="hidden" name="checkout" value="Checkout">
+          <button type="submit" name="checkout" class="button large w-full">{{ checkout_label }}</button>
+        </form>
+
+        <a href="{{ routes.cart_url }}" class="button-text animate-underline pb-[.15em]">{{ view_cart_label }}</a>
+      </div>
+    </div>
+  </mini-cart>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Mini Cart",
+  "class": "block-mini-cart",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shown after adding to cart, but only when Theme settings → Cart is set to \"Cart page\". With the cart drawer it stays hidden."
+    },
+    {
+      "type": "text",
+      "id": "header_text",
+      "label": "Confirmation message",
+      "default": "Added to your basket"
+    },
+    {
+      "type": "text",
+      "id": "text_checkout",
+      "label": "Checkout button text",
+      "default": "Go to Checkout"
+    },
+    {
+      "type": "text",
+      "id": "view_cart_text",
+      "label": "View cart link text",
+      "default": "View your basket"
+    }
+  ]
+}
+{% endschema %}

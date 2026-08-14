@@ -1,5 +1,5 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% liquid
@@ -42,7 +42,7 @@
       <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
         {% if product.selected_or_first_available_variant.image != blank %}
           <div class="md:col-span-2">
-            {% render 'image' with
+            {% render 'image',
               src: product.selected_or_first_available_variant.image,
               loading: 'eager',
               sizes: media_sizes,
@@ -53,7 +53,7 @@
           </div>
         {% endif %}
         <div class="hidden md:grid md:grid-cols-2 gap-gutter">
-          {% render 'product-media' with product: product %}
+          {% render 'product-media', product: product %}
         </div>
       </div>
 

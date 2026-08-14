@@ -31,14 +31,19 @@ const refreshSlideshow = section => {
   }
 }
 
+// Drawer sections (cart, search, menu, age gate) reveal themselves when the merchant
+// selects them in the editor, so they can see what they're editing.
+//
+// Opt-in via data-editor-auto-open. A modal that merely lives *inside* a content section
+// — the filter drawer inside the product grid — must not hijack selection of that section.
 const toggleSectionModal = (section, open = true) => {
-  if (section.querySelector('modal-component')) {
-    if (open) {
-      const modal = section.querySelector('modal-component')
-      openModal(modal.id)
-    } else {
-      closeModal()
-    }
+  const modal = section?.querySelector('modal-component[data-editor-auto-open]')
+  if (!modal) return
+
+  if (open) {
+    openModal(modal.id)
+  } else {
+    closeModal()
   }
 }
 
@@ -149,8 +154,17 @@ const handleSlideSelection = (target, isSelect) => {
   }
 }
 
+// The mini cart only appears after adding to cart, so selecting its block in the editor
+// has to reveal it — otherwise there's nothing on screen to edit.
+const toggleMiniCart = (target, open) => {
+  const miniCart = target.matches?.('mini-cart') ? target : target.querySelector?.('mini-cart')
+  if (miniCart) miniCart.dataset.visible = open ? 'true' : 'false'
+}
+
 function blockEditor(ev) {
   const { target } = ev
+
+  toggleMiniCart(target, ev.type === 'shopify:block:select')
 
   const collapseContent = target.querySelector('[data-collapsible="content"]')
   const collapseIcon = target.querySelector('[data-collapsible="icon"]')

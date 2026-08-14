@@ -28,6 +28,7 @@
 - Header Dropdown Finesse
 - 2 Level Menu Items for desktop and mobile dropdowns
   - Hover images in dropdowns
+- Locale Switcher (Denim Tears reference i think?)
 
   ## Questions
   - Does shopify have a native newsletter signup? I would like the option for a newsletter signup on the site but want to make sure it integrates well with shopify or any other apps people may use. what do other premium themes usually do?

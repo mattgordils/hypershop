@@ -35,8 +35,12 @@ if (!customElements.get("collapsible-item")) {
           if (!this.content) {
             console.error('collapsible-item: No content element found', this)
             return
-          } else {
+          } else if (!this.content.hasAttribute('aria-hidden')) {
+            // Only default to collapsed when the markup doesn't state otherwise —
+            // re-rendered components (e.g. filter groups) can ship expanded.
             this.content.ariaHidden = 'true'
+          } else if (this.content.ariaHidden === 'false' && this.icon) {
+            this.icon.dataset.icon = 'minus'
           }
 
           this.trigger.forEach(item => {

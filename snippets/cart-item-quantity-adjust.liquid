@@ -11,12 +11,12 @@
       style="--button-color: var(--light-text-color); --button-hover-color: {%- if item.quantity > 1 -%}var(--text-color){%- else -%}var(--error){%- endif -%};"
     >
       {% if item.quantity > 1 %}
-        {% render 'icon-material' with icon: 'remove' %}
+        {% render 'icon-material', icon: 'remove' %}
       {% else %}
-        {% render 'icon-material' with icon: 'close' %}
+        {% render 'icon-material', icon: 'close' %}
       {% endif %}
     </button>
-    <div class="w-[3em] leading-none pt-[.15em] text-center flex justify-center items-center quantity-current transition-all">
+    <div class="body w-[3em] leading-none text-center flex justify-center items-center quantity-current transition-all">
       {{ item.quantity }}
     </div>
     <button
@@ -29,7 +29,7 @@
         disabled
       {% endif %}
     >
-      {% render 'icon-material' with icon: 'add' %}
+      {% render 'icon-material', icon: 'add' %}
     </button>
   </cart-quantity-adjust>
 </div>

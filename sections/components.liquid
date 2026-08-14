@@ -1,0 +1,75 @@
+{%- comment -%}
+  Component gallery for the styleguide.
+
+  Each example renders the real component snippet with sample data (snippets/mock-product),
+  so it reflects Theme settings live and still works on a store with no products.
+
+  To add a component: add its key to `component_keys`, a label to `component_labels`, and a
+  matching `when` in snippets/mock-product.liquid.
+{%- endcomment -%}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+
+{%- liquid
+  assign component_keys = 'product-card,product-card-sold-out' | split: ','
+  assign component_labels = 'Product card,Product card — sold out' | split: ','
+
+  comment
+    Matches the four-up preview grid below, so the browser downloads the size it renders.
+  endcomment
+  assign preview_sizes = '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw'
+-%}
+
+<div class="px-margin {{ spacing_class }}">
+  <div class="max-w-site-max-w mx-auto">
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">{{ section.settings.heading | default: 'Components' }}</strong>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
+      {%- for component in component_keys -%}
+        <div>
+          <p class="eyebrow text-light-text-color mb-gutter">{{ component_labels[forloop.index0] }}</p>
+          {% render 'mock-product', component: component, sizes: preview_sizes %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Components",
+  "tag": "section",
+  "class": "section-components",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Components"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Live previews built from sample data — they follow your Theme settings and work before any products exist."
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -26,6 +26,13 @@
     assign share_alt = article.image.alt | default: article.title
   elsif page_image
     assign share_image = page_image
+  elsif settings.share_image
+    comment
+      Theme settings → Icons & Sharing. Last resort, so a link to any page without an
+      image of its own still unfurls with artwork rather than a bare title.
+    endcomment
+    assign share_image = settings.share_image
+    assign share_alt = settings.share_image.alt | default: shop.name
   endif
 -%}
 

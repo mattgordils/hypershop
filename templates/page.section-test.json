@@ -99,7 +99,7 @@
         "tablet_columns": 2.5,
         "mobile_columns": 1.5,
         "show_arrows": true,
-        "show_dots": false,
+        "show_pager": true,
         "color_scheme": "",
         "section_padding": "none",
         "section_spacing": "medium"

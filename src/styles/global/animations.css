@@ -10,7 +10,8 @@
 
   .active > .animate-underline,
   .animate-underline:hover,
-  .group:hover .animate-underline {
+  .group:hover .animate-underline,
+  .animate-underline.underlined {
     background-size: 100% 1px;
     background-position: 0% 100%;
   }

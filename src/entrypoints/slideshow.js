@@ -26,23 +26,37 @@ if (!customElements.get('slide-show')) {
           : 3000
         this.drag = this.dataset.drag === 'false' ? false : true
         this.fade = this.dataset.fade === 'true' ? true : false
-        this.dots = this.querySelector('.slider-dots')
-        this.dotItems = false
-        this.arrowNext = this.querySelector('.slider-next')
-        this.arrowPrev = this.querySelector('.slider-prev')
-        // Arrows and dots can also live outside the slide-show DOM tree — look
-        // them up by data-slider="<slide-show id>" as a fallback. Cheap: a few
-        // ID-scoped querySelectors per instance, once at construct time.
-        if ((!this.arrowNext || !this.arrowPrev || !this.dots) && this.id) {
-          this.arrowNext = this.arrowNext || document.querySelector(`.slider-next[data-slider="${this.id}"]`)
-          this.arrowPrev = this.arrowPrev || document.querySelector(`.slider-prev[data-slider="${this.id}"]`)
-          this.dots = this.dots || document.querySelector(`.slider-dots[data-slider="${this.id}"]`)
-        }
+
+        // Collect controls that belong to this slide-show. Nested descendants
+        // are found by class; external controls (in a heading row, a floating
+        // dock, a sibling column…) opt in via data-slider="<id>". Each control
+        // class is stored as an array so a single slide-show can be driven by
+        // multiple arrow sets, dot rails, etc. simultaneously (product-carousel,
+        // for example, renders a desktop arrow pair in its heading and a mobile
+        // pair below the carousel — both pairs must stay in sync).
+        this.arrowNexts = this.#collectControls('slider-next')
+        this.arrowPrevs = this.#collectControls('slider-prev')
+        this.dotsContainers = this.#collectControls('slider-dots')
+        this.dotItems = []
+
         this.slides = this.querySelectorAll('.slider-slide') || []
         this.navs = this.querySelectorAll('.slider-nav')
         this.currentSlide = 0
         this.breakpoints = this?.dataset?.breakpoints ? JSON.parse(this?.dataset?.breakpoints) : {}
         this.initializeSlideshow()
+      }
+
+      #collectControls(className) {
+        const nested = Array.from(this.querySelectorAll('.' + className))
+        const external = this.id
+          ? Array.from(document.querySelectorAll(`.${className}[data-slider="${this.id}"]`))
+          : []
+        // Dedupe — a control can legitimately be both nested inside the
+        // slide-show AND carry data-slider="<id>" (e.g. a mobile arrow pair
+        // rendered inside the slide-show that reuses the same snippet as an
+        // external heading pair). Both queries would match it and we'd wire
+        // its click handler twice, causing a single click to scroll twice.
+        return [...new Set([...nested, ...external])]
       }
 
       editorActions(embla) {
@@ -134,6 +148,13 @@ if (!customElements.get('slide-show')) {
         this.embla = embla
         this.mediaQueryHandlers = []
 
+        const setControlsHidden = (hidden) => {
+          const controls = [...this.arrowNexts, ...this.arrowPrevs, ...this.dotsContainers]
+          controls.forEach((el) => {
+            hidden ? el.classList.add('!hidden') : el.classList.remove('!hidden')
+          })
+        }
+
         const toggleActiveWhenScrollable = () => {
           setTimeout(() => {
             // Hide controls if embla itself is inactive (grid-fallback mode) OR
@@ -141,16 +162,7 @@ if (!customElements.get('slide-show')) {
             // bound via data-slider — those don't get the .inactive CSS scope.
             const isActive = embla.internalEngine()?.options?.active
             const isScrollable = isActive && embla.internalEngine().scrollSnaps.length > 1
-
-            if (!isScrollable) {
-              this?.arrowNext?.classList.add('!hidden')
-              this?.arrowPrev?.classList.add('!hidden')
-              this?.dots?.classList.add('!hidden')
-            } else {
-              this?.arrowNext?.classList.remove('!hidden')
-              this?.arrowPrev?.classList.remove('!hidden')
-              this?.dots?.classList.remove('!hidden')
-            }
+            setControlsHidden(!isScrollable)
           }, 100)
         }
 
@@ -171,20 +183,21 @@ if (!customElements.get('slide-show')) {
 
         setupBreakpointListeners()
 
-        // Slider Controls
-        if (this.arrowNext) {
-          this.arrowNext.addEventListener('click', () => {
+        // Bind every arrow set (nested + external) to the same embla instance.
+        // Multiple arrow pairs stay perfectly in sync because they all call
+        // through to the same embla.scrollNext / scrollPrev.
+        this.arrowNexts.forEach((btn) => {
+          btn.addEventListener('click', () => {
             embla.scrollNext()
             updateSlide()
           })
-        }
-
-        if (this.arrowPrev) {
-          this.arrowPrev.addEventListener('click', () => {
+        })
+        this.arrowPrevs.forEach((btn) => {
+          btn.addEventListener('click', () => {
             embla.scrollPrev()
             updateSlide()
           })
-        }
+        })
 
         const setTheme = () => {
           if (this.classList.contains('change-color')) {
@@ -200,12 +213,11 @@ if (!customElements.get('slide-show')) {
         }
 
         const updateSlide = () => {
-          if (this.arrowPrev) {
-            this.arrowPrev.disabled = !embla.canScrollPrev()
-          }
-          if (this.arrowNext) {
-            this.arrowNext.disabled = !embla.canScrollNext()
-          }
+          const prevDisabled = !embla.canScrollPrev()
+          const nextDisabled = !embla.canScrollNext()
+          this.arrowPrevs.forEach((btn) => { btn.disabled = prevDisabled })
+          this.arrowNexts.forEach((btn) => { btn.disabled = nextDisabled })
+
           this.currentSlide = embla
             .slideNodes()
             .findIndex((node) => node?.classList.contains('is-snapped'))
@@ -213,12 +225,12 @@ if (!customElements.get('slide-show')) {
             item.innerHTML = this.currentSlide + 1
           })
 
-          if (this.dotItems) {
-            this.dotItems?.forEach((item, index) => {
+          if (this.dotItems.length) {
+            this.dotItems.forEach(({ button, index }) => {
               if (index === this.currentSlide) {
-                item.classList.add('active')
+                button.classList.add('active')
               } else {
-                item.classList.remove('active')
+                button.classList.remove('active')
               }
             })
           }
@@ -249,33 +261,32 @@ if (!customElements.get('slide-show')) {
           }
         }
 
+        // Render dot buttons into every dots container that belongs to this
+        // slide-show (nested or external). Track every button across all
+        // containers so `updateSlide` can toggle .active on the matching
+        // button in each one.
         const renderDots = () => {
-          if (this.dots) {
-            let dotItems = ''
+          if (!this.dotsContainers.length) return
 
-            embla.slideNodes()?.forEach((slide, index) => {
-              dotItems +=
-                '<button class="slider-dot" title="Go to slide ' +
-                (index + 1) +
-                '"><span>' +
-                (index + 1) +
-                '</span></button>'
+          let dotMarkup = ''
+          embla.slideNodes()?.forEach((slide, index) => {
+            dotMarkup +=
+              '<button class="slider-dot" title="Go to slide ' +
+              (index + 1) +
+              '"><span>' +
+              (index + 1) +
+              '</span></button>'
+          })
+
+          this.dotItems = []
+          this.dotsContainers.forEach((container) => {
+            container.innerHTML = dotMarkup
+            container.querySelectorAll('.slider-dot').forEach((button, index) => {
+              if (index === 0) button.classList.add('active')
+              button.addEventListener('click', () => { embla.scrollTo(index) })
+              this.dotItems.push({ button, index })
             })
-
-            this.dots.innerHTML = dotItems
-            this.dotItems = this?.dots?.querySelectorAll('.slider-dot')
-
-            if (this.dotItems) {
-              this.dotItems?.forEach((item, index) => {
-                if (index === 0) {
-                  item.classList.add('active')
-                }
-                item?.addEventListener('click', () => {
-                  embla.scrollTo(index)
-                })
-              })
-            }
-          }
+          })
         }
 
         const renderNav = () => {
@@ -294,9 +305,41 @@ if (!customElements.get('slide-show')) {
           }
         }
 
+        // Expose CSS custom properties that describe the carousel's scroll state,
+        // so any pager style (scrollbar-thumb, moving underline, custom shapes)
+        // can position itself continuously without knowing slide counts —
+        // important because multi-slide-per-view breaks index-based math.
+        //
+        //   --scroll-progress : 0 → 1, how far scrolled from first to last snap
+        //   --scroll-thumb    : 0 → 1, viewport / total-content width, i.e. the
+        //                       natural scrollbar-thumb size for this slideshow
+        //
+        // Set on the slide-show (nested pagers inherit) and mirrored onto every
+        // external dots container (they live outside the tree and can't inherit).
+        const updateScrollVars = () => {
+          const progress = Math.max(0, Math.min(1, embla.scrollProgress()))
+          const rootWidth = embla.rootNode().clientWidth
+          const contentWidth = embla.containerNode().scrollWidth
+          const thumbRatio = contentWidth > 0 ? Math.min(1, rootWidth / contentWidth) : 1
+
+          this.style.setProperty('--scroll-progress', progress)
+          this.style.setProperty('--scroll-thumb', thumbRatio)
+
+          this.dotsContainers.forEach((container) => {
+            if (!this.contains(container)) {
+              container.style.setProperty('--scroll-progress', progress)
+              container.style.setProperty('--scroll-thumb', thumbRatio)
+            }
+          })
+        }
+
         embla.on('scroll', updateSlide)
+        embla.on('scroll', updateScrollVars)
+        embla.on('reInit', updateScrollVars)
+        embla.on('resize', updateScrollVars)
         toggleActiveWhenScrollable()
         updateSlide()
+        updateScrollVars()
         renderDots()
         setInactive()
         renderNav()

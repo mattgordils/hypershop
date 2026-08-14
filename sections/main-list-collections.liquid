@@ -4,7 +4,7 @@
 {% endcomment %}
 
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 <div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
@@ -25,7 +25,7 @@
           <a href="{{ collection.url }}" class="block group" aria-label="View {{ collection.title }}">
             <div class="aspect-3/4 relative overflow-hidden rounded">
               {% if coll_image != blank %}
-                {% render 'image' with
+                {% render 'image',
                   src: coll_image,
                   ratio: 0.75,
                   layout: 'cover',

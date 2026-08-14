@@ -1,6 +1,17 @@
+{%- comment -%}
+  @param {object} product
+  @param {string} [class]
+  @param {string} [badges]   - comma-separated labels, for previews built from sample
+                               data where there's no product to read tags from
+  @param {boolean} [sold_out] - render the sold-out badge visible (sample data)
+  @param {boolean} [on_sale]  - render the sale badge visible (sample data)
+{%- endcomment -%}
+
 {% liquid
   assign badge_class = "rounded theme-light-grey body-tiny bold px-[.75em] py-[.3em] shrink-0 whitespace-nowrap"
   assign wrapper_class = class | default: "flex flex-wrap gap-1"
+
+  assign static_badges = badges | split: ','
 
   assign has_badges = false
 
@@ -31,12 +42,18 @@
       </div>
     {% endif %}
   {% endfor %}
-  
-  <div class="hidden {{ badge_class }}" data-badge="sold-out">
+
+  {%- comment -%} Explicit labels, for sample-data previews {%- endcomment -%}
+  {% for badge in static_badges %}
+    <div class="{{ badge_class }} badge-static">{{ badge | strip }}</div>
+  {% endfor %}
+
+  {%- comment -%} Toggled by JS on variant change; sample data can force them on {%- endcomment -%}
+  <div class="{% unless sold_out %}hidden {% endunless %}{{ badge_class }}" data-badge="sold-out">
     Sold Out
   </div>
 
-  <div class="hidden {{ badge_class }}" data-badge="sale">
+  <div class="{% unless on_sale %}hidden {% endunless %}{{ badge_class }}" data-badge="sale">
     On Sale
   </div>
 </div>

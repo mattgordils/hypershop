@@ -1,4 +1,9 @@
-<modal-component id="cartDrawer" class="cart-container drawer">
+<modal-component
+  id="cartDrawer"
+  class="cart-container drawer"
+  data-cart-section="{{ section.id }}"
+  data-editor-auto-open
+>
   <div
     class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] theme-white z-1"
   >
@@ -52,7 +57,7 @@
               <div class="py-(--cart-padding) space-y-(--cart-padding)">
                 {% for item in cart.items %}
                   {% if forloop.index0 != 0 %}<hr class="border-hr-color">{% endif %}
-                  {% render 'cart-item' with item: item %}
+                  {% render 'cart-item', item: item %}
                 {% endfor %}
               </div>
             </div>
@@ -67,7 +72,11 @@
             {%- endfor -%}
           {%- endif -%}
 
-          {% render 'cart-upsell' with product_list: section.settings.upsell_collection.products %}
+          {% render 'cart-upsell', product_list: section.settings.upsell_collection.products %}
+
+          {%- if section.settings.show_cart_note and cart.item_count > 0 -%}
+            {% render 'cart-note' %}
+          {%- endif -%}
 
         </div>
         {% if cart.item_count > 0 %}
@@ -121,6 +130,20 @@
       "id": "show_discount_input",
       "label": "Show Discount Code Input",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "label": "Show order note",
+      "info": "Lets shoppers add a note that carries through to the order.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cart_note_label",
+      "label": "Order note label",
+      "default": "Add a note to your order",
+      "visible_if": "{{ section.settings.show_cart_note }}"
     },
     {
       "type": "checkbox",

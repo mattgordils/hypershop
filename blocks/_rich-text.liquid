@@ -1,4 +1,4 @@
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 {% if block.settings.text != blank %}
   <div class="rich-text {{ block.settings.size }} {{ space_below | strip }}">
     {{ block.settings.text }}

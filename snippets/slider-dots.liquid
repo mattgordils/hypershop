@@ -7,8 +7,11 @@
      gets `data-slider="<id>"` and slideshow.js falls back to a document-level
      lookup keyed on the id.
 
-  The JS also toggles !hidden on the container when the track isn't scrollable.
-  Styling for the dots themselves lives in src/styles/components/slideshow.css.
+  The JS also toggles !hidden on the container when the track isn't scrollable,
+  and exposes --scroll-progress and --scroll-thumb custom properties on the
+  container so pager styles can render a continuous scrollbar-style thumb
+  without needing to know slide counts. Styling lives in
+  src/styles/components/slideshow.css.
 
   Optional args:
     class        — extra classes on the wrapper (e.g. spacing)
@@ -16,9 +19,18 @@
     color_scheme — color scheme id to apply (e.g. 'theme-dark', 'theme-light-grey').
                    Sets --text-color / --bg-color on the container so dot borders
                    and fills pick up the scheme instead of inheriting from context.
+    type         — pager style. Adds a `type-<value>` class the CSS can hook onto,
+                   e.g. 'dots', 'dots_pill', 'progress_strip', 'scrollbar'.
 {%- endcomment -%}
 {%- assign target_attr = '' -%}
 {%- if for != blank -%}
   {%- assign target_attr = ' data-slider="' | append: for | append: '"' -%}
 {%- endif -%}
-<div class="slider-dots type-progress_strip {{ color_scheme }} {{ class }}"{{ target_attr }}></div>
+{%- assign type_class = '' -%}
+{%- if type != blank -%}
+  {%- assign type_class = 'type-' | append: type -%}
+
+  {% comment %} For testing progress_strip {% endcomment %}
+  {%- assign type_class = 'type-progress_strip' -%}
+{%- endif -%}
+<div class="slider-dots {{ type_class }} {{ color_scheme }} {{ class }}"{{ target_attr }}></div>

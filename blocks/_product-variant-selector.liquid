@@ -10,9 +10,9 @@
   endif
 -%}
 
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 <div data-dynamic-content class="{{ space_below | strip }}">
-  {% render 'product-option-form' with
+  {% render 'product-option-form',
     product: product,
     context: variant_context
   %}

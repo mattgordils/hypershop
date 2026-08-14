@@ -1,4 +1,4 @@
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 {% if block.blocks.size > 0 %}
   <div class="flex gap-gutter flex-wrap items-center {% if block.settings.alignment == 'center' %}justify-center{% else %}justify-start{% endif %} {{ space_below | strip }}">
     {% for block in block.blocks %}

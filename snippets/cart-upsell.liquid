@@ -14,7 +14,7 @@
 
       {% if in_cart != true and product.available %}
         <div>
-          {% render 'product-card-mini' with product: product %}
+          {% render 'product-card-mini', product: product %}
         </div>
       {% endif %}
     {% endfor %}

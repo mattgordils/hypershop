@@ -1,8 +1,14 @@
 
+{%- comment -%}
+  @param {object} product
+  @param {boolean} [available] - force the in-stock state. For previews built from sample
+                                 data, where there's no variant to read availability from.
+{%- endcomment -%}
+
 {%-liquid
   assign is_available = false
   assign button_text = 'Sold Out'
-  if product.selected_or_first_available_variant.available
+  if available or product.selected_or_first_available_variant.available
     assign button_text = 'Add to Cart'
     assign is_available = true
   endif
@@ -31,15 +37,15 @@
     "
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon-material' with icon: icon %}
+      {% render 'icon-material', icon: icon %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon-material' with icon: icon %}
+        {% render 'icon-material', icon: icon %}
       {% endif %}
       {{ button_text }}
     {% endif %}
     {% if show_price %}
-      {% render 'product-price' with
+      {% render 'product-price',
         item: product.selected_or_first_available_variant,
         compare_price_class: 'opacity-50'
       %}

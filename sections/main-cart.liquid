@@ -6,7 +6,7 @@
 {% endcomment %}
 
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% liquid
@@ -18,7 +18,10 @@
   assign spend_x_more = section.settings.free_shipping_threshold | times: 100.00 | minus: cart.items_subtotal_price | money
 %}
 
-<div class="cart-container {{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
+<div
+  class="cart-container {{ section.settings.color_scheme }} {{ spacing_class }} px-margin"
+  data-cart-section="{{ section.id }}"
+>
   <div class="max-w-site-max-w mx-auto">
     {% comment %} Heading lives in a #cartUpdate so the count refreshes with the cart {% endcomment %}
     <div id="cartUpdate" class="py-v-space-sm flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-hr-color">
@@ -46,10 +49,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-gutter gap-y-v-space-sm py-(--cart-padding)">
           {% comment %} Line items {% endcomment %}
           <div class="lg:col-span-7 xl:col-span-8">
-            <div class="cart-items flex flex-col gap-(--cart-padding)">
+            <div class="cart-items flex flex-col gap-(--cart-padding) lg:sticky lg:top-[calc(var(--header-height)+var(--site-gutters))]">
               {% for item in cart.items %}
                 {% if forloop.index0 != 0 %}<hr class="m-0 border-hr-color">{% endif %}
-                {% render 'cart-item' with item: item %}
+                {% render 'cart-item', item: item %}
               {% endfor %}
             </div>
           </div>
@@ -75,11 +78,18 @@
               {% endif %}
 
               {% render 'cart-footer' %}
+
+              {%- comment -%} Outside cart-footer, whose root is a #cartUpdate the refresh replaces {%- endcomment -%}
+              {%- if section.settings.show_cart_note -%}
+                <div class="px-(--cart-padding) pb-(--cart-padding)">
+                  {% render 'cart-note' %}
+                </div>
+              {%- endif -%}
             </div>
           </div>
         </div>
 
-        {% render 'cart-upsell' with product_list: section.settings.upsell_collection.products %}
+        {% render 'cart-upsell', product_list: section.settings.upsell_collection.products %}
       {% endif %}
     </div>
 
@@ -145,6 +155,26 @@
       "type": "checkbox",
       "id": "show_discount_input",
       "label": "Show Discount Code Input",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "label": "Show order note",
+      "info": "Lets shoppers add a note that carries through to the order.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cart_note_label",
+      "label": "Order note label",
+      "default": "Add a note to your order",
+      "visible_if": "{{ section.settings.show_cart_note }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accelerated_payment_buttons",
+      "label": "Show accelerated payment buttons",
       "default": true
     },
     {

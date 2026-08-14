@@ -1,9 +1,9 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% capture padding_class %}
-  {% render 'util-section-padding' with space: section.settings.section_padding %}
+  {% render 'util-section-padding', space: section.settings.section_padding %}
 {% endcapture %}
 
 {%- liquid
@@ -28,7 +28,7 @@
           <h2 class="h3 grow text-balance">{{ section.settings.heading }}</h2>
           {%- if section.settings.show_arrows -%}
             <div class="hidden md:block shrink-0">
-              {% render 'slider-arrows' with for: carousel_id %}
+              {% render 'slider-arrows', for: carousel_id %}
             </div>
           {%- endif -%}
         </div>
@@ -43,7 +43,7 @@
         <div class="slider-container">
           {%- for product in carousel_products -%}
             <div class="slider-slide">
-              {% render 'product-card' with product: product %}
+              {% render 'product-card', product: product %}
             </div>
           {%- endfor -%}
         </div>
@@ -51,11 +51,11 @@
         {%- if section.settings.show_pager or section.settings.show_arrows -%}
           <div class="flex justify-between items-center">
             {%- if section.settings.show_pager -%}
-              {% render 'slider-dots' with class: 'mt-v-space-sm', type: section.settings.pager_style %}
+              {% render 'slider-dots', class: 'mt-v-space-sm', type: section.settings.pager_style %}
             {%- endif -%}
             {%- if section.settings.show_arrows -%}
               <div class="block md:hidden shrink-0 mt-v-space-sm">
-                {% render 'slider-arrows' with for: carousel_id %}
+                {% render 'slider-arrows', for: carousel_id %}
               </div>
             {%- endif -%}
           </div>

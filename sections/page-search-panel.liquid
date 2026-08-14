@@ -12,7 +12,11 @@
 {%- assign default_scheme = '' -%}
 {%- for s in settings.color_schemes limit: 1 -%}{%- assign default_scheme = s.id -%}{%- endfor -%}
 
-<modal-component id="searchDrawer" class="search-container drawer search-position-{{ settings.search_layout }}">
+<modal-component
+  id="searchDrawer"
+  class="search-container drawer search-position-{{ settings.search_layout }}"
+  data-editor-auto-open
+>
   <div class="modal-content w-full md:w-[30vw] 2xl:w-[25vw] max-w-full md:min-w-[600px] {{ default_scheme }} z-1">
     <predictive-search
       class="flex flex-col {{ default_scheme }} h-full overflow-y-auto"
@@ -72,7 +76,7 @@
                   endif
                 -%}
                 {% if show_product %}
-                  <div>{% render 'product-card' with product: product %}</div>
+                  <div>{% render 'product-card', product: product %}</div>
                   {%- assign shown_count = shown_count | plus: 1 -%}
                 {% endif %}
                 {% if shown_count >= max_products %}{% break %}{% endif %}

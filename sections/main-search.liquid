@@ -6,13 +6,21 @@
 {% endcomment %}
 
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {%- liquid
   assign has_results = false
   if search.performed and search.results_count > 0
     assign has_results = true
+  endif
+
+  # Filters survive a filtered-to-zero result set, so keep rendering the grid (which shows
+  # its own empty state) rather than dropping to the fallback collection — otherwise the
+  # filters vanish and there's no way to undo them.
+  assign show_grid = has_results
+  if search.performed and search.filters.size > 0
+    assign show_grid = true
   endif
 -%}
 
@@ -50,7 +58,7 @@
     </div>
   </div>
 
-  {% if has_results %}
+  {% if show_grid %}
     {%- capture search_url -%}
       {{- routes.search_url }}?q={{ search.terms | url_encode }}&type=product&options[prefix]=last
     {%- endcapture -%}
@@ -72,7 +80,7 @@
       %}
     {% endpaginate %}
   {% elsif search.performed %}
-    {% comment %} Searched, but nothing found {% endcomment %}
+    {% comment %} Searched, nothing found, and no filters to adjust {% endcomment %}
     <div class="px-margin">
       <div class="max-w-site-max-w mx-auto text-center pb-v-space-lg flex flex-col items-center gap-gutter">
         <p class="h4">No results found for &ldquo;{{ search.terms }}&rdquo;</p>
@@ -82,7 +90,7 @@
           </p>
           <in-view class="w-full grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm pt-gutter">
             {% for product in section.settings.no_results_collection.products limit: 6 %}
-              <div>{% render 'product-card' with product: product %}</div>
+              <div>{% render 'product-card', product: product %}</div>
             {% endfor %}
           </in-view>
         {% else %}
@@ -99,7 +107,7 @@
         {% endif %}
         <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
           {% for product in section.settings.no_results_collection.products limit: 6 %}
-            <div>{% render 'product-card' with product: product %}</div>
+            <div>{% render 'product-card', product: product %}</div>
           {% endfor %}
         </in-view>
       </div>
@@ -124,6 +132,14 @@
       "id": "placeholder",
       "label": "Input Placeholder",
       "default": "Search products"
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "paragraph",
+      "content": "Filter layout, collapsing, price style and hidden filters are set once in Theme settings → Filters, so this grid and search stay consistent. Which filters exist is managed in the Search & Discovery app."
     },
     {
       "type": "header",

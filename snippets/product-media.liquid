@@ -15,12 +15,12 @@
       >
         {% if media_item.media_type == 'video' %}
           {% if playing %}
-            {% render 'video' with
+            {% render 'video',
               src: media_item,
               layout: 'cover'
             %}
           {% else %}
-            {% render 'image' with
+            {% render 'image',
               src: media_item.preview_image,
               layout: 'cover',
               sizes: sizes
@@ -31,7 +31,7 @@
           {% endif %}
         {% else %}
           {% if media_item.image != blank %}
-            {% render 'image' with
+            {% render 'image',
               src: media_item.image,
               layout: 'cover',
               sizes: sizes

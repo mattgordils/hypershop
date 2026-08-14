@@ -14,15 +14,30 @@
   endif
 -%}
 
+{%- comment -%}
+  Theme settings → Cart. With no drawer rendered in "page" mode, the trigger has to be a
+  real link to /cart rather than a button that opens nothing.
+{%- endcomment -%}
+{%- assign cart_trigger_class = 'header-trigger cart-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center gap-2 whitespace-nowrap cursor-pointer leading-none' -%}
+{%- if settings.cart_type == 'page' -%}
+<a
+  href="{{ routes.cart_url }}"
+  class="{{ cart_trigger_class }} border-none"
+  title="{{ a11y_title }}"
+  aria-label="{{ a11y_title }}"
+  {{ block.shopify_attributes }}
+>
+{%- else -%}
 <modal-trigger
   data-modal-id="cartDrawer"
-  class="header-trigger cart-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center gap-2 whitespace-nowrap cursor-pointer leading-none"
+  class="{{ cart_trigger_class }}"
   role="button"
   tabindex="0"
   title="{{ a11y_title }}"
   aria-label="{{ a11y_title }}"
   {{ block.shopify_attributes }}
 >
+{%- endif -%}
   {%- if symbol == 'circle' -%}
     <span
       id="cartCount"
@@ -74,7 +89,7 @@
       {%- if cart.item_count > 0 -%}{{ count_prepend }}{{ cart.item_count }}{{ count_append }}{%- endif -%}
     </span>
   {%- endif -%}
-</modal-trigger>
+{%- if settings.cart_type == 'page' -%}</a>{%- else -%}</modal-trigger>{%- endif -%}
 
 {% schema %}
 {

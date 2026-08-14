@@ -1,0 +1,37 @@
+/* Mini cart confirmation ("cart page" mode).
+
+   Positioned against the header, not the viewport: the block renders inside
+   .section-header, which is `position: sticky` and therefore a positioned ancestor. So
+   `top: 100%` means "directly below the header" — it tracks the header as it sticks and
+   sits clear of a notification banner without measuring anything in JS.
+
+   The only behavioural contract is data-visible="true|false", toggled by mini-cart.js.
+   Everything else here is a starting point meant to be replaced; the rule worth keeping is
+   the hidden state, so the panel isn't on screen at first paint. */
+mini-cart {
+  position: absolute;
+  top: 100%;
+  right: var(--site-margins);
+  z-index: 6;
+  width: min(400px, calc(100vw - (var(--site-margins) * 2)));
+
+  transition:
+    opacity var(--md-speed) ease-in-out,
+    transform var(--md-speed) ease-in-out;
+
+  &[data-visible='false'] {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+    pointer-events: none;
+  }
+
+  &[data-visible='true'] {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  mini-cart {
+    transition-duration: 0.01ms;
+  }
+}

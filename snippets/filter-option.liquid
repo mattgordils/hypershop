@@ -1,0 +1,71 @@
+{%- comment -%}
+  One selectable filter/sort choice: a visually hidden input, a marker, and its label.
+
+  Checkbox and radio render identically today — the `type` is passed through so they
+  can diverge later by switching `marker` at the call site (or by keying the default
+  below off `type`).
+
+  @param {string} type       - 'checkbox' | 'radio' (default 'checkbox')
+  @param {string} id         - input id; namespace it with the filters instance uid
+  @param {string} name       - query param name
+  @param {string} value
+  @param {string} label      - visible text
+  @param {boolean} [checked]
+  @param {boolean} [disabled]
+  @param {string} [marker]   - 'check' (default) | 'dot' | 'swatch'
+  @param {object} [color]    - color_list metaobject, used by the 'swatch' marker
+  @param {string} [class]    - extra classes on the label
+{%- endcomment -%}
+
+{%- liquid
+  assign input_type = type | default: 'checkbox'
+  assign marker_style = marker | default: 'check'
+-%}
+
+{%- comment -%}
+  The input is sr-only rather than hidden: `display: none` would drop it out of the tab
+  order entirely. Focus lands on the invisible input, so the focus ring goes on the label
+  via has-[:focus-visible]. Inputs in a collapsed group stay unreachable — collapsible.css
+  puts `visibility: hidden` on collapsed content.
+{%- endcomment -%}
+<label
+  for='{{ id }}'
+  class='flex items-start justify-start gap-2 py-[.1em] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 {% if disabled %}opacity-50 cursor-not-allowed{% else %}cursor-pointer{% endif %} {{ class }}'
+>
+  <input
+    type='{{ input_type }}'
+    class='sr-only peer'
+    id='{{ id }}'
+    name='{{ name }}'
+    value='{{ value }}'
+    {% if checked %}checked{% endif %}
+    {% if disabled %}disabled{% endif %}
+  >
+
+  {%- comment -%} The marker is only visible while checked — hence text-transparent + peer-checked. {%- endcomment -%}
+  <span class='text-transparent peer-checked:text-current'>
+    {%- case marker_style -%}
+      {%- when 'swatch' -%}
+        <div
+          style='--color: {% if color.color != blank %}{{ color.color }}{% else %}var(--hr-color){% endif %};'
+          class='relative flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-[var(--color)]'
+        >
+          {% if color.swatch != blank %}
+            {% render 'image', src: color.swatch, size: '20px', image_position: 'cover', classname: 'rounded-full' %}
+          {% endif %}
+          {%- comment -%} bg-current so the dot only shows on the selected color {%- endcomment -%}
+          <div class='marker w-[6px] h-[6px] rounded-full bg-current'></div>
+        </div>
+      {%- when 'dot' -%}
+        <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color'>
+          <div class='marker w-[6px] h-[6px] rounded-full bg-current'></div>
+        </div>
+      {%- else -%}
+        <div class='flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-base bg-hr-color{% if checked %} theme-dark{% endif %}'>
+          <div class='marker -mt-[2px] w-[4px] h-[8px] rounded-base border-r border-b border-current rotate-45'></div>
+        </div>
+    {%- endcase -%}
+  </span>
+
+  <span>{{ label }}</span>
+</label>

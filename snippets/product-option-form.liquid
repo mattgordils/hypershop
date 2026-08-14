@@ -178,7 +178,7 @@ variant will update imagery and url
               >
                 {%- if color_variant.image -%}
                   <div class="aspect-square w-full rounded-[calc(var(--base-border-radius)-2px)] overflow-hidden">
-                    {% render 'image' with
+                    {% render 'image',
                       src: color_variant.image,
                       ratio: 1,
                       width: 120,

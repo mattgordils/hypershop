@@ -1,3 +1,21 @@
+{%- comment -%}
+  @param {object} product
+  @param {string} [sizes]   - CSS width the card renders at, for the image's `sizes`.
+                              Pass the real layout width; a fixed guess makes the browser
+                              download a far larger file than the slot needs.
+  @param {string} [loading] - 'lazy' (default) or 'eager' for above-the-fold cards
+  @param {boolean} [mock]   - render from sample data (see mock-product) instead of a
+                              product, so component previews work with an empty store
+  @param {string} [mock_title]
+  @param {number} [mock_price]
+  @param {number} [mock_compare_at_price]
+  @param {string} [mock_image]        - filename in assets
+  @param {string} [mock_hover_image]  - filename in assets
+  @param {string} [mock_badges]       - comma-separated badge labels
+  @param {boolean} [mock_sold_out]
+  @param {boolean} [mock_on_sale]
+{%- endcomment -%}
+
 {%-liquid
   assign card_image = product.images[0]
   assign card_hover_image = product.images[1]
@@ -5,9 +23,84 @@
     assign card_image = product.selected_or_first_available_variant.image
   endif
 
+  assign card_title = product.title
+  assign card_sizes = sizes | default: '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw'
+  assign card_loading = loading | default: 'lazy'
+
+  comment
+    Sample-data mode. Asset images go through the image snippet's `image` param and
+    CDN images through `src`, so whichever is nil is simply ignored.
+  endcomment
+  assign card_image_asset = null
+  assign card_hover_image_asset = null
+  if mock
+    assign card_title = mock_title
+    assign card_image = null
+    assign card_hover_image = null
+    assign card_image_asset = mock_image
+    assign card_hover_image_asset = mock_hover_image
+  endif
+
   assign media_radius = ''
   if settings.card_border_radius
     assign media_radius = ' overflow-hidden rounded-[var(--base-border-radius)]'
+  endif
+
+  comment
+    Aspect ratio: the class has to be a literal for Tailwind's scanner to emit it, so
+    the setting maps to a fixed class here rather than being interpolated. `card_ratio`
+    is the same shape passed to the image snippet, which crops the srcset to match.
+  endcomment
+  assign card_ratio = settings.card_aspect_ratio | default: '4/5'
+  case card_ratio
+    when '2/3'
+      assign card_aspect_class = 'aspect-2/3'
+    when '1/1'
+      assign card_aspect_class = 'aspect-square'
+    when '5/4'
+      assign card_aspect_class = 'aspect-5/4'
+    when '3/2'
+      assign card_aspect_class = 'aspect-3/2'
+    else
+      assign card_ratio = '4/5'
+      assign card_aspect_class = 'aspect-4/5'
+  endcase
+
+  assign card_title_class = settings.card_title_class | default: 'body'
+  assign card_price_class = settings.card_price_class | default: 'body'
+
+  comment
+    Checkbox settings read as nil until saved once, so default-on has to be explicit.
+  endcomment
+  assign show_hover_image = true
+  if settings.card_show_hover_image == false
+    assign show_hover_image = false
+  endif
+
+  assign hover_effect = settings.card_hover_effect | default: 'none'
+  assign text_over_image = false
+  if settings.card_text_over_image
+    assign text_over_image = true
+  endif
+
+  comment
+    Scale has to clip, or the growing image escapes the card's box.
+  endcomment
+  assign media_class = card_aspect_class | append: ' relative block product-card__media' | append: media_radius
+  if hover_effect == 'scale'
+    assign media_class = media_class | append: ' product-card__media--scale overflow-hidden'
+  endif
+
+  comment
+    Availability drives both the badge and whether quick add can appear. Sample data
+    declares it, so the styleguide can show an in-stock card and a sold-out one.
+  endcomment
+  assign card_available = product.selected_or_first_available_variant.available
+  if mock
+    assign card_available = true
+    if mock_sold_out
+      assign card_available = false
+    endif
   endif
 
   comment
@@ -21,49 +114,95 @@
   if template.name == 'collection' and collection.handle
     assign card_url = product.url | within: collection
   endif
+  if mock
+    assign card_url = '#'
+  endif
 -%}
+
+{%- comment -%}
+  Tailwind safelist. Title/price classes arrive from Theme settings as strings, so the
+  scanner can't see them at the point of use — listing them here keeps the utilities in
+  the build: h1 h2 h3 h4 h5 h6 body-tiny body-small body body-medium body-large
+{%- endcomment -%}
 
 {%- comment -%}
   data-product-id / data-product-handle are stable hooks so review/app widgets
   (app blocks or app embeds) can find each card and inject content like star ratings.
 {%- endcomment -%}
+{%- comment -%}
+  Captured so the same markup can sit over the image or beneath it — the only difference
+  is where it's output and the wrapper's classes.
+{%- endcomment -%}
+{%- capture card_text -%}
+  <h3 class="{{ card_title_class }} grow">
+    <a href="{{ card_url }}" itemprop="url" class="{% unless text_over_image %}pt-3 {% endunless %}border-none block text-balance">
+      <span itemprop="name" class="animate-underline">
+        {{ card_title }}
+      </span>
+    </a>
+  </h3>
+  <div class="{{ card_price_class }}{% unless text_over_image %} pt-3{% endunless %}" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+    <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
+    <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+    <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+    {% if mock %}
+      {% render 'product-price', price: mock_price, compare_at_price: mock_compare_at_price %}
+    {% else %}
+      {% render 'product-price', item: product.selected_or_first_available_variant %}
+    {% endif %}
+  </div>
+{%- endcapture -%}
+
 <article
-  class="product-card flex flex-col"
+  class="product-card flex flex-col group"
+  style="--card-badge-padding-mobile: {{ settings.card_badge_padding_mobile | default: 12 }}px; --card-badge-padding-desktop: {{ settings.card_badge_padding_desktop | default: 16 }}px; --card-action-padding-mobile: {{ settings.card_action_padding_mobile | default: 12 }}px; --card-action-padding-desktop: {{ settings.card_action_padding_desktop | default: 16 }}px;"
   data-product-update="product-{{ product.id }}"
   data-product-id="{{ product.id }}"
   data-product-handle="{{ product.handle }}"
   itemscope
   itemtype="https://schema.org/Product"
 >
-  <div class="relative group">
+  <div class="relative">
     <a
       href="{{ card_url }}"
-      class="aspect-3/4 relative block{{ media_radius }}"
-      aria-label="View {{ product.title }}"
+      class="{{ media_class }}"
+      aria-label="View {{ card_title }}"
     >
-      <div class="absolute top-0 left-0 w-full p-4 z-3">
-        {% render 'product-badges' with product: product %}
+      <div class="absolute top-0 left-0 w-full p-(--card-badge-padding) z-3">
+        {% render 'product-badges',
+          product: product,
+          badges: mock_badges,
+          sold_out: mock_sold_out,
+          on_sale: mock_on_sale
+        %}
       </div>
-      {% render 'image' with
+      {% render 'image',
         src: card_image,
-        sizes: '640px',
-        ratio: 0.75,
+        image: card_image_asset,
+        sizes: card_sizes,
+        ratio: card_ratio,
         layout: 'cover',
-        loading: 'lazy',
-        alt: product.title,
+        loading: card_loading,
+        alt: card_title,
         class: 'z-1 relative'
       %}
-      {% if card_hover_image != blank %}
+      {%- assign hover_alt = card_title | append: ' - alternate view' -%}
+      {% if show_hover_image and card_hover_image != blank or show_hover_image and card_hover_image_asset != blank %}
         <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          {% render 'image' with
+          {% render 'image',
             src: card_hover_image,
-            sizes: '640px',
-            ratio: 0.75,
+            image: card_hover_image_asset,
+            sizes: card_sizes,
+            ratio: card_ratio,
             layout: 'cover',
-            alt: product.title | append: ' - alternate view'
+            alt: hover_alt
           %}
         </div>
       {% endif %}
+
+      {%- if hover_effect == 'darken' or hover_effect == 'lighten' -%}
+        <div class="product-card__tint product-card__tint--{{ hover_effect }}" aria-hidden="true"></div>
+      {%- endif -%}
     </a>
 
     {%- comment -%}
@@ -76,45 +215,44 @@
         type="button"
         data-quick-view-trigger
         data-product-handle="{{ product.handle }}"
-        aria-label="Quick view {{ product.title }}"
-        class="button small absolute bottom-4 left-1/2 -translate-x-1/2 z-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+        aria-label="Quick view {{ card_title }}"
+        class="button small absolute bottom-(--card-action-padding) left-1/2 -translate-x-1/2 z-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
       >
         Quick view
       </button>
     {% endif %}
-  </div>
 
-  <div class="flex justify-between gap-gutter">
-    <h3 class="body grow">
-      <a href="{{ card_url }}" itemprop="url" class="pt-3 border-none block text-balance">
-        <span itemprop="name">
-          {{ product.title }}
-        </span>
-      </a>
-    </h3>
-    <div class="body pt-3" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-      <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
-      <meta itemprop="priceCurrency" content="{{ shop.currency }}">
-      <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
-      {% render 'product-price' with item: product.selected_or_first_available_variant %}
-    </div>
-  </div>
-
-  {% if settings.card_quick_action == 'quick_add' %}
-    {% comment %} Work In Progress {% endcomment %}
-    <add-to-cart-form class="hidden">
-      <div>
-        {% render 'product-option-form' with
-          product: product,
-          section_context: context,
-          class: "pb-gutter items-center",
-          label_class: "text-center pb-1 block"
-        %}
-        {% render 'add-to-cart-button' with
+    {% comment %} {% if settings.card_quick_action == 'quick_add' and mock != true %} {% endcomment %}
+    <add-to-cart-form
+      class="absolute px-(--card-action-padding) left-0 right-0 bottom-0 z-3 overflow-hidden {% if card_available != true or settings.card_quick_action != 'quick_add' %}hidden{% else %}block{% endif %}"
+    >
+      {% render 'product-option-form',
+        product: product,
+        section_context: context,
+        class: "p-gutter items-center bg-bg hidden",
+        label_class: "text-center pb-1 block"
+      %}
+      <div class="pb-(--card-action-padding) group-hover:translate-y-0 translate-y-full transition-transform">
+        {% render 'add-to-cart-button',
           class: "w-full",
-          product: product
+          product: product,
+          available: card_available
         %}
       </div>
     </add-to-cart-form>
-  {% endif %}
+
+    {%- if text_over_image -%}
+      <div class="product-card__text-overlay absolute bottom-0 left-0 w-full z-3 flex justify-between gap-gutter p-(--card-badge-padding)">
+        {{ card_text }}
+      </div>
+    {%- endif -%}
+  </div>
+
+
+
+  {%- unless text_over_image -%}
+    <div class="flex justify-between gap-gutter">
+      {{ card_text }}
+    </div>
+  {%- endunless -%}
 </article>

@@ -1,9 +1,9 @@
 {%- liquid
   assign product = section.settings.product | default: product
 -%}
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 <div class="{{ space_below | strip }}">
-  {% render 'quantity-adjust' with
+  {% render 'quantity-adjust',
     item: product.selected_or_first_available_variant
   %}
 </div>

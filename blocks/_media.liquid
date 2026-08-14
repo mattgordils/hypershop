@@ -1,13 +1,13 @@
 {% if block.settings.media_type == 'video' %}
   {% if block.settings.video != blank %}
-    {% render 'video' with
+    {% render 'video',
       src: block.settings.video,
       layout: layout
     %}
   {% endif %}
 {% else %}
   {% if block.settings.image != blank %}
-    {% render 'image' with
+    {% render 'image',
       src: block.settings.image,
       layout: layout,
       loading: loading,

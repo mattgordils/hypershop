@@ -91,7 +91,7 @@
         {%- if forloop.last -%}
           <span aria-current="page">{{ crumb_title }}</span>
         {%- else -%}
-          <a href="{{ crumb_url }}" class="animate-underline underlined">{{ crumb_title }}</a>
+          <a href="{{ crumb_url }}" class="animate-underline">{{ crumb_title }}</a>
           <span aria-hidden="true">/</span>
         {%- endif -%}
       </li>

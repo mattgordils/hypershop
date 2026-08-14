@@ -2,11 +2,11 @@
   assign block_product = block.settings.product | default: section.settings.product | default: product
 %}
 
-{% capture space_below %}{% render 'util-block-spacing' with space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 
 {% if block_product != blank %}
   <div class="{{ space_below | strip }}">
-    {% render 'product-badges' with product: block_product %}
+    {% render 'product-badges', product: block_product %}
   </div>
 {% endif %}
 

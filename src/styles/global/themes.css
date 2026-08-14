@@ -14,3 +14,14 @@
   color: var(--text-color);
   background: var(--bg-color);
 }
+
+.theme-success {
+  --bg-color: var(--color-success);
+  --text-color: var(--color-light);
+  --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+  --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+  --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
+  --main-color: var(--text-color);
+  color: var(--text-color);
+  background: var(var(--bg-color));
+}

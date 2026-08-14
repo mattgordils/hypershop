@@ -1,0 +1,49 @@
+{%- comment -%}
+  Sample product data for component previews.
+
+  One source of truth, so every component demo shows the same product and a fresh install
+  with an empty catalogue still renders a realistic styleguide. Components are rendered
+  through their real snippets, so anything driven by Theme settings (image shape, text
+  sizes, overlay padding, quick actions) previews accurately.
+
+  Adding a component: add a `when` below, passing these same values.
+
+  @param {string} component - 'product-card' | 'product-card-sold-out'
+  @param {string} [sizes]   - forwarded to the component, for image sizing
+{%- endcomment -%}
+
+{%- liquid
+  assign mock_title = 'Camp Collar Shirt'
+  assign mock_price = 8800
+  assign mock_compare_at_price = 12000
+  assign mock_image = 'tee-shirt-mock.png'
+  assign mock_hover_image = 'tee-shirt-mock-2.png'
+  assign mock_badges = 'New'
+-%}
+
+{%- case component -%}
+  {%- when 'product-card' -%}
+    {% render 'product-card',
+      mock: true,
+      mock_title: mock_title,
+      mock_price: mock_price,
+      mock_compare_at_price: mock_compare_at_price,
+      mock_image: mock_image,
+      mock_hover_image: mock_hover_image,
+      mock_badges: mock_badges,
+      mock_on_sale: true,
+      sizes: sizes
+    %}
+
+  {%- when 'product-card-sold-out' -%}
+    {%- comment -%} Sold out, so no sale badge and no quick add — the state drives the badges. {%- endcomment -%}
+    {% render 'product-card',
+      mock: true,
+      mock_title: mock_title,
+      mock_price: mock_price,
+      mock_image: mock_image,
+      mock_hover_image: mock_hover_image,
+      mock_sold_out: true,
+      sizes: sizes
+    %}
+{%- endcase -%}

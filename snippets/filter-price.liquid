@@ -1,0 +1,225 @@
+{%- comment -%}
+  The price filter, in the style chosen under Theme settings → Filters → Price.
+
+  Shopify only accepts ONE price range per request (filter.v.price.gte / .lte), so every
+  style here resolves to a single min→max pair. That's why the range list is radios: two
+  non-adjacent ranges can't be expressed, and checkboxes would silently include the gap.
+
+  `price_range` is currently Shopify's only range-type filter, so this snippet is
+  price-specific. The bucket maths below is unit-agnostic — only the display is money.
+
+  @param {object} filter - the price_range filter
+  @param {string} uid    - filters instance id prefix, for namespacing input ids
+
+  Values in filter.*.value are cents; the query params take dollars, hence
+  money_without_currency (which respects the store's format) for anything sent.
+{%- endcomment -%}
+
+{%- liquid
+  assign price_style = settings.filter_price_style | default: 'inputs'
+
+  # Two forms of each bound. The *_display strings keep the store's own money formatting
+  # for the number inputs; the whole-dollar integers feed the bucket maths and the slider,
+  # because Liquid's (1..n) rejects a float and prices don't need cent-level granularity.
+  assign range_max_display = filter.range_max | money_without_currency | replace: ',', ''
+  assign range_max = range_max_display | ceil
+
+  assign min_value_display = filter.min_value.value | money_without_currency | replace: ',', ''
+  assign max_value_display = filter.max_value.value | money_without_currency | replace: ',', ''
+
+  assign current_min = 0
+  if filter.min_value.value
+    assign current_min = min_value_display | floor
+  endif
+  assign current_max = range_max
+  if filter.max_value.value
+    assign current_max = max_value_display | ceil
+  endif
+
+  assign min_id = 'Filter-' | append: uid | append: '-' | append: filter.min_value.param_name
+  assign max_id = 'Filter-' | append: uid | append: '-' | append: filter.max_value.param_name
+-%}
+
+{%- case price_style -%}
+  {%- when 'list' -%}
+    {%- liquid
+      # Snap to a round step: the smallest one on the ladder that keeps the list at or
+      # under the requested number of ranges. Deterministic, and no logarithms in Liquid.
+      assign target_count = settings.filter_price_range_count | default: 5
+      assign ladder = '10,25,50,100,250,500,1000,2500,5000,10000,25000' | split: ','
+      assign step = ladder | last | plus: 0
+
+      for candidate in ladder
+        assign candidate_step = candidate | plus: 0
+        # Ceiling division, so the count matches what actually renders below
+        assign buckets = range_max | minus: 1 | divided_by: candidate_step | plus: 1
+        if range_max > 0 and buckets <= target_count
+          assign step = candidate_step
+          break
+        endif
+      endfor
+
+      assign bucket_count = 1
+      if range_max > 0
+        assign bucket_count = range_max | minus: 1 | divided_by: step | plus: 1
+      endif
+    -%}
+
+    <ul>
+      {%- liquid
+        assign all_id = 'Filter-' | append: uid | append: '-price-all'
+        assign all_checked = false
+        if filter.min_value.value == null and filter.max_value.value == null
+          assign all_checked = true
+        endif
+      -%}
+      <li class='filter-item body'>
+        {% render 'filter-option',
+          type: 'radio',
+          id: all_id,
+          name: 'price_bucket',
+          value: '',
+          label: 'All prices',
+          checked: all_checked
+        %}
+      </li>
+
+      {%- for i in (1..bucket_count) -%}
+        {%- liquid
+          assign bucket_min = forloop.index0 | times: step
+          assign bucket_max = bucket_min | plus: step
+          assign is_last = false
+          if forloop.last
+            assign is_last = true
+          endif
+
+          # The grid expands "min:max" into gte/lte; an open top end omits lte.
+          if is_last
+            assign bucket_value = bucket_min | append: ':'
+            assign bucket_label = bucket_min | times: 100 | money | append: '+'
+          else
+            assign bucket_value = bucket_min | append: ':' | append: bucket_max
+            assign bucket_min_money = bucket_min | times: 100 | money
+            assign bucket_max_money = bucket_max | times: 100 | money
+            assign bucket_label = bucket_min_money | append: ' – ' | append: bucket_max_money
+          endif
+
+          assign bucket_checked = false
+          if current_min == bucket_min
+            if is_last and filter.max_value.value == null
+              assign bucket_checked = true
+            elsif filter.max_value.value and current_max == bucket_max
+              assign bucket_checked = true
+            endif
+          endif
+
+          assign bucket_id = 'Filter-' | append: uid | append: '-price-' | append: forloop.index
+        -%}
+        <li class='filter-item body'>
+          {% render 'filter-option',
+            type: 'radio',
+            id: bucket_id,
+            name: 'price_bucket',
+            value: bucket_value,
+            label: bucket_label,
+            checked: bucket_checked
+          %}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {%- when 'slider' -%}
+    {%- comment -%}
+      Two range inputs stacked on one track — not split halves, so either thumb can cross
+      the midpoint and ranges like 60–80 stay selectable. price-slider.js clamps them and
+      drives the fill; `change` (fired on release) is what triggers the grid refresh.
+    {%- endcomment -%}
+    <price-slider
+      class='price-slider block pt-2'
+      style='--price-min: 0; --price-max: {{ range_max }};'
+    >
+      <div class='price-slider__values body-small flex justify-between pb-3'>
+        <output data-price-output='min' for='{{ min_id }}'>{{ current_min | times: 100 | money }}</output>
+        <output data-price-output='max' for='{{ max_id }}'>{{ current_max | times: 100 | money }}</output>
+      </div>
+
+      <div class='price-slider__track'>
+        <div class='price-slider__fill' data-price-fill></div>
+
+        <label class='sr-only' for='{{ min_id }}'>Minimum price</label>
+        <input
+          class='price-slider__input'
+          type='range'
+          id='{{ min_id }}'
+          name='{{ filter.min_value.param_name }}'
+          value='{{ current_min }}'
+          min='0'
+          max='{{ range_max }}'
+          step='1'
+          data-price-thumb='min'
+          data-omit-at='min'
+        >
+
+        <label class='sr-only' for='{{ max_id }}'>Maximum price</label>
+        <input
+          class='price-slider__input'
+          type='range'
+          id='{{ max_id }}'
+          name='{{ filter.max_value.param_name }}'
+          value='{{ current_max }}'
+          min='0'
+          max='{{ range_max }}'
+          step='1'
+          data-price-thumb='max'
+          data-omit-at='max'
+        >
+      </div>
+    </price-slider>
+
+  {%- else -%}
+    <div class='filter-group-display__price-range grid grid-cols-2 gap-2'>
+      <div class='filter-group-display__price-range-from'>
+        <div
+          style='--input-border: var(--hr-color);'
+          class='large input-component relative has-placeholder has-label inline-block w-full'
+        >
+          <span class='pl-[calc(var(--input-height)*0.2)] pt-[13px] absolute left-0 top-[1px] bottom-0 flex items-center justify-start'>
+            {{- cart.currency.symbol -}}
+          </span>
+          <input
+            class='input !pl-[calc(var(--input-height)*0.2+.65em)]'
+            name='{{ filter.min_value.param_name }}'
+            id='{{ min_id }}'
+            {% if filter.min_value.value %}value='{{ min_value_display }}'{% endif %}
+            type='number'
+            placeholder='0'
+            min='0'
+            max='{{ range_max_display }}'
+          >
+          <label class='input-label' for='{{ min_id }}'>From</label>
+        </div>
+      </div>
+
+      <div class='filter-group-display__price-range-to'>
+        <div
+          style='--input-border: var(--hr-color);'
+          class='large input-component relative has-placeholder has-label inline-block w-full'
+        >
+          <span class='pl-[calc(var(--input-height)*0.2)] pt-[13px] absolute left-0 top-[1px] bottom-0 flex items-center justify-start'>
+            {{- cart.currency.symbol -}}
+          </span>
+          <input
+            class='input !pl-[calc(var(--input-height)*0.2+.65em)]'
+            name='{{ filter.max_value.param_name }}'
+            id='{{ max_id }}'
+            {% if filter.max_value.value %}value='{{ max_value_display }}'{% endif %}
+            type='number'
+            placeholder='{{ range_max_display }}'
+            min='0'
+            max='{{ range_max_display }}'
+          >
+          <label class='input-label' for='{{ max_id }}'>To</label>
+        </div>
+      </div>
+    </div>
+{%- endcase -%}
