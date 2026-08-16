@@ -1,0 +1,445 @@
+{% capture spacing_class %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+{% capture desktop_media_aspect %}
+  {% render 'util-aspect-ratio', ratio: section.settings.desktop_media_aspect_ratio %}
+{% endcapture %}
+{% capture mobile_media_aspect %}
+  {% render 'util-aspect-ratio', ratio: section.settings.mobile_media_aspect_ratio %}
+{% endcapture %}
+
+{% liquid
+	comment
+		Media/info split across a 12-column grid. Only the media width is a setting — the
+		info column takes whatever is left, so the two can never disagree.
+
+		Spans are passed as CSS custom properties rather than baked into class names:
+		Tailwind only emits classes it can see in the source, so md:col-span-{{ n }} would
+		produce nothing. col-span-(--var) is one literal class that reads any value.
+	endcomment
+	assign media_span = section.settings.desktop_media_columns | default: 6
+	assign info_span = 12 | minus: media_span
+
+	comment
+		Keep `sizes` honest about the column share, or a narrow media column still
+		downloads a half-viewport image.
+	endcomment
+	assign media_vw = media_span | times: 100 | divided_by: 12
+	assign media_sizes = '(min-width: 768px) ' | append: media_vw | append: 'vw, 100vw'
+	comment
+		Desktop-only placement. Both columns get an explicit start line rather than relying on
+		source order, so swapping sides is a value change while the DOM order stays as it is —
+		media first, which is what mobile and a screen reader should get.
+	endcomment
+	assign media_position = section.settings.desktop_media_position | default: 'left'
+
+	assign media_start = 1
+	assign info_start = media_span | plus: 1
+	if media_position == 'right'
+		assign media_start = info_span | plus: 1
+		assign info_start = 1
+	endif
+
+	comment
+		Full bleed cancels the page margin on the outer side only, so the media runs to the
+		edge while the grid, the gutter between columns and the info side stay put. The classes
+		are written out in full because Tailwind only emits what it can read in source — a
+		built-up `md:-m<side>-margin` would compile to nothing.
+	endcomment
+	assign media_bleed_class = ''
+	if section.settings.desktop_media_full_bleed
+		if media_position == 'right'
+			assign media_bleed_class = ' md:-mr-margin'
+		else
+			assign media_bleed_class = ' md:-ml-margin'
+		endif
+	endif
+	comment
+		Use the chosen product when set (so the section can run on any page),
+		otherwise the page's product (normal PDP behaviour).
+	endcomment
+	assign product = section.settings.product | default: product
+
+	comment
+		One ratio per viewport, applied to every media frame in it — so a grid, a
+		scrolling column and a slideshow all line up no matter which layout that
+		viewport is set to. Both go out as custom properties and main-product.css
+		picks the live one at the breakpoint; an inline style can't hold a media
+		query, and the stylesheet tag can't read Liquid.
+	endcomment
+	assign desktop_media_aspect = desktop_media_aspect | strip
+	assign mobile_media_aspect = mobile_media_aspect | strip
+
+	comment
+		Centering the info column takes both halves: text-align for the prose
+		blocks, and align-items for the ones that lay their contents out in a
+		flex row. Written out per viewport rather than as one class — Tailwind
+		only emits what it can see, so the md: variants have to be literal.
+
+		The pdp-info--center-* modifiers are what main-product.css hangs off to
+		give full width back to the blocks that have to span the column.
+	endcomment
+	assign desktop_align = section.settings.desktop_content_alignment | default: 'left'
+	assign mobile_align = section.settings.mobile_content_alignment | default: 'left'
+
+	comment
+		The left case is `items-stretch`, not `items-start`: both align the text
+		the same way, but flex-start sizes each block to its content, which is
+		exactly the shrinking the centered case has to be patched around. Stretch
+		is the flex default and what the column had before alignment was a
+		setting — text-align alone does the work.
+	endcomment
+	if mobile_align == 'center'
+		assign info_align_class = 'pdp-info--center-mobile text-center items-center'
+	else
+		assign info_align_class = 'text-left items-stretch'
+	endif
+
+	if desktop_align == 'center'
+		assign info_align_class = info_align_class | append: ' pdp-info--center-desktop md:text-center md:items-center'
+	else
+		assign info_align_class = info_align_class | append: ' md:text-left md:items-stretch'
+	endif
+%}
+
+{% stylesheet %}
+  :root {
+    --pdp-info-height: calc(100svh - var(--spacing-full-header-height) - var(--spacing-margin));
+    body:has(.section-header.scrolled) {
+      --pdp-info-height: calc(100svh - var(--spacing-header-height) - var(--spacing-margin));
+    }
+  }
+
+  body:has(.shopify-section.shopify-section-group-header-group.scrolled) .pdp-info {
+    padding-top: var(--spacing-gutter);
+  }
+{% endstylesheet %}
+
+{% if product != blank %}
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pdp.js' | asset_url }}" defer></script>
+{%- comment -%} The gallery is a <slide-show> in every layout — inactive Embla is what makes it a grid. {%- endcomment -%}
+<script src="{{ 'slideshow.js' | asset_url }}" defer></script>
+
+<div class="px-margin">
+  <div class="mx-auto max-w-site-max-w w-full">
+    <div
+      id="mainPDP"
+      data-product-update="{{ section.id }}"
+      class="w-full flex flex-col md:grid md:grid-cols-12 gap-y-margin gap-x-gutter {{ spacing_class }}"
+      style="--pdp-media-span: {{ media_span }}; --pdp-info-span: {{ info_span }}; --pdp-media-start: {{ media_start }}; --pdp-info-start: {{ info_start }};"
+    >
+      <div class="min-w-full md:col-span-(--pdp-media-span) md:col-start-(--pdp-media-start) md:row-start-1{{ media_bleed_class }}" data-dynamic-content>
+        {%- if section.settings.show_breadcrumbs -%}
+          {%- comment -%} Only ever visible below md, so it follows the mobile alignment. {%- endcomment -%}
+          <div class="md:hidden">
+            {% render 'breadcrumbs', class: 'mb-gutter', align: mobile_align %}
+          </div>
+        {%- endif -%}
+
+        {% render 'product-media',
+          product: product,
+          section_id: section.id,
+          desktop_layout: section.settings.desktop_media_layout,
+          mobile_layout: section.settings.mobile_media_layout,
+          media_width: section.settings.mobile_media_width,
+          badges_over_media: section.settings.badges_over_media,
+          desktop_aspect_ratio: desktop_media_aspect,
+          mobile_aspect_ratio: mobile_media_aspect,
+          sizes: media_sizes
+        %}
+      </div>
+
+      <div class="md:col-span-(--pdp-info-span) md:col-start-(--pdp-info-start) md:row-start-1">
+        <add-to-cart-form class="pdp-info pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:transition-[padding] {{ info_align_class }}">
+          {%- if section.settings.show_breadcrumbs -%}
+            {%- comment -%} Only ever visible at md and up, so it follows the desktop alignment. {%- endcomment -%}
+            <div class="hidden md:block w-full">
+              {% render 'breadcrumbs', class: 'mb-gutter', align: desktop_align %}
+            </div>
+          {%- endif -%}
+
+          {%- if section.blocks != blank and section.blocks.size > 0 -%}
+            {% comment %} {% for block in section.blocks %}
+              {% render block %}
+            {% endfor %} {% endcomment %}
+            {% content_for 'blocks' %}
+          {%- endif -%}
+        </add-to-cart-form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "section-main-product",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_headline"
+    },
+    {
+      "type": "_rich-text"
+    },
+    {
+      "type": "_actions"
+    },
+    {
+      "type": "_product-price"
+    },
+    {
+      "type": "_product-qty-input"
+    },
+    {
+      "type": "_product-variant-selector"
+    },
+    {
+      "type": "_product-buy-buttons"
+    },
+    {
+      "type": "_stock-count"
+    },
+    {
+      "type": "_product-badges"
+    },
+    {
+      "type": "_accordion"
+    },
+    {
+      "type": "_tabs"
+    },
+    {
+      "type": "_spacer"
+    }
+  ],
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave blank on a product template to use that product. Pick a product to feature this section on other pages (e.g. the home page)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "badges_over_media",
+      "label": "Badges over media",
+      "info": "Overlays the product badges on the gallery. Slideshow layouts only — a grid has no single frame to sit them on.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Desktop",
+      "info": "Applies at 768px and up. Each layout names its own pager, so it is one choice per viewport."
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_layout",
+      "default": "grid",
+      "label": "Media layout",
+      "options": [
+        { "label": "Grid — 2 columns", "value": "grid" },
+        { "label": "Scrolling — full width", "value": "scrolling" },
+        { "label": "Scrolling — thumbnails left", "value": "scrolling_thumbnails_left" },
+        { "label": "Slideshow — no pager", "value": "slideshow" },
+        { "label": "Slideshow — dots", "value": "slideshow_dots" },
+        { "label": "Slideshow — thumbnails under", "value": "slideshow_thumbnails_under" },
+        { "label": "Slideshow — thumbnails left", "value": "slideshow_thumbnails_left" },
+        { "label": "Slideshow — thumbnails overlaid", "value": "slideshow_thumbnails_overlaid" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_aspect_ratio",
+      "default": "portrait_4_5",
+      "label": "Media aspect ratio",
+      "info": "Applied to every media frame so the layouts stay aligned.",
+      "options": [
+        { "label": "Portrait (2:3)", "value": "portrait_2_3" },
+        { "label": "Portrait (3:4)", "value": "portrait_3_4" },
+        { "label": "Portrait (4:5)", "value": "portrait_4_5" },
+        { "label": "Square (1:1)", "value": "square" },
+        { "label": "Landscape (5:4)", "value": "landscape_5_4" },
+        { "label": "Landscape (4:3)", "value": "landscape_4_3" },
+        { "label": "Landscape (3:2)", "value": "landscape_3_2" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_position",
+      "label": "Desktop media position",
+      "info": "Desktop only — mobile always stacks with the media first.",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_media_full_bleed",
+      "label": "Full bleed media",
+      "info": "Runs the media to the outer edge of the window on desktop, keeping the grid and the product details in place.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_media_columns",
+      "label": "Media width",
+      "info": "Columns out of 12. The product details fill the rest.",
+      "min": 4,
+      "max": 8,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_alignment",
+      "default": "left",
+      "label": "Content alignment",
+      "info": "Aligns the breadcrumbs and the product info blocks. Media is unaffected.",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile",
+      "info": "Applies below 768px."
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_layout",
+      "default": "slideshow_dots",
+      "label": "Media layout",
+      "options": [
+        { "label": "Slideshow — no pager", "value": "slideshow" },
+        { "label": "Slideshow — dots", "value": "slideshow_dots" },
+        { "label": "Slideshow — thumbnails under", "value": "slideshow_thumbnails_under" },
+        { "label": "Slideshow — thumbnails overlaid", "value": "slideshow_thumbnails_overlaid" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_aspect_ratio",
+      "default": "portrait_4_5",
+      "label": "Media aspect ratio",
+      "options": [
+        { "label": "Portrait (2:3)", "value": "portrait_2_3" },
+        { "label": "Portrait (3:4)", "value": "portrait_3_4" },
+        { "label": "Portrait (4:5)", "value": "portrait_4_5" },
+        { "label": "Square (1:1)", "value": "square" },
+        { "label": "Landscape (5:4)", "value": "landscape_5_4" },
+        { "label": "Landscape (4:3)", "value": "landscape_4_3" },
+        { "label": "Landscape (3:2)", "value": "landscape_3_2" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_media_width",
+      "default": "margins",
+      "label": "Media width",
+      "options": [
+        { "label": "Margins", "value": "margins" },
+        { "label": "Full Width", "value": "full" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_alignment",
+      "default": "left",
+      "label": "Content alignment",
+      "info": "Aligns the breadcrumbs and the product info blocks. Media is unaffected.",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Slim",
+          "value": "slim"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "blocks": [
+        {
+          "type": "_product-badges"
+        },
+        {
+          "type": "_headline",
+          "settings": {
+            "text": "{{ product.title }}",
+            "style": "h2",
+            "element": "h1"
+          }
+        },
+        {
+          "type": "_product-variant-selector"
+        },
+        {
+          "type": "_stock-count"
+        },
+        {
+          "type": "_product-buy-buttons"
+        },
+        {
+          "type": "_accordion",
+          "blocks": [
+            {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "Description",
+                "text": "{{ product.description }}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

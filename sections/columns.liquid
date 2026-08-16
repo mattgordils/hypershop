@@ -1,71 +1,90 @@
+{%- comment -%} Slideshow + Embla load only where a carousel exists, not in the global bundle. {%- endcomment -%}
+<script src="{{ 'slideshow.js' | asset_url }}" defer></script>
+
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% capture padding_class %}
-  {% render 'util-section-padding' with space: section.settings.section_padding %}
+  {% render 'util-section-padding', space: section.settings.section_padding %}
 {% endcapture %}
 
 {%-liquid
-  assign columns = section.blocks | where: 'type', "column"
   assign alignment = section.settings.alignment
-  assign justify_alignment = section.settings.alignment
+  assign alignment_class = 'lockup-' | append: alignment
 
-  assign mobile_cols = 100.00 | divided_by: section.settings.mobile_columns
-  assign tablet_cols = 100.00 | divided_by: section.settings.tablet_columns
-  assign desktop_cols = 100.00 | divided_by: section.settings.columns
+  # Decide the initial embla state and any breakpoint override so a single
+  # <slide-show> element covers all four grid/slideshow combinations without
+  # duplicating markup. `active: false` at a breakpoint drops the carousel
+  # into the responsive grid fallback defined in slideshow.css.
+  assign desktop_slideshow = section.settings.slideshow
+  assign mobile_slideshow  = section.settings.mobile_slideshow
+  assign initial_active = 'false'
+  assign breakpoints_json = ''
 
-  assign eyebrow = section.settings.eyebrow
-  assign headline = section.settings.headline
-  assign text = section.settings.text
+  if desktop_slideshow and mobile_slideshow
+    assign initial_active = 'true'
+  elsif desktop_slideshow == false and mobile_slideshow == false
+    assign initial_active = 'false'
+  elsif desktop_slideshow and mobile_slideshow == false
+    # Grid on mobile, slideshow at lg+
+    assign initial_active = 'false'
+    assign breakpoints_json = '{"(min-width: 1024px)": {"active": true}}'
+  else
+    # Slideshow on mobile, grid at lg+
+    assign initial_active = 'true'
+    assign breakpoints_json = '{"(min-width: 1024px)": {"active": false}}'
+  endif
 -%}
 
-<div class="{{ spacing_class }} {{ padding_class }} w-full px-margin overflow-hidden md:grid md:grid-cols-12 md:gap-x-gutter {{ section.settings.color_scheme }}">
-  <div class="mx-auto md:col-span-10 md:col-start-2 w-full">
-    
-    {% if eyebrow != blank or headline != blank or text != blank %}
-      <in-view class="{% if section.settings.slideshow %}hidden lg:flex{% else %}flex{% endif %} mb-v-space-sm text-{{ alignment }} w-full flex-col items-{{ alignment }} justify-start gap-gutter">
-        {% if eyebrow != blank %}<div class="h6 text-light-text-color">{{ eyebrow }}</div>{% endif %}
-        {% if headline != blank %}<div class="pb-[.3em] {{ section.settings.headline_size }}">{{ headline }}</div>{% endif %}
-        {% if text != blank %}<div class="body">{{ text }}</div>{% endif %}
-      </in-view>
-    {% endif %}
+{% stylesheet %}
+  /* Contain the media to a square — letterboxed with object-fit: contain */
+  .columns--media-square .block-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
 
-    {% if section.settings.slideshow == false %}
-      <div>
-        <div
-          style="--mobile-cols: {{ mobile_cols }}%; --tablet-cols: {{ tablet_cols }}%; --desktop-cols: {{ desktop_cols }}%;"
-          class="flex flex-wrap justify-{{ alignment }} gap-y-v-space-sm {% if section.settings.mobile_columns > 1 %}lg:-mx-half-gutter{% else %}-mx-half-gutter{% endif %}"
-        >
-          {%- for column in section.blocks -%}
-            <div class="{% if section.settings.mobile_slideshow %}hidden lg:block{% endif %} relative w-[var(--mobile-cols)] md:w-[var(--tablet-cols)] xl:w-[var(--desktop-cols)] px-half-gutter">
-              <div class="flex flex-col h-full text-balance max-w-[500px]">
-                {% render column %}
-              </div>
-            </div>
-          {%- endfor -%}
-        </div>
-      </div>
-    {% endif %}
-    
-    {% if section.settings.mobile_slideshow or section.settings.slideshow %}
+  .columns--media-square .block-media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .columns--media-square .block-media img,
+  .columns--media-square .block-media video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+{% endstylesheet %}
+
+<div
+  class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}{% if section.settings.limit_media_width %} columns--limit-media{% endif %}"
+>
+  <div class="overflow-hidden">
+    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
       <slide-show
-        class="{% if section.settings.slideshow == false %}lg:hidden {% endif %} block -mx-margin px-margin"
+        class="block overflow-visible"
         data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.columns }}"
+        data-active="{{ initial_active }}"
+        data-align="{% if alignment == 'left' %}start{% else %}center{% endif %}"
+        {% if breakpoints_json != blank %}data-breakpoints='{{ breakpoints_json }}'{% endif %}
       >
-        <div class="slider-container">
+        <div class="slider-container {% if alignment == 'left' %}justify-start{% else %}justify-center{% endif %}">
           {%- for column in section.blocks -%}
             <div class="slider-slide">
-              <div class="flex flex-col h-full text-balance max-w-[500px]">
+              <div class="{{ alignment_class }} flex flex-col h-full text-balance{% if alignment == 'center' %} mx-auto{% endif %}">
                 {% render column %}
               </div>
             </div>
           {%- endfor -%}
         </div>
-        <div class="slider-dots text-light-text-color mt-6"></div>
+        {% render 'slider-dots', class: 'mt-6', color_scheme: section.settings.dots_color_scheme %}
       </slide-show>
-    {% endif %}
-    
+    </div>
   </div>
 </div>
 
@@ -74,45 +93,6 @@
   "name": "Columns",
   "class": "section-columns",
   "settings": [
-    {
-      "type": "header",
-      "content": "Section Options"
-    },
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "headline",
-      "label": "Headline"
-    },
-    {
-      "type": "select",
-      "id": "headline_size",
-      "default": "h3",
-      "label": "Headline Size",
-      "options": [
-        {
-          "label": "H1",
-          "value": "h1"
-        },
-        {
-          "label": "H2",
-          "value": "h2"
-        },
-        {
-          "label": "H3",
-          "value": "h3"
-        }
-      ]
-    },
-    {
-      "type": "inline_richtext",
-      "id": "text",
-      "label": "Text"
-    },
     {
       "type": "text_alignment",
       "id": "alignment",
@@ -166,7 +146,41 @@
       "max": 6,
       "step": 1
     },
-    // Section Spacing
+    {
+      "type": "color_scheme",
+      "id": "dots_color_scheme",
+      "label": "Dots color scheme",
+      "info": "Applied to the slideshow dots. Leave blank to inherit from the section.",
+      "visible_if": "{{ section.settings.slideshow or section.settings.mobile_slideshow }}"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_square",
+      "label": "Contain media to a square",
+      "info": "Fits each column's image or video inside a square (object-fit: contain).",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "limit_media_width",
+      "label": "Limit media width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "media_max_width",
+      "min": 40,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Media Max Width",
+      "default": 400,
+      "visible_if": "{{ section.settings.limit_media_width }}"
+    },
     {
       "type": "header",
       "content": "Spacing & Sizing"
@@ -177,7 +191,7 @@
       "label": "Section Color",
       "default": "theme-default"
     },
-		{
+    {
       "type": "select",
       "id": "section_padding",
       "default": "none",
@@ -241,7 +255,7 @@
     {
       "type": "_text-lockup"
     }
-	],
+  ],
   "presets": [
     {
       "name": "Columns"

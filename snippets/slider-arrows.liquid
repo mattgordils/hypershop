@@ -1,0 +1,37 @@
+{%- comment -%}
+  Prev/Next arrows for <slide-show>. Two placements are supported:
+
+  1. Inside the <slide-show> — no extra args needed. slideshow.js finds them
+     via this.querySelector('.slider-next' / '.slider-prev').
+  2. Outside the <slide-show> (e.g. next to a heading, in a sibling column) —
+     pass `for: '<slide-show id>'`. Each button gets `data-slider="<id>"` and
+     slideshow.js falls back to a document-level lookup keyed on the id.
+
+  Optional args:
+    class — extra classes on the outer wrapper
+    size  — button size preset: 'tiny' | 'small' | 'default' | 'large' (default 'small')
+    for   — slide-show id, only needed when the arrows live outside the slide-show
+{%- endcomment -%}
+{%- assign arrow_size = size | default: 'small' -%}
+{%- assign target_attr = '' -%}
+{%- if for != blank -%}
+  {%- assign target_attr = ' data-slider="' | append: for | append: '"' -%}
+{%- endif -%}
+<div class="slider-arrows flex items-center gap-2 {{ class }}">
+  <button
+    type="button"
+    class="slider-prev button circle {{ arrow_size }}"
+    aria-label="Previous slide"
+    {{ target_attr }}
+  >
+    {% render 'icon-material', icon: 'chevron_left' %}
+  </button>
+  <button
+    type="button"
+    class="slider-next button circle {{ arrow_size }}"
+    aria-label="Next slide"
+    {{ target_attr }}
+  >
+    {% render 'icon-material', icon: 'chevron_right' %}
+  </button>
+</div>

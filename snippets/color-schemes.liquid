@@ -1,0 +1,70 @@
+{%- comment -%}
+  Single source of truth for color schemes.
+
+  Every scheme in the theme's color system becomes a `.{scheme.id}` class here,
+  whether it was added in code (settings_data.json → color_schemes) or visually
+  in the theme editor. Sections apply the class via
+  `{{ section.settings.color_scheme }}` (the value is the scheme id). The site
+  default (:root) is seeded from the FIRST scheme in theme-settings.liquid.
+
+  Two rules keep this working in BOTH the storefront and the theme editor:
+
+  1. Output RAW colors only — never a Liquid color filter (color_extract,
+     color_mix…). In the editor, colors inside {% style %} become live-preview
+     placeholders and a filter run on a placeholder breaks. Derived colors
+     (--light-text-color/--hr-color/--light-grey) are computed in CSS with
+     color-mix() in main.css, adapting to --text-color/--bg-color.
+
+  2. Decide whether an OPTIONAL field is set by checking it OUTSIDE {% style %},
+     where an unset color is truly empty. (Inside {% style %} the editor swaps
+     every color — even unset ones — for a NON-empty placeholder, so `!= blank`
+     there is always true and would emit an empty `--var:` that clobbers the
+     inherited value.) We precompute the set-fields list below, then only output
+     the raw setting (a placeholder in the editor → live preview) when it's set.
+
+  So a scheme only needs background + text + accent; every optional field falls
+  back to the inherited / CSS-derived look when blank.
+{%- endcomment -%}
+{%- if settings.color_schemes != blank -%}
+{%- liquid
+  # optional scheme field → CSS custom property (field:var pairs, split by |)
+  assign optional_vars = 'background_gradient:--bg-gradient|hr:--hr-color|light_grey:--light-grey|error:--error|success:--success|primary_button_background:--primary-button-bg|primary_button_label:--primary-button-color|primary_button_border:--primary-button-border|primary_button_hover_background:--primary-button-hover-bg|primary_button_hover_label:--primary-button-hover-color|primary_button_hover_border:--primary-button-hover-border|secondary_button_background:--secondary-button-bg|secondary_button_label:--secondary-button-color|secondary_button_border:--secondary-button-border|secondary_button_hover_background:--secondary-button-hover-bg|secondary_button_hover_label:--secondary-button-hover-color|secondary_button_hover_border:--secondary-button-hover-border' | split: '|'
+
+  # Build a ",schemeId:field," list of fields that actually have a value, tested
+  # here OUTSIDE the style tag where unset colors are empty.
+  assign set_fields = ','
+  for scheme in settings.color_schemes
+    for pair in optional_vars
+      assign field = pair | split: ':' | first
+      capture raw
+        echo scheme.settings[field]
+      endcapture
+      assign raw = raw | strip
+      unless raw == blank
+        assign set_fields = set_fields | append: scheme.id | append: ':' | append: field | append: ','
+      endunless
+    endfor
+  endfor
+-%}
+{% style %}
+  {%- for scheme in settings.color_schemes -%}
+    .{{ scheme.id }} {
+      --bg-color: {{ scheme.settings.background }};
+      --text-color: {{ scheme.settings.text }};
+      --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+      --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+      --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
+      --main-color: {{ scheme.settings.accent }};
+      {%- for pair in optional_vars -%}
+        {%- assign kv = pair | split: ':' -%}
+        {%- assign lookup = ',' | append: scheme.id | append: ':' | append: kv[0] | append: ',' -%}
+        {%- if set_fields contains lookup %}
+      {{ kv[1] }}: {{ scheme.settings[kv[0]] }};
+        {%- endif -%}
+      {%- endfor %}
+      color: var(--text-color);
+      background: var(--bg-gradient, var(--bg-color));
+    }
+  {%- endfor -%}
+{% endstyle %}
+{%- endif -%}

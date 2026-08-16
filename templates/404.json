@@ -9,10 +9,6 @@
  */
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {}
-    },
     "main": {
       "type": "main-404",
       "blocks": {
@@ -31,7 +27,8 @@
                 "style": "h2",
                 "element": "h1"
               },
-              "blocks": {}
+              "blocks": {
+              }
             },
             "text": {
               "type": "_rich-text",
@@ -40,7 +37,8 @@
                 "text": "<p>We could not find the page you are looking for</p>",
                 "size": "body-medium"
               },
-              "blocks": {}
+              "blocks": {
+              }
             }
           },
           "block_order": [
@@ -53,10 +51,9 @@
       "settings": {
         "section_spacing": "medium"
       }
-    },
+    }
   },
   "order": [
-    "settings",
     "main"
   ]
 }

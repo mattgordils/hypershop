@@ -1,0 +1,195 @@
+{%- liquid
+  assign lorem_short = 'This is an <b>example</b> of what text and <i>buttons</i> will look <strong><i>like on this</i></strong> background color option.'
+  assign lorem_long = 'Lorem ipsum dolor sit amet, <strong>consectetur adipiscing</strong> elit, sed do eiusmod tempor incididunt ut <em>labore et dolore <b>magna aliqua</b></em>. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+
+  assign column_class = "bg-linear-to-b from-error rounded-t opacity-25"
+-%}
+
+{%- comment -%} Reusable swatch: set --color on any wrapper and this fills with it. {%- endcomment -%}
+{%- capture swatch -%}<div class="aspect-square rounded relative" style="background: var(--color)"><div class="absolute inset-0 rounded border border-current opacity-15"></div></div>{%- endcapture -%}
+
+<div class="py-v-space px-margin">
+  <div class="max-w-site-max-w mx-auto">
+    <div class="max-w-[750px] text-balance space-y-6 mb-v-space">
+      <h1>Site Styleguide</h1>
+      <p class="h5">Everything below — type scales, colors, color schemes, buttons, inputs, and the grid — is defined once in your <strong>Theme settings</strong> and cascades across every page of your store. This page is only a live preview: change a value in Theme settings and it updates here and everywhere it's used.</p>
+      {%- if request.design_mode -%}
+        <p class="body">To edit any of it, open <strong>Theme settings</strong> — the gear icon at the bottom of the editor sidebar.</p>
+      {%- else -%}
+        <p class="body">To edit any of it, open <a href="https://{{ shop.permanent_domain }}/admin/themes/current/editor" class="animate-underline underlined">Theme settings</a> (Shopify admin → Online Store → Themes → Customize → Theme settings).</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ═══ TYPOGRAPHY ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Desktop Typography</strong>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm mb-v-space-lg">
+      <div>
+        <h1 class="mb-v-space-sm">Header Style Number 1</h1>
+        <h2 class="mb-v-space-sm">Header Style Number 2</h2>
+        <h3 class="mb-v-space-sm">Header Style Number 3</h3>
+        <h4 class="mb-v-space-sm">Header Style Number 4</h4>
+        <p class="h5 mb-v-space-sm"><strong>Header Style<br>Number 5</strong></p>
+        <p class="h6">Header Style Number 6</p>
+      </div>
+
+      <div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Tiny</p>
+          <p class="body-tiny">{{ lorem_long }}</p>
+        </div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Small</p>
+          <p class="body-small">{{ lorem_long }}</p>
+        </div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body (Default)</p>
+          <p>{{ lorem_long }}</p>
+        </div>
+        <div>
+          <p class="eyebrow text-light-text-color mb-gutter">Body Medium</p>
+          <p class="body-medium">{{ lorem_long }}</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="mb-v-space-sm">
+          <p class="eyebrow text-light-text-color mb-gutter">Body Large</p>
+          <p class="body-large">{{ lorem_long }}</p>
+        </div>
+        <div>
+          <p class="eyebrow text-light-text-color mb-gutter">Blockquote</p>
+          <blockquote>{{ lorem_long }}</blockquote>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ═══ COLOR SCHEMES ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Color Schemes</strong>
+    </div>
+
+    {%- if settings.color_schemes != blank -%}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-gutter mb-v-space-lg">
+        {%- for scheme in settings.color_schemes -%}
+          {%- liquid
+            assign sc_bg     = scheme.settings.background
+            assign sc_text   = scheme.settings.text
+            assign sc_accent = scheme.settings.accent
+          -%}
+
+          <div class="relative">
+            <div class="absolute inset-0 border border-current rounded opacity-7 pointer-events-none"></div>
+            <div class="rounded {{ scheme.id }} p-gutter bg-bg text-text-color">
+              <p class="eyebrow mb-3 bg-light-grey -mx-gutter -mt-gutter p-gutter rounded-t {% if forloop.index0 == 0  %}text-error{% else %}text-light-text-color{% endif %}">
+                {% if forloop.index0 == 0  %}
+                  Default Color Schme
+                {% else %}
+                  Color Scheme Example
+                {% endif %}
+              </p>
+              <h2 class="mb-3">Scheme {{ forloop.index }}</h2>
+              <p class="body-small mb-6">{{ lorem_short }}</p>
+              <div class="flex flex-wrap gap-3 mb-4 items-center">
+                <button class="button">Get Started</button>
+                <button class="button secondary">Learn More</button>
+                <button class="button" disabled>Disabled</button>
+                <a href="#" class="button-text">Text Link</a>
+              </div>
+              <hr class="mt-v-space-sm">
+              <h6 class="mb-4 mt-2">Colors</h6>
+              <div class="grid grid-cols-4 gap-x-3 gap-y-5">
+                <div style="--color: {{ sc_bg }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Background</p></div>
+                <div style="--color: {{ sc_text }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Text</p></div>
+                <div style="--color: {{ sc_accent }}">{{ swatch }}<p class="body-small text-light-text-color mt-1">Accent</p></div>
+                <div style="--color: var(--hr-color)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Line</p></div>
+                <div style="--color: var(--success)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Success</p></div>
+                <div style="--color: var(--error)">{{ swatch }}<p class="body-small text-light-text-color mt-1">Error</p></div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="mb-v-space-lg">
+        <p class="body-small text-light-text-color">No color schemes yet. Go to <strong>Theme Settings → Schemes</strong> and click <strong>Add Scheme</strong> to create your first one.</p>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} ═══ GRID ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">Grid</strong>
+    </div>
+
+    <div class="mb-v-space-lg">
+      <div class="flex items-center gap-gutter mb-2">
+        <span class="eyebrow text-error">Desktop Grid</span>
+        <span class="body-tiny text-light-text-color">Columns: 12</span>
+        <span class="body-tiny text-light-text-color ml-auto">Gutters: var(--site-gutters)</span>
+        <span class="body-tiny text-light-text-color">Margins: var(--site-margins)</span>
+      </div>
+      <div class="grid gap-gutter grid-cols-6 md:grid-cols-12 h-[75vh]">
+        {%- for i in (1..12) -%}
+          <div class="{{ column_class }}{% if forloop.index > 6 %} hidden md:block{% endif %}"></div>
+        {%- endfor -%}
+      </div>
+
+      <div class="mt-v-space-sm justify-center hidden md:flex">
+        <div class="py-12 px-[calc(var(--site-margins-mobile)*1px)] rounded-[50px] w-full max-w-[400px] relative aspect-[9/16] flex flex-col bg-bg -mt-[40vh]">
+          <div class="absolute inset-0 rounded-[50px] border border-error opacity-20"></div>
+          <div class="eyebrow mb-1 w-full grow-0 shrink-0 text-error">Mobile Grid</div>
+          <div class="body-tiny mb-3 text-light-text-color w-full grow-0 shrink-0">Columns: 6 &nbsp;|&nbsp; Margins &amp; Gutters: var(--site-margins)</div>
+          <div class="grid gap-[calc(var(--site-gutters-mobile)*1px)] grid-cols-6 w-full grow">
+            {%- for i in (1..6) -%}
+              <div class="{{ column_class }}"></div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} ═══ UI ELEMENTS ═══ {%- endcomment -%}
+    <div class="border-t border-hr-color pt-gutter mb-v-space">
+      <strong class="h6">UI Elements</strong>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-v-space-lg relative">
+      <div>
+        <p class="eyebrow text-light-text-color mb-gutter">Button Primary (Default)</p>
+        <div class="flex flex-col items-start gap-gutter mb-v-space-sm">
+          <button class="button tiny">Button Tiny</button>
+          <button class="button small">Button Small</button>
+          <button class="button">Button</button>
+          <button class="button large">Button Large</button>
+        </div>
+        <p class="eyebrow text-light-text-color mb-gutter">Button Secondary</p>
+        <div class="flex flex-col items-start gap-gutter">
+          <button class="button secondary">Button</button>
+          <button class="button" disabled>Button Disabled</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow text-light-text-color mb-gutter">Input</p>
+        <div class="flex flex-col gap-gutter mb-v-space-sm max-w-[400px]">
+          <input type="text" placeholder="Text">
+          <input type="text" placeholder="Label" value="Focus">
+        </div>
+        <p class="eyebrow text-light-text-color mb-gutter">Select</p>
+        <div class="relative max-w-[400px]">
+          <select class="w-full">
+            <option>Option</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} Component previews — real snippets, sample data (see snippets/mock-product) {%- endcomment -%}
+{% section 'components' %}

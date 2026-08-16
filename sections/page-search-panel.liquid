@@ -1,0 +1,108 @@
+{%- comment -%}
+  Predictive search drawer. Triggered from the header search block
+  (`_header-search`, data-modal-id="searchDrawer"). The <predictive-search> web
+  component (assets/predictive-search.js) fetches the `predictive-search` SECTION
+  via the Section Rendering API and swaps its markup into [data-predictive-results],
+  so results render with the real product-card component. Scope (products / pages /
+  blog posts) + layout come from Theme settings → Search (settings.search_*).
+{%- endcomment -%}
+<script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
+
+{%- comment -%} Drawer uses the FIRST color scheme — the site-wide default. {%- endcomment -%}
+{%- assign default_scheme = '' -%}
+{%- for s in settings.color_schemes limit: 1 -%}{%- assign default_scheme = s.id -%}{%- endfor -%}
+
+<modal-component
+  id="searchDrawer"
+  class="search-container drawer search-position-{{ settings.search_layout }}"
+  data-editor-auto-open
+>
+  <div class="modal-content w-full md:w-[30vw] 2xl:w-[25vw] max-w-full md:min-w-[600px] {{ default_scheme }} z-1">
+    <predictive-search
+      class="flex flex-col {{ default_scheme }} h-full overflow-y-auto"
+      data-search-url="{{ routes.predictive_search_url }}"
+      data-search-page-url="{{ routes.search_url }}"
+      data-search-products="{{ settings.search_products }}"
+      data-search-pages="{{ settings.search_pages }}"
+      data-search-articles="{{ settings.search_articles }}"
+      data-limit="{{ settings.search_results_limit }}"
+    >
+      {%- comment -%} Header: input + close {%- endcomment -%}
+      <div class="sticky top-0 bg-bg z-2 px-margin w-full flex justify-between items-baseline gap-gutter shrink-0">
+        <div class="grow h-header-height flex items-center justify-stretch">
+          <div class="relative w-full">
+            <input
+              type="search"
+              data-search-input
+              placeholder="{{ 'general.search.placeholder' | t | default: 'Search for anything' }}"
+              class="w-full underlined"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-label="{{ 'general.search.search' | t | default: 'Search' }}"
+            >
+            <div data-search-loading class="absolute right-0 top-1/2 -translate-y-1/2 hidden bg-bg">
+              <div class="dot-loader text-light-text-color"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+        <modal-trigger class="search-close shrink-0">
+          <div class="button-text animate-underline underlined cursor-pointer">{{ 'general.search.close' | t | default: 'close' }}</div>
+        </modal-trigger>
+      </div>
+
+      {%- comment -%} Results region {%- endcomment -%}
+      <div class="flex-1 px-margin flex flex-col justify-start items-stretch">
+        <div data-search-error class="hidden">
+          <p class="body text-light-text-color py-3">Something went wrong. Please try again.</p>
+        </div>
+
+        {%- comment -%} Initial state — a featured collection before typing {%- endcomment -%}
+        <div data-search-initial class="w-full grow pb-gutter flex flex-col justify-end items-stretch z-1">
+          {% if settings.search_initial_collection != blank %}
+            <div class="body mb-4">{{ settings.search_initial_collection.title }}</div>
+            <div class="grid grid-cols-2 gap-gutter w-full">
+              {%- liquid
+                assign shown_count = 0
+                assign max_products = 4
+                assign hide_sold_out = settings.search_hide_sold_out
+              -%}
+              {% for product in settings.search_initial_collection.products %}
+                {%- liquid
+                  assign show_product = true
+                  if hide_sold_out and product.available == false
+                    assign show_product = false
+                  endif
+                -%}
+                {% if show_product %}
+                  <div>{% render 'product-card', product: product %}</div>
+                  {%- assign shown_count = shown_count | plus: 1 -%}
+                {% endif %}
+                {% if shown_count >= max_products %}{% break %}{% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} Live results — server-rendered `predictive-search` section swapped in here {%- endcomment -%}
+        <div data-predictive-results></div>
+      </div>
+
+      {%- comment -%} View all {%- endcomment -%}
+      <div data-search-view-all class="px-margin pb-gutter shrink-0 hidden sticky bottom-0 z-2">
+        <a href="{{ routes.search_url }}" data-search-view-all-link class="relative z-2 button w-full text-center">View all results</a>
+        <div class="z-1 h-[calc(var(--button-height)/2+var(--site-gutters))] bg-bg absolute bottom-0 left-0 w-full"></div>
+      </div>
+    </predictive-search>
+  </div>
+
+  <modal-trigger class="overlay bg-text-color opacity-50"></modal-trigger>
+</modal-component>
+
+{% schema %}
+{
+  "name": "Search",
+  "class": "section-search-panel"
+}
+{% endschema %}

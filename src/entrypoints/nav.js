@@ -1,32 +1,4 @@
-import { openModal } from './modal'
-
-const scrollThreshold = 40
-
-// const updateScrollDirection = () => {
-//   let scrollDirection = "down"
-//   let scrolled = false
-//   let lastScrollY = window.pageYOffset;
-
-//   const scrollY = window.pageYOffset;
-//   const direction = scrollY > lastScrollY ? "down" : "up";
-//   if (direction !== scrollDirection && (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)) {
-//     scrollDirection = direction
-//   }
-//   lastScrollY = scrollY > 0 ? scrollY : 0;
-
-//   if (scrollY >= scrollThreshold) {
-//     console.log('scrolled')
-//     scrolled = true
-//   }
-
-//   if (scrollY < scrollThreshold) {
-//     console.log('NOT scrolled')
-//     scrolled = false
-//   }
-
-//   // window.removeEventListener("scroll", updateScrollDirection); // clean up
-
-// };
+const scrollThreshold = 40;
 
 class StickyHeader extends HTMLElement {
   constructor() {
@@ -36,9 +8,11 @@ class StickyHeader extends HTMLElement {
   }
 
   connectedCallback() {
-    this.header = document.getElementById('shopify-section-page_header');
+    this.header = document.querySelector('.section-header:has(sticky-header)');
+    this.scrollThreshold = document.querySelector('.section-notification-banner')?.offsetHeight || 40;
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
+
 
     // Use passive listener for better performance
     window.addEventListener('scroll', this.onScrollHandler, { passive: true });
@@ -79,13 +53,73 @@ if (!customElements.get('sticky-header')) {
   customElements.define('sticky-header', StickyHeader);
 }
 
-// window.addEventListener("scroll", updateScrollDirection); // add event listener
-
-function maybeOpenCart() {
-  const urlParams = new URLSearchParams(window.location.search);
-  if (window.location.pathname == "/cart") {
-    openModal('cartDrawer')
-  } else if (urlParams.get("cart-open") === "true") {
-    openModal('cartDrawer')
+/**
+ * <menu-item> — click-to-open dropdown for a top-level header menu item that
+ * has sublinks. Open state is exposed as `data-open="true"` on the host so
+ * styling can target `[data-open="true"]` selectors from CSS or Tailwind
+ * (`group-data-[open=true]/menu:*`). The trigger button also mirrors state via
+ * `aria-expanded`. Only one menu-item may be open at a time — opening another
+ * or clicking outside closes the current one, and Escape closes + refocuses.
+ */
+class MenuItem extends HTMLElement {
+  constructor() {
+    super();
+    this.onDocumentClick = this.onDocumentClick.bind(this);
+    this.onKeydown = this.onKeydown.bind(this);
   }
+
+  connectedCallback() {
+    this.trigger = this.querySelector('[data-menu-trigger]');
+    this.trigger?.addEventListener('click', this.onTriggerClick.bind(this));
+    document.addEventListener('click', this.onDocumentClick);
+    document.addEventListener('keydown', this.onKeydown);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('click', this.onDocumentClick);
+    document.removeEventListener('keydown', this.onKeydown);
+  }
+
+  get isOpen() {
+    return this.dataset.open === 'true';
+  }
+
+  set isOpen(value) {
+    this.dataset.open = value ? 'true' : 'false';
+    this.trigger?.setAttribute('aria-expanded', value ? 'true' : 'false');
+  }
+
+  onTriggerClick(event) {
+    event.preventDefault();
+    if (this.isOpen) this.close();
+    else this.open();
+  }
+
+  open() {
+    // Only one menu-item open at a time
+    document.querySelectorAll('menu-item[data-open="true"]').forEach((item) => {
+      if (item !== this) item.close();
+    });
+    this.isOpen = true;
+  }
+
+  close() {
+    this.isOpen = false;
+  }
+
+  onDocumentClick(event) {
+    if (!this.isOpen) return;
+    if (this.contains(event.target)) return;
+    this.close();
+  }
+
+  onKeydown(event) {
+    if (event.key !== 'Escape' || !this.isOpen) return;
+    this.close();
+    this.trigger?.focus();
+  }
+}
+
+if (!customElements.get('menu-item')) {
+  customElements.define('menu-item', MenuItem);
 }

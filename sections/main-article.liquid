@@ -1,0 +1,193 @@
+{% comment %}
+  Article (blog post) page. Featured image, title + meta, rich-text content,
+  optional comments, and previous/next navigation.
+{% endcomment %}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+
+<article
+  class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <div class="max-w-narrow mx-auto pt-v-space-sm">
+    {% render 'breadcrumbs' %}
+  </div>
+  <div class="max-w-narrow mx-auto py-v-space-sm">
+    <header class="text-center flex flex-col gap-gutter pb-v-space-sm">
+      <a href="{{ blog.url }}" class="body-small animate-underline underlined self-center">{{ blog.title }}</a>
+      <h1 class="h2" itemprop="headline">{{ article.title }}</h1>
+      {% if section.settings.show_date or section.settings.show_author %}
+        <div class="body-small text-light-text-color flex items-center justify-center gap-2">
+          {% if section.settings.show_date %}
+            <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+              {{ article.published_at | date: '%B %-d, %Y' }}
+            </time>
+          {% endif %}
+          {% if section.settings.show_date and section.settings.show_author %}<span aria-hidden="true">&middot;</span>{% endif %}
+          {% if section.settings.show_author %}
+            <span itemprop="author">{{ article.author }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </header>
+  </div>
+
+  {% if section.settings.show_featured_image and article.image %}
+    <div class="max-w-site-max-w mx-auto pb-v-space-sm">
+      {% render 'image',
+        src: article.image,
+        sizes: '(min-width: 1200px) 1100px, 100vw',
+        loading: 'eager',
+        fetchpriority: 'high',
+        class: 'w-full',
+        alt: article.image.alt | default: article.title
+      %}
+    </div>
+  {% endif %}
+
+  <div class="max-w-narrow mx-auto">
+    <div class="rte body" itemprop="articleBody">
+      {{ article.content }}
+    </div>
+
+    {% if article.tags.size > 0 and section.settings.show_tags %}
+      <div class="flex flex-wrap gap-half-gutter pt-v-space-sm">
+        {% for tag in article.tags %}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="button small grey">{{ tag }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if blog.previous_article or blog.next_article %}
+      <nav class="flex justify-between gap-gutter pt-v-space-sm border-t border-hr-color mt-v-space-sm" aria-label="Article navigation">
+        <div>
+          {% if blog.previous_article %}
+            <a href="{{ blog.previous_article.url }}" class="body-small animate-underline underlined" rel="prev">&larr; {{ blog.previous_article.title }}</a>
+          {% endif %}
+        </div>
+        <div class="text-right">
+          {% if blog.next_article %}
+            <a href="{{ blog.next_article.url }}" class="body-small animate-underline underlined" rel="next">{{ blog.next_article.title }} &rarr;</a>
+          {% endif %}
+        </div>
+      </nav>
+    {% endif %}
+
+    {% if blog.comments_enabled? %}
+      <div id="comments" class="pt-v-space border-t border-hr-color mt-v-space-sm">
+        <h2 class="h4 pb-gutter">
+          {% if article.comments_count > 0 %}
+            {{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}
+          {% else %}
+            Leave a comment
+          {% endif %}
+        </h2>
+
+        {% if article.comments_count > 0 %}
+          {% paginate article.comments by 10 %}
+            <ul class="flex flex-col gap-gutter pb-v-space-sm" role="list">
+              {% for comment in article.comments %}
+                <li class="theme-light-grey rounded p-gutter">
+                  <div class="rte body-small">{{ comment.content }}</div>
+                  <p class="body-small text-light-text-color pt-2">
+                    — {{ comment.author }}, <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">{{ comment.created_at | date: '%B %-d, %Y' }}</time>
+                  </p>
+                </li>
+              {% endfor %}
+            </ul>
+            {% render 'paginate-nav', class: 'pb-v-space-sm', paginate: paginate %}
+          {% endpaginate %}
+        {% endif %}
+
+        {% form 'new_comment', article, class: 'flex flex-col gap-gutter' %}
+          {% if form.posted_successfully? %}
+            <p class="theme-light-grey rounded p-gutter body" role="status">
+              {% if blog.moderated? %}Thanks — your comment will be posted once approved.{% else %}Thanks for your comment!{% endif %}
+            </p>
+          {% elsif form.errors %}
+            <div class="text-error body-small" role="alert">{{ form.errors | default_errors }}</div>
+          {% endif %}
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+            <div class="flex flex-col gap-1">
+              <label for="CommentAuthor">Name <span aria-hidden="true">*</span></label>
+              <input type="text" id="CommentAuthor" name="comment[author]" value="{{ form.author }}" required aria-required="true" autocomplete="name">
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="CommentEmail">Email <span aria-hidden="true">*</span></label>
+              <input type="email" id="CommentEmail" name="comment[email]" value="{{ form.email }}" required aria-required="true" autocomplete="email" autocapitalize="off" spellcheck="false">
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="CommentBody">Comment <span aria-hidden="true">*</span></label>
+            <textarea id="CommentBody" name="comment[body]" rows="5" required aria-required="true">{{ form.body }}</textarea>
+          </div>
+          <div>
+            <button type="submit" class="button">Post comment</button>
+          </div>
+        {% endform %}
+      </div>
+    {% endif %}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "section-main-article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "Show Featured Image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show Date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show Author",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show Tags",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,199 @@
+{%- liquid
+  assign symbol = block.settings.symbol
+  assign label = block.settings.label
+  assign custom_icon = block.settings.custom_icon
+  assign default_icon = block.settings.icon
+  assign count_appearance = block.settings.count_appearance
+  assign a11y_title = 'header.cart_label' | t
+
+  assign count_prepend = ''
+  assign count_append = ''
+  if count_appearance == 'text'
+    assign count_prepend = '('
+    assign count_append = ')'
+  endif
+-%}
+
+{%- comment -%}
+  Theme settings → Cart. With no drawer rendered in "page" mode, the trigger has to be a
+  real link to /cart rather than a button that opens nothing.
+{%- endcomment -%}
+{%- assign cart_trigger_class = 'header-trigger cart-trigger shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center gap-2 whitespace-nowrap cursor-pointer leading-none' -%}
+{%- if settings.cart_type == 'page' -%}
+<a
+  href="{{ routes.cart_url }}"
+  class="{{ cart_trigger_class }} border-none"
+  title="{{ a11y_title }}"
+  aria-label="{{ a11y_title }}"
+  {{ block.shopify_attributes }}
+>
+{%- else -%}
+<modal-trigger
+  data-modal-id="cartDrawer"
+  class="{{ cart_trigger_class }}"
+  role="button"
+  tabindex="0"
+  title="{{ a11y_title }}"
+  aria-label="{{ a11y_title }}"
+  {{ block.shopify_attributes }}
+>
+{%- endif -%}
+  {%- if symbol == 'circle' -%}
+    <span
+      id="cartCount"
+      class="cart-count-circle shrink-0 body-small w-6 h-6 flex items-center justify-center rounded-full text-center"
+      data-empty-hide="true"
+    >
+      {{ cart.item_count }}
+    </span>
+  {%- elsif symbol == 'icon' or symbol == 'custom' -%}
+    <span class="shrink-0 relative flex items-center">
+      {%- if symbol == 'custom' and custom_icon != blank -%}
+        {% render 'header-icon',
+          icon: custom_icon,
+          icon_inverted: block.settings.custom_icon_inverted,
+          size: block.settings.icon_width,
+          alt: ''
+        %}
+      {%- else -%}
+        <span
+        class="shrink-0 material-icon block"
+        style="font-size: {{ block.settings.icon_width | default: 18 }}px;"
+        aria-hidden="true"
+      >{{ default_icon }}</span>
+      {%- endif -%}
+      {%- if count_appearance == 'bubble' -%}
+        <span
+          id="cartCount"
+          class="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full theme-dark text-[10px] leading-none flex items-center justify-center"
+          data-empty-hide="true"
+        >
+          {{ cart.item_count }}
+        </span>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+
+  {%- if label != blank -%}
+    <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
+  {%- endif -%}
+
+  {%- if symbol != 'circle' and count_appearance == 'superscript' -%}
+    <sup id="cartCount" class="shrink-0 body-small leading-none -translate-y-1" data-empty-hide="true">
+      {{ cart.item_count }}
+    </sup>
+  {%- elsif symbol != 'circle' and count_appearance == 'text' -%}
+    <span
+      id="cartCount"
+      class="shrink-0 body-small md:body"
+      data-prepend="{{ count_prepend }}"
+      data-append="{{ count_append }}"
+      data-empty-hide="true"
+    >
+      {%- if cart.item_count > 0 -%}{{ count_prepend }}{{ cart.item_count }}{{ count_append }}{%- endif -%}
+    </span>
+  {%- endif -%}
+{%- if settings.cart_type == 'page' -%}</a>{%- else -%}</modal-trigger>{%- endif -%}
+
+{% schema %}
+{
+  "name": "Header Cart",
+  "class": "block-header-cart h-full",
+  "settings": [
+    {
+      "type": "select",
+      "id": "symbol",
+      "label": "Symbol",
+      "default": "circle",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Circle (count only)",
+          "value": "circle"
+        },
+        {
+          "label": "Icon",
+          "value": "icon"
+        },
+        {
+          "label": "Custom Icon",
+          "value": "custom"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Material icon name",
+      "default": "shopping_bag",
+      "info": "Any Material Symbols name (e.g. shopping_bag, shopping_cart).",
+      "visible_if": "{{ block.settings.symbol == 'icon' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Uploaded SVG or PNG. Falls back to the default icon if empty.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon_inverted",
+      "label": "Custom icon \u2014 inverted",
+      "info": "Optional. Crossfades in over a transparent header, matching the logo.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "label": "Icon size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "visible_if": "{{ block.settings.symbol != 'none' and block.settings.symbol != 'circle' }}",
+      "info": "Applies to both the built-in and uploaded icons."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Leave blank to hide. Override the default \"Cart\" wording \u2014 accessibility text always uses the translated default."
+    },
+    {
+      "type": "header",
+      "content": "Item count",
+      "visible_if": "{{ block.settings.symbol != 'circle' }}"
+    },
+    {
+      "type": "select",
+      "id": "count_appearance",
+      "label": "Count appearance",
+      "default": "bubble",
+      "visible_if": "{{ block.settings.symbol != 'circle' }}",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Superscript",
+          "value": "superscript"
+        },
+        {
+          "label": "Bubble",
+          "value": "bubble"
+        },
+        {
+          "label": "Text \u2014 Cart (2)",
+          "value": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

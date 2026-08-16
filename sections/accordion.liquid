@@ -1,42 +1,33 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% capture padding_class %}
-  {% render 'util-section-padding' with space: section.settings.section_padding %}
+  {% render 'util-section-padding', space: section.settings.section_padding %}
 {% endcapture %}
 
 <div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} w-full">
 
   <div class="px-margin relative">
 
-    <div class="text-center">
+    <div class="text-center mx-auto max-w-site-max-w mb-v-space-sm">
       <h3 class="h2">
-        <div class="text-dark">{{ section.settings.title }}</div>
+        {% content_for 'block',
+          type: '_text-lockup',
+          id: 'text-lockup',
+          classname: 'max-w-narrow text-balance'
+        %}
       </h3>
     </div>
 
-    <div class="grid sm:grid-cols-12 gap-gutter">
-      <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4 pt-v-space-sm">
-        <accordion-list class="block border-b border-hr-color">
-          {% for row in section.blocks %}
-            <collapsible-item class="border-t border-hr-color" id="{{row.id}}" {{ row.shopify_attributes }}>
-              <button data-collapsible="trigger" class="text-left h5 flex justify-between gap-x-gutter w-full py-4">
-                <div class="pt-[.125em]">{{ row.settings.title }}</div>
-                <div class="h-[1.125em] shrink-0 grow-0 flex items-center justify-center pb-[1px]">
-                  <div data-collapsible="icon">{% render 'icon_animated', icon: 'plus' %}</div>
-                </div>
-              </button>
-              <div data-collapsible="content">
-                <div>
-                  <div class="pb-6">{{ row.settings.text }}</div>
-                </div>
-              </div>
-            </collapsible-item>
-          {% endfor %}
-        </accordion-list>
+    <in-view class="grid sm:grid-cols-12 gap-gutter mx-auto max-w-site-max-w">
+      <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4">
+        {% content_for 'block',
+          type: '_accordion',
+          id: 'accordion'
+        %}
       </div>
-    </div>
+    </in-view>
 
   </div>
 
@@ -52,13 +43,6 @@
       "content": "Accordion Section"
     },
     {
-      "type": "text",
-      "id": "title",
-      "label": "Headline",
-      "default": "FAQs"
-    },
-    // Section Spacing
-    {
       "type": "header",
       "content": "Spacing & Sizing"
     },
@@ -68,7 +52,7 @@
       "label": "Section Color",
       "default": "theme-default"
     },
-		{
+    {
       "type": "select",
       "id": "section_padding",
       "default": "none",
@@ -124,50 +108,20 @@
       ]
     }
   ],
-  "blocks": [
-		{
-      "type": "row",
-      "name": "Row",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Lorem ipsum dolor sit amet, consectetur"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining unchanged.</p>"
-        }
-      ]
-    }
-	],
+  "blocks": [],
   "presets": [
     {
       "name": "Accordion",
       "blocks": [
         {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
-          }
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
         },
         {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
-          }
-        },
-        {
-          "type": "row",
-          "settings": {
-            "title": "The question is?",
-            "text": "<p>The answer to the question.<\/p>"
-          }
+          "id": "accordion",
+          "type": "_accordion",
+          "static": true
         }
       ]
     }

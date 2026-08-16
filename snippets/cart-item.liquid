@@ -1,0 +1,77 @@
+{%-liquid
+  assign image = item.product.featured_image
+  if item.image
+    assign image = item.image
+  endif
+
+  comment
+    Thumbnails follow the product card's ratio setting, resolved through the same util
+    as everywhere else. The number is both the --card-aspect value below and the crop
+    the image snippet applies to the srcset.
+  endcomment
+  capture card_aspect
+    render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+  endcapture
+  assign card_aspect = card_aspect | strip
+-%}
+
+{%- comment -%}
+  @param {object} item
+  @param {boolean} [qty]     - false renders a Remove link instead of the quantity stepper
+  @param {boolean} [compact] - drop both, for read-only contexts like the mini cart
+
+  data-line-key is the line item key, so a specific line can be picked out of freshly
+  rendered section markup.
+{%- endcomment -%}
+<div id="cartLineItem" data-line-key="{{ item.key }}" class="flex gap-x-gutter">
+  <div class="w-24">
+    <div class="aspect-(--card-aspect) relative w-full rounded overflow-hidden" style="--card-aspect: {{ card_aspect }};">
+      {%- comment -%} sizes: the thumbnail column is w-24, i.e. 96px; srcset covers the DPR. {%- endcomment -%}
+      {% render 'image',
+        src: image,
+        layout: 'cover',
+        loading: 'eager',
+        ratio: card_aspect,
+        sizes: '96px',
+        width: 100
+      %}
+    </div>
+  </div>
+  <div id="cartUpdate" class="grow basis-0 col-span-4 flex flex-col">
+    <div class="flex justify-between grow gap-x-gutter">
+      <a href="{{ item.url }}">
+        {{ item.product.title }}
+        <div class="body-small">
+          {{ item.variant.title }}
+          {%- for property in item.properties -%}
+            <span class="block text-light-text-color">{{ property[0] }}: {{ property[1] }}
+            </span>
+          {%- endfor -%}
+        </div>
+      </a>
+      <div class="shrink-0">
+        <div>
+          {% render 'product-price',
+            item: item.variant,
+            times: item.quantity
+          %}
+        </div>
+        {% if qty == false and compact != true %}
+          <cart-remove-item>
+            <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
+          </cart-remove-item>
+        {% endif %}
+      </div>
+    </div>
+    {% if qty != false and compact != true %}
+      <div class="flex justify-between items-center">
+        <div>
+          {% render 'cart-item-quantity-adjust', item: item %}
+        </div>
+        <cart-remove-item>
+          <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
+        </cart-remove-item>
+      </div>
+    {% endif %}
+  </div>
+</div>

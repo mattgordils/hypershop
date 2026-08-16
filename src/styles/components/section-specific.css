@@ -1,0 +1,37 @@
+.page-sections {
+  & .shopify-section {
+    &:first-of-type {
+      /* If first section, adjust the definition of "full screen height" */
+      & .h-screen-height {
+        height: calc(100svh - var(--spacing-full-header-height));
+      }
+      &:has(.header-overlap) {
+        .h-screen-height {
+          height: calc(100svh - var(--header-offset));
+        }
+        margin-top: calc(var(--spacing-header-height) * -1);
+      }
+    }
+  }
+}
+
+.lockup-left .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-left items-start mx-auto;
+  }
+}
+
+.lockup-center .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-center items-center mx-auto;
+  }
+}
+
+.lockup-right .block-text-lockup {
+  > div,
+  > in-view {
+    @apply text-right items-end mx-auto;
+  }
+}

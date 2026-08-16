@@ -1,21 +1,19 @@
+{%- comment -%} Slideshow + Embla load only where a carousel exists, not in the global bundle. {%- endcomment -%}
+<script src="{{ 'slideshow.js' | asset_url }}" defer></script>
+
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {%-liquid
-  assign hasMedia = false
-  assign height_auto = false
-  assign media_position = 'cover'
   if section.settings.image != blank
-    assign hasMedia = true
   endif
 
   if section.settings.section_height == 'auto-height'
-  assign height_auto = true
   endif
 -%}
 
-<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner">
+<div class="{{ spacing_class }} {{ section.settings.section_height }} section-inner{% if section.settings.header_overlap %} header-overlap{% endif %}">
   <div class="relative h-full{% if section.settings.section_width == 'margins' %} mx-margin{% endif %}">
     {% if section.blocks.size > 1 %}
     <slide-show
@@ -49,10 +47,10 @@
 
 {% schema %}
 {
-	"name": "Wide Media",
+  "name": "Wide Media",
   "tag": "section",
   "class": "section-wide-media",
-	"settings": [
+  "settings": [
     {
       "type": "header",
       "content": "Spacing & Sizing"
@@ -127,6 +125,13 @@
       ]
     },
     {
+      "type": "checkbox",
+      "id": "header_overlap",
+      "label": "Header Overlap",
+      "info": "Overlap the site header on top of this section",
+      "default": false
+    },
+    {
       "type": "header",
       "content": "Slideshow Settings",
       "info": "Only apply if there are multiple slides"
@@ -146,19 +151,21 @@
       "label": "Overlay Opacity",
       "default": 6,
       "visible_if": "{{ section.settings.slideshow_autoplay == true }}"
-    },
-	],
-	"blocks": [
+    }
+  ],
+  "blocks": [
     {
       "type": "_media-slide"
     }
-	],
-	"presets": [
+  ],
+  "presets": [
     {
       "name": "Wide Media",
       "category": "Text",
-      "blocks": []
-	  }
+      "blocks": [
+
+      ]
+    }
   ]
 }
 {% endschema %}

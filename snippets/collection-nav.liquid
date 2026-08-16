@@ -1,0 +1,70 @@
+{%- comment -%}
+  Quick switcher between collections, above the grid.
+
+  @param {object} collections - a collection_list setting
+  @param {string} [layout]    - 'link' (default) | 'thumbnail'
+  @param {string} [class]     - extra classes on the wrapper
+{%- endcomment -%}
+
+{%- liquid
+  assign nav_layout = layout | default: 'link'
+-%}
+
+{%- if collections != blank -%}
+  <nav class="collection-nav {{ class }}" aria-label="{{ 'general.collections' | t }}">
+    {%- comment -%}
+      Scrolls sideways rather than wrapping, so a long list stays one row. The negative
+      margin lets items bleed to the screen edge while keeping the first one aligned.
+    {%- endcomment -%}
+    <ul class="flex gap-gutter overflow-x-auto -mx-margin px-margin {% if nav_layout == 'thumbnail' %}items-start{% else %}items-center{% endif %}">
+      {%- for nav_collection in collections -%}
+        {%- liquid
+          assign is_current = false
+          if collection.handle == nav_collection.handle
+            assign is_current = true
+          endif
+
+          # Collections often have no image of their own — fall back to a product's.
+          assign nav_image = nav_collection.image | default: nav_collection.products.first.featured_image
+        -%}
+
+        {%- if nav_layout == 'thumbnail' -%}
+          <li class="shrink-0 w-[120px] md:w-[150px]">
+            <a
+              href="{{ nav_collection.url }}"
+              class="block group border-none"
+              {% if is_current %}aria-current="page"{% endif %}
+            >
+              <div class="aspect-4/5 relative overflow-hidden rounded-base bg-light-grey">
+                {%- if nav_image != blank -%}
+                  {% render 'image',
+                    src: nav_image,
+                    ratio: .8,
+                    layout: 'cover',
+                    sizes: '150px',
+                    alt: nav_collection.title
+                  %}
+                {%- endif -%}
+              </div>
+              <div>
+                <span class="animate-underline{% if is_current %} underlined{% endif %} body-small pt-2">
+                  {{ nav_collection.title }}
+                </span>
+              </div>
+            </a>
+          </li>
+        {%- else -%}
+          <li class="shrink-0">
+            <a
+              href="{{ nav_collection.url }}"
+              class="h6 animate-underline{% if is_current %} underlined{% else %} text-light-text-color hover:text-text-color transition{% endif %}"
+              {% if is_current %}aria-current="page"{% endif %}
+            >
+              {{ nav_collection.title }}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endif -%}

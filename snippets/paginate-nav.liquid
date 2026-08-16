@@ -20,13 +20,13 @@
       <li>
         {%- if paginate.previous -%}
           <a href="{{ paginate.previous.url }}" class="{{ arrow_class }}" aria-label="Previous page">
-            {% render 'icon_material', icon: 'arrow_back' %}
+            {% render 'icon-material', icon: 'arrow_back' %}
           </a>
         {%- else -%}
           {% comment %}
           Don't show prev arrow if on first page
           <span class="{{ arrow_class }} opacity-40 cursor-not-allowed" aria-disabled="true">
-            {% render 'icon_material', icon: 'arrow_back' %}
+            {% render 'icon-material', icon: 'arrow_back' %}
           </span>
           {% endcomment %}
         {%- endif -%}
@@ -119,13 +119,13 @@
       <li>
         {%- if paginate.next -%}
           <a href="{{ paginate.next.url }}" class="{{ arrow_class }}" aria-label="Next page">
-            {% render 'icon_material', icon: 'arrow_forward' %}
+            {% render 'icon-material', icon: 'arrow_forward' %}
           </a>
         {%- else -%}
           {% comment %}
           Don't show next arrow if on first page
           <span class="{{ arrow_class }} opacity-40 cursor-not-allowed" aria-disabled="true">
-            {% render 'icon_material', icon: 'arrow_forward' %}
+            {% render 'icon-material', icon: 'arrow_forward' %}
           </span>
           {% endcomment %}
         {%- endif -%}

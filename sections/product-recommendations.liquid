@@ -1,26 +1,41 @@
 <script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
 
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
+{%-liquid
+  comment
+    `default` rather than `if section.settings.product`: an unset product picker
+    hands back an EmptyDrop, not nil, and only nil and false are falsy in Liquid
+    — so the `if` always fired and overwrote the page's product with the empty
+    one, leaving the element with no id to fetch against. The filter treats the
+    EmptyDrop as empty and falls through, which is why main-product's identical
+    line has always worked.
+  endcomment
+  assign section_product = section.settings.product | default: product
+-%}
+
 <div class="px-margin overflow-hidden {{ spacing_class }}">
+  {%- if section.settings.heading != blank -%}
+    <div class="mx-auto max-w-site-max-w">
+      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading }}</h2>
+    </div>
+  {%- endif -%}
+
   <product-recommendations
-    class="product-recommendations"
-    data-product-handle="{{ product.handle }}"
-    data-product-id="{{ product.id }}"
-    {% if product.collections.size > 0 %}
-    data-collection-handle="{{ product.collections.first.handle }}"
+    class="product-recommendations block mx-auto max-w-site-max-w"
+    data-product-handle="{{ section_product.handle }}"
+    data-product-id="{{ section_product.id }}"
+    {% if section_product.collections.size > 0 %}
+    data-collection-handle="{{ section_product.collections.first.handle }}"
     {% endif %}
-    data-product-tags="{{ product.tags | join: ',' }}"
+    data-product-tags="{{ section_product.tags | join: ',' }}"
     data-min-products="{{ section.settings.min_products }}"
     data-max-products="{{ section.settings.max_products }}"
     data-hide-sold-out="{{ section.settings.hide_sold_out }}"
     data-section-id="{{ section.id }}"
   >
-    {%- if section.settings.heading != blank -%}
-      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading }}</h2>
-    {%- endif -%}
 
     <div data-loading class="text-center py-8">
       <p>Loading recommendations...</p>
@@ -45,6 +60,12 @@
       "id": "heading",
       "default": "You may also like",
       "label": "Heading"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "defaults to current product page if on a product detail page"
     },
     {
       "type": "range",

@@ -1,0 +1,283 @@
+{% comment %}
+  Shared product results grid. Used by sections/product-grid.liquid (collection)
+  and sections/main-search.liquid (search) so filters, sort, columns, promo cards
+  and pagination behave identically on both.
+
+  @param {object} products       - paginatable list (collection.products or search.results)
+  @param {string} results_url    - base URL for filter/sort AJAX (collection.url, or search URL incl. q & type)
+  @param {string} section_id     - section.id (Section Rendering API + scoping)
+  @param {number} [per_page]     - products per page (default 24)
+  @param {string} [pagination_style] - 'numbered' | 'load_more' | 'infinite' (default 'numbered')
+  @param {number} [columns]      - desktop columns (default 4)
+  @param {number} [tablet_columns] - default 3
+  @param {number} [mobile_columns] - default 2
+  @param {object} [filters]      - filter list (collection.filters / search.filters)
+  Filter behaviour (layout, price style, hidden filters) comes from Theme settings → Filters.
+  @param {object} [sort_options] - sort options
+  @param {string} [sort_by]      - active sort value
+  @param {number} [result_count] - total result count
+  @param {string} [promos]       - pre-rendered promo card HTML (built by the section, collection only)
+  @param {string} [spacing_class]
+{% endcomment %}
+
+{%- liquid
+  assign pagination_style = pagination_style | default: 'numbered'
+  assign columns = columns | default: 4
+  assign tablet_columns = tablet_columns | default: 3
+  assign mobile_columns = mobile_columns | default: 2
+
+  comment
+    `sizes` has to describe the width each card actually renders at. A fixed guess (the
+    old '640px') makes the browser pick the srcset entry for 640 * DPR — a ~1280px file
+    for a ~340px slot on a retina screen. Derived from the column settings instead, so
+    changing the grid changes what gets downloaded.
+  endcomment
+  assign desktop_vw = 100 | divided_by: columns
+  assign tablet_vw = 100 | divided_by: tablet_columns
+  assign mobile_vw = 100 | divided_by: mobile_columns
+  assign card_sizes = '(min-width: 1024px) ' | append: desktop_vw | append: 'vw, (min-width: 640px) ' | append: tablet_vw | append: 'vw, ' | append: mobile_vw | append: 'vw'
+
+  assign filterable = false
+  if filters != blank
+    assign filterable = true
+  endif
+
+  # Filter behaviour is configured once, in Theme settings → Filters, so the collection
+  # grid and search inherit the same config with no per-section plumbing.
+  assign filter_layout = settings.filter_layout | default: 'drawer'
+
+  assign show_sidebar = false
+  if filterable and filter_layout == 'sidebar'
+    assign show_sidebar = true
+  endif
+
+  # Count of applied filters, for the drawer trigger. Mirrors what the snippet's
+  # active-filter chips show: one per active value, plus one for a set price range.
+  assign active_filter_count = 0
+  for filter in filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != null or filter.max_value.value != null
+        assign active_filter_count = active_filter_count | plus: 1
+      endif
+    else
+      assign active_filter_count = active_filter_count | plus: filter.active_values.size
+    endif
+  endfor
+
+  # Filter drawer: one per section, so two grids on a page can't collide.
+  assign filter_drawer_id = 'filterDrawer-' | append: section_id
+
+  # Drawer uses the FIRST color scheme — the site-wide default (as the search drawer does).
+  assign default_scheme = ''
+  for scheme in settings.color_schemes limit: 1
+    assign default_scheme = scheme.id
+  endfor
+-%}
+
+<collection-grid
+  id="collectionItems"
+  class="block px-margin {{ spacing_class }}"
+  data-url="{{ results_url }}"
+  data-section-id="{{ section_id }}"
+>
+  <div class="max-w-site-max-w mx-auto relative z-1{% if show_sidebar %} lg:grid lg:grid-cols-4 lg:gap-x-gutter{% endif %}">
+    {% if show_sidebar %}
+      {%- comment -%} Hidden on the wrapper, not the form — the active-filter chips sit outside the form. {%- endcomment -%}
+      <div class="hidden lg:block">
+        {% render 'filters', filters: filters, id_prefix: 'sidebar', section_id: section_id %}
+      </div>
+    {% endif %}
+    {%- comment -%}
+      Empty state. Filters stay rendered and interactive so the shopper can back out of
+      whatever produced zero results — the section is only skipped when there's nothing
+      to filter at all.
+    {%- endcomment -%}
+    <div class="{% if show_sidebar %}col-span-3{% endif %}">
+      <div class="relative z-4 flex gap-gutter justify-between align-baseline mb-gutter">
+        {% if result_count %}
+          <span class="body inline-block align-top text-light-text-color">{{ result_count }} Items</span>
+        {% endif %}
+
+        {% if sort_options.size > 0 %}
+          <div class="flex align-baseline justify-between">
+            {% if show_sidebar %}
+              <div id="sortItems" class="relative z-2 align-top {% if filterable %} hidden lg:inline-block{% else %} inline-block{% endif %}">
+                <button id="sortTrigger" class="body flex items-center justify-end gap-1 group">
+                  <span class="animate-underline pb-[.1em]">
+                    Sort By
+                    {% for option in sort_options %}
+                      {% if option.value == sort_by %}
+                        {{ option.name }}
+                      {% endif %}
+                    {% endfor %}
+                  </span>
+                  <span class="icon block -mt-[2px] transition">
+                    {% render 'icon-material', icon: 'keyboard_arrow_down', class: 'block' %}
+                  </span>
+                </button>
+                <ul
+                  id="sortList"
+                  class="hidden absolute top-[calc(100%+10px)] right-0 bg-bg flex flex-col items-start justify-start border rounded border-hr-color pl-4 pr-8 py-3"
+                >
+                  {% for option in sort_options %}
+                    {%- liquid
+                      assign bar_sort_id = 'Sort-' | append: section_id | append: '-' | append: forloop.index
+                      assign bar_sort_checked = false
+                      if option.value == sort_by
+                        assign bar_sort_checked = true
+                      endif
+                    -%}
+                    <li class="filter-item">
+                      {%- comment -%} marker: 'dot' keeps this dropdown looking as it does today {%- endcomment -%}
+                      {% render 'filter-option',
+                        type: 'radio',
+                        id: bar_sort_id,
+                        name: 'sort_by',
+                        value: option.value,
+                        label: option.name,
+                        checked: bar_sort_checked,
+                        marker: 'dot',
+                        class: 'body whitespace-nowrap'
+                      %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            {% if filterable %}
+              <modal-trigger
+                data-modal-id="{{ filter_drawer_id }}"
+                role="button"
+                tabindex="0"
+                aria-haspopup="dialog"
+                class="body inline-flex items-center gap-1 group align-top{% if show_sidebar %} lg:hidden{% endif %}"
+              >
+                <span class="animate-underline pb-[.1em]">
+                  {{ 'products.facets.filter_and_sort' | t }}{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
+                </span>
+                <span class="icon block -mt-[2px]">
+                  {% render 'icon-material', icon: 'tune', class: 'block' %}
+                </span>
+              </modal-trigger>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if products.size == 0 %}
+        <div class="py-v-space-sm text-center flex flex-col items-center gap-3{% if show_sidebar %} lg:col-span-3{% endif %}">
+          <h3 class="h3">{{ 'products.facets.empty_title' | t }}</h3>
+          <p class="body text-light-text-color max-w-narrow">
+            {{ 'products.facets.empty_text' | t }}
+          </p>
+          {% if active_filter_count > 0 %}
+            <button type="button" data-clear-all-filters class="button mt-2">{{ 'products.facets.clear_all_filters' | t }}</button>
+          {% endif %}
+        </div>
+      {% else %}
+      {%- comment -%} {% paginate %} runs in the section (paginatable objects can't be passed through {% render %}); we receive the current page + the paginate object {%- endcomment -%}
+      <in-view
+        class="product-grid__grid gap-x-gutter {% if settings.card_text_over_image %}gap-y-gutter{% else %}gap-y-v-space-sm{% endif %}"
+        style="--grid-cols-mobile: {{ mobile_columns }}; --grid-cols-tablet: {{ tablet_columns }}; --grid-cols-desktop: {{ columns }};"
+      >
+        {% for product in products %}
+          {%- comment -%} The first row is above the fold at any breakpoint — don't lazy-load it. {%- endcomment -%}
+          {%- assign card_loading = 'lazy' -%}
+          {%- if forloop.index <= columns -%}
+            {%- assign card_loading = 'eager' -%}
+          {%- endif -%}
+          <div>
+            {% render 'product-card', product: product, sizes: card_sizes, loading: card_loading %}
+          </div>
+        {% endfor %}
+
+        {%- comment -%} Promo cards: explicitly placed; products auto-flow (dense) around them. Pre-rendered by the section (settings/placement resolved against native section.blocks). {%- endcomment -%}
+        {{ promos }}
+      </in-view>
+      {% endif %}
+
+      {%- if paginate -%}
+        {%- case pagination_style -%}
+          {%- when 'load_more' -%}
+            {%- if paginate.next -%}
+              <load-more data-section-id="{{ section_id }}" data-grid-next="{{ paginate.next.url }}" class="flex justify-center pt-v-space-sm">
+                <button type="button" class="button">{{ 'products.pagination.load_more' | t }}</button>
+              </load-more>
+            {%- endif -%}
+          {%- when 'infinite' -%}
+            {%- if paginate.next -%}
+              <infinite-scroll data-section-id="{{ section_id }}" data-grid-next="{{ paginate.next.url }}" class="block w-full h-px" aria-hidden="true"></infinite-scroll>
+            {%- endif -%}
+          {%- else -%}
+            {% render 'paginate-nav', class: 'pt-v-space-sm', paginate: paginate %}
+        {%- endcase -%}
+      {%- endif -%}
+    </div>
+  </div>
+</collection-grid>
+
+{%- comment -%}
+  Filter drawer. Sits outside <collection-grid> so it isn't dimmed while results
+  load, but inside the section so it re-renders with fresh counts. The grid finds
+  it (and keeps it in sync) via data-filters-for, and re-applies `open` after a
+  re-render so filtering never closes the drawer.
+{%- endcomment -%}
+{% if filterable %}
+  <modal-component id="{{ filter_drawer_id }}" class="filter-container drawer">
+    <div class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] {{ default_scheme }} bg-bg z-1{% if show_sidebar %} lg:hidden!{% endif %}">
+      <div class="flex flex-col h-full">
+        <div class="shrink-0 h-header-height px-margin md:px-gutter w-full flex justify-between items-center border-hr-color">
+          <p class="h5">{{ 'products.facets.filter' | t }}</p>
+          <modal-trigger
+            class="filter-close button circle transparent -mr-[18px]"
+            role="button"
+            tabindex="0"
+            aria-label="Close filters"
+          >
+            <div class="icon material-icon text-[18px]">close</div>
+          </modal-trigger>
+        </div>
+
+        <div class="grow shrink overflow-y-auto overflow-x-hidden px-margin md:px-gutter pb-margin md:pb-gutter">
+          {%- comment -%} Sort rides along in the drawer — the bar's dropdown is the desktop affordance. {%- endcomment -%}
+          {% render 'filters',
+            filters: filters,
+            id_prefix: 'drawer',
+            section_id: section_id,
+            sort_options: sort_options,
+            sort_by: sort_by
+          %}
+        </div>
+      </div>
+    </div>
+
+    <modal-trigger class="overlay bg-text-color opacity-20{% if show_sidebar %} lg:hidden!{% endif %}"></modal-trigger>
+  </modal-component>
+{% endif %}
+
+{%- if pagination_style == 'load_more' -%}
+  <script src="{{ 'load-more.js' | asset_url }}" defer></script>
+{%- elsif pagination_style == 'infinite' -%}
+  <script src="{{ 'infinite-scroll.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-grid__grid {
+    display: grid;
+    grid-auto-flow: row dense;
+    grid-template-columns: repeat(var(--grid-cols-mobile, 2), minmax(0, 1fr));
+  }
+
+  @media (min-width: 640px) {
+    .product-grid__grid {
+      grid-template-columns: repeat(var(--grid-cols-tablet, 3), minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-grid__grid {
+      grid-template-columns: repeat(var(--grid-cols-desktop, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}

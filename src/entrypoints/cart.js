@@ -1,8 +1,16 @@
+const debounce = (fn, wait = 300) => {
+  let timer
+  return (...args) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(...args), wait)
+  }
+}
+
 // Refresh Cart
 const updateCartCount = () => {
   const cartCountItems = document.querySelectorAll('#cartCount')
   cartCountItems.forEach(item => {
-    const newCartCount = document.querySelector('#cartHeader').dataset.cartCount
+    const newCartCount = document.querySelector('#cartHeader')?.dataset.cartCount
     let prependContent = ''
     let appendContent = ''
     if (newCartCount > 0) {
@@ -25,61 +33,155 @@ const updateCartCount = () => {
   });
 }
 
-export const refreshCart = (fullRefresh = false) => {
-  const sectionTitle = 'page_cart-panel'
-  const cartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
-  if (!cartDrawer) {
-    // Don't run if no cart drawer section is found
+// Refresh a single cart surface (the cart drawer or the cart page) in place.
+// Every query is scoped to the surface's own root so the drawer and the cart page
+// can coexist on the cart page without colliding, even though they share the
+// same #cartContent / #cartLineItem / #cartUpdate hooks.
+//
+// `root` carries data-cart-section="{{ section.id }}" — the id has to come from Liquid,
+// not the section's filename. A section placed by a JSON template gets a generated id
+// (template--123__main), so hardcoding 'main-cart' silently matched nothing and the cart
+// page never refreshed.
+const refreshCartSection = (root, fullRefresh = false) => {
+  const sectionId = root?.dataset.cartSection
+  if (!sectionId || !root.querySelector('#cartContent')) {
+    // This cart surface isn't on the current page — nothing to refresh
     return false
   }
 
-  fetch(window.Shopify.routes.root + "?sections=" + sectionTitle)
+  return fetch(window.Shopify.routes.root + "?sections=" + sectionId)
     .then(res => res.json())
     .then(res => {
-      const currentCartDrawer = document.querySelector('#shopify-section-' + sectionTitle + ' #cartContent')
+      const currentCartContent = root.querySelector('#cartContent')
 
-      var el = document.createElement( 'div' );
-      el.innerHTML = res[sectionTitle]
-      const oldCartCount = document.querySelector('#shopify-section-' + sectionTitle + ' #cartHeader').dataset.cartCount
-      const newCartCount = el.querySelector('#cartHeader').dataset.cartCount
+      const el = document.createElement('div')
+      el.innerHTML = res[sectionId]
 
-      const oldlineCount = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
-      const newlineCount = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartLineItem')?.length
+      const oldCartCount = root.querySelector('#cartHeader')?.dataset.cartCount
+      const newCartCount = el.querySelector('#cartHeader')?.dataset.cartCount
 
-      if (newCartCount == 0 || oldCartCount == 0 || (oldlineCount !== newlineCount)) {
+      const oldLineCount = root.querySelectorAll('#cartLineItem')?.length
+      const newLineCount = el.querySelectorAll('#cartLineItem')?.length
+
+      if (newCartCount == 0 || oldCartCount == 0 || oldCartCount == null || (oldLineCount !== newLineCount)) {
         fullRefresh = true
       }
 
-      fullRefresh = true
-
       if (fullRefresh) {
-        // Full Cart Refresh
-        const cartContent = el.querySelector('#cartContent')
-        const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        
-        currentCartDrawer.outerHTML = cartContent.outerHTML
-        updateItems?.forEach((item, index) => {
-          if (updatedItems[index]?.innerHTML && item) {
-            item.innerHTML = updatedItems[index].innerHTML
-          }
-        });
+        const newCartContent = el.querySelector('#cartContent')
+        if (newCartContent && currentCartContent) {
+          // The note lives inside #cartContent, so a full refresh would discard whatever
+          // is being typed (removing an item mid-sentence, say). Carry the in-progress
+          // text and the caret across the swap, then let the component save it.
+          const oldNote = currentCartContent.querySelector('[data-cart-note]')
+          const noteValue = oldNote?.value
+          const noteFocused = oldNote && document.activeElement === oldNote
+          const caret = oldNote?.selectionStart
 
-        updateCartCount()
-      } else {
-        // Update Cart Pieces
-        const updateItems = document.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        const updatedItems = el.querySelectorAll('#shopify-section-' + sectionTitle + ' #cartUpdate')
-        
-        updateItems?.forEach((item, index) => {
-          if (updatedItems[index]?.innerHTML && item) {
-            item.innerHTML = updatedItems[index].innerHTML
-          }
-        });
+          currentCartContent.outerHTML = newCartContent.outerHTML
 
-        updateCartCount()
+          const freshNote = root.querySelector('[data-cart-note]')
+          if (freshNote && noteValue != null && freshNote.value !== noteValue) {
+            freshNote.value = noteValue
+            freshNote.dispatchEvent(new Event('input', { bubbles: true }))
+            if (noteFocused) {
+              freshNote.focus()
+              freshNote.setSelectionRange(caret, caret)
+            }
+          }
+        }
       }
+
+      // Update the partial pieces that live outside #cartContent or need
+      // syncing after a partial change (header count, shipping meter, totals).
+      const updateItems = root.querySelectorAll('#cartUpdate')
+      const updatedItems = el.querySelectorAll('#cartUpdate')
+      updateItems?.forEach((item, index) => {
+        if (updatedItems[index]?.innerHTML && item) {
+          item.innerHTML = updatedItems[index].innerHTML
+        }
+      });
+
+      updateCartCount()
     })
+}
+
+// Refresh every cart surface present on the page — the drawer (rendered in the layout)
+// and, on the cart page, the cart section too. Both tag themselves with
+// data-cart-section, so new surfaces are picked up without touching this file.
+//
+// Only #cartContent and the #cartUpdate fragments are swapped, never the whole section:
+// app blocks live outside #cartContent, so their DOM (and any JS an app bound to it)
+// survives a cart update untouched.
+export const refreshCart = (fullRefresh = false) => {
+  document.querySelectorAll('[data-cart-section]').forEach((root) => {
+    refreshCartSection(root, fullRefresh)
+  })
+}
+
+// Order note. Saves to cart.note as the shopper types (debounced) and again on blur, so
+// the note survives a cart refresh — a refresh re-renders it from the saved cart, and
+// anything still unsaved would be lost.
+//
+// Deliberately does NOT call refreshCart(): re-rendering the cart while someone is typing
+// would blow away the textarea they're in.
+if (!customElements.get("cart-note")) {
+  customElements.define(
+    "cart-note",
+    class CartNote extends HTMLElement {
+      connectedCallback() {
+        this.controller = new AbortController()
+        this.input = this.querySelector("[data-cart-note]")
+        this.status = this.querySelector("[data-cart-note-status]")
+        if (!this.input) return
+
+        this.lastSaved = this.input.value
+        this.debouncedSave = debounce(() => this.save(), 600)
+
+        this.input.addEventListener("input", this.debouncedSave, { signal: this.controller.signal })
+        this.input.addEventListener("blur", () => this.save(), { signal: this.controller.signal })
+      }
+
+      disconnectedCallback() {
+        this.controller?.abort()
+        this.saveController?.abort()
+      }
+
+      save = () => {
+        const note = this.input.value
+        if (note === this.lastSaved) return
+
+        this.saveController?.abort()
+        this.saveController = new AbortController()
+        this.lastSaved = note
+
+        fetch(window.Shopify.routes.root + "cart/update.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ note }),
+          signal: this.saveController.signal,
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            this.setStatus("Note saved")
+          })
+          .catch((error) => {
+            if (error.name === "AbortError") return
+            console.error("Error saving cart note:", error)
+            this.lastSaved = null // let the next attempt retry
+            this.setStatus("Couldn't save your note")
+          })
+      }
+
+      setStatus = (message) => {
+        if (!this.status) return
+        this.status.textContent = message
+        this.status.classList.remove("opacity-0")
+        clearTimeout(this.statusTimer)
+        this.statusTimer = setTimeout(() => this.status.classList.add("opacity-0"), 2000)
+      }
+    }
+  )
 }
 
 // Remove Cart Item
@@ -389,8 +491,6 @@ if (!customElements.get("discount-remove")) {
         this.button.disabled = true;
         this.button.classList.add('opacity-50');
 
-        console.log('Removing discount...');
-
         // Remove discount by sending empty string to /cart/update.js
         fetch(window.Shopify.routes.root + 'cart/update.js', {
           method: 'POST',
@@ -403,8 +503,6 @@ if (!customElements.get("discount-remove")) {
         })
         .then(response => response.json())
         .then(data => {
-          console.log('Discount removed:', data);
-
           // Refresh the cart to show updated totals
           refreshCart(true);
 

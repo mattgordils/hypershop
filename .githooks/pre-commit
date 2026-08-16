@@ -1,0 +1,93 @@
+#!/bin/sh
+# Build the theme before every commit, so whatever lands in the repo is the production
+# output. The Shopify GitHub integration deploys the repo verbatim — if assets/ held a
+# development build, that's what would go live.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+
+set -e
+
+# ---------------------------------------------------------------------------
+# Locate a working Node.
+#
+# GUI git clients (SourceTree, Tower, Fork) don't load your shell profile, so nvm's node
+# isn't on PATH. Worse, a machine can have a stale `npm` from an old system install —
+# /usr/local/bin/npm surviving without its node — which looks fine to `command -v npm`
+# and then dies as `env: node: No such file or directory` when npm's shebang runs.
+#
+# So: test that node actually EXECUTES, and resolve npm from the same install rather than
+# trusting whatever is first on PATH.
+# ---------------------------------------------------------------------------
+node_works() {
+  command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1
+}
+
+if ! node_works; then
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    # shellcheck source=/dev/null
+    . "$NVM_DIR/nvm.sh" >/dev/null 2>&1 || true
+  fi
+fi
+
+# Still nothing — look directly at the usual install locations. Later matches win, so an
+# nvm version beats a system one, and the highest nvm version beats older ones.
+if ! node_works; then
+  for candidate in \
+    /usr/local/bin \
+    /opt/homebrew/bin \
+    "$HOME/.nvm/versions/node"/*/bin
+  do
+    [ -x "$candidate/node" ] && node_bin="$candidate"
+  done
+
+  if [ -n "$node_bin" ]; then
+    PATH="$node_bin:$PATH"
+    export PATH
+  fi
+fi
+
+if ! node_works; then
+  echo "" >&2
+  echo "pre-commit: no working Node found — commit aborted." >&2
+  echo "Looked on PATH, in \$NVM_DIR, and in the usual install locations." >&2
+  echo "If you use a version manager, make sure a default version is set." >&2
+  exit 1
+fi
+
+# Prefer the npm that ships with the node we just resolved, so a stale npm elsewhere on
+# PATH can't be picked up instead.
+node_dir=$(dirname "$(command -v node)")
+if [ -x "$node_dir/npm" ]; then
+  npm_cmd="$node_dir/npm"
+elif command -v npm >/dev/null 2>&1; then
+  npm_cmd="npm"
+else
+  echo "pre-commit: node found at $(command -v node) but no npm alongside it." >&2
+  exit 1
+fi
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+# Clean first: webpack overwrites but never deletes. Without this, removing a file from
+# src/entrypoints/ leaves its stale bundle in assets/ forever — the theme keeps shipping
+# code that no longer exists in source.
+"$npm_cmd" run clean >/dev/null 2>&1 || true
+
+if ! "$npm_cmd" run build >/tmp/hypershop-build.log 2>&1; then
+  echo "" >&2
+  echo "pre-commit: BUILD FAILED — commit aborted." >&2
+  echo "" >&2
+  tail -30 /tmp/hypershop-build.log >&2
+  echo "" >&2
+  echo "Full log: /tmp/hypershop-build.log" >&2
+  # clean already emptied assets/; put the last good build back so the working tree
+  # isn't left broken by a failed commit.
+  git checkout -- assets 2>/dev/null || true
+  exit 1
+fi
+
+git add assets
+
+exit 0

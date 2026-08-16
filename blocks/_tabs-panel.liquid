@@ -1,0 +1,48 @@
+{%- comment -%}
+  Both halves of a tab live here — the label that sits in the row at the top and the
+  panel below it — because a parent block can't read a child block's settings, so this
+  is the only place the title exists. They come out as two siblings rather than one
+  wrapper — the block wrapper Shopify puts around them is display:contents in the
+  parent's stylesheet — so the parent's flex `order` can lift the label into the row
+  while the panel stays below with the content.
+{%- endcomment -%}
+{%- liquid
+  # An untitled tab still needs a label — without one there is nothing to click and
+  # its panel can never be opened.
+  assign title = block.settings.title
+  if title == blank
+    assign title = 'general.tabs.untitled' | t
+  endif
+-%}
+<label class="tabs__tab shrink-0 whitespace-nowrap text-left py-[.75em]" for="Tab-{{ block.id }}">
+  {{- title -}}
+</label>
+<div class="tabs__panel rich-text pt-[.75em]">
+  {{ block.settings.text }}
+</div>
+
+{% schema %}
+{
+  "name": "Tab",
+  "class": "block-tabs-panel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Shown as the tab button. Kept to one line \u2014 long titles wrap the row rather than the title."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Tab"
+    }
+  ]
+}
+{% endschema %}

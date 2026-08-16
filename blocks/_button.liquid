@@ -5,7 +5,7 @@
   endif
 %}
 
-{% render 'button' with
+{% render 'button',
   label: block.settings.label,
   target: target,
   class: block.settings.style,
@@ -50,7 +50,9 @@
       ]
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Button"

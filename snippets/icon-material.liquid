@@ -1,0 +1,29 @@
+{%-liquid
+  assign icon_size = 18
+  assign icon_text = 'close'
+  if size
+      assign icon_size = size
+  endif
+
+  if icon
+      assign icon_text = icon
+  endif
+
+  comment
+    A bare number means pixels; anything carrying its own unit (1.5rem, 2em, 100%,
+    var(--x), inherit) is passed through untouched. Round-tripping through `times: 1`
+    is the check: it only survives unchanged if the value really was numeric.
+  endcomment
+  assign icon_size_string = icon_size | append: ''
+  assign icon_size_number = icon_size | times: 1 | append: ''
+  if icon_size_string == icon_size_number
+    assign icon_font_size = icon_size_string | append: 'px'
+  else
+    assign icon_font_size = icon_size_string
+  endif
+-%}
+
+<div
+  class="icon material-icon {{ class }}"
+  style="font-size: {{ icon_font_size }}"
+>{{ icon_text }}</div>

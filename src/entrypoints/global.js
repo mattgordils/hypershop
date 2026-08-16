@@ -1,20 +1,18 @@
-import "../styles/main.scss";
-import { openModal } from "./modal";
+import "../styles/main.css";
+import { openModal, closeModal } from "./modal";
 import { refreshCart } from "./cart";
 
 // Components
 import './modal';
 import './collapsible';
 import './inView';
-import './slideshow';
 import './sort-filter';
+import './price-slider';
+import './mini-cart';
+import './localization';
+import './newsletter-form';
 
-// Console Signature
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('\n╔    ╗  Site by STUDIO HYPERLINK\n║ ╠╣ ║  www.studiohyper.link\n╚    ╝  Hot Bagels, Hotter Websites\n ');
-})
-
-// Utils?
+// Utils
 function isMobileOrTablet() {
   const ua = navigator.userAgent;
   if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
@@ -46,9 +44,50 @@ docReady(() => {
   }
 })
 
+// Lazy images render at opacity-0 and fade in once decoded (see snippets/image.liquid).
+// One delegated listener covers every image on the page — the alternative, an inline
+// handler per <img>, meant the snippet emitted a duplicate <script> on every render.
+//
+// `load` doesn't bubble, hence the capture phase. Images already complete before this
+// runs (cache hits, or anything decoded during HTML parse) never fire it at all, so
+// they're swept once on ready. Eager images never get opacity-0 in the first place.
+const revealImage = (image) => image.classList.remove('opacity-0')
+
+const sweepDecodedImages = (root) => {
+  if (root.nodeType !== Node.ELEMENT_NODE) return
+  if (root.matches('img.opacity-0') && root.complete) revealImage(root)
+  root.querySelectorAll('img.opacity-0').forEach((image) => {
+    if (image.complete) revealImage(image)
+  })
+}
+
+document.addEventListener(
+  'load',
+  (event) => {
+    if (event.target.tagName === 'IMG') revealImage(event.target)
+  },
+  true
+)
+
+// Markup injected after load — theme editor section re-renders, variant swaps
+// replacing [data-dynamic-content], infinite scroll, the mini cart — re-inserts
+// images the browser has already decoded. Those are `complete` the moment they
+// land, so `load` never fires and the delegated listener above can't reach
+// them: they'd sit at opacity-0 forever, i.e. an invisible product gallery.
+// The one-shot sweep on ready only ever covered the initial document.
+const decodedImageSweeper = new MutationObserver((records) => {
+  for (const record of records) {
+    for (const node of record.addedNodes) sweepDecodedImages(node)
+  }
+})
+
+docReady(() => {
+  sweepDecodedImages(document.body)
+  decodedImageSweeper.observe(document.body, { childList: true, subtree: true })
+})
+
 const arraysEqual = (a, b) => {
   if (a === b) return true;
-  // console.log('arry eq', a, b)
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
 
@@ -84,6 +123,22 @@ export const getSelectedOptions = productOptions => {
   })
   return selectedOptions
 }
+
+const addToCart = (variantId, quantity = 1, properties = {}, sellingPlan = null) => {
+  const formData = {
+    items: [{ id: variantId, quantity, properties, selling_plan: sellingPlan }]
+  };
+  return fetch(window.Shopify.routes.root + 'cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  }).then(res => res.json());
+};
+
+window.theme = {
+  modal: { open: openModal, close: closeModal },
+  cart: { add: addToCart, refresh: refreshCart },
+};
 
 if (!customElements.get("add-to-cart-form")) {
   customElements.define(
@@ -124,8 +179,6 @@ if (!customElements.get("add-to-cart-form")) {
           const subscription = this.querySelector('.rc-widget .rc-selling-plans select.rc-selling-plans-dropdown__select')
           const propertiesInputs = this.querySelectorAll('[name^="property_"]')
 
-          console.log('propertiesInputs: ',propertiesInputs)
-          
           let properties = {}
           if (propertiesInputs?.length > 0) {
             propertiesInputs.forEach(prop => {
@@ -154,8 +207,6 @@ if (!customElements.get("add-to-cart-form")) {
             })
           }
 
-          console.log('properties: ',properties)
-
           let variantId = ''
           let variantData = ''
           if (this?.dataset?.variantId) {
@@ -176,6 +227,22 @@ if (!customElements.get("add-to-cart-form")) {
             ]
           }
 
+          // In "cart page" mode, ask Shopify to re-render the mini cart in this same
+          // request — the response then carries the added line as real cart-item markup,
+          // so nothing has to be rebuilt in JS.
+          const miniCart = document.querySelector("mini-cart");
+          if (miniCart?.dataset.sectionId) {
+            formData.sections = miniCart.dataset.sectionId;
+            formData.sections_url = window.location.pathname;
+          }
+
+          // Clear any previous cart error before trying again
+          const errorEl = this.querySelector("[data-cart-error]");
+          if (errorEl) {
+            errorEl.textContent = "";
+            errorEl.classList.add("hidden");
+          }
+
           fetch(window.Shopify.routes.root + "cart/add.js", {
             method: "POST",
             headers: {
@@ -183,13 +250,36 @@ if (!customElements.get("add-to-cart-form")) {
             },
             body: JSON.stringify(formData)
           })
-          .then(data => {
-            console.log(data)
+          .then(async (response) => {
+            const data = await response.json();
+
+            // A non-2xx response is usually "not enough stock". Surface Shopify's
+            // own (localized) message inline and don't open the cart drawer.
+            if (!response.ok) {
+              const message =
+                data.description || data.message || "Sorry, we couldn't add that to your cart.";
+              if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.remove("hidden");
+              }
+              return;
+            }
+
             refreshCart();
+
+            // The mini cart replaces the drawer in "cart page" mode
+            if (miniCart) {
+              miniCart.show(data);
+            } else {
+              openModal("cartDrawer");
+            }
           })
-          .then(() => { openModal("cartDrawer") })
           .catch((error) => {
             console.error("Error:", error);
+            if (errorEl) {
+              errorEl.textContent = "Something went wrong. Please try again.";
+              errorEl.classList.remove("hidden");
+            }
           });
         };
 

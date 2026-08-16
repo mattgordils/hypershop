@@ -9,12 +9,14 @@
  */
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {}
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "section_spacing": "medium"
+      }
     }
   },
   "order": [
-    "settings"
+    "main"
   ]
 }

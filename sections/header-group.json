@@ -1,0 +1,41 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "notification-banner": {
+      "type": "page-notification-banner",
+      "settings": {}
+    },
+    "header": {
+      "type": "page-header",
+      "blocks": {
+        "header-search": {
+          "type": "_header-search",
+          "static": true,
+          "settings": {}
+        },
+        "header-account": {
+          "type": "_header-account",
+          "static": true,
+          "settings": {}
+        },
+        "header-cart": {
+          "type": "_header-cart",
+          "static": true,
+          "settings": {}
+        }
+      },
+      "settings": {}
+    }
+  },
+  "order": ["notification-banner", "header"]
+}

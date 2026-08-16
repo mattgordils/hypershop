@@ -1,0 +1,142 @@
+{% liquid
+	assign columns = section.blocks | where: 'type', 'menu'
+%}
+
+<div id="footer" class="p-margin {{ section.settings.color_scheme }}" role="contentinfo">
+	{% comment %} tiny links {% endcomment %}
+	<div class="mb-v-space grid grid-cols-2 lg:grid-cols-12 gap-x-gutter gap-y-v-space">
+
+		<div class="col-span-2 lg:col-span-6 lg:grid lg:grid-cols-6 lg:gap-x-gutter">
+			<div class="flex flex-col gap-y-3 lg:col-span-4">
+				<div class="h6">
+					{{ section.settings.text }}
+				</div>
+				{% render 'newsletter-form',
+					id_prefix: 'footer',
+					confirm_text: section.settings.text_confirm
+				%}
+			</div>
+		</div>
+
+		<div class="lg:col-span-6 flex gap-gutter">
+			{% for column in columns %}
+				<div class="w-1 grow">
+					<h6 class="smallcaps mb-4">{{ column.settings.link_list.title }}</h6>
+					{% for link in column.settings.link_list.links %}
+						<ul class="leading-none">
+							<li>
+								<a href="{{ link.url }}" class="inline-block align-top body-small bold">
+									<span class="animate-underline">
+										{{ link.title }}
+									</span>
+								</a>
+							</li>
+						</ul>
+					{% endfor %}
+				</div>
+			{% endfor %}
+		</div>
+
+	</div>
+
+	{%- comment -%} Renders nothing unless Markets offers more than one country or language {%- endcomment -%}
+	{% comment %} {% render 'localization-form', class: 'pb-gutter' %} {% endcomment %}
+
+	{%- comment -%}
+		App blocks — where a Klaviyo/Mailchimp/Omnisend embed goes. Keeping this here means a
+		merchant can swap the native form for their provider's own, or run both, without the
+		theme hardcoding any integration.
+	{%- endcomment -%}
+	{%- assign app_blocks = section.blocks | where: 'type', '@app' -%}
+	{%- if app_blocks.size > 0 -%}
+		<div class="mb-v-space flex flex-col gap-gutter">
+			{%- for block in app_blocks -%}
+				{% render block %}
+			{%- endfor -%}
+		</div>
+	{%- endif -%}
+
+	<div class="flex justify-between items-center border-t pt-2 border-hr-color">
+		<div>
+			<p class="body-tiny">©{{ "now" | date: "%Y" }}. {{ shop.name }}</p>
+		</div>
+		<div>
+			<collapsible-trigger
+				class="cursor-pointer body-tiny animate-underline"
+				data-id="siteCred"
+			>
+				Site Credit
+			</collapsible-trigger>
+		</div>
+	</div>
+</div>
+<collapsible-item id="siteCred">
+	<div data-collapsible="content" class="theme-dark">
+		<div>
+			<div class="max-w-site-max-w py-gutter px-margin body-small text-center mx-auto">
+				Site by <a class="animate-underline" href="https://hyperlinknyc.com/">Studio Hyperlink</a>
+			</div>
+		</div>
+	</div>
+</collapsible-item>
+
+<script>
+	document.querySelector('[data-id="siteCred"]').addEventListener('click', () => {
+		setTimeout(() => {
+			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+		}, 300)
+	})
+</script>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "class": "section-footer",
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "link_list",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+		{
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Sign Up Text"
+    },
+    {
+      "type": "text",
+      "id": "text_confirm",
+      "label": "Confirmation Text",
+      "info": "Text that appears after a successful subscription",
+      "default": "Thank you"
+    }
+  ]
+}
+{% endschema %}

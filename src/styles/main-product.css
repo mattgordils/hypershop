@@ -1,0 +1,600 @@
+.section-main-product {
+  & .pdp-blocks {
+    & .shopify-block:empty,
+    & .shopify-block.block-product-badges:not(:has(.product-badges.empty)) {
+      display: none;
+    }
+    & .block-headline {
+      text-wrap: balance;
+    }
+  }
+}
+
+/* Centered info column. `items-center` is what centers a block whose content is
+   narrower than the column, but it sizes every block to its content — and three
+   of them are meant to span the column instead: the accordion and tabs draw
+   rules and rails across it, and buy buttons owns a "full width button" setting
+   that would silently stop working.
+
+   Alignment is a per-viewport setting, so this comes in two modifiers, each
+   bounded to the range its Tailwind counterpart covers. Two closed ranges
+   rather than this file's usual mobile-base-plus-768-override: a modifier only
+   ever applies at one viewport, and overriding would mean writing an "undo"
+   rule for the other. */
+@media (max-width: 767px) {
+  .pdp-info--center-mobile {
+    & > :is(.block-accordion, .block-tabs, .block-buy-buttons) {
+      width: 100%;
+    }
+
+    /* Handed the full width back, a button that isn't set to fill would sit at
+       the start of its row. Scoped to that row specifically so the quantity
+       stepper's own flex layout is left alone. */
+    & > .block-buy-buttons > div > .flex {
+      justify-content: center;
+    }
+
+    /* Same reason for the tab row. `safe` matters here because that row
+       scrolls: plain `center` on an overflowing flex container pushes the first
+       tab into overflow the user can't scroll back to. */
+    & > .block-tabs .tabs__list {
+      justify-content: safe center;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .pdp-info--center-desktop {
+    & > :is(.block-accordion, .block-tabs, .block-buy-buttons) {
+      width: 100%;
+    }
+
+    & > .block-buy-buttons > div > .flex {
+      justify-content: center;
+    }
+
+    & > .block-tabs .tabs__list {
+      justify-content: safe center;
+    }
+  }
+}
+
+/* ============================================================
+   PRODUCT MEDIA GALLERY
+
+   One DOM for every layout — see snippets/product-media.liquid. Whether the
+   track is a real slideshow is Embla's decision (data-active plus a 768px
+   breakpoint override); everything below is arrangement and pager placement.
+
+   Mobile rules are the base layer and read `data-mobile-layout`; the 768px
+   block re-states each one against `data-desktop-layout`, which is the same
+   breakpoint the PDP uses to split into two columns. Both attributes are
+   matched with *= so the option values can name their pager inline
+   ("slideshow_thumbnails_left" is a slideshow AND a left rail).
+   ============================================================ */
+.pdp-media {
+  /* Columns the track falls back to when Embla is inactive. */
+  --pdp-media-columns: 1;
+  /* Both ratios arrive as inline custom properties from product-media.liquid —
+     an inline style can't hold a media query — and --pdp-media-aspect is the
+     resolved one every frame reads, switched at the breakpoint below. */
+  --pdp-media-aspect-mobile: 0.8;
+  --pdp-media-aspect-desktop: var(--pdp-media-aspect-mobile);
+  --pdp-media-aspect: var(--pdp-media-aspect-mobile);
+  --pdp-media-thumb-size: 4.5rem;
+  --pdp-media-thumb-gap: 0.5rem;
+
+  /* Active thumbnail treatment. Fading is the default; for a border instead, set
+     --pdp-thumb-opacity: 1 and --pdp-thumb-active-outline: 2px solid currentColor. */
+  --pdp-thumb-opacity: 0.5;
+  --pdp-thumb-hover-opacity: 0.75;
+  --pdp-thumb-active-opacity: 1;
+  --pdp-thumb-outline: 0 solid transparent;
+  --pdp-thumb-outline-offset: 2px;
+  --pdp-thumb-active-outline: var(--pdp-thumb-outline);
+  --pdp-thumb-active-outline-offset: var(--pdp-thumb-outline-offset);
+  --pdp-media-gap: var(--site-gutters);
+  /* How far the stage extends past this wrapper; only full-width media on
+     mobile is non-zero. Overlaid pagers subtract it to reach the image edge. */
+  --pdp-media-bleed: 0px;
+
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pdp-media-gap);
+  isolation: isolate;
+}
+
+/* Basis 100% is what forces the "under" rail onto its own flex line. A basis of
+   0 would leave the break up to the gap outweighing the stage's margins, and
+   full-width media makes those margins negative (-mx-margin) — enough to pull
+   the rail back onto the stage's line and collapse the stage to a sliver. Only
+   the "left" rail, which is supposed to share the line, resets this. */
+/* Where a sticky rail comes to rest: the bottom edge of the sticky header. The
+   header sheds the notification banner once `.scrolled` flips, so this tracks
+   the same two states as --pdp-info-height in main-product.liquid — and unlike
+   the global --sticky-top it accounts for the banner in the first one.
+
+   No gutter added on top of that. The media frame starts only a hair below the
+   header, so any extra offset here is enough to trip the sticky threshold at
+   scroll 0 and push the rail out of alignment with the top of the image. The
+   sticky info column resolves to the same bare header height for that reason.
+   Subtracting this from 100svh is what lets the rail reach the window bottom.
+
+   The breathing room below the header comes back as padding once the rail is
+   actually stuck — the same trick .pdp-info uses in main-product.liquid. Inside
+   the scroll box it insets the content without moving the box, so it can't
+   knock the rail out of alignment the way an offset does. */
+.pdp-media {
+  --pdp-media-rail-top: var(--full-header-height);
+  --pdp-media-rail-pad-top: 0px;
+}
+
+body:has(.section-header.scrolled) .pdp-media {
+  --pdp-media-rail-top: var(--header-height);
+  --pdp-media-rail-pad-top: var(--site-gutters);
+}
+
+.pdp-media__stage {
+  /* Containing block for the click zones. Without it their `inset: 0` resolves against
+     .pdp-media — which also holds the thumbnail rail — and the zones cover the thumbs,
+     swallowing every click meant for them. */
+  position: relative;
+  order: 2;
+  flex: 1 1 100%;
+  /* Without this a flex item refuses to shrink below its content, and a wide
+     slide track would push the rail out of the column. */
+  min-width: 0;
+}
+
+.pdp-media__frame {
+  position: relative;
+  aspect-ratio: var(--pdp-media-aspect);
+  background: var(--light-grey);
+  overflow: hidden;
+}
+
+/* Grid / scrolling fallback. Higher specificity than the generic
+   `slide-show.inactive .slider-slide` rule in components/slideshow.css, which
+   sizes slides from --slides-xs/sm/lg at 640/1024 — the wrong breakpoints for a
+   gallery that switches at 768. */
+.pdp-media__stage.inactive {
+  & .slider-container {
+    gap: var(--pdp-media-gap);
+  }
+
+  & .slider-slide {
+    width: calc(
+      (100% - var(--pdp-media-gap) * (var(--pdp-media-columns) - 1)) / var(--pdp-media-columns)
+    );
+
+    /* The lead media always spans the row. In a grid that keeps the variant
+       image hero-sized; in a single column it changes nothing. */
+    &:first-child {
+      width: 100%;
+    }
+  }
+}
+
+/* ---- Pagers ------------------------------------------------------------
+   Both pagers are always in the DOM when either viewport asks for them, and
+   each viewport shows only the one it wants. Thumbnails cost a handful of
+   120px images; rendering the gallery twice would cost the full set. */
+
+/* Hidden by default at both viewports; the placement rules below opt each one
+   back in. Scoped through [data-mobile-layout] (always present) rather than
+   written bare, so this out-weighs `slide-show:not(.inactive) .slider-dots`
+   in components/slideshow.css, which would otherwise force the dots visible in
+   any layout whose pager is thumbnails or none. */
+.pdp-media[data-mobile-layout] .pdp-media__dots,
+.pdp-media[data-mobile-layout] .pdp-media__thumbs {
+  display: none;
+}
+
+.pdp-media__dots {
+  /* Positioned so it shares a layer with the click zones rather than sitting in the
+     static flow beneath them. */
+  position: relative;
+  z-index: 1;
+  margin-block-start: var(--pdp-media-gap);
+}
+
+.pdp-media__thumbs {
+  order: 3;
+  flex-basis: 100%;
+  gap: var(--pdp-media-thumb-gap);
+  overflow: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.pdp-media__thumb {
+  flex: 0 0 auto;
+  width: var(--pdp-media-thumb-size);
+  opacity: var(--pdp-thumb-opacity);
+  outline: var(--pdp-thumb-outline);
+  outline-offset: var(--pdp-thumb-outline-offset);
+  transition:
+    opacity var(--md-speed) ease-in-out,
+    outline-color var(--md-speed) ease-in-out;
+
+  &:hover {
+    opacity: var(--pdp-thumb-hover-opacity);
+  }
+
+  /* Both, so existing `.active` styling keeps working while [data-active] is the hook
+     for anything new. */
+  &.active,
+  &[data-active='true'] {
+    opacity: var(--pdp-thumb-active-opacity);
+    outline: var(--pdp-thumb-active-outline);
+    outline-offset: var(--pdp-thumb-active-outline-offset);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* Keyboard focus only. Clicking a thumbnail leaves it focused, and some engines
+     paint their default ring for that — which reads as a stray outline appearing
+     after a click. */
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+.pdp-media__thumb-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: var(--pdp-media-aspect);
+  background: var(--light-grey);
+  overflow: hidden;
+}
+
+.pdp-media__thumb-badge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--light-color);
+  pointer-events: none;
+}
+
+/* ---- Mobile placement (base layer) ---- */
+.pdp-media[data-mobile-layout='grid'] {
+  --pdp-media-columns: 2;
+}
+
+.pdp-media[data-mobile-layout*='dots'] .pdp-media__dots {
+  display: flex;
+}
+
+.pdp-media[data-mobile-layout*='thumbnails'] .pdp-media__thumbs {
+  display: flex;
+}
+
+/* "Under" on mobile takes the PAGE as its container, not the media wrapper: the scroll
+   box is pulled out to the screen edges and holds the page margin as padding, so the
+   first and last thumbs line up with everything else on the page while overflowing ones
+   run off both edges of the screen. Same idea as overlaid, one level further out.
+
+   The pull is a flat page margin rather than --pdp-media-bleed: full-width media already
+   bleeds the stage by exactly that much, so this lands on the screen edge either way.
+
+   flex-grow is what lets the rail claim the width the negative margin opens up; without
+   it the box keeps its 100% basis and just shifts left. */
+.pdp-media[data-mobile-layout*='thumbnails_under'] .pdp-media__thumbs {
+  flex-grow: 1;
+  margin-inline: calc(var(--site-margins) * -1);
+  padding-inline: var(--site-margins);
+  scroll-padding-inline: var(--site-margins);
+}
+
+.pdp-media[data-mobile-layout*='thumbnails_left'] .pdp-media__stage {
+  flex-basis: 0;
+}
+
+/* The vertical counterpart of the "under" rail: the scroll box runs to the
+   bottom edge of the window rather than stopping short, so overflowing thumbs
+   bleed off it.
+
+   The trailing gutter has to read two different ways, so it takes two
+   declarations. While the rail is stuck the box ends at the window edge and the
+   padding sits inside it, leaving a gutter of space under the last thumb at the
+   end of the scroll. Once the page reaches the bottom of the gallery, sticky
+   parks the rail by its MARGIN box — and the negative margin is exactly the
+   padding, so the two cancel and the last thumb lands flush on the bottom of
+   the media instead of a gutter above it.
+
+   scroll-padding mirrors the padding at the top so scrolling a thumb to the
+   start of the rail lands it below the header, not underneath it. */
+.pdp-media[data-mobile-layout*='thumbnails_left'] .pdp-media__thumbs {
+  order: 1;
+  flex: 0 0 var(--pdp-media-thumb-size);
+  flex-basis: var(--pdp-media-thumb-size);
+  flex-direction: column;
+  align-self: flex-start;
+  position: sticky;
+  inset-block-start: var(--pdp-media-rail-top);
+  max-height: calc(100svh - var(--pdp-media-rail-top));
+  margin-block-end: calc(var(--pdp-media-gap) * -1);
+  padding-block-start: var(--pdp-media-rail-pad-top);
+  padding-block-end: var(--pdp-media-gap);
+  scroll-padding-block-start: var(--pdp-media-rail-pad-top);
+  transition:
+    max-height var(--md-speed) ease-in-out,
+    padding-block-start var(--md-speed) ease-in-out,
+    inset-block-start var(--md-speed) ease-in-out;
+}
+
+/* Overlaid is the "under" rail lifted onto the image — same row, same gap, same
+   aspect. It is absolute against .pdp-media, which is safe because the only
+   other in-flow child at that point is the stage — the dots rail is
+   display:none whenever a thumbnail pager is the active one.
+
+   The gutter is padding, not inset, so the rail's scroll box spans the whole
+   frame: overflowing thumbs run off both edges of the image while the first and
+   last still come to rest a gutter clear of it. `scroll-padding` keeps
+   scroll-into-view from parking a thumb underneath that padding. */
+.pdp-media[data-mobile-layout*='thumbnails_overlaid'] .pdp-media__thumbs {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: var(--pdp-media-gap);
+  inset-inline: calc(var(--pdp-media-bleed) * -1);
+  padding-inline: var(--pdp-media-gap);
+  scroll-padding-inline: var(--pdp-media-gap);
+  flex-basis: auto;
+  flex-direction: row;
+  width: auto;
+  max-height: none;
+}
+
+/* One thumb size for both mobile pagers. Overlaid has to run small because it shares the
+   frame with the product photo; "under" matches it so switching layouts doesn't resize
+   the rail. */
+.pdp-media[data-mobile-layout*='thumbnails_overlaid'],
+.pdp-media[data-mobile-layout*='thumbnails_under'] {
+  --pdp-media-thumb-size: 3rem;
+}
+
+/* Small screens: size both mobile rails by fraction rather than by a fixed width, so
+   exactly six thumbs span the rail with no remainder — five gaps come out of the width
+   before the division. A seventh item is what starts the overflow that runs off the edges.
+
+   Each rail measures its own content box, which is what makes one rule fit both: "under"
+   spans the page and holds the page margin as padding, so six land flush with the media
+   edges (and with the screen edges when media bleeds full-width). Overlaid spans the
+   image and holds the media gutter, so six land a gutter clear of the photo — the inset
+   that style is supposed to have.
+
+   Has to follow the fixed 3rem rule above: a media query adds no specificity, so with
+   equal selectors source order is what decides. */
+@media (max-width: 639px) {
+  .pdp-media[data-mobile-layout*='thumbnails_under'],
+  .pdp-media[data-mobile-layout*='thumbnails_overlaid'] {
+    --pdp-media-thumb-size: calc(
+      (100% - (var(--pdp-media-thumb-gap) * 5)) / 6
+    );
+  }
+}
+
+/* Full-width media pulls the stage out past .pdp-media by one page margin on
+   mobile only (see the -mx-margin/md:mx-0 pair in product-media.liquid). The
+   overlay has to follow it, or it would bleed off a seam inset from the actual
+   image edge. */
+.pdp-media[data-media-width='full'] {
+  --pdp-media-bleed: var(--site-margins);
+}
+
+/* ---- Desktop placement ---- */
+@media (min-width: 768px) {
+  /* Each desktop rule below has to out-specify its mobile counterpart, not just
+     come later — an attribute selector weighs the same as a class, so the bare
+     `.pdp-media` / `.pdp-media__thumbs` forms would lose. Matching
+     `[data-mobile-layout]` (always present) levels the two up. */
+  .pdp-media[data-mobile-layout] {
+    --pdp-media-columns: 1;
+    --pdp-media-thumb-size: 4.5rem;
+    --pdp-media-aspect: var(--pdp-media-aspect-desktop);
+  }
+
+  /* Full-width media drops its negative margin at this breakpoint (md:mx-0), so
+     there is no bleed for the rails to chase — zeroing the token here keeps the
+     `calc(bleed * -1)` in the placement rules honest at both viewports. */
+  .pdp-media[data-media-width='full'] {
+    --pdp-media-bleed: 0px;
+  }
+
+  .pdp-media[data-desktop-layout='grid'] {
+    --pdp-media-columns: 2;
+  }
+
+  .pdp-media[data-mobile-layout] .pdp-media__dots,
+  .pdp-media[data-mobile-layout] .pdp-media__thumbs {
+    display: none;
+  }
+
+  .pdp-media[data-desktop-layout*='dots'] .pdp-media__dots {
+    display: flex;
+  }
+
+  .pdp-media[data-desktop-layout*='thumbnails'] .pdp-media__thumbs {
+    display: flex;
+  }
+
+  /* Reset to the "under" defaults first — a viewport pairing like
+     desktop "thumbnails under" with mobile "thumbnails overlaid" would
+     otherwise inherit the mobile placement. */
+  .pdp-media[data-desktop-layout*='thumbnails'] .pdp-media__thumbs {
+    position: static;
+    order: 3;
+    flex: 0 1 auto;
+    flex-basis: 100%;
+    flex-direction: row;
+    width: auto;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    scroll-padding: 0;
+  }
+
+  .pdp-media[data-desktop-layout*='thumbnails_under'] .pdp-media__thumbs {
+    flex-grow: 1;
+    margin-inline: calc(var(--pdp-media-bleed) * -1);
+    padding-inline: var(--pdp-media-gap);
+    scroll-padding-inline: var(--pdp-media-gap);
+  }
+
+  /* Same pairing as the mobile block: only the left rail shares the stage's
+     line, so it is the only layout that gives the stage a zero basis. */
+  .pdp-media[data-mobile-layout] .pdp-media__stage {
+    flex-basis: 100%;
+  }
+
+  .pdp-media[data-desktop-layout*='thumbnails_left'] .pdp-media__stage {
+    flex-basis: 0;
+  }
+
+  .pdp-media[data-desktop-layout*='thumbnails_left'] .pdp-media__thumbs {
+    order: 1;
+    flex: 0 0 var(--pdp-media-thumb-size);
+    flex-basis: var(--pdp-media-thumb-size);
+    flex-direction: column;
+    align-self: flex-start;
+    position: sticky;
+    inset-block-start: var(--pdp-media-rail-top);
+    max-height: calc(100svh - var(--pdp-media-rail-top));
+    margin-block-end: calc(var(--pdp-media-gap) * -1);
+    padding-block-start: var(--pdp-media-rail-pad-top);
+    padding-block-end: var(--pdp-media-gap);
+    scroll-padding-block-start: var(--pdp-media-rail-pad-top);
+    transition:
+      max-height var(--md-speed) ease-in-out,
+      padding-block-start var(--md-speed) ease-in-out,
+      inset-block-start var(--md-speed) ease-in-out;
+  }
+
+  .pdp-media[data-desktop-layout*='thumbnails_overlaid'] .pdp-media__thumbs {
+    position: absolute;
+    z-index: 2;
+    inset-block-end: var(--pdp-media-gap);
+    inset-inline: calc(var(--pdp-media-bleed) * -1);
+    padding-inline: var(--pdp-media-gap);
+    scroll-padding-inline: var(--pdp-media-gap);
+    flex-basis: auto;
+    flex-direction: row;
+    width: auto;
+    max-height: none;
+  }
+}
+
+/* A thumbnail in a non-slideshow layout is a jump list — slideshow.js scrolls
+   the slide into view, so keep it clear of the sticky header. */
+.pdp-media__slide {
+  scroll-margin-block-start: var(--sticky-top);
+}
+
+/* Slideshow click zones + badge overlay.
+
+   Both only apply where the layout is actually a slideshow. The markup renders whenever
+   either breakpoint is one, and these rules switch them off at the breakpoint that isn't
+   — a grid layout has no single frame to sit a badge on, and no slides to page through. */
+.pdp-media__zones,
+.pdp-media__badges {
+  display: none;
+}
+
+/* Anchored to the image, not to .pdp-media. Full-width media pulls the stage a page
+   margin further out on mobile, so a plain left: 0 leaves the badges floating inside the
+   photo by exactly that much — the same correction the overlaid thumbnail rail makes.
+   The token is zero for margin-width media and at desktop, where the stage sits flush. */
+.pdp-media__badges {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: calc(var(--pdp-media-bleed) * -1);
+  z-index: 3;
+}
+
+.pdp-media[data-mobile-layout*='slideshow'] .pdp-media__zones,
+.pdp-media[data-mobile-layout*='slideshow'] .pdp-media__badges {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .pdp-media[data-desktop-layout*='slideshow'] .pdp-media__zones,
+  .pdp-media[data-desktop-layout*='slideshow'] .pdp-media__badges {
+    display: block;
+  }
+
+  .pdp-media:not([data-desktop-layout*='slideshow']) .pdp-media__zones,
+  .pdp-media:not([data-desktop-layout*='slideshow']) .pdp-media__badges {
+    display: none;
+  }
+}
+
+/* The zones sit above the slides but below the dots rail, and are pointer-transparent as
+   a container so only the halves themselves take events. */
+.pdp-media__zones {
+  position: absolute;
+  /* Anchored to the top of the stage and given the media's own aspect ratio, so the
+     zones stop exactly at the bottom of the image. `inset: 0` would stretch them over
+     whatever else the stage holds — the dots rail sits inside it, below the slides — and
+     a positioned element paints above static content regardless of z-index, so the zones
+     would eat those clicks even sitting at 0. */
+  inset-block-start: 0;
+  inset-inline: 0;
+  aspect-ratio: var(--pdp-media-aspect);
+  /* Below the overlaid thumbnails (2), which sit on the image itself. */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pdp-media__zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  /* Touch drags must reach Embla rather than being eaten as a gesture on the button. */
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pdp-media__zone--prev {
+  left: 0;
+  cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath d='M15 4l-8 8 8 8' fill='none' stroke='black' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M15 4l-8 8 8 8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 14 14, w-resize;
+}
+
+.pdp-media__zone--next {
+  right: 0;
+  cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath d='M9 4l8 8-8 8' fill='none' stroke='black' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9 4l8 8-8 8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 14 14, e-resize;
+}
+
+/* A focus ring here only makes sense when the zones ARE the pager (no dots, no
+   thumbnails) — those get a real aria-label. The decorative ones are aria-hidden, and a
+   click focusing an invisible half of the image should never draw anything. */
+.pdp-media__zone[aria-hidden='true']:focus,
+.pdp-media__zone:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.pdp-media__zone:not([aria-hidden='true']):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+}
+
+/* Coarse pointers swipe; a persistent half-screen tap target competes with that and
+   there's no cursor to hint at it either. */
+@media (hover: none) {
+  .pdp-media__zone {
+    display: none;
+  }
+}

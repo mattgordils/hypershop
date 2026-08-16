@@ -1,7 +1,26 @@
-{% render 'product_price' with
-  item: product.selected_or_first_available_variant,
-  classname: block.settings.size
-%}
+{%-liquid
+  assign product = section.settings.product | default: product
+  assign show_percentage_off = false
+  if product.compare_at_price != blank and product.compare_at_price > product.price and block.settings.percentage_off == true
+    assign show_percentage_off = true
+    assign price_diff = product.compare_at_price | minus: product.price
+  endif
+-%}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+<div class="flex items-baseline {{ space_below | strip }}">
+  {% render 'product-price',
+    item: product.selected_or_first_available_variant,
+    classname: block.settings.size
+  %}
+
+  {% if show_percentage_off %}
+    <span class="text-success ml-[.5em] {{ block.settings.size }}">
+      {{ price_diff | times: 1.00 | divided_by: product.price | times: 100 | remove: '.0' }}% off
+    </span>
+  {% endif %}
+</div>
 
 {% schema %}
 {
@@ -14,26 +33,39 @@
       "default": "body",
       "label": "Text Size",
       "options": [
-        {
-          "label": "Small",
-          "value": "body-small"
-        },
-        {
-          "label": "Normal",
-          "value": "body"
-        },
-        {
-          "label": "Medium",
-          "value": "body-medium"
-        },
-        {
-          "label": "Large",
-          "value": "body-large"
-        }
+        { "label": "Small", "value": "body-small" },
+        { "label": "Normal", "value": "body" },
+        { "label": "Medium", "value": "body-medium" },
+        { "label": "Large", "value": "body-large" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "percentage_off",
+      "default": false,
+      "label": "Show Percentage Off"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
       ]
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Price"

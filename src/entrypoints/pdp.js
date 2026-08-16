@@ -1,4 +1,4 @@
-import "../styles/main-product.scss";
+import "../styles/main-product.css";
 
 if (!customElements.get("pdp-qty-input")) {
   customElements.define(
@@ -68,6 +68,5 @@ if (!customElements.get("pdp-qty-input")) {
 
 // if (subscriptionOptions) {
 //   subscriptionOptions.forEach(option => {
-//     console.log('OPTION')
 //   })
 // }

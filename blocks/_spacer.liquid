@@ -1,0 +1,32 @@
+{% comment %}
+  Fills the available vertical space to push sibling blocks apart (e.g. pin the
+  buy buttons to the bottom of the PDP info column). The min-height keeps a small
+  gap when there's nothing left to fill. For fixed gaps, use a block's
+  "Space Below" setting instead.
+{% endcomment %}
+
+<div class="block w-full spacer-fill grow"></div>
+
+{% stylesheet %}
+  .block-spacer:has(.spacer-fill) {
+    flex: 1;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Spacer",
+  "class": "block-spacer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Fills available vertical space to push blocks apart. For fixed spacing, use a block's “Space Below” setting."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spacer"
+    }
+  ]
+}
+{% endschema %}

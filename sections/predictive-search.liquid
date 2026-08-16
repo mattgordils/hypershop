@@ -1,0 +1,73 @@
+{%- comment -%}
+  Predictive-search RESULTS, rendered server-side and fetched by
+  predictive-search.js via the Section Rendering API
+  (/search/suggest?section_id=predictive-search&resources[type]=…). Because it
+  runs through Liquid, results use the real `product-card` component (badges,
+  price, hover image, card settings) — always in sync with the rest of the site.
+
+  Which resource types appear is driven by the `resources[type]` param the JS
+  sends, which comes from the search drawer's scope settings (products always,
+  pages / blog posts optional). The JS lifts everything inside
+  [data-predictive-results-inner] into the drawer.
+{%- endcomment -%}
+<div data-predictive-results-inner>
+  {%- if predictive_search.performed -%}
+    {%- assign r_products = predictive_search.resources.products -%}
+    {%- assign r_pages    = predictive_search.resources.pages -%}
+    {%- assign r_articles = predictive_search.resources.articles -%}
+
+    {%- if r_products.size > 0 or r_pages.size > 0 or r_articles.size > 0 -%}
+      {%- if r_products.size > 0 -%}
+        <div class="pb-v-space-sm">
+          <div class="grid grid-cols-2 gap-gutter">
+            {%- for product in r_products -%}
+              <div>{% render 'product-card', product: product %}</div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if r_pages.size > 0 -%}
+        <div class="pb-v-space-sm">
+          <div class="py-2 border-b border-hr-color"><span class="h6">Pages</span></div>
+          <div class="divide-y divide-hr-color">
+            {%- for page in r_pages -%}
+              <a href="{{ page.url }}" class="block py-3 hover:bg-light-grey transition-colors">
+                <span class="body">{{ page.title }}</span>
+              </a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if r_articles.size > 0 -%}
+        <div class="pb-v-space-sm">
+          <div class="py-2 border-b border-hr-color"><span class="h6">Blog posts</span></div>
+          <div class="divide-y divide-hr-color">
+            {%- for article in r_articles -%}
+              <a href="{{ article.url }}" class="flex gap-x-3 py-3 hover:bg-light-grey transition-colors">
+                {%- if article.image -%}
+                  <div class="w-15 h-15 bg-light-grey shrink-0 relative overflow-hidden">
+                    {{ article.image | image_url: width: 120, height: 120, crop: 'center' | image_tag: widths: '60, 120', sizes: '60px', alt: article.title, class: 'absolute inset-0 w-full h-full object-cover', loading: 'lazy' }}
+                  </div>
+                {%- endif -%}
+                <div class="flex flex-col justify-center min-w-0">
+                  <span class="body truncate">{{ article.title }}</span>
+                  <span class="body-small text-light-text-color">{{ article.published_at | date: '%b %d, %Y' }}</span>
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      <p class="body text-light-text-color py-3">No results found for "{{ predictive_search.terms }}".</p>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Predictive Search"
+}
+{% endschema %}

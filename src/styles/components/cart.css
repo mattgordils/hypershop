@@ -1,0 +1,15 @@
+body[data-state-cart="open"] {}
+
+.cart-container {
+  --cart-padding: var(--site-gutters);
+
+  @media screen and (max-width: 767px) {
+    --cart-padding: var(--site-margins);
+  }
+}
+
+.cart-items {
+  & #cartLineItem:not(:first-of-type) {
+    border-top: 2px solid;
+  }
+}

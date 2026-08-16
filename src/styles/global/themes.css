@@ -1,0 +1,27 @@
+/* THEMES
+
+   Color schemes are generated at runtime from the theme's color system by
+   snippets/color-schemes.liquid — one `.{scheme.id}` class per scheme, for both
+   code-defined (settings_data.json) and editor-added schemes. Do NOT hardcode
+   scheme classes here; add them to the color system instead.
+
+   This file is only for internal, non-selectable color combos: a plain
+   `.theme-*` class you apply directly in code but deliberately keep OUT of the
+   merchant's color-scheme dropdown. Give it its own --text-color / --bg-color
+   and the base rule below applies them. */
+
+*[class*="theme-"] {
+  color: var(--text-color);
+  background: var(--bg-color);
+}
+
+.theme-success {
+  --bg-color: var(--color-success);
+  --text-color: var(--color-light);
+  --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+  --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+  --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
+  --main-color: var(--text-color);
+  color: var(--text-color);
+  background: var(var(--bg-color));
+}

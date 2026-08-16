@@ -1,0 +1,381 @@
+<script src="{{ 'nav.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .section-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  header {
+    color: var(--header-color);
+    border-color: transparent;
+    background: var(--header-bg);
+  }
+
+  :root {
+    --header-bg: var(--color-bg);
+    --header-color: var(--color-text);
+    --header-offset: 0;
+    &:has(.page-sections .header-overlap) {
+      --header-bg: var(--color-transparent);
+      --header-color: var(--color-light);
+      --header-offset: var(--spacing-header-banner-height);
+    }
+  }
+
+  .section-header.scrolled header,
+  .section-header:has(menu-item[data-open="true"]) header {
+    color: var(--text-color);
+    background: var(--bg-color);
+    border-color: var(--hr-color);
+  }
+
+  /* Shared page overlay behind any open dropdown. One element in the header
+     that fades in when any <menu-item> is open. Clicking it triggers the
+     document-level outside-click handler in nav.js which closes the open
+     menu-item (the overlay is a sibling of the menu-items, so the click is
+     "outside" from the menu-item's perspective — no extra JS needed). */
+  .menu-overlay {
+    position: fixed;
+    top: var(--header-banner-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -2;
+    background: currentColor;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    transition: visibility var(--md-speed), opacity var(--md-speed);
+    transition-behavior: allow-discrete;
+  }
+  .section-header:has(menu-item[data-open="true"]) .menu-overlay {
+    visibility: visible;
+    opacity: 0.2;
+    pointer-events: auto;
+  }
+
+  /* Dropdown panel — kept `invisible` when closed so sublinks aren't in the
+     tab order, but `transition-behavior: allow-discrete` defers the visibility
+     flip to the end of the close animation so the grid-rows height transition
+     plays out fully. Height animation itself lives on the inner grid via
+     Tailwind (grid-rows-[0fr] → group-data-[open=true]/menu:grid-rows-[1fr]). */
+  [data-menu-panel] {
+    transition: visibility var(--md-speed);
+    transition-behavior: allow-discrete;
+  }
+
+  /* Cart count "circle" mode — inverts against the current header state.
+     Default (solid header, whether from being scrolled, from a solid scheme,
+     or from a dropdown-open background flip): bg = text-color, text = bg-color.
+     Transparent header (overlap present, not scrolled, no dropdown open):
+     bg = white, text = dark, so the pill stays legible against arbitrary
+     imagery behind the header. */
+  .cart-count-circle {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+  }
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .cart-count-circle {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+  }
+
+  /* Shared trigger + label styling for the search / account / cart / hamburger
+     buttons. Each trigger wrapper gets .header-trigger, each label span gets
+     .header-trigger-label. The label picks up an animated currentColor underline
+     on hover of its enclosing trigger — same behavior as the top-level nav items,
+     just centralized here so all four triggers stay visually consistent. */
+  .header-trigger-label {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size var(--slow-speed);
+  }
+  .header-trigger:hover .header-trigger-label,
+  .header-trigger.active .header-trigger-label {
+    background-size: 100% 1px;
+    background-position: 0% 100%;
+  }
+
+  /* Logo crossfade — stack the two logos so they share the same cell */
+  .logo-stack {
+    display: grid;
+  }
+  .logo-stack > .logo-layer {
+    grid-area: 1 / 1;
+  }
+  .logo-stack.has-inverted .logo-layer {
+    transition: opacity var(--md-speed) ease;
+  }
+
+  /* Custom header icons crossfade on the same trigger as the logo. */
+  .icon-stack {
+    display: grid;
+  }
+  .icon-stack > .icon-layer {
+    grid-area: 1 / 1;
+  }
+  .icon-stack.has-inverted .icon-layer {
+    transition: opacity var(--md-speed) ease;
+  }
+  .icon-stack.has-inverted .icon-layer--inverted {
+    opacity: 0;
+  }
+  /* Solid header (default) shows the default logo; inverted layer hidden */
+  .logo-stack.has-inverted .logo-layer--inverted {
+    opacity: 0;
+  }
+  /* Transparent header (overlap present, not scrolled, no dropdown open)
+     crossfades to the inverted logo */
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--default,
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .icon-stack.has-inverted .icon-layer--default {
+    opacity: 0;
+  }
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--inverted,
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .icon-stack.has-inverted .icon-layer--inverted {
+    opacity: 1;
+  }
+{% endstylesheet %}
+
+{%- comment -%}
+  Style hooks for the hosted-customer-account web component. Colors come from
+  the first color scheme (site default); fonts, radii, and header offset come
+  from the global theme settings. `.dialog` is the portalled account sheet
+  (rendered outside the header), so it needs the same offset applied directly.
+{%- endcomment -%}
+{%- assign account_scheme = nil -%}
+{%- for scheme in settings.color_schemes limit: 1 -%}
+  {%- assign account_scheme = scheme -%}
+{%- endfor -%}
+{% style %}
+  .dialog,
+  .section-header shopify-account {
+    --shopify-account-dialog-position-top: var(--full-header-height);
+  }
+
+  .section-header shopify-account {
+    {% if account_scheme != blank %}
+      --shopify-account-color-background: {{ account_scheme.settings.background }};
+      --shopify-account-color-text: {{ account_scheme.settings.text }};
+      --shopify-account-color-accent: {{ account_scheme.settings.accent }};
+    {% else %}
+      --shopify-account-color-background: var(--bg-color);
+      --shopify-account-color-text: var(--text-color);
+      --shopify-account-color-accent: var(--main-color);
+    {% endif %}
+    --shopify-account-color-accent-hover: var(--main-color);
+    --shopify-account-color-border: var(--hr-color);
+    --shopify-account-color-background-subdued: var(--light-grey);
+    --shopify-account-color-text-subdued: var(--light-text-color);
+    --shopify-account-color-shadow: rgb(from var(--shopify-account-color-text) r g b / .05);
+    --shopify-account-color-control-background: color-mix(in srgb, var(--shopify-account-color-background) 90%, #ffffff 10%);
+    --shopify-account-color-control-text: var(--shopify-account-color-text);
+    --shopify-account-color-card-background: color-mix(in srgb, var(--shopify-account-color-background) 90%, #ffffff 10%);
+    --shopify-account-color-card-text: var(--shopify-account-color-text);
+    --shopify-account-signed-in-avatar-color-background: var(--shopify-account-color-accent);
+    --shopify-account-signed-in-avatar-color-text: var(--shopify-account-color-accent-text);
+    /* Let both signed-in and signed-out avatars size to their slot content —
+       we render our own custom avatar for both states in _header-account.liquid.
+       Setting `auto` prevents Shopify from reserving a fixed 28px box around
+       the slot, which was making the signed-out trigger look padded. */
+    --shopify-account-signed-in-avatar-size: auto;
+
+    --shopify-account-font-body: var(--main-font);
+    --shopify-account-font-heading: var(--secondary-font);
+    --shopify-account-font-heading-weight: var(--h3-weight);
+    --shopify-account-font-heading-transform: var(--h3-transform);
+
+    --shopify-account-radius-base: var(--base-border-radius);
+    --shopify-account-radius-input: var(--base-border-radius);
+    --shopify-account-radius-button: var(--button-border-radius);
+    --shopify-account-radius-button-small: 2px;
+    --shopify-account-radius-dialog: var(--base-border-radius);
+  }
+{% endstyle %}
+
+{%- liquid
+  assign logo = section.settings.logo
+  assign logo_inverted = section.settings.logo_inverted
+  assign has_secondary = false
+  if section.settings.secondary_menu.links.size > 0
+    assign has_secondary = true
+  endif
+
+  assign lw_mobile = section.settings.logo_width_mobile
+  assign lw_desktop = section.settings.logo_width_desktop
+
+  comment
+    The logo renders at a known CSS width, so the candidates are just that width at 1x, 2x
+    and 3x — nothing larger is ever displayed. Without a `sizes` the browser assumes 100vw
+    and takes the biggest file in the list, which is how a 156px logo pulled 624px.
+
+    `sizes` declares the widest the clamp can reach for any viewport at or above the point
+    it starts interpolating. Reporting the mobile width there would under-report at mid
+    viewports and pick a candidate too small to stay crisp — over-reporting is the safe
+    direction, and costs at most ~1.3x on a narrow tablet.
+  endcomment
+  assign lw_max = lw_desktop
+  if lw_mobile > lw_desktop
+    assign lw_max = lw_mobile
+  endif
+
+  comment
+    Pre-computed: filters chain left to right, so a `times: 2` after an append would
+    multiply the whole accumulated string rather than the number before it.
+  endcomment
+  assign lw_max_2x = lw_max | times: 2
+  assign lw_max_3x = lw_max | times: 3
+  assign lw_mobile_2x = lw_mobile | times: 2
+  assign lw_mobile_3x = lw_mobile | times: 3
+
+  assign logo_widths = lw_mobile | append: ',' | append: lw_mobile_2x | append: ',' | append: lw_mobile_3x | append: ',' | append: lw_max | append: ',' | append: lw_max_2x | append: ',' | append: lw_max_3x
+  assign logo_widths = logo_widths | split: ',' | uniq | join: ', '
+
+  assign logo_sizes = '(min-width: 400px) ' | append: lw_max | append: 'px, ' | append: lw_mobile | append: 'px'
+-%}
+
+{%- capture logo_html -%}
+  {%- capture logo_inner -%}
+    <a
+      href="{{ routes.root_url }}"
+      title="Go to {{ shop.name }} homepage"
+      class="logo-stack block border-0 w-(--logo-width){% if logo_inverted != blank %} has-inverted{% endif %}"
+      style="--logo-width: clamp(min({{ lw_mobile }}px, {{ lw_desktop }}px), calc({{ lw_mobile }}px + ({{ lw_desktop }} - {{ lw_mobile }}) * ((100vw - 400px) / 1040)), max({{ lw_mobile }}px, {{ lw_desktop }}px));"
+    >
+      <span class="logo-layer logo-layer--default">
+        {%- if logo != blank -%}
+          {{ logo | image_url: width: lw_max_2x | image_tag: widths: logo_widths, sizes: logo_sizes, loading: 'eager', alt: shop.name, class: 'w-full h-auto block' }}
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </span>
+      {%- if logo_inverted != blank -%}
+        <span class="logo-layer logo-layer--inverted relative" aria-hidden="true">
+          {{ logo_inverted | image_url: width: lw_max_2x | image_tag: widths: logo_widths, sizes: logo_sizes, loading: 'eager', alt: '', class: 'absolute w-full h-full block object-contain' }}
+        </span>
+      {%- endif -%}
+    </a>
+  {%- endcapture -%}
+  {%- if request.page_type == 'index' -%}
+    <h1 class="body logo">{{ logo_inner }}</h1>
+  {%- else -%}
+    <div class="body logo">{{ logo_inner }}</div>
+  {%- endif -%}
+{%- endcapture -%}
+
+<sticky-header>
+  {%- comment -%} Single shared overlay behind any open dropdown — styling in the {% stylesheet %} above. {%- endcomment -%}
+  <div class="menu-overlay" aria-hidden="true"></div>
+  <header class="transition-[height,background,color,border] h-header-height w-full flex px-margin items-center border-b">
+    {%- comment -%} Left region — primary menu when a secondary menu is set {%- endcomment -%}
+    <div class="h-full flex items-center {% if has_secondary %}grow shrink basis-0{% endif %}">
+      {%- if has_secondary -%}
+        {% render 'header-menu', menu: section.settings.menu %}
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Center region — logo. Hugs the left when there is no secondary menu. {%- endcomment -%}
+    <div class="shrink-0{% unless has_secondary %} mr-auto{% endunless %}">
+      {{ logo_html }}
+    </div>
+
+    {%- comment -%} Right region — menu (secondary if set, else primary) + account + cart + mobile hamburger {%- endcomment -%}
+    <div class="flex items-center justify-end grow shrink basis-0 h-[calc(100%+1px)] -mr-[calc(var(--site-gutters)/2)]">
+      {%- comment -%} + 1px to compensate for the header border {%- endcomment -%}
+      {%- if has_secondary -%}
+        {% render 'header-menu', menu: section.settings.secondary_menu %}
+      {%- else -%}
+        {% render 'header-menu', menu: section.settings.menu %}
+      {%- endif -%}
+
+      {% content_for 'block', type: '_header-search', id: 'header-search' %}
+      {% content_for 'block', type: '_header-account', id: 'header-account' %}
+
+      <modal-trigger
+        data-modal-id="menuPanel"
+        class="header-trigger md:hidden shrink-0 h-full px-[calc(var(--site-gutters)/2)] flex items-center whitespace-nowrap leading-none cursor-pointer"
+        role="button"
+        aria-label="Open navigation menu"
+        tabindex="0"
+      ><span class="header-trigger-label shrink-0 body-small md:body">Menu</span></modal-trigger>
+
+      {% content_for 'block', type: '_header-cart', id: 'header-cart' %}
+    </div>
+  </header>
+
+  {%- comment -%}
+    Outside <header> so it stays out of the flex row, but inside the section so it
+    positions against .section-header — below the header, moving with it, and clear of a
+    notification banner without any measuring.
+  {%- endcomment -%}
+  {% content_for 'block', type: '_mini-cart', id: 'mini-cart' %}
+</sticky-header>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header relative z-6",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "If no logo is uploaded, the store name is shown as text."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_inverted",
+      "label": "Inverted logo",
+      "info": "Shown while the header is transparent (overlapping a section). Crossfades to the main logo once the header becomes solid on scroll."
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width (mobile)",
+      "min": 40,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Logo width (desktop)",
+      "min": 40,
+      "max": 400,
+      "step": 4,
+      "unit": "px",
+      "default": 156
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Navigation Menu",
+      "info": "When a secondary menu is set, this menu moves to the left of the logo."
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "Secondary menu",
+      "info": "Optional. When set, sits to the right of the logo (next to the account and cart)."
+    }
+  ]
+}
+{% endschema %}

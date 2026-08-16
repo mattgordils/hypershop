@@ -1,21 +1,31 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
+    {%- comment -%}
+      Runs synchronously, before <body> is parsed, so the scroll-entrance CSS (which is
+      scoped to html:not(.no-js)) is in effect for the very first paint — nothing flashes
+      visible and then hides. If scripting is unavailable the class stays and the entrance
+      never applies, leaving content visible rather than stuck at opacity 0.
+    {%- endcomment -%}
+    <script>document.documentElement.classList.remove('no-js');</script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="">
+    <meta name="theme-color" content="{{ settings.color_schemes.first.settings.background | default: '#ffffff' }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preload" href="{{ 'global.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ 'global.css' | asset_url }}"></noscript>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+    {{ 'global.css' | asset_url | stylesheet_tag: preload: true }}
 
-    {% if settings.favicon != blank %}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
-    {% endif %}
-
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.favicon | image_url: width: 32 }}">
+    {%- endif -%}
+    {%- assign touch_icon = settings.touch_icon | default: settings.favicon -%}
+    {%- if touch_icon != blank -%}
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ touch_icon | image_url: width: 180, height: 180 }}">
+      <link rel="icon" type="image/png" sizes="192x192" href="{{ touch_icon | image_url: width: 192, height: 192 }}">
+      <link rel="icon" type="image/png" sizes="512x512" href="{{ touch_icon | image_url: width: 512, height: 512 }}">
+    {%- endif -%}
 
     <title>
       {{ page_title }}
@@ -28,54 +38,59 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    {% render 'meta_tags' %}
-    {% render 'structured_data' %}
+    {% render 'meta-tags' %}
+    {% render 'structured-data' %}
+    {% render 'faq-schema' %}
 
     {{ content_for_header }}
 
-    {% render 'fonts' %}
+    {% render 'theme-settings' %}
+    {% render 'color-schemes' %}
 
-    {% render 'integrations_before_head_close' %}
+    {% render 'integrations-before-head-close' %}
   </head>
 
-  <body data-barba="wrapper" {%- if request.design_mode -%}data-shopify-editor="true"{%- endif -%}>
+  <body data-button-hover="{{ settings.button_hover_effect | default: 'simple' }}"{% if request.design_mode %} data-shopify-editor="true"{% endif %}>
     <!-- Skip Links for Accessibility -->
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
     <a class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-50 focus:bg-main focus:text-bg focus:px-4 focus:py-2 focus:rounded" href="#footer">Skip to footer</a>
 
-    {% render 'integrations_after_body_open' %}
+    {% render 'integrations-after-body-open' %}
     
-    {% section 'page_notification-banner' %}
-    {% section 'page_header' %}
+    {% comment %} <div class="sticky top-0 w-full z-6"> {% endcomment %}
+      {% sections 'header-group' %}
+    {% comment %} </div> {% endcomment %}
     
     {% comment %}
-    {% section 'page_age-gate' %}
+    {% section 'page-age-gate' %}
     {% endcomment %}
     
-    <main id="main-content" data-barba="container" data-barba-namespace="home" role="main">
+    <main id="main-content" role="main" class="min-h-[calc(100vh-var(--spacing-full-header-height))]">
       <div class="page-sections">
-        {%- if request.design_mode -%}
-          {% render 'dev_typography-tester' %}
-        {%- endif -%}
         {{ content_for_layout }}
       </div>
     </main>
 
-    {% section 'page_cart-panel' %}
-    {% section 'page_footer' %}
+    {%- comment -%}
+      Theme settings → Cart. In "page" mode the drawer isn't rendered at all; the mini cart
+      confirmation (a block in the header) takes its place and the cart lives at /cart.
+    {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'page-cart-panel' %}
+    {%- endif -%}
+    {% section 'page-search-panel' %}
+    {% sections 'footer-group' %}
 
-    <div class="page-transition-overlay"></div>
-
-    {{ 'global.js' | asset_url | script_tag }}
-    {{ 'cart.js' | asset_url | script_tag }}
+    <script src="{{ 'global.js' | asset_url }}" defer></script>
+    <script src="{{ 'cart.js' | asset_url }}" defer></script>
 
     {%- if request.design_mode -%}
-      {{ 'shopify-editor.js' | asset_url | script_tag }}
+      <script src="{{ 'shopify-editor.js' | asset_url }}" defer></script>
     {%- endif -%}
 
-    {% section 'page_menu-panel' %}
+    {% section 'page-menu-panel' %}
 
-    {% render 'integrations_before_body_close' %}
+    {% render 'integrations-before-body-close' %}
 
   </body>
 </html>

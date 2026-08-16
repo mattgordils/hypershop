@@ -1,0 +1,107 @@
+{% comment %}
+  Stock counter / low-stock urgency block (PDP). Mirrors the pattern most themes
+  ship (Dawn "Inventory status", Impulse/Prestige "Only X left"):
+  - Shows only when the variant is tracked, in stock, and at/below a threshold.
+  - Message supports a [count] token, so it can be "Only [count] left" or a fixed
+    "Selling fast".
+  - Hidden when stock is above the threshold (or untracked / out of stock).
+
+  Wrapped in [data-dynamic-content] so it re-renders for the selected variant.
+{% endcomment %}
+
+{%- liquid
+  assign product = section.settings.product | default: product
+  assign variant = product.selected_or_first_available_variant
+  assign qty = variant.inventory_quantity
+
+  assign tracked = false
+  if variant.inventory_management != blank
+    assign tracked = true
+  endif
+
+  assign show_message = false
+  if tracked and qty > 0 and qty <= block.settings.threshold
+    assign show_message = true
+  endif
+
+  assign message = block.settings.message | replace: '[count]', qty
+-%}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+<div data-dynamic-content {{ block.shopify_attributes }}>
+  {% if show_message %}
+    <p class="block-stock-count flex items-center gap-2 {{ block.settings.text_size }} {{ space_below | strip }}">
+      {% if block.settings.show_dot %}
+        <span class="inline-block w-2 h-2 rounded-full bg-error shrink-0" aria-hidden="true"></span>
+      {% endif %}
+      <span>{{ message }}</span>
+    </p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Stock Counter",
+  "class": "block-stock-count-wrapper",
+  "settings": [
+    {
+      "type": "range",
+      "id": "threshold",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "label": "Low stock threshold",
+      "info": "Only shows when remaining stock is at or below this number. Hidden above it.",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "info": "Use [count] to insert the remaining quantity. e.g. \"Only [count] left\" or \"Selling fast\".",
+      "default": "Only [count] left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show indicator dot",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "default": "body-small",
+      "options": [
+        { "value": "body-tiny", "label": "Tiny" },
+        { "value": "body-small", "label": "Small" },
+        { "value": "body", "label": "Normal" },
+        { "value": "body-medium", "label": "Medium" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stock Counter"
+    }
+  ]
+}
+{% endschema %}

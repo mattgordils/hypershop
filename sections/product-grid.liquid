@@ -1,89 +1,91 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {%-liquid
-  assign show_filters = collection
   assign section_collection = section.settings.collection | default: collection
+  assign paginatable = true
 
   if section.settings.products != blank
+    # Manual product list: a plain (capped) array, not paginatable.
     assign section_collection = section.settings
+    assign paginatable = false
+  elsif section.settings.collection != blank
+    # A collection chosen via a section setting is a plain (max-50) array.
+    # Only the current collection template's `collection` object is paginatable.
+    assign paginatable = false
   endif
+
+  assign result_count = section_collection.products_count | default: section_collection.products.size
 -%}
 
-{% if section_collection.products.size > 0 %}
-  <{% if show_filters %}collection-grid{% else %}div{% endif %}
-    id="collectionItems"
-    class="block px-margin {{ spacing_class }}"
-    data-url="{{ collection.url }}"
-    data-section-id="{{ section.id }}"
-  >
-    {% if show_filters %}
-      <div class="mb-gutter">
-        {% if section_collection.products.size > 0 %}
-          <span class="text-light-text-color"> {{ section_collection.products.size }} Items </span>
-        {% endif %}
+{%- comment -%}
+  Render promo cards into a string for the grid. Each renders inside its own
+  Shopify block wrapper, which the block styles by id for grid placement.
+{%- endcomment -%}
+{%- capture promos -%}
+  {%- for block in section.blocks -%}
+    {% render block %}
+  {%- endfor -%}
+{%- endcapture -%}
 
-        {% if collection.sort_options.size > 0 %}
-          <div id="sortItems" class="relative z-2 inline-block align-top">
-            <button id="sortTrigger" class="h6 flex items-center justify-end gap-1 group">
-              <span class="border-b border-dashed border-hr-color transition group-hover:border-text-color">
-                Sort By
-                {% for option in collection.sort_options %}
-                  {% if option.value == collection.sort_by %}
-                    {{ option.name }}
-                  {% endif %}
-                {% endfor %}
-              </span>
-              <span class="icon block -mt-[2px] transition">
-                {% render 'icon_material' with icon: 'keyboard_arrow_down', class: 'block' %}
-              </span>
-            </button>
-            <ul
-              id="sortList"
-              class="hidden absolute top-[calc(100%+10px)] left-0 bg-bg flex flex-col items-start justify-start border border-hr-color pl-4 pr-8 py-3"
-            >
-              {% for option in collection.sort_options %}
-                <li class="filter-item">
-                  <label
-                    class="cursor-pointer body py-[.1em] flex items-start justify-center gap-x-2 whitespace-nowrap"
-                    for="{{ option.value }}"
-                  >
-                    <input
-                      class="hidden peer"
-                      name="sort_by"
-                      type="radio"
-                      value="{{ option.value }}"
-                      id="{{ option.value }}"
-                      {% if option.value == collection.sort_by %}
-                        checked
-                      {% endif %}
-                    >
-                    <div class="text-transparent peer-checked:text-current shrink-0 whitespace-nowrap flex items-center justify-center mt-[.24em] w-[10px] h-[10px] rounded-full bg-hr-color">
-                      <div class="marker w-[6px] h-[6px] rounded-full bg-current"></div>
-                    </div>
-                    {{ option.name }}
-                  </label>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-
-        {% render 'filters' %}
-      </div>
-    {% endif %}
-
-    <div class="max-w-site-max-w mx-auto relative z-1">
-      <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
-        {% for product in section_collection.products %}
-          <div>
-            {% render 'product_card' with product: product %}
-          </div>
-        {% endfor %}
-      </in-view>
+{%- if section.settings.show_breadcrumbs -%}
+  <div class="px-margin">
+    <div class="mx-auto max-w-site-max-w w-full">
+      {% render 'breadcrumbs', class: 'mb-gutter' %}
     </div>
-  </{% if show_filters %}collection-grid{% else %}div{% endif %}>
+  </div>
+{%- endif -%}
+
+{%- if section.settings.collection_nav != blank -%}
+  <div class="px-margin">
+    <div class="mx-auto max-w-site-max-w w-full">
+      {% render 'collection-nav',
+        collections: section.settings.collection_nav,
+        layout: section.settings.collection_nav_layout,
+        class: 'mb-gutter'
+      %}
+    </div>
+  </div>
+{%- endif -%}
+
+{%- comment -%}
+  Render whenever there are products OR filters to adjust — a filtered-to-zero collection
+  still needs its filters on screen, otherwise the shopper is stuck with no way back.
+{%- endcomment -%}
+{% if section_collection.products.size > 0 or collection.filters.size > 0 %}
+  {% if paginatable %}
+    {% paginate section_collection.products by section.settings.products_per_page %}
+      {% render 'product-grid',
+        products: section_collection.products,
+        filters: collection.filters,
+        sort_options: collection.sort_options,
+        sort_by: collection.sort_by,
+        results_url: collection.url,
+        result_count: result_count,
+        section_id: section.id,
+        promos: promos,
+        columns: section.settings.columns,
+        tablet_columns: section.settings.tablet_columns,
+        mobile_columns: section.settings.mobile_columns,
+        paginate: paginate,
+        pagination_style: section.settings.pagination_style,
+        spacing_class: spacing_class
+      %}
+    {% endpaginate %}
+  {% else %}
+    {%- comment -%} Manual list or a settings-referenced collection: a plain array, not paginatable. {%- endcomment -%}
+    {% render 'product-grid',
+      products: section_collection.products,
+      result_count: result_count,
+      section_id: section.id,
+      promos: promos,
+      columns: section.settings.columns,
+      tablet_columns: section.settings.tablet_columns,
+      mobile_columns: section.settings.mobile_columns,
+      spacing_class: spacing_class
+    %}
+  {% endif %}
 {% endif %}
 
 {% schema %}
@@ -95,7 +97,7 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection",
+      "label": "Collection"
     },
     {
       "type": "product_list",
@@ -103,36 +105,117 @@
       "label": "Products",
       "info": "This will override the selected collection"
     },
-		{
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Collection Navigation"
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_nav",
+      "label": "Collections",
+      "limit": 12,
+      "info": "A quick switcher shown above the grid. The collection being viewed is highlighted."
+    },
+    {
+      "type": "select",
+      "id": "collection_nav_layout",
+      "label": "Navigation layout",
+      "default": "link",
+      "options": [
+        { "value": "link", "label": "Links" },
+        { "value": "thumbnail", "label": "Thumbnails" }
+      ],
+      "visible_if": "{{ section.settings.collection_nav != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "paragraph",
+      "content": "Filter layout, collapsing, price style and hidden filters are set once in Theme settings → Filters, so this grid and search stay consistent. Which filters exist is managed in the Search & Discovery app."
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Pagination"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "Pagination style",
+      "default": "numbered",
+      "options": [
+        { "value": "numbered", "label": "Numbered" },
+        { "value": "load_more", "label": "Load more button" },
+        { "value": "infinite", "label": "Infinite scroll" }
+      ]
+    },
+    {
       "type": "select",
       "id": "section_spacing",
       "default": "medium",
       "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
-        {
-          "label": "None",
-          "value": "none"
-        },
-        {
-          "label": "Slim",
-          "value": "slim"
-        },
-        {
-          "label": "Small",
-          "value": "small"
-        },
-        {
-          "label": "Medium",
-          "value": "medium"
-        },
-        {
-          "label": "Large",
-          "value": "large"
-        }
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
       ]
     }
-	],
+  ],
+  "blocks": [
+    {
+      "type": "_promo-card"
+    }
+  ],
   "presets": [
     {
       "name": "Product Grid"
@@ -140,4 +223,3 @@
   ]
 }
 {% endschema %}
-

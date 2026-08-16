@@ -11,6 +11,19 @@
 
 import { getVariant } from './global'
 
+const getLiveRegion = () => {
+  let el = document.getElementById('variant-live-region');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'variant-live-region';
+    el.setAttribute('aria-live', 'polite');
+    el.setAttribute('aria-atomic', 'true');
+    el.className = 'sr-only';
+    document.body.appendChild(el);
+  }
+  return el;
+};
+
 class VariantSelects extends HTMLElement {
   constructor() {
     super();
@@ -79,8 +92,12 @@ class VariantSelects extends HTMLElement {
     this.updateCurrentVariant();
 
     if (!this.currentVariant) {
+      getLiveRegion().textContent = 'Selected combination is unavailable.';
       return;
     }
+
+    const availText = this.currentVariant.available ? 'In stock' : 'Sold out';
+    getLiveRegion().textContent = `${this.currentVariant.title} — ${availText}.`;
 
     // Step 3: Store variant ID (will be needed after DOM replacement)
     const variantId = this.currentVariant.id;
@@ -175,6 +192,28 @@ class VariantSelects extends HTMLElement {
         hasVisibleBadges = true;
       } else {
         soldOutBadge.classList.add('hidden');
+      }
+    }
+
+    // Update low stock badge. The threshold is stamped on the element by Liquid, since
+    // it's a theme setting the JS has no other way to read. `inventory_quantity` is only
+    // present when the variant is tracked, which is exactly when the badge applies —
+    // and it never shows alongside "Sold Out".
+    const lowStockBadge = containerElement.querySelector('[data-badge="low-stock"]');
+    if (lowStockBadge) {
+      const threshold = Number(lowStockBadge.dataset.threshold) || 0;
+      const remaining = variant.inventory_quantity;
+      const isLow =
+        variant.available &&
+        typeof remaining === 'number' &&
+        remaining > 0 &&
+        remaining <= threshold;
+
+      if (isLow) {
+        lowStockBadge.classList.remove('hidden');
+        hasVisibleBadges = true;
+      } else {
+        lowStockBadge.classList.add('hidden');
       }
     }
 
@@ -318,24 +357,14 @@ class VariantSelects extends HTMLElement {
       const form = this.closest('add-to-cart-form');
       const jsonScript = form.querySelector('[type="application/json"]#productJson');
 
-      if (!jsonScript) {
-        console.error('Could not find variant data JSON in card');
-        return;
-      }
+      if (!jsonScript) return;
 
       const variantData = JSON.parse(jsonScript.textContent);
-      console.log('Variant data from page:', variantData);
-      console.log('Current variant:', this.currentVariant);
 
       // Find the selected variant
       const selectedVariant = variantData.find(v => v.id === this.currentVariant.id);
 
-      if (!selectedVariant) {
-        console.error('Could not find selected variant in variant data');
-        return;
-      }
-
-      console.log('Selected variant:', selectedVariant);
+      if (!selectedVariant) return;
 
       // Update card image if variant has an image
       if (selectedVariant.featured_image) {
@@ -583,18 +612,24 @@ class VariantSelects extends HTMLElement {
     oldDynamicElements.forEach((oldElement, index) => {
       const newElement = newDynamicElements[index];
       if (newElement && oldElement.parentNode) {
-        // Only skip updates for actual image galleries (aspect-square class)
-        // Don't skip for product info sections that happen to contain images
-        const isImageGallery = oldElement.classList.contains('aspect-square');
+        // Leave the gallery alone when the variant maps to the same media in the same
+        // order. Replacing it tears down the live <slide-show> and rebuilds it at slide
+        // one, so a shopper picking a size — which usually shares the colour's photos —
+        // would be thrown back to the first image mid-browse.
+        //
+        // Keyed on the leading media id rather than an <img> src: srcset means the two
+        // documents can pick different candidates for the same photo, and the old check
+        // (a class the PDP gallery never had) never ran at all.
+        const oldMedia = oldElement.querySelector('[data-media-key]');
+        const newMedia = newElement.querySelector('[data-media-key]');
 
-        if (isImageGallery) {
-          // Compare image sources to see if variant image changed
-          const oldImg = oldElement.querySelector('img');
-          const newImg = newElement.querySelector('img');
-
-          if (oldImg && newImg && oldImg.src === newImg.src) {
-            return;
-          }
+        if (
+          oldMedia &&
+          newMedia &&
+          oldMedia.dataset.mediaKey &&
+          oldMedia.dataset.mediaKey === newMedia.dataset.mediaKey
+        ) {
+          return;
         }
 
         oldElement.parentNode.replaceChild(

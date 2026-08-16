@@ -25,10 +25,9 @@ and uses section settings from the containing section
   endif
 -%}
 
-<style>
+{% stylesheet %}
   .section-wide-media .block-media-slide .block-media {
-    {% comment %} min-height: 100%;
-    width: 100%; {% endcomment %}
+    /* min-height: 100%; width: 100%; */
     flex-grow: 1;
     position: relative;
   }
@@ -42,7 +41,7 @@ and uses section settings from the containing section
     top: 0;
     left: 0;
   }
-</style>
+{% endstylesheet %}
 
 <div class="media z-1 {% if height_auto %}relative{% else %}absolute top-0 bottom-0 left-0 w-full{% endif %}">
   <div class="absolute top-0 left-0 w-full h-full bg-true-black z-2" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.00 }}"></div>
@@ -54,7 +53,7 @@ and uses section settings from the containing section
     </div>
   </div>
 </div>
-<div class="theme-dark !bg-transparent {% if height_auto %}absolute top-0 left-0 w-full h-full{% else %}h-full relative{% endif %} overlay-content z-1 flex {{ block.settings.h_alignment }} {{ block.settings.v_alignment }} px-margin pb-margin pt-[--content-padding]">
+<div class="theme-dark !bg-transparent {% if height_auto %}absolute top-0 left-0 w-full h-full{% else %}h-full relative{% endif %} overlay-content z-1 flex {{ block.settings.h_alignment }} {{ block.settings.v_alignment }} px-margin pb-margin pt-(--content-padding)">
   <div class="grid gap-gutter w-full sm:w-[66.666%] xl:w-1/2 2xl:w-1/3">
     <div>
       {% content_for 'block',

@@ -1,0 +1,31 @@
+{%- comment -%}
+  Order note. Saved straight to cart.note via /cart/update.js, so it carries through to
+  checkout and shows on the order in admin.
+
+  Rendered outside every #cartUpdate region on purpose: those get their innerHTML replaced
+  on a cart refresh, which would wipe whatever is being typed mid-edit.
+
+  @param {string} [label] - visible label; falls back to the section setting
+{%- endcomment -%}
+
+{%- liquid
+  assign note_label = label | default: section.settings.cart_note_label | default: 'Add a note to your order'
+  assign note_id = 'CartNote-' | append: section.id
+-%}
+
+<cart-note class="cart-note block pt-(--cart-padding) {{ classname }}">
+  <label for="{{ note_id }}" class="body-small pb-2 flex gap-3 justify-between">
+    {{ note_label }}
+    <span class="cart-note__status text-light-text-color opacity-0 transition-opacity" data-cart-note-status aria-live="polite"></span>
+  </label>
+
+  <textarea
+    id="{{ note_id }}"
+    name="note"
+    rows="1"
+    data-cart-note
+    class="w-full body-small resize-none h-[unset]"
+    placeholder="{{ 'sections.cart.note_placeholder' | t }}"
+    style="field-sizing: content;"
+  >{{ cart.note }}</textarea>
+</cart-note>

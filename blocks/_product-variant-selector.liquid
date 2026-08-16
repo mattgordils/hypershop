@@ -1,7 +1,20 @@
-<div data-dynamic-content>
-  {% render 'product_option_form' with
+{%- liquid
+  assign product = section.settings.product | default: product
+  comment
+    Off a product template (a featured product) run the variant component in
+    client-side mode so it updates from productJson without writing the URL.
+  endcomment
+  assign variant_context = 'PDP'
+  if section.settings.product != blank
+    assign variant_context = 'featured'
+  endif
+-%}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+<div data-dynamic-content class="{{ space_below | strip }}">
+  {% render 'product-option-form',
     product: product,
-    context: 'PDP'
+    context: variant_context
   %}
 </div>
 
@@ -9,8 +22,28 @@
 {
   "name": "Variant Selector",
   "class": "block-variant-selector",
-  "settings": [],
-  "blocks": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
+    }
+  ],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Variant Selector"

@@ -1,0 +1,97 @@
+{%- comment -%}
+  Newsletter signup, using Shopify's native customer form: a submission creates a customer
+  tagged "newsletter" and subscribed to email marketing. The tag is what marks them as a
+  subscriber rather than just an account.
+
+  newsletter-form.js posts it in place and reads the outcome from the response, so there's
+  no page reload — but the form works untouched with JavaScript off, which is why nothing
+  here depends on it.
+
+  `id_prefix` namespaces every id so this can appear more than once on a page (footer plus
+  a newsletter section, say) without colliding — duplicate ids would point every label and
+  aria-describedby at the first instance.
+
+  @param {string} [id_prefix]     - default 'footer'
+  @param {string} [confirm_text]  - shown in the field after a successful signup
+  @param {string} [placeholder]
+  @param {string} [class]         - classes for the field row
+{%- endcomment -%}
+
+{%- liquid
+  assign uid = id_prefix | default: 'footer'
+  assign confirm = confirm_text | default: 'Thank you'
+  assign field_placeholder = placeholder | default: 'general.newsletter.placeholder' | t
+  assign row_class = class | default: 'border-b border-solid bg-transparent font-expanded w-full flex'
+
+  assign form_id = 'Newsletter-' | append: uid
+  assign input_id = form_id | append: '-input'
+  assign error_id = form_id | append: '-error'
+-%}
+
+{%- comment -%}
+  The success state is rendered here rather than only in JS: a non-JS submission reloads
+  the page, and this is what it comes back to. JS reuses the same markup.
+{%- endcomment -%}
+<newsletter-form
+  data-success="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
+  data-success-text="{{ confirm | escape }}"
+  data-placeholder="{{ field_placeholder | escape }}"
+  data-error-text="{{ 'general.newsletter.error' | t | escape }}"
+  data-reset-delay="3000"
+>
+  {% form 'customer', id: form_id, class: 'w-full' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    <label class="sr-only" for="{{ input_id }}">
+      {{ 'general.newsletter.email_label' | t }}
+    </label>
+
+    <div class="{{ row_class }}">
+      <input
+        type="email"
+        id="{{ input_id }}"
+        name="contact[email]"
+        class="underlined grow"
+        data-newsletter-input
+        value=""
+        placeholder="{% if form.posted_successfully? %}{{ confirm | escape }}{% else %}{{ field_placeholder | escape }}{% endif %}"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        required
+        {% if form.errors %}
+          aria-invalid="true"
+          aria-describedby="{{ error_id }}"
+        {% endif %}
+      >
+      <button type="submit" title="{{ 'general.newsletter.submit' | t }}" class="button circle transparent shrink-0 grow-0">
+        <span data-newsletter-icon="default"{% if form.posted_successfully? %} hidden{% endif %}>
+          {% render 'icon-material', icon: 'arrow_forward' %}
+        </span>
+        <span data-newsletter-icon="success"{% unless form.posted_successfully? %} hidden{% endunless %}>
+          {% render 'icon-material', icon: 'check' %}
+        </span>
+      </button>
+    </div>
+
+    {%- comment -%}
+      Both regions always render so the JS path has somewhere to write. The confirmation
+      reads as a placeholder visually, which screen readers don't announce — hence the
+      separate live region.
+    {%- endcomment -%}
+    <div class="sr-only" data-newsletter-announce aria-live="polite">
+      {%- if form.posted_successfully? -%}{{ confirm }}{%- endif -%}
+    </div>
+
+    <div
+      id="{{ error_id }}"
+      data-newsletter-error
+      class="body-small w-full text-error mt-2"
+      aria-live="polite"
+      {% unless form.errors %}hidden{% endunless %}
+    >
+      {%- if form.errors -%}{{ form.errors | default_errors }}{%- endif -%}
+    </div>
+  {% endform %}
+</newsletter-form>

@@ -1,5 +1,6 @@
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 {% if block.settings.text != blank %}
-  <div class="rich-text {{ block.settings.size }}">
+  <div class="rich-text {{ block.settings.size }} {{ space_below | strip }}">
     {{ block.settings.text }}
   </div>
 {% endif %}
@@ -20,26 +21,33 @@
       "default": "",
       "label": "Text Size",
       "options": [
-        {
-          "label": "Small",
-          "value": "body-small"
-        },
-        {
-          "label": "Normal",
-          "value": ""
-        },
-        {
-          "label": "Medium",
-          "value": "body-medium"
-        },
-        {
-          "label": "Large",
-          "value": "body-large"
-        }
+        { "label": "Small", "value": "body-small" },
+        { "label": "Normal", "value": "body" },
+        { "label": "Medium", "value": "body-medium" },
+        { "label": "Large", "value": "body-large" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "none",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
       ]
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Text"

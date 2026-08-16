@@ -1,9 +1,46 @@
-<div data-dynamic-content>
-  {% render 'add_to_cart_button' with
-    class: "w-full large",
-    product: product,
-    show_price: block.settings.show_price
-  %}
+{%-liquid
+  assign product = section.settings.product | default: product
+
+  assign show_qty = block.settings.show_qty
+  assign qty_layout = block.settings.qty_layout
+  assign button_full_width = block.settings.button_full_width
+
+  assign button_class = block.settings.button_size
+  if button_full_width
+    assign button_class = button_class | append: ' w-full'
+  endif
+
+  assign wrapper_class = 'flex-col items-stretch'
+  if qty_layout == 'inline' or show_qty == false
+    assign wrapper_class = 'flex-row items-stretch'
+  endif
+
+  assign button_wrapper_class = 'shrink-0'
+  if button_full_width
+    assign button_wrapper_class = 'grow'
+  endif
+-%}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+<div class="{{ space_below | strip }}">
+  <div class="flex w-full gap-4 {{ wrapper_class }}">
+    {%- if show_qty -%}
+      <div class="grow-0 shrink-0 button bg-transparent! border-hr-color! {{ block.settings.button_size }}">
+        {% render 'quantity-adjust',
+          item: product.selected_or_first_available_variant
+        %}
+      </div>
+    {%- endif -%}
+    <div data-dynamic-content class="{{ button_wrapper_class }}">
+      {% render 'add-to-cart-button',
+        class: button_class,
+        product: product,
+        show_price: block.settings.show_price
+      %}
+    </div>
+  </div>
+  {%- comment -%} Populated by the add-to-cart handler when a cart error occurs (e.g. not enough stock) {%- endcomment -%}
+  <div data-cart-error role="alert" class="hidden text-error body-small pt-2"></div>
 </div>
 
 {% schema %}
@@ -16,9 +53,70 @@
       "id": "show_price",
       "default": true,
       "label": "Show Price in Button"
+    },
+    {
+      "type": "header",
+      "content": "Quantity"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_qty",
+      "default": true,
+      "label": "Show quantity input"
+    },
+    {
+      "type": "select",
+      "id": "qty_layout",
+      "label": "Quantity layout",
+      "default": "inline",
+      "visible_if": "{{ block.settings.show_qty }}",
+      "options": [
+        { "label": "Inline with Add to Cart", "value": "inline" },
+        { "label": "Stacked above Add to Cart", "value": "stacked" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_full_width",
+      "default": true,
+      "label": "Full-width button"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "default": "default",
+      "options": [
+        { "label": "small", "value": "small" },
+        { "label": "Medium", "value": "default" },
+        { "label": "Large", "value": "large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Buy Buttons"

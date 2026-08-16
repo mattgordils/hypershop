@@ -1,0 +1,35 @@
+<div class="{{ class }} w-fit flex lg:h-full">
+  <pdp-qty-input
+    class="flex items-center"
+    data-increment="1"
+    data-min-count="1"
+    {% if item.inventory_policy != 'continue' %}
+      data-max-count="{{ item.inventory_quantity }}"
+    {% else %}
+      data-max-count="9999"
+    {% endif %}
+  >
+    <button
+      id="qtyDown"
+      class="button unpadd transparent circle tiny quantity-change quantity-down"
+      title="Decrease quantity"
+      style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
+    >
+      {% render 'icon-material', icon: 'remove' %}
+    </button>
+    <input
+      type="number"
+      value="1"
+      data-input="qty"
+      class="qty-input pointer-events-none !px-0 !bg-transparent !text-center !border-none grow w-[3em]"
+    />
+    <button
+      id="qtyUp"
+      class="button unpadd transparent circle tiny quantity-change quantity-up"
+      title="Increase quantity"
+      style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
+    >
+      {% render 'icon-material', icon: 'add' %}
+    </button>
+  </pdp-qty-input>
+</div>

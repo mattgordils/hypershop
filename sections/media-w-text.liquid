@@ -1,9 +1,9 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% capture padding_class %}
-  {% render 'util-section-padding' with space: section.settings.section_padding %}
+  {% render 'util-section-padding', space: section.settings.section_padding %}
 {% endcapture %}
 
 {%-liquid
@@ -46,7 +46,7 @@
 -%}
 
 <div class="{{ spacing_class }} {{ padding_class }} {{ wrapper_class }} {{ section.settings.color_scheme }} section-inner">
-  <in-view class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm {{ section.settings.v_alignment }}">
+  <in-view class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm max-w-site-max-w mx-auto {{ section.settings.v_alignment }}">
     {% if section.settings.media_placement_mobile != 'bottom' %}
       <div class="md:col-span-6 {{ media_col_class }}">
         {% content_for 'block',

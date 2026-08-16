@@ -1,0 +1,52 @@
+{%- comment -%}
+  A merchant-uploaded header icon, with the same crossfade the logo uses: over a
+  transparent header the inverted version fades in, and back out once the header solidifies
+  or a dropdown opens. The trigger lives in page-header's stylesheet, shared with the logo,
+  so the two can never drift out of step.
+
+  Candidates are the rendered size at 1x and 2x — nothing larger is ever displayed — with a
+  `sizes` to match. Without it the browser assumes 100vw and takes the largest file, which
+  is how an 18px icon was pulling a 72px one.
+
+  @param {object} icon
+  @param {object} [icon_inverted]
+  @param {number} [size] - rendered height in px
+  @param {string} [alt]
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_size = size | default: 18
+  assign icon_size_2x = icon_size | times: 2
+  assign icon_widths = icon_size | append: ', ' | append: icon_size_2x
+  assign icon_sizes = icon_size | append: 'px'
+  assign icon_class = 'block h-(--header-icon-size) w-auto object-contain'
+-%}
+
+{%- if icon != blank -%}
+  <span
+    class="icon-stack shrink-0{% if icon_inverted != blank %} has-inverted{% endif %}"
+    style="--header-icon-size: {{ icon_size }}px;"
+  >
+    <span class="icon-layer icon-layer--default">
+      {{ icon | image_url: width: icon_size_2x | image_tag:
+        widths: icon_widths,
+        sizes: icon_sizes,
+        alt: alt,
+        class: icon_class,
+        loading: 'eager'
+      }}
+    </span>
+
+    {%- if icon_inverted != blank -%}
+      <span class="icon-layer icon-layer--inverted" aria-hidden="true">
+        {{ icon_inverted | image_url: width: icon_size_2x | image_tag:
+          widths: icon_widths,
+          sizes: icon_sizes,
+          alt: '',
+          class: icon_class,
+          loading: 'eager'
+        }}
+      </span>
+    {%- endif -%}
+  </span>
+{%- endif -%}

@@ -1,0 +1,92 @@
+/* Price slider
+   Two range inputs share one track. Both are full width and stacked, so either thumb
+   can travel the whole range (halving the track would make 60–80 unselectable). The
+   inputs ignore pointer events; only the thumbs take them, so whichever thumb is under
+   the cursor gets the drag. --fill-start / --fill-end are set by price-slider.js. */
+price-slider {
+  --price-track-height: 2px;
+  --price-thumb-size: 14px;
+
+  display: block;
+}
+
+.price-slider__track {
+  position: relative;
+  height: var(--price-thumb-size);
+  isolation: isolate;
+}
+
+.price-slider__track::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: calc((var(--price-thumb-size) - var(--price-track-height)) / 2);
+  height: var(--price-track-height);
+  background: var(--hr-color);
+}
+
+.price-slider__fill {
+  position: absolute;
+  top: calc((var(--price-thumb-size) - var(--price-track-height)) / 2);
+  left: var(--fill-start, 0%);
+  right: calc(100% - var(--fill-end, 100%));
+  height: var(--price-track-height);
+  background: var(--text-color);
+}
+
+.price-slider__input {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  width: 100%;
+  height: var(--price-thumb-size);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.price-slider__input:focus-visible {
+  outline: none;
+}
+
+/* Thumbs. The pseudo-elements can't be combined into one rule — an unknown selector
+   in the list invalidates the whole thing in every browser. */
+.price-slider__input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--price-thumb-size);
+  height: var(--price-thumb-size);
+  border: 1px solid var(--text-color);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--bg-color);
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.price-slider__input::-moz-range-thumb {
+  width: var(--price-thumb-size);
+  height: var(--price-thumb-size);
+  border: 1px solid var(--text-color);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--bg-color);
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.price-slider__input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.price-slider__input:focus-visible::-moz-range-thumb {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.price-slider__input:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}

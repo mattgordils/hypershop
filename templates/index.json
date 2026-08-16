@@ -9,12 +9,7 @@
  */
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {}
-    }
   },
   "order": [
-    "settings"
   ]
 }

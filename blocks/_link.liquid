@@ -5,10 +5,10 @@
   endif
 %}
 
-{% render 'link' with
+{% render 'link',
   label: block.settings.label,
   target: target,
-  class: 'animate-underline',
+  class: 'button-text animate-underline pb-[.15em]',
   to: block.settings.link
 %}
 
@@ -29,7 +29,9 @@
       "label": "Link URL"
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Link"

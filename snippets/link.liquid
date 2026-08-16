@@ -1,20 +1,22 @@
 {% if label != blank and to != blank %}
   <a
     href="{{ to }}"
+    {% if target %}
     target="{{ target }}"
+    {% endif %}
     class="{{ class }}"
     title="{{ label }}"
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon-material', icon: icon %}
       {% endif %}
       {% if icon_svg != blank %}
         {{ icon_svg }}
       {% endif %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon-material', icon: icon %}
       {% endif %}
       {% if icon_svg != blank %}
         {{ icon_svg }}

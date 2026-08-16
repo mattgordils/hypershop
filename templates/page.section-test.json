@@ -9,122 +9,123 @@
  */
 {
   "sections": {
-    "settings": {
-      "type": "page_settings",
-      "settings": {
-        "header_color": "var(--bg-color)",
-        "header_overlap": true
-      }
-    },
-    "wide_media_cwqYYx": {
+    "wide_media": {
       "type": "wide-media",
       "blocks": {
-        "media": {
-          "type": "_media",
-          "static": true,
+        "slide_1": {
+          "type": "_media-slide",
           "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/needle-on-record.jpg",
-            "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4"
-          },
-          "blocks": {}
-        },
-        "text-lockup": {
-          "type": "_text-lockup",
-          "static": true,
-          "settings": {
-            "alignment": "center"
+            "overlay_opacity": 0,
+            "v_alignment": "items-center",
+            "h_alignment": "justify-center"
           },
           "blocks": {
-            "headline_a9HnQG": {
-              "type": "_headline",
-              "name": "Headline",
+            "media": {
+              "type": "_media",
               "settings": {
-                "text": "All The Sections at Your Finger-Tips",
-                "style": "h1",
-                "element": "h1"
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg",
+                "video": "shopify://files/videos/YONY Fall Winter 2023 (Teaser).mp4"
               },
               "blocks": {}
             },
-            "actions_h9cYWr": {
-              "type": "_actions",
-              "name": "Links",
-              "settings": {},
-              "blocks": {
-                "button_CmWCY6": {
-                  "type": "_button",
-                  "name": "Button",
-                  "settings": {
-                    "label": "Create Your Page",
-                    "link": "shopify://pages/section-dump",
-                    "new_tab": false,
-                    "style": "primary"
-                  },
-                  "blocks": {}
-                }
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "center",
+                "media_max_width": 2000
               },
-              "block_order": [
-                "button_CmWCY6"
-              ]
+              "blocks": {}
             }
           },
           "block_order": [
-            "headline_a9HnQG",
-            "actions_h9cYWr"
+            "media"
+          ]
+        },
+        "slide_2": {
+          "type": "_media-slide",
+          "settings": {
+            "overlay_opacity": 0,
+            "v_alignment": "items-center",
+            "h_alignment": "justify-center"
+          },
+          "blocks": {
+            "media": {
+              "type": "_media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg"
+              },
+              "blocks": {}
+            },
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "center",
+                "media_max_width": 2000
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media"
           ]
         }
       },
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ],
       "name": "Wide Media",
       "settings": {
-        "overlay_opacity": 0,
-        "h_alignment": "justify-center",
-        "v_alignment": "items-center",
         "section_height": "h-screen-height",
+        "section_width": "full",
+        "section_spacing": "medium",
+        "header_overlap": true,
+        "slideshow_autoplay": false,
+        "slideshow_autoplay_speed": 6
+      }
+    },
+    "product_carousel": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "heading": "Featured products",
+        "collection": "frontpage",
+        "products": [],
+        "desktop_columns": 4,
+        "tablet_columns": 2.5,
+        "mobile_columns": 1.5,
+        "show_arrows": true,
+        "show_pager": true,
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
-    "text_section_7NkykN": {
+    "text_section": {
       "type": "text-section",
       "blocks": {
         "text-lockup": {
           "type": "_text-lockup",
           "static": true,
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
-          "blocks": {
-            "headline_Mz3m4T": {
-              "type": "_headline",
-              "name": "Headline",
-              "settings": {
-                "text": "All of the sections you could want...",
-                "style": "h2",
-                "element": "h2"
-              },
-              "blocks": {}
-            },
-            "rich_text_f4J9nm": {
-              "type": "_rich-text",
-              "name": "Text",
-              "settings": {
-                "text": "<p>Build the perfect page with this amazing toolkit of sections and blocks. You'll never want to do it any other way again!</p>",
-                "size": "body-medium"
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "headline_Mz3m4T",
-            "rich_text_f4J9nm"
-          ]
+          "blocks": {}
         }
       },
       "name": "Text Section",
       "settings": {
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
-    "media_w_text_NEGyQf": {
+    "media_w_text": {
       "type": "media-w-text",
       "blocks": {
         "media": {
@@ -140,196 +141,1093 @@
           "type": "_text-lockup",
           "static": true,
           "settings": {
-            "alignment": "center"
+            "alignment": "center",
+            "media_max_width": 2000
           },
           "blocks": {
-            "headline_dUphXT": {
+            "headline_LTyQhA": {
               "type": "_headline",
               "name": "Headline",
               "settings": {
                 "text": "Headline",
                 "style": "h2",
-                "element": "h2"
+                "element": "h2",
+                "space_below": "none"
               },
               "blocks": {}
             },
-            "rich_text_aygqzK": {
+            "rich_text_CApnCN": {
               "type": "_rich-text",
               "name": "Text",
               "settings": {
-                "text": "<p>Put text next to an image or video if you like. It can be pretty nice.</p>",
-                "size": ""
+                "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>",
+                "size": "",
+                "space_below": "none"
               },
               "blocks": {}
             },
-            "actions_wheHiN": {
+            "actions_bQnfaD": {
               "type": "_actions",
               "name": "Links",
-              "settings": {},
+              "settings": {
+                "space_below": "none"
+              },
               "blocks": {
-                "button_6Ua8LD": {
+                "button_BETJjp": {
                   "type": "_button",
                   "name": "Button",
                   "settings": {
-                    "label": "Button Text",
-                    "link": "shopify://products/camp-collar-shirt-with-piping-5",
+                    "label": "Shop Now",
+                    "link": "shopify://collections/all",
                     "new_tab": false,
                     "style": "primary"
+                  },
+                  "blocks": {}
+                },
+                "link_7g7G3L": {
+                  "type": "_link",
+                  "name": "Link",
+                  "settings": {
+                    "label": "Our Story",
+                    "link": "shopify://pages/section-dump"
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
-                "button_6Ua8LD"
+                "button_BETJjp",
+                "link_7g7G3L"
               ]
             }
           },
           "block_order": [
-            "headline_dUphXT",
-            "rich_text_aygqzK",
-            "actions_wheHiN"
+            "headline_LTyQhA",
+            "rich_text_CApnCN",
+            "actions_bQnfaD"
           ]
         }
       },
       "name": "Media With Text",
       "settings": {
-        "h_alignment": "justify-center",
+        "media_placement": "left",
         "v_alignment": "items-center",
+        "edge_to_edge": false,
+        "media_placement_mobile": "top",
+        "color_scheme": "",
+        "section_padding": "none",
         "section_spacing": "medium"
       }
     },
-    "product_grid_QwgTtj": {
+    "columns": {
+      "type": "columns",
+      "blocks": {
+        "col_1": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_3Rfq4J": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/tangerine_600x_dd70ad42-ff5e-4238-90ef-780623cb0187.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Tangerine Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A microbial substrate that has a positive impact on the oral environment</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_3Rfq4J",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_2": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HaCBEd": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/grapefruit_600x_c2bde855-dcf2-4689-9432-c0663853fc36.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin C",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A powerful antioxidant that fights decay and gingivitis</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HaCBEd",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_3": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_ecpbHL": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/seaweed_600x_d4a77a4c-fa44-4baa-87dd-0b453e533da3.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Crispus Chondrus",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Prebiotic that balances oral ecology and contains minerals for strong teeth</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_ecpbHL",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "text_lockup_G94H3G": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_dU3NVN": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/papaya_600x_9e823953-b20b-4e54-ad5f-c378fbc9bd1d.avif"
+              },
+              "blocks": {}
+            },
+            "headline_KXGVrp": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin E",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_jUJMF9": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Supports tissue repair and combats oxidative stress</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_dU3NVN",
+            "headline_KXGVrp",
+            "rich_text_jUJMF9"
+          ]
+        },
+        "text_lockup_dYUYWp": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_QPD9Qc": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/crans_600x_681de5fc-5794-44a7-8ffe-3bf30778a36f.webp"
+              },
+              "blocks": {}
+            },
+            "headline_U9Lcyk": {
+              "type": "_headline",
+              "settings": {
+                "text": "Cranberry Seed Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_xMJWpX": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Inflammation calming prebiotic nutrient with essential fatty acids</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_QPD9Qc",
+            "headline_U9Lcyk",
+            "rich_text_xMJWpX"
+          ]
+        },
+        "text_lockup_WJfpFQ": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HLLMkE": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/lemon_600x_3ee51094-f574-412f-9dfa-067dec2bcb5e.webp"
+              },
+              "blocks": {}
+            },
+            "headline_yXjacB": {
+              "type": "_headline",
+              "settings": {
+                "text": "CoQ10",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_gCwcbk": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Cell-energy enhancer for healthy mitochondrial function</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HLLMkE",
+            "headline_yXjacB",
+            "rich_text_gCwcbk"
+          ]
+        }
+      },
+      "block_order": [
+        "col_1",
+        "col_2",
+        "col_3",
+        "text_lockup_G94H3G",
+        "text_lockup_dYUYWp",
+        "text_lockup_WJfpFQ"
+      ],
+      "name": "Columns",
+      "settings": {
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 6,
+        "tablet_columns": 3,
+        "mobile_slideshow": false,
+        "mobile_columns": 2,
+        "contain_square": true,
+        "limit_media_width": true,
+        "media_max_width": 400,
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
+    "columns_cQyTMT": {
+      "type": "columns",
+      "blocks": {
+        "text_lockup_HETzqh": {
+          "type": "_text-lockup",
+          "name": "Text Lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "media_i9Ypra": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg"
+              },
+              "blocks": {}
+            },
+            "headline_7MQqCh": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "The Best Arouound",
+                "style": "h3",
+                "element": "h4",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_HLTXFd": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Nothings ever gonna bring you down</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_i9Ypra",
+            "headline_7MQqCh",
+            "rich_text_HLTXFd"
+          ]
+        },
+        "text_lockup_wDrHUC": {
+          "type": "_text-lockup",
+          "name": "Text Lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "media_LVjFb7": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/needle-on-record.jpg"
+              },
+              "blocks": {}
+            },
+            "headline_qqUAtV": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "The Best Arouound",
+                "style": "h3",
+                "element": "h1",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_hnbe8C": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Nothings ever gonna bring you down</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_LVjFb7",
+            "headline_qqUAtV",
+            "rich_text_hnbe8C"
+          ]
+        }
+      },
+      "block_order": [
+        "text_lockup_HETzqh",
+        "text_lockup_wDrHUC"
+      ],
+      "name": "Columns",
+      "settings": {
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 2,
+        "tablet_columns": 2,
+        "mobile_slideshow": false,
+        "mobile_columns": 1,
+        "contain_square": false,
+        "limit_media_width": false,
+        "media_max_width": 1000,
+        "color_scheme": "theme-light-grey",
+        "section_padding": "medium",
+        "section_spacing": "medium"
+      }
+    },
+    "columns-2": {
+      "type": "columns",
+      "blocks": {
+        "col_1": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_3Rfq4J": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/tangerine_600x_dd70ad42-ff5e-4238-90ef-780623cb0187.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Tangerine Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A microbial substrate that has a positive impact on the oral environment</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_3Rfq4J",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_2": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HaCBEd": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/grapefruit_600x_c2bde855-dcf2-4689-9432-c0663853fc36.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin C",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>A powerful antioxidant that fights decay and gingivitis</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HaCBEd",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "col_3": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_ecpbHL": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/seaweed_600x_d4a77a4c-fa44-4baa-87dd-0b453e533da3.webp"
+              },
+              "blocks": {}
+            },
+            "headline": {
+              "type": "_headline",
+              "settings": {
+                "text": "Crispus Chondrus",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Prebiotic that balances oral ecology and contains minerals for strong teeth</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_ecpbHL",
+            "headline",
+            "rich_text"
+          ]
+        },
+        "text_lockup_G94H3G": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_dU3NVN": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/papaya_600x_9e823953-b20b-4e54-ad5f-c378fbc9bd1d.avif"
+              },
+              "blocks": {}
+            },
+            "headline_KXGVrp": {
+              "type": "_headline",
+              "settings": {
+                "text": "Vitamin E",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_jUJMF9": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Supports tissue repair and combats oxidative stress</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_dU3NVN",
+            "headline_KXGVrp",
+            "rich_text_jUJMF9"
+          ]
+        },
+        "text_lockup_dYUYWp": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_QPD9Qc": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/crans_600x_681de5fc-5794-44a7-8ffe-3bf30778a36f.webp"
+              },
+              "blocks": {}
+            },
+            "headline_U9Lcyk": {
+              "type": "_headline",
+              "settings": {
+                "text": "Cranberry Seed Oil",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_xMJWpX": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Inflammation calming prebiotic nutrient with essential fatty acids</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_QPD9Qc",
+            "headline_U9Lcyk",
+            "rich_text_xMJWpX"
+          ]
+        },
+        "text_lockup_WJfpFQ": {
+          "type": "_text-lockup",
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 120
+          },
+          "blocks": {
+            "media_HLLMkE": {
+              "type": "_media",
+              "name": "Media",
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/lemon_600x_3ee51094-f574-412f-9dfa-067dec2bcb5e.webp"
+              },
+              "blocks": {}
+            },
+            "headline_yXjacB": {
+              "type": "_headline",
+              "settings": {
+                "text": "CoQ10",
+                "style": "h4",
+                "element": "h3",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_gCwcbk": {
+              "type": "_rich-text",
+              "settings": {
+                "text": "<p>Cell-energy enhancer for healthy mitochondrial function</p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "media_HLLMkE",
+            "headline_yXjacB",
+            "rich_text_gCwcbk"
+          ]
+        }
+      },
+      "block_order": [
+        "col_1",
+        "col_2",
+        "col_3",
+        "text_lockup_G94H3G",
+        "text_lockup_dYUYWp",
+        "text_lockup_WJfpFQ"
+      ],
+      "name": "Columns",
+      "settings": {
+        "alignment": "center",
+        "slideshow": false,
+        "columns": 4,
+        "tablet_columns": 3,
+        "mobile_slideshow": true,
+        "mobile_columns": 2,
+        "contain_square": true,
+        "limit_media_width": true,
+        "media_max_width": 400,
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
+    "accordion": {
+      "type": "accordion",
+      "blocks": {
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "center",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "headline": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Frequently asked questions",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "headline"
+          ]
+        },
+        "accordion": {
+          "type": "_accordion",
+          "static": true,
+          "settings": {
+            "first_open": true,
+            "space_below": "none"
+          },
+          "blocks": {
+            "row_1": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "What is your return policy?",
+                "title_size": "body bold",
+                "text": "<p>We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in their original packaging.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "row_2": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "How long does shipping take?",
+                "title_size": "body bold",
+                "text": "<p>Standard shipping takes 3–5 business days. Expedited and express options are available at checkout.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            },
+            "row_3": {
+              "type": "_accordion-row",
+              "name": "Row",
+              "settings": {
+                "title": "Do you ship internationally?",
+                "title_size": "body bold",
+                "text": "<p>Yes, we ship to most countries worldwide. Any applicable duties and taxes are calculated at checkout.</p>",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "row_1",
+            "row_2",
+            "row_3"
+          ]
+        }
+      },
+      "name": "Accordion",
+      "settings": {
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
+    "blog_list": {
+      "type": "blog-list",
+      "name": "Blog Post List",
+      "settings": {
+        "blog": "",
+        "feature_first_item": true,
+        "show_date": false,
+        "show_excerpt": true,
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
+    },
+    "product_grid": {
       "type": "product-grid",
+      "blocks": {
+        "promo_card_8fqtki": {
+          "type": "_promo-card",
+          "name": "Promo Card",
+          "settings": {
+            "color_scheme": "theme-dark",
+            "overlay_opacity": 15,
+            "v_alignment": "items-start",
+            "col_start_d": 1,
+            "col_span_d": 2,
+            "row_start_d": 1,
+            "row_span_d": 2,
+            "col_start_t": 1,
+            "col_span_t": 2,
+            "row_start_t": 1,
+            "row_span_t": 2
+          },
+          "blocks": {
+            "media": {
+              "type": "_media",
+              "static": true,
+              "settings": {
+                "media_type": "image",
+                "image": "shopify://shop_images/Yony5f73544fa57c945f73544fa595b.345749235f73544fa595b.jpg"
+              },
+              "blocks": {}
+            },
+            "text-lockup": {
+              "type": "_text-lockup",
+              "static": true,
+              "settings": {
+                "alignment": "left",
+                "media_max_width": 2000
+              },
+              "blocks": {
+                "headline_VeWhde": {
+                  "type": "_headline",
+                  "name": "Headline",
+                  "settings": {
+                    "text": "Dress Real Cool",
+                    "style": "h2",
+                    "element": "h2",
+                    "space_below": "none"
+                  },
+                  "blocks": {}
+                },
+                "rich_text_G4GqzU": {
+                  "type": "_rich-text",
+                  "name": "Text",
+                  "settings": {
+                    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>",
+                    "size": "",
+                    "space_below": "none"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "headline_VeWhde",
+                "rich_text_G4GqzU"
+              ]
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "promo_card_8fqtki"
+      ],
       "name": "Product Grid",
       "settings": {
         "collection": "frontpage",
         "products": [],
+        "columns": 4,
+        "tablet_columns": 3,
+        "mobile_columns": 2,
+        "products_per_page": 24,
+        "pagination_style": "numbered",
         "section_spacing": "medium"
       }
     },
-    "accordion_6z8g69": {
-      "type": "accordion",
+    "product_recommendations": {
+      "type": "product-recommendations",
+      "name": "Product Recommendations",
+      "settings": {
+        "heading": "You may also like",
+        "product": "camp-collar-shirt-with-piping-5",
+        "min_products": 4,
+        "max_products": 8,
+        "hide_sold_out": true,
+        "section_spacing": "medium"
+      }
+    },
+    "main_contact_PdUKiV": {
+      "type": "main-contact",
       "blocks": {
-        "row_HyEyic": {
-          "type": "row",
+        "headline_JtKkWN": {
+          "type": "_headline",
+          "name": "Headline",
           "settings": {
-            "title": "Who is Jack Agro?",
-            "text": "<p>Jack Agro is the strongest, handsomest man who has ever lived.</p>"
-          }
+            "text": "Headline",
+            "style": "h2",
+            "element": "h2",
+            "space_below": "none"
+          },
+          "blocks": {}
         },
-        "row_zcUMtK": {
-          "type": "row",
+        "rich_text_9prbxM": {
+          "type": "_rich-text",
+          "name": "Text",
           "settings": {
-            "title": "Is Jack Agro answering these questions?",
-            "text": "<p>Ha! No. Jack’s too busy to take the time to answer these questions. It’s me. Seth, Jack’s intern.</p>"
-          }
-        },
-        "row_rdjQJr": {
-          "type": "row",
-          "settings": {
-            "title": "Where's my order Jack?",
-            "text": "<p>I don’t want to be rude but I just want remind you that this is Seth, Jack’s intern, not<br/>Jack. Jack’s too busy to be answering questions. You can click here (TODO?) for order tracking.</p>"
-          }
-        },
-        "row_C4H3kb": {
-          "type": "row",
-          "settings": {
-            "title": "Why is it called power jerky?",
-            "text": "<p>Back in the 1800s, when the American West was being settled, meat was salted, cut into long, thick strips, dried in the sun, and carried in saddlebags until needed for a snack or meal. It was called charqui, a Spanish word meaning dried meat. This was eventually Americanized into “jerky”. And we called AGRO “power jerky” because it has all the protein power of beef jerky but with fewer health and environmental issues.</p>"
-          }
-        },
-        "row_jNKPY8": {
-          "type": "row",
-          "settings": {
-            "title": "How much protein is in every serving of Agro Power Jerky?",
-            "text": "<p>10 grams. And 25g per bag.</p>"
-          }
-        },
-        "row_eBg6QU": {
-          "type": "row",
-          "settings": {
-            "title": "What kind of magic is this? Where did all the cholesterol and sodium go?",
-            "text": "<p>Because AGRO is made from plants not animals, it doesn’t have any cholesterol and doesn’t require all the salt to preserve it.</p>"
-          }
-        },
-        "row_pXbE9q": {
-          "type": "row",
-          "settings": {
-            "title": "What does the 100% happiness guarantee mean?",
-            "text": "<p>GETAGRO.com customers: If you don’t 100% love your jerky, we’ll give you a refund on your first order (up to 4 bags). Refunds are eligible within 6 months of the order date.</p>"
-          }
-        },
-        "row_iAJmRc": {
-          "type": "row",
-          "settings": {
-            "title": "Where does the caffeine in Energy Bolt come from?",
-            "text": "<p>Coffee beans.</p>"
-          }
-        },
-        "row_knnbWK": {
-          "type": "row",
-          "settings": {
-            "title": "Do you have any samples?",
-            "text": "<p>As a small company, we can’t send out any samples at the moment. However, we do offer a 100% happiness guarantee in case you don’t love it. So give it a shot, and let us know what you think!</p>"
-          }
-        },
-        "row_AXcqjQ": {
-          "type": "row",
-          "settings": {
-            "title": "Can I update my shipping address, edit, or cancel my order once I place it?",
-            "text": "<p>Orders typically ship out the same day at AGRO but we’ll do everything we can to catch your order. Please email us at <a href=\"mailto:hello@getagro.com\" title=\"mailto:hello@getagro.com\">hello@getagro.com</a> with your order number and we’ll do our best to work some magic for you.</p>"
-          }
-        },
-        "row_hH7J6E": {
-          "type": "row",
-          "settings": {
-            "title": "Can Agro be shipped outside the U.S.?",
-            "text": "<p>Right now AGRO can only be shipped within the US. We will eventually figure out how<br/>to ship things internationally, but we’re a small team and right now we’re 100% focused<br/>on the US.</p>"
-          }
-        },
-        "row_iXJaPW": {
-          "type": "row",
-          "settings": {
-            "title": "Will Agro ever be available at retail stores?",
-            "text": "<p>Yes. We are starting to work on it. If you work with a store that wants to offer AGRO to your customers, please email us at <a href=\"mailto:sales@GetAGRO.com\" title=\"mailto:sales@GetAGRO.com\">sales@GetAGRO.com</a>.</p>"
-          }
-        },
-        "row_ffAABd": {
-          "type": "row",
-          "settings": {
-            "title": "My order arrived but it's damaged. What do I do?",
-            "text": "<p>We’re so sorry to hear that! Please email us at <a href=\"mailto:hello@getagro.co\" title=\"mailto:hello@getagro.co\">hello@getagro.co</a> and let us know which flavors were damaged so we can get this sorted out right away.</p>"
-          }
+            "text": "<p>Some text to go with the form</p>",
+            "size": "",
+            "space_below": "none"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "row_HyEyic",
-        "row_zcUMtK",
-        "row_rdjQJr",
-        "row_C4H3kb",
-        "row_jNKPY8",
-        "row_eBg6QU",
-        "row_pXbE9q",
-        "row_iAJmRc",
-        "row_knnbWK",
-        "row_AXcqjQ",
-        "row_hH7J6E",
-        "row_iXJaPW",
-        "row_ffAABd"
+        "headline_JtKkWN",
+        "rich_text_9prbxM"
       ],
-      "name": "Accordion",
+      "name": "Contact Form",
       "settings": {
-        "title": "FAQs",
+        "button_label": "Send",
+        "success_message": "Thanks for reaching out — we will be in touch soon.",
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
+    },
+    "main_page_jaP7aG": {
+      "type": "main-page",
+      "name": "Page",
+      "settings": {
+        "show_title": true,
+        "color_scheme": "",
+        "section_spacing": "medium"
+      }
+    },
+    "main_product_KYJzwf": {
+      "type": "main-product",
+      "blocks": {
+        "product_badges_BTM8Vc": {
+          "type": "_product-badges",
+          "settings": {
+            "product": "",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "headline_RYgmGa": {
+          "type": "_headline",
+          "settings": {
+            "text": "{{ closest.product.title }}",
+            "style": "h2",
+            "element": "h1",
+            "space_below": "none"
+          },
+          "blocks": {}
+        },
+        "product_variant_selector_NpR8DJ": {
+          "type": "_product-variant-selector",
+          "settings": {
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "stock_count_EkkaaU": {
+          "type": "_stock-count",
+          "settings": {
+            "threshold": 10,
+            "message": "Only [count] left",
+            "show_dot": true,
+            "text_size": "body-small",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "product_buy_buttons_cgzK6e": {
+          "type": "_product-buy-buttons",
+          "settings": {
+            "show_price": true,
+            "button_size": "default",
+            "space_below": "medium"
+          },
+          "blocks": {}
+        },
+        "accordion_6XwdRG": {
+          "type": "_accordion",
+          "settings": {
+            "first_open": true,
+            "space_below": "none"
+          },
+          "blocks": {
+            "accordion_row_CrtM6E": {
+              "type": "_accordion-row",
+              "settings": {
+                "title": "Description",
+                "title_size": "body",
+                "text": "{{ closest.product.description }}",
+                "text_size": "body-small"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "accordion_row_CrtM6E"
+          ]
+        }
+      },
+      "block_order": [
+        "product_badges_BTM8Vc",
+        "headline_RYgmGa",
+        "product_variant_selector_NpR8DJ",
+        "stock_count_EkkaaU",
+        "product_buy_buttons_cgzK6e",
+        "accordion_6XwdRG"
+      ],
+      "name": "Product",
+      "settings": {
+        "product": "camp-collar-shirt-with-piping",
         "section_spacing": "medium"
       }
     }
   },
   "order": [
-    "settings",
-    "wide_media_cwqYYx",
-    "text_section_7NkykN",
-    "media_w_text_NEGyQf",
-    "product_grid_QwgTtj",
-    "accordion_6z8g69"
+    "wide_media",
+    "product_carousel",
+    "text_section",
+    "media_w_text",
+    "columns",
+    "columns_cQyTMT",
+    "columns-2",
+    "accordion",
+    "blog_list",
+    "product_grid",
+    "product_recommendations",
+    "main_contact_PdUKiV",
+    "main_page_jaP7aG",
+    "main_product_KYJzwf"
   ]
 }

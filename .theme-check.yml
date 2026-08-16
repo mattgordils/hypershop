@@ -1,2 +1,10 @@
 MatchingTranslations:
   enabled: false
+
+# render-with named-argument variables are not statically resolvable by theme-check
+UndefinedObject:
+  enabled: false
+
+# content_for 'block' is a valid Shopify Blocks tag; older theme-check doesn't know it
+SyntaxError:
+  enabled: false

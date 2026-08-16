@@ -1,0 +1,57 @@
+/* Product card overlay padding.
+   The card sets *-mobile / *-desktop from Theme settings as inline custom properties;
+   the swap happens here because an inline style can't carry a media query. Badges and
+   the quick action are separate knobs — a badge usually wants breathing room where a
+   full-width quick add button often wants none. */
+.product-card {
+  --card-badge-padding: var(--card-badge-padding-mobile, 12px);
+  --card-action-padding: var(--card-action-padding-mobile, 12px);
+  --card-tint-opacity: 0.15;
+
+  @media (min-width: 1024px) {
+    --card-badge-padding: var(--card-badge-padding-desktop, 16px);
+    --card-action-padding: var(--card-action-padding-desktop, 16px);
+  }
+}
+
+/* Hover effects (Theme settings → Product Card → Hover).
+   Scale targets <picture> rather than <img>: the image snippet wraps every image, and
+   both the main and hover images are covered by the one rule. */
+.product-card__media--scale picture {
+  transition: transform var(--slow-speed) ease;
+}
+
+.product-card:hover .product-card__media--scale picture,
+.product-card:focus-within .product-card__media--scale picture {
+  transform: scale(1.05);
+}
+
+/* Tint sits above both images (z-2) but below badges and quick actions (z-3). */
+.product-card__tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-speed) ease;
+}
+
+.product-card__tint--darken {
+  background: var(--dark-color);
+}
+
+.product-card__tint--lighten {
+  background: var(--light-color);
+}
+
+.product-card:hover .product-card__tint,
+.product-card:focus-within .product-card__tint {
+  opacity: var(--card-tint-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card__media--scale picture,
+  .product-card__tint {
+    transition-duration: 0.01ms;
+  }
+}

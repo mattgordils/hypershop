@@ -1,0 +1,99 @@
+{% comment %}
+  List of all collections. Renders a grid of collection cards (image + title)
+  reusing the theme's grid layout and image snippet.
+{% endcomment %}
+
+{% capture spacing_class %}
+  {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+
+<div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
+  <div class="max-w-site-max-w mx-auto py-v-space-sm">
+    {% if section.settings.heading != blank %}
+      <h1 class="h2 text-center pb-v-space-sm">{{ section.settings.heading }}</h1>
+    {% endif %}
+
+    {% paginate collections by section.settings.collections_per_page %}
+      <in-view class="grid grid-cols-2 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm">
+        {% for collection in collections %}
+          {% liquid
+            assign coll_image = collection.image
+            if coll_image == blank
+              assign coll_image = collection.products.first.featured_image
+            endif
+          %}
+          <a href="{{ collection.url }}" class="block group" aria-label="View {{ collection.title }}">
+            <div class="aspect-3/4 relative overflow-hidden rounded">
+              {% if coll_image != blank %}
+                {% render 'image',
+                  src: coll_image,
+                  ratio: 0.75,
+                  layout: 'cover',
+                  sizes: '(min-width: 768px) 33vw, 50vw',
+                  loading: 'lazy',
+                  alt: collection.title
+                %}
+              {% else %}
+                <div class="absolute inset-0 theme-light-grey"></div>
+              {% endif %}
+              <div class="absolute inset-0 bg-true-black opacity-0 group-hover:opacity-20 transition-opacity z-2"></div>
+            </div>
+            <h2 class="body text-center pt-gutter">
+              <span class="animate-underline">{{ collection.title }}</span>
+            </h2>
+          </a>
+        {% endfor %}
+      </in-view>
+      {% render 'paginate-nav', class: 'pt-v-space-sm', paginate: paginate %}
+    {% endpaginate %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "tag": "section",
+  "class": "section-main-list-collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections"
+    },
+    {
+      "type": "range",
+      "id": "collections_per_page",
+      "min": 6,
+      "max": 48,
+      "step": 6,
+      "label": "Collections Per Page",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing",
+      "default": "medium",
+      "label": "Section Spacing",
+      "info": "This can be used to adjust or remove the space below this section",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    }
+  ]
+}
+{% endschema %}

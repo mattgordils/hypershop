@@ -1,9 +1,13 @@
 {% liquid
-  assign block_product = block.settings.product | default: product
+  assign block_product = block.settings.product | default: section.settings.product | default: product
 %}
 
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
 {% if block_product != blank %}
-  {% render 'product-badges' with product: block_product %}
+  <div class="{{ space_below | strip }}">
+    {% render 'product-badges', product: block_product %}
+  </div>
 {% endif %}
 
 {% schema %}
@@ -12,12 +16,36 @@
   "class": "block-product-badges",
   "settings": [
     {
+      "type": "header",
+      "content": "Product Badges",
+      "info": "To get badges like “Best Seller” to appear, when editing the product add a tag of “badge-Best Seller”"
+    },
+    {
       "type": "product",
       "id": "product",
       "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "medium",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
     }
   ],
-  "blocks": [],
+  "blocks": [
+
+  ],
   "presets": [
     {
       "name": "Product Badges"

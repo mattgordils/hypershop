@@ -1,0 +1,111 @@
+{% doc %}
+  Breadcrumb trail for the current template (product, collection, article, blog,
+  page, search). Single source of truth for BOTH presentations of the trail:
+
+    format: 'html' (default) - accessible <nav><ol> markup for the page
+    format: 'json'           - schema.org BreadcrumbList <script> for SEO
+
+  The trail is built once (Home first, current page last). Product trails prefer
+  the collection the shopper navigated from — populated when the product is
+  reached via a /collections/x/products/y URL, which `product_card` emits via
+  `within: collection` — falling back to an assigned collection.
+
+  Consumed by section templates (visible nav) and by `structured_data.liquid`,
+  which renders `format: 'json'` so the visible trail and the rich-result trail
+  can never drift apart.
+
+  @param {string} [format] - 'html' (default) or 'json'.
+  @param {string} [class] - Extra classes for the wrapping <nav> (html only).
+  @param {string} [align] - 'center' centers the trail. The <ol> is a flex row,
+    so text-align on an ancestor can't reach it (html only).
+
+  @example
+  {% render 'breadcrumbs' %}
+  {% render 'breadcrumbs', class: 'px-margin' %}
+  {% render 'breadcrumbs', align: 'center' %}
+  {% render 'breadcrumbs', format: 'json' %}
+{% enddoc %}
+
+{%- liquid
+  # Build the trail as Title/url pairs joined by item_sep; the last pair is the current page.
+  assign sep = '~|~'
+  assign item_sep = '~~'
+
+  capture crumbs
+    echo 'Home' | append: sep | append: routes.root_url
+
+    case template.name
+      when 'product'
+        # Prefer the collection the shopper navigated from; else an assigned one.
+        assign bc_collection = product.collections.first
+        if collection.handle
+          assign bc_collection = collection
+        endif
+        if bc_collection
+          echo item_sep | append: bc_collection.title | append: sep | append: bc_collection.url
+        endif
+        echo item_sep | append: product.title | append: sep | append: product.url
+      when 'collection'
+        echo item_sep | append: collection.title | append: sep | append: collection.url
+      when 'article'
+        echo item_sep | append: blog.title | append: sep | append: blog.url
+        echo item_sep | append: article.title | append: sep | append: article.url
+      when 'blog'
+        echo item_sep | append: blog.title | append: sep | append: blog.url
+      when 'page'
+        echo item_sep | append: page.title | append: sep | append: page.url
+      when 'search'
+        echo item_sep | append: 'Search' | append: sep | append: routes.search_url
+    endcase
+  endcapture
+
+  assign crumb_list = crumbs | split: item_sep
+-%}
+
+{%- if crumb_list.size > 1 -%}
+  {%- if format == 'json' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {%- for crumb in crumb_list -%}
+      {%- assign parts = crumb | split: sep -%}
+      {%- assign crumb_title = parts.first | strip -%}
+      {%- assign crumb_url = parts.last | strip -%}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "name": {{ crumb_title | json }},
+      "item": "{{ shop.url }}{{ crumb_url }}"
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+  {%- else -%}
+{%- liquid
+  assign crumb_justify = ''
+  if align == 'center'
+    assign crumb_justify = 'justify-center'
+  endif
+-%}
+<nav class="breadcrumbs body-small text-light-text-color {{ class }}" aria-label="Breadcrumb">
+  <ol class="flex flex-wrap items-center gap-1 {{ crumb_justify }}" role="list">
+    {%- for crumb in crumb_list -%}
+      {%- assign parts = crumb | split: sep -%}
+      {%- assign crumb_title = parts.first | strip -%}
+      {%- assign crumb_url = parts.last | strip -%}
+      <li class="flex items-center gap-1">
+        {%- if forloop.last -%}
+          <span aria-current="page">{{ crumb_title }}</span>
+        {%- else -%}
+          <a href="{{ crumb_url }}" class="animate-underline">{{ crumb_title }}</a>
+          <span aria-hidden="true">/</span>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ol>
+</nav>
+  {%- endif -%}
+{%- endif -%}

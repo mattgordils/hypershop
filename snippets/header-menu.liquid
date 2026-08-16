@@ -1,0 +1,99 @@
+{%- comment -%}
+  Renders a header navigation menu (used for both the primary and secondary
+  menus). Accepts:
+    menu — a link_list drop
+
+  Items with sublinks are wrapped in <menu-item> (assets/nav.js) which toggles
+  data-open on click. Descendants use group-data-[open=true]/menu:* variants to
+  react to that state — no hover-driven CSS anywhere in this snippet.
+
+  Panel height animates via the grid-template-rows 0fr → 1fr trick (no JS
+  needed for auto-height). The shared page overlay lives in page-header.liquid
+  and is driven by :has(menu-item[data-open="true"]).
+{%- endcomment -%}
+
+{%- if menu.links.size > 0 -%}
+  <ul class="h-full hidden md:flex items-center">
+    {%- for link in menu.links -%}
+      {%- assign has_sublinks = false -%}
+      {%- if link.links.size > 0 -%}{%- assign has_sublinks = true -%}{%- endif -%}
+      <li class="h-full">
+        {%- if has_sublinks -%}
+          <menu-item class="group/menu h-full flex items-center" data-open="false">
+            <button
+              type="button"
+              class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center bg-transparent border-0"
+              aria-expanded="false"
+              aria-haspopup="true"
+              data-menu-trigger
+              {% if link.active %}aria-current="page"{% endif %}
+            >
+              <span class="animate-underline grow-0 shrink-0 leading-none">{{ link.title }}</span>
+              <div class="material-icon text-[18px] transition-transform duration-(--md-speed) group-data-[open=true]/menu:rotate-180 group-data-[open=true]/menu:translate-y-[-1px]">keyboard_arrow_down</div>
+            </button>
+            <div
+              class="
+                absolute top-0 left-0 w-full bg-bg z-[-1] pt-header-height
+                invisible pointer-events-none
+                group-data-[open=true]/menu:visible
+                group-data-[open=true]/menu:pointer-events-auto
+              "
+              data-menu-panel
+            >
+              <div
+                class="
+                  grid grid-rows-[0fr]
+                  group-data-[open=true]/menu:grid-rows-[1fr]
+                  transition-[grid-template-rows] duration-(--md-speed)
+                "
+              >
+                <div class="overflow-hidden min-h-0">
+                  <div class="px-margin py-gutter">
+                    <ul class="sublinks scroll-entrance">
+                      {%- for sublink in link.links -%}
+                        {%- assign has_sub_sublinks = false -%}
+                        {%- if sublink.links.size > 0 -%}{%- assign has_sub_sublinks = true -%}{%- endif -%}
+                        <li>
+                          <a
+                            href="{{ sublink.url }}"
+                            class="h3 group inline-block vertical-align-top{% if sublink.active %} active{% endif %}"
+                            {% if sublink.active %}aria-current="page"{% endif %}
+                          >
+                            <span class="animate-underline grow-0 shrink-0 leading-none">{{ sublink.title }}</span>
+                          </a>
+                          {%- if has_sub_sublinks -%}
+                            <ul>
+                              {%- for subsublink in sublink.links -%}
+                                <li class="pl-6">
+                                  <a
+                                    href="{{ subsublink.url }}"
+                                    class="h3 group inline-block vertical-align-top{% if subsublink.active %} active{% endif %}"
+                                    {% if subsublink.active %}aria-current="page"{% endif %}
+                                  >
+                                    <span class="animate-underline grow-0 shrink-0 leading-none">{{ subsublink.title }}</span>
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </menu-item>
+        {%- else -%}
+          <a
+            href="{{ link.url }}"
+            class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+            {% if link.active %}aria-current="page"{% endif %}
+          >
+            <span class="animate-underline grow-0 shrink-0 leading-none">{{ link.title }}</span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

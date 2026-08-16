@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* Explicit content sources so Tailwind scans all Liquid + JS */
+@source "../../layout/**/*.liquid";
+@source "../../templates/**/*.liquid";
+@source "../../sections/**/*.liquid";
+@source "../../snippets/**/*.liquid";
+@source "../../blocks/**/*.liquid";
+@source "../../src/entrypoints/**/*.js";
+
+/* ============================================================
+   THEME
+   Replaces tailwind.config.js — maps CSS vars to TW utilities.
+   Use @theme inline so utilities reference CSS vars directly
+   (e.g. .bg-bg → background-color: var(--bg-color)) with no
+   extra `:root` indirection.
+   ============================================================ */
+@theme inline {
+  /* Colors */
+  --color-true-black: #000000;
+  --color-light: var(--bg-color);
+  --color-dark: var(--text-color);
+  --color-bg: var(--bg-color);
+  --color-main: var(--main-color);
+  --color-text-color: var(--text-color);
+  --color-light-text-color: var(--light-text-color);
+  --color-hr-color: var(--hr-color);
+  --color-light-grey: var(--light-grey);
+  --color-error: var(--error);
+  --color-success: var(--success);
+  --color-alert: var(--alert);
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius: var(--base-border-radius);
+  --radius-base: var(--base-border-radius);
+  --radius-button: var(--button-border-radius);
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-large: 30px;
+  --radius-full: 9999px;
+
+  /* Spacing — named tokens that become p-*, m-*, gap-*, h-*, w-* utilities */
+  --spacing-gutter: var(--site-gutters);
+  --spacing-margin: var(--site-margins);
+  --spacing-half-gutter: calc(var(--site-gutters) / 2);
+  --spacing-half-margin: calc(var(--site-margins) / 2);
+  --spacing-v-space: var(--vertical-spacing);
+  --spacing-half-v-space: calc(var(--vertical-spacing) / 2);
+  --spacing-v-space-sm: var(--vertical-spacing-small);
+  --spacing-v-space-lg: var(--vertical-spacing-large);
+  --spacing-header-banner-height: var(--header-banner-height);
+  --spacing-header-height: var(--header-height);
+  --spacing-sticky-top: var(--sticky-top);
+  --spacing-full-header-height: var(--full-header-height);
+  --spacing-screen-height: calc(100 * var(--vh));
+  --spacing-screen-small: 50vh;
+  --spacing-screen-medium: 75vh;
+  --spacing-site-max-w: var(--site-max-width);
+  --spacing-narrow: var(--narrow-width);
+
+  /* Transition Duration */
+  --default-transition-duration: var(--md-speed);
+  --transition-duration-slow: var(--slow-speed);
+  --transition-duration-fast: var(--fast-speed);
+
+  /* Transition Delay */
+  --delay-stagger: var(--stagger-time);
+
+  /* Z-Index */
+  --z-1: 1;
+  --z-2: 2;
+  --z-3: 3;
+  --z-4: 4;
+  --z-5: 5;
+  --z-6: 6;
+
+  /* Aspect Ratio */
+  --aspect-3/2: 3 / 2;
+  --aspect-2/3: 2 / 3;
+  --aspect-3/4: 3 / 4;
+  --aspect-4/3: 4 / 3;
+  --aspect-4/5: 4 / 5;
+  --aspect-5/4: 5 / 4;
+}
+
+/* Custom transition-property utilities */
+@utility transition-width  { transition-property: width, min-width; }
+@utility transition-height { transition-property: height, min-height; }
+@utility transition-top    { transition-property: top; }
+
+/* ============================================================
+   GLOBAL CSS VARIABLES
+   Theme constants and derived values only. Editor-controlled
+   tokens (colors, fonts, grid, button heights, radius, header
+   height, type scale) are set in snippets/theme-settings.liquid
+   from the Shopify theme settings.
+   ============================================================ */
+@layer base {
+  :root {
+    /* Vertical spacing scale */
+    --vertical-spacing: clamp(40px, calc(16.923px + 5.769vw), 100px);
+    @media (min-width: 1440px) { --vertical-spacing: clamp(100px, calc(70px + 2.083vw), 120px); }
+    @media (min-width: 2400px) { --vertical-spacing: 120px; }
+
+    --vertical-spacing-small: clamp(20px, calc(8.462px + 2.885vw), 50px);
+    @media (min-width: 1440px) { --vertical-spacing-small: clamp(50px, calc(35px + 1.042vw), 60px); }
+    @media (min-width: 2400px) { --vertical-spacing-small: 60px; }
+
+    --vertical-spacing-large: clamp(60px, calc(25.385px + 8.654vw), 150px);
+    @media (min-width: 1440px) { --vertical-spacing-large: clamp(150px, calc(105px + 3.125vw), 180px); }
+    @media (min-width: 2400px) { --vertical-spacing-large: 180px; }
+
+    /* Brand Colors */
+    --dark-color: #000;
+    --light-color: #fff;
+
+    /* Derived colors — computed in CSS (not Liquid) from --text-color/--bg-color,
+       so they adapt to whatever scheme is in scope. Doing this in CSS avoids
+       Liquid color filters, which break the theme editor's live preview. A scheme
+       can still override any of these explicitly. */
+    --light-text-color: color-mix(in srgb, var(--text-color) 50%, transparent);
+    --hr-color: color-mix(in srgb, var(--text-color) 15%, transparent);
+    --light-grey: color-mix(in srgb, var(--bg-color) 95%, var(--text-color));
+    --alert: yellow;
+
+    /* Typography constants */
+    --mono-font: monospace;
+    --normal: normal;
+    --light: 300;
+    --medium: 600;
+    --bold: 700;
+
+    /* Transitions */
+    --md-speed: .3s;
+    --fast-speed: .15s;
+    --slow-speed: .6s;
+    --stagger-time: .05s;
+
+    /* UI */
+    --vh: 1vh;
+    --narrow-width: 800px;
+    --header-banner-height: 0px;
+    --full-header-height: calc(var(--header-height) + var(--header-banner-height));
+    --sticky-top: calc(var(--site-gutters) + var(--header-height));
+  }
+}
+
+/* ============================================================
+   GLOBAL STYLES
+   ============================================================ */
+@import "./global/typography.css";
+@import "./global/themes.css";
+@import "./global/animations.css";
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+@import "./components/rich-text.css";
+@import "./components/scroll-entrance.css";
+@import "./components/button.css";
+@import "./components/cart.css";
+@import "./components/modal.css";
+@import "./components/collapsible.css";
+@import "./components/filters.css";
+@import "./components/product-card.css";
+@import "./components/mini-cart.css";
+@import "./components/slideshow.css";
+@import "./components/animated-icon.css";
+@import "./components/section-specific.css";
+
+/* ============================================================
+   GLOBAL ELEMENT RESETS
+   ============================================================ */
+html {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--main-font);
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input, textarea, select, button {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video { display: block; }
+
+body {
+  color: var(--text-color);
+  background: var(--bg-color);
+  &.fixed { width: 100%; }
+}
+
+.main-header .logo-wrapper svg * { fill: currentcolor; }
+svg:not(.full-color) * { fill: currentcolor; }
+
+.grid.reverse { direction: rtl; }
+.grid.reverse > * { direction: initial; }
+
+.shopify-section:empty,
+.shopify-block:empty { display: none; }

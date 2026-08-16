@@ -2,10 +2,13 @@ import { closeModal, openModal } from './modal'
 import { toggleCollapsibleItem } from './collapsible'
 
 const refreshSlideshow = section => {
-  const sectionSlideshows = section.querySelectorAll('slide-show')
+  const sectionSlideshows = section?.querySelectorAll('slide-show')
   if (sectionSlideshows?.length > 0) {
     sectionSlideshows.forEach(slideshow => {
-      slideshow.slider.update()
+      // `slider` has never been a property of <slide-show> — the instance is on
+      // `embla`. This threw a TypeError and took the rest of the handler with
+      // it, so setInview() never ran and re-rendered sections stayed hidden.
+      slideshow.embla?.reInit()
 
       // Restore slide position after reload
       const storedSlideIndex = sessionStorage.getItem(`slideshow-${section.id}-index`)
@@ -31,14 +34,19 @@ const refreshSlideshow = section => {
   }
 }
 
+// Drawer sections (cart, search, menu, age gate) reveal themselves when the merchant
+// selects them in the editor, so they can see what they're editing.
+//
+// Opt-in via data-editor-auto-open. A modal that merely lives *inside* a content section
+// — the filter drawer inside the product grid — must not hijack selection of that section.
 const toggleSectionModal = (section, open = true) => {
-  if (section.querySelector('modal-component')) {
-    if (open) {
-      const modal = section.querySelector('modal-component')
-      openModal(modal.id)
-    } else {
-      closeModal()
-    }
+  const modal = section?.querySelector('modal-component[data-editor-auto-open]')
+  if (!modal) return
+
+  if (open) {
+    openModal(modal.id)
+  } else {
+    closeModal()
   }
 }
 
@@ -54,38 +62,23 @@ const setInview = (section) => {
 }
 
 function sectionEditor(ev) {
-  const { target } = ev;
-  const section = document.querySelector('#' + target.id)
+  const section = ev.target
 
-  console.log(ev)
+  // Reveal work first, enhancement second. Anything that makes re-rendered
+  // markup visible has to run before the slideshow/modal calls — a throw in
+  // one of those used to leave the section invisible, which reads as "the
+  // editor didn't re-render" and sends you to save-and-refresh.
+  setInview(section)
 
-  // Cart Drawer
   if (ev.type === 'shopify:section:select') {
-    // Open Section Modal On Select
     toggleSectionModal(section)
-    // Refresh Slideshows On Select
-    refreshSlideshow(section)
-    // Make Sure in-view items transition in
-    setInview(section)
   }
 
   if (ev.type === 'shopify:section:deselect') {
-    // Close Section Modal On Select
     toggleSectionModal(section, false)
-    // Refresh Slideshows On Select
-    refreshSlideshow(section)
-    // Make Sure in-view items transition in
-    setInview(section)
   }
 
-  if (ev.type === 'shopify:section:load') {
-    // Refresh Slideshows On Select
-    refreshSlideshow(section)
-    // Make Sure in-view items transition in
-    setInview(section)
-  }
-
-  return
+  refreshSlideshow(section)
 }
 
 const handleSlideSelection = (target, isSelect) => {
@@ -151,8 +144,34 @@ const handleSlideSelection = (target, isSelect) => {
   }
 }
 
+// The mini cart only appears after adding to cart, so selecting its block in the editor
+// has to reveal it — otherwise there's nothing on screen to edit.
+const toggleMiniCart = (target, open) => {
+  const miniCart = target.matches?.('mini-cart') ? target : target.querySelector?.('mini-cart')
+  if (miniCart) miniCart.dataset.visible = open ? 'true' : 'false'
+}
+
+// Selecting a tab's content block in the editor has to switch to that tab, or the
+// merchant is editing a panel they can't see — only the active one is visible. Same
+// reasoning as the accordion below, which opens the row that was selected.
+//
+// Re-rendering after a setting change resets the group to its first tab (the `checked`
+// attribute comes back with the markup), and the editor re-fires select afterwards — so
+// this also restores the tab they were on.
+//
+// Tabs are radios, so checking the one that belongs to the selected block is the whole
+// job — the CSS does the rest. `label.control` is the input the label points at.
+const revealTabForBlock = (target) => {
+  const label = target.matches?.('.tabs__tab') ? target : target.querySelector?.('.tabs__tab')
+  if (label?.control) label.control.checked = true
+}
+
 function blockEditor(ev) {
   const { target } = ev
+
+  toggleMiniCart(target, ev.type === 'shopify:block:select')
+
+  if (ev.type === 'shopify:block:select') revealTabForBlock(target)
 
   const collapseContent = target.querySelector('[data-collapsible="content"]')
   const collapseIcon = target.querySelector('[data-collapsible="icon"]')
@@ -162,8 +181,6 @@ function blockEditor(ev) {
   }
 
   // Handle slide selection
-  console.log('EV: ', ev.type)
-
   if (ev.type === 'shopify:block:select') {
     handleSlideSelection(target, true)
   } else if (ev.type === 'shopify:block:deselect') {

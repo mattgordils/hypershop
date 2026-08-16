@@ -2,8 +2,11 @@
   "sections": {
     "main": {
       "type": "product-grid",
-      "blocks": {},
-      "block_order": []
+      "blocks": {
+      },
+      "block_order": [
+
+      ]
     }
   },
   "order": [
