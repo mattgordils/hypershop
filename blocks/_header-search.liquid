@@ -22,14 +22,18 @@
     {% comment %} {{ block.shopify_attributes }} {% endcomment %}
   >
     {%- if symbol == 'custom' and custom_icon != blank -%}
-      {{ custom_icon | image_url: width: 72 | image_tag:
-        widths: '24, 48, 72',
-        alt: '',
-        class: 'shrink-0 block h-[18px] w-auto object-contain',
-        loading: 'lazy'
-      }}
+      {% render 'header-icon',
+          icon: custom_icon,
+          icon_inverted: block.settings.custom_icon_inverted,
+          size: block.settings.icon_width,
+          alt: ''
+        %}
     {%- elsif symbol == 'icon' -%}
-      <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+      <span
+        class="shrink-0 material-icon block"
+        style="font-size: {{ block.settings.icon_width | default: 18 }}px;"
+        aria-hidden="true"
+      >{{ default_icon }}</span>
     {%- endif -%}
     {%- if label != blank -%}
       <span class="header-trigger-label shrink-0 body-small md:body">{{ label }}</span>
@@ -48,9 +52,18 @@
       "label": "Symbol",
       "default": "icon",
       "options": [
-        { "label": "None", "value": "none" },
-        { "label": "Icon", "value": "icon" },
-        { "label": "Custom Icon", "value": "custom" }
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Icon",
+          "value": "icon"
+        },
+        {
+          "label": "Custom Icon",
+          "value": "custom"
+        }
       ]
     },
     {
@@ -69,10 +82,29 @@
       "visible_if": "{{ block.settings.symbol == 'custom' }}"
     },
     {
+      "type": "image_picker",
+      "id": "custom_icon_inverted",
+      "label": "Custom icon \u2014 inverted",
+      "info": "Optional. Crossfades in over a transparent header, matching the logo.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "label": "Icon size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "visible_if": "{{ block.settings.symbol != 'none' }}",
+      "info": "Applies to both the built-in and uploaded icons."
+    },
+    {
       "type": "text",
       "id": "label",
       "label": "Label",
-      "info": "Leave blank to hide. Override the default \"Search\" wording — accessibility text always uses the translated default. Set Symbol to \"None\" and clear this to remove the trigger entirely."
+      "info": "Leave blank to hide. Override the default \"Search\" wording \u2014 accessibility text always uses the translated default. Set Symbol to \"None\" and clear this to remove the trigger entirely."
     }
   ]
 }

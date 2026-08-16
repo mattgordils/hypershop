@@ -13,18 +13,19 @@
   assign note_id = 'CartNote-' | append: section.id
 -%}
 
-<cart-note class="cart-note block pt-(--cart-padding)">
-  <label for="{{ note_id }}" class="body-small block pb-2">{{ note_label }}</label>
+<cart-note class="cart-note block pt-(--cart-padding) {{ classname }}">
+  <label for="{{ note_id }}" class="body-small pb-2 flex gap-3 justify-between">
+    {{ note_label }}
+    <span class="cart-note__status text-light-text-color opacity-0 transition-opacity" data-cart-note-status aria-live="polite"></span>
+  </label>
 
   <textarea
     id="{{ note_id }}"
     name="note"
-    rows="3"
+    rows="1"
     data-cart-note
-    class="w-full body-small"
-    placeholder="Special instructions, gift message, delivery notes…"
+    class="w-full body-small resize-none h-[unset]"
+    placeholder="{{ 'sections.cart.note_placeholder' | t }}"
+    style="field-sizing: content;"
   >{{ cart.note }}</textarea>
-
-  {%- comment -%} aria-live so the save is announced without stealing focus {%- endcomment -%}
-  <p class="cart-note__status body-tiny text-light-text-color pt-1 opacity-0 transition-opacity" data-cart-note-status aria-live="polite"></p>
 </cart-note>

@@ -72,6 +72,7 @@
         if filter.min_value.value == null and filter.max_value.value == null
           assign all_checked = true
         endif
+        assign all_prices_label = 'products.facets.all_prices' | t
       -%}
       <li class='filter-item body'>
         {% render 'filter-option',
@@ -79,7 +80,7 @@
           id: all_id,
           name: 'price_bucket',
           value: '',
-          label: 'All prices',
+          label: all_prices_label,
           checked: all_checked
         %}
       </li>
@@ -146,7 +147,7 @@
       <div class='price-slider__track'>
         <div class='price-slider__fill' data-price-fill></div>
 
-        <label class='sr-only' for='{{ min_id }}'>Minimum price</label>
+        <label class='sr-only' for='{{ min_id }}'>{{ 'products.facets.min_price' | t }}</label>
         <input
           class='price-slider__input'
           type='range'
@@ -160,7 +161,7 @@
           data-omit-at='min'
         >
 
-        <label class='sr-only' for='{{ max_id }}'>Maximum price</label>
+        <label class='sr-only' for='{{ max_id }}'>{{ 'products.facets.max_price' | t }}</label>
         <input
           class='price-slider__input'
           type='range'
@@ -196,7 +197,7 @@
             min='0'
             max='{{ range_max_display }}'
           >
-          <label class='input-label' for='{{ min_id }}'>From</label>
+          <label class='input-label' for='{{ min_id }}'>{{ 'products.facets.price_from' | t }}</label>
         </div>
       </div>
 
@@ -218,7 +219,7 @@
             min='0'
             max='{{ range_max_display }}'
           >
-          <label class='input-label' for='{{ max_id }}'>To</label>
+          <label class='input-label' for='{{ max_id }}'>{{ 'products.facets.price_to' | t }}</label>
         </div>
       </div>
     </div>

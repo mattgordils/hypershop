@@ -1,0 +1,86 @@
+{%- comment -%}
+  Country (currency) and language switcher. Drop it anywhere — footer, header block,
+  menu panel.
+
+  Shopify Markets decides which countries and languages exist; this only lets the shopper
+  choose between them. Nothing renders unless the store actually offers more than one, so
+  it's safe to place unconditionally.
+
+  Deliberately a real <form> posting to the localization endpoint: it works with
+  JavaScript off, and localization.js only upgrades it to submit on change and hide the Go
+  button. Theme-side IP redirection is intentionally absent — Shopify handles
+  recommendation/redirection in Markets settings, and doing it in the theme fights it.
+
+  @param {string} [show]  - 'both' (default) | 'country' | 'language'
+  @param {string} [class] - classes for the wrapper
+  @param {string} [label_class]
+{%- endcomment -%}
+
+{%- liquid
+  assign show_selectors = show | default: 'both'
+
+  assign show_country = false
+  if localization.available_countries.size > 1
+    if show_selectors == 'both' or show_selectors == 'country'
+      assign show_country = true
+    endif
+  endif
+
+  assign show_language = false
+  if localization.available_languages.size > 1
+    if show_selectors == 'both' or show_selectors == 'language'
+      assign show_language = true
+    endif
+  endif
+-%}
+
+{%- if show_country or show_language -%}
+  <localization-form class="localization-form block {{ class }}">
+    {%- form 'localization', class: 'flex flex-wrap items-end gap-gutter' -%}
+      {%- comment -%} Comes back to the same page instead of dumping the shopper on the homepage {%- endcomment -%}
+      <input type="hidden" name="return_to" value="{{ request.path | escape }}">
+
+      {%- if show_country -%}
+        <div class="localization-form__field">
+          <label class="body-tiny block pb-1 {{ label_class }}" for="LocalizationCountry">
+            {{ 'general.localization.country_label' | t }}
+          </label>
+          <select id="LocalizationCountry" name="country_code" data-localization-select>
+            {%- for country in localization.available_countries -%}
+              <option
+                value="{{ country.iso_code }}"
+                {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+              >
+                {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+
+      {%- if show_language -%}
+        <div class="localization-form__field">
+          <label class="body-tiny block pb-1 {{ label_class }}" for="LocalizationLanguage">
+            {{ 'general.localization.language_label' | t }}
+          </label>
+          <select id="LocalizationLanguage" name="locale_code" data-localization-select>
+            {%- for language in localization.available_languages -%}
+              <option
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
+                {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+              >
+                {{ language.endonym_name | capitalize }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Hidden by localization.js; the only way to submit without JS {%- endcomment -%}
+      <button type="submit" class="button small" data-localization-submit>
+        {{ 'general.localization.update' | t }}
+      </button>
+    {%- endform -%}
+  </localization-form>
+{%- endif -%}

@@ -29,16 +29,6 @@ if (!customElements.get('product-recommendations')) {
       }
 
       async connectedCallback() {
-        console.log('product-recommendations: Initializing', {
-          productId: this.productId,
-          productHandle: this.productHandle,
-          collectionHandle: this.collectionHandle,
-          tags: this.productTags,
-          min: this.minProducts,
-          max: this.maxProducts,
-          hideSoldOut: this.hideSoldOut,
-          hasContainer: !!this.container
-        })
 
         if (!this.productId || !this.container) {
           console.error('product-recommendations: Missing required elements or data attributes', {
@@ -50,7 +40,6 @@ if (!customElements.get('product-recommendations')) {
 
         try {
           const products = await this.fetchProducts()
-          console.log('product-recommendations: Fetched products', products)
           await this.renderProducts(products)
         } catch (error) {
           console.error('product-recommendations: Error fetching products', error)
@@ -65,9 +54,8 @@ if (!customElements.get('product-recommendations')) {
         try {
           const recommendations = await this.fetchRecommendations()
           products = [...recommendations]
-          console.log('product-recommendations: Step 1 (Recommendations API):', products.length, 'products')
-        } catch (error) {
-          console.warn('product-recommendations: Recommendations API failed', error)
+        } catch {
+          // This source is optional — fall through to the next one.
         }
 
         // Filter out products without images (always)
@@ -77,7 +65,6 @@ if (!customElements.get('product-recommendations')) {
         if (this.hideSoldOut) {
           const beforeFilter = products.length
           products = this.filterAvailableProducts(products)
-          console.log(`product-recommendations: Filtered sold out: ${beforeFilter} -> ${products.length}`)
         }
 
         // Step 2: If we need more products, fetch from same collection
@@ -88,11 +75,9 @@ if (!customElements.get('product-recommendations')) {
             if (this.hideSoldOut) {
               filtered = this.filterAvailableProducts(filtered)
             }
-            console.log('product-recommendations: Step 2 (Collection):', filtered.length, 'products')
             products = this.mergeProducts(products, filtered)
-            console.log('product-recommendations: After merge:', products.length, 'products')
-          } catch (error) {
-            console.warn('product-recommendations: Collection fetch failed', error)
+          } catch {
+            // This source is optional — fall through to the next one.
           }
         }
 
@@ -104,32 +89,26 @@ if (!customElements.get('product-recommendations')) {
             if (this.hideSoldOut) {
               filtered = this.filterAvailableProducts(filtered)
             }
-            console.log('product-recommendations: Step 3 (Tagged):', filtered.length, 'products')
             products = this.mergeProducts(products, filtered)
-            console.log('product-recommendations: After merge:', products.length, 'products')
-          } catch (error) {
-            console.warn('product-recommendations: Tagged products fetch failed', error)
+          } catch {
+            // This source is optional — fall through to the next one.
           }
         }
 
         // Step 4: If we still need more, fetch random products
         if (products.length < this.minProducts) {
-          console.log(`product-recommendations: Step 4 (Random) - need ${this.minProducts - products.length} more products`)
           try {
             const randomProducts = await this.fetchRandomProducts()
             let filtered = this.filterProductsWithImages(randomProducts)
             if (this.hideSoldOut) {
               filtered = this.filterAvailableProducts(filtered)
             }
-            console.log('product-recommendations: Step 4 (Random):', filtered.length, 'products')
             products = this.mergeProducts(products, filtered)
-            console.log('product-recommendations: After merge:', products.length, 'products')
-          } catch (error) {
-            console.warn('product-recommendations: Random products fetch failed', error)
+          } catch {
+            // This source is optional — fall through to the next one.
           }
         }
 
-        console.log('product-recommendations: Final product count:', products.length)
 
         // Shuffle the final list to ensure randomness across all sources
         const shuffled = this.shuffleArray(products)
@@ -195,11 +174,9 @@ if (!customElements.get('product-recommendations')) {
         }
 
         const data = await response.json()
-        console.log('product-recommendations: Random fetch raw:', data.products?.length || 0, 'products')
 
         const shuffled = this.shuffleArray(data.products || [])
         const afterFilter = this.filterCurrentProduct(shuffled)
-        console.log('product-recommendations: Random after filtering current product:', afterFilter.length, 'products')
 
         return afterFilter
       }
@@ -228,7 +205,6 @@ if (!customElements.get('product-recommendations')) {
           return true
         })
 
-        console.log(`product-recommendations: filterAvailableProducts: ${products.length} -> ${available.length}`)
         return available
       }
 
@@ -257,7 +233,6 @@ if (!customElements.get('product-recommendations')) {
 
         const filtered = products.length - withImages.length
         if (filtered > 0) {
-          console.log(`product-recommendations: filterProductsWithImages: ${products.length} -> ${withImages.length} (filtered ${filtered} products without images)`)
         }
         return withImages
       }
@@ -278,10 +253,8 @@ if (!customElements.get('product-recommendations')) {
       }
 
       async renderProducts(products) {
-        console.log('product-recommendations: Rendering', products.length, 'products')
 
         if (products.length === 0) {
-          console.log('product-recommendations: No products to render')
           this.hideLoading()
           this.style.display = 'none'
           return
@@ -295,13 +268,11 @@ if (!customElements.get('product-recommendations')) {
             fetch(`/products/${product.handle}?view=card`)
               .then(response => {
                 if (!response.ok) {
-                  console.warn(`Failed to fetch card for ${product.handle}`)
                   return ''
                 }
                 return response.text()
               })
               .catch(err => {
-                console.warn(`Error fetching card for ${product.handle}:`, err)
                 return ''
               })
           )
@@ -311,7 +282,6 @@ if (!customElements.get('product-recommendations')) {
           // Insert all cards
           this.container.innerHTML = cards.filter(card => card).join('')
 
-          console.log('product-recommendations: Rendered', this.container.children.length, 'product cards')
         } catch (error) {
           console.error('product-recommendations: Failed to render cards', error)
         }

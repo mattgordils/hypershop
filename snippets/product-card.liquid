@@ -14,6 +14,7 @@
   @param {string} [mock_badges]       - comma-separated badge labels
   @param {boolean} [mock_sold_out]
   @param {boolean} [mock_on_sale]
+  @param {boolean} [mock_low_stock]
 {%- endcomment -%}
 
 {%-liquid
@@ -47,24 +48,15 @@
   endif
 
   comment
-    Aspect ratio: the class has to be a literal for Tailwind's scanner to emit it, so
-    the setting maps to a fixed class here rather than being interpolated. `card_ratio`
-    is the same shape passed to the image snippet, which crops the srcset to match.
+    Aspect ratio comes through the same util the PDP gallery uses, so the two ratio
+    settings can't drift apart. It resolves to a plain number, which is what the
+    --card-aspect custom property below wants and what the image snippet uses to crop
+    the srcset — no per-ratio Tailwind class, so a new option needs no code here.
   endcomment
-  assign card_ratio = settings.card_aspect_ratio | default: '4/5'
-  case card_ratio
-    when '2/3'
-      assign card_aspect_class = 'aspect-2/3'
-    when '1/1'
-      assign card_aspect_class = 'aspect-square'
-    when '5/4'
-      assign card_aspect_class = 'aspect-5/4'
-    when '3/2'
-      assign card_aspect_class = 'aspect-3/2'
-    else
-      assign card_ratio = '4/5'
-      assign card_aspect_class = 'aspect-4/5'
-  endcase
+  capture card_aspect
+    render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+  endcapture
+  assign card_aspect = card_aspect | strip
 
   assign card_title_class = settings.card_title_class | default: 'body'
   assign card_price_class = settings.card_price_class | default: 'body'
@@ -86,7 +78,7 @@
   comment
     Scale has to clip, or the growing image escapes the card's box.
   endcomment
-  assign media_class = card_aspect_class | append: ' relative block product-card__media' | append: media_radius
+  assign media_class = 'aspect-(--card-aspect) relative block product-card__media' | append: media_radius
   if hover_effect == 'scale'
     assign media_class = media_class | append: ' product-card__media--scale overflow-hidden'
   endif
@@ -135,15 +127,21 @@
 {%- endcomment -%}
 {%- capture card_text -%}
   <h3 class="{{ card_title_class }} grow">
-    <a href="{{ card_url }}" itemprop="url" class="{% unless text_over_image %}pt-3 {% endunless %}border-none block text-balance">
-      <span itemprop="name" class="animate-underline">
+    {% if text_over_image %}
+      <span itemprop="name" class="animate-underline text-balance">
         {{ card_title }}
       </span>
-    </a>
+    {% else %}
+      <a href="{{ card_url }}" itemprop="url" class="{% unless text_over_image %}pt-3 {% endunless %}border-none block text-balance pointer-events-auto">
+        <span itemprop="name" class="animate-underline">
+          {{ card_title }}
+        </span>
+      </a>
+    {% endif %}
   </h3>
   <div class="{{ card_price_class }}{% unless text_over_image %} pt-3{% endunless %}" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
     <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
-    <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+    <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
     <link itemprop="availability" href="https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
     {% if mock %}
       {% render 'product-price', price: mock_price, compare_at_price: mock_compare_at_price %}
@@ -166,36 +164,44 @@
     <a
       href="{{ card_url }}"
       class="{{ media_class }}"
+      style="--card-aspect: {{ card_aspect }};"
       aria-label="View {{ card_title }}"
     >
-      <div class="absolute top-0 left-0 w-full p-(--card-badge-padding) z-3">
+      <div class="absolute top-0 left-0 flex items-start w-full p-(--card-badge-padding) z-3 gap-gutter">
+        {%- if text_over_image -%}
+          {% assign badges_class = 'justify-end grow-0' %}
+          <div class="pointer-events-none grow flex-col">
+            {{ card_text }}
+          </div>
+        {%- endif -%}
         {% render 'product-badges',
           product: product,
           badges: mock_badges,
           sold_out: mock_sold_out,
-          on_sale: mock_on_sale
+          on_sale: mock_on_sale,
+          low_stock: mock_low_stock,
+          classname: badges_class
         %}
       </div>
       {% render 'image',
         src: card_image,
         image: card_image_asset,
         sizes: card_sizes,
-        ratio: card_ratio,
+        ratio: card_aspect,
         layout: 'cover',
         loading: card_loading,
-        alt: card_title,
+        decorative: true,
         class: 'z-1 relative'
       %}
-      {%- assign hover_alt = card_title | append: ' - alternate view' -%}
       {% if show_hover_image and card_hover_image != blank or show_hover_image and card_hover_image_asset != blank %}
         <div class="absolute top-0 left-0 w-full h-full z-2 opacity-0 group-hover:opacity-100 transition-opacity">
           {% render 'image',
             src: card_hover_image,
             image: card_hover_image_asset,
             sizes: card_sizes,
-            ratio: card_ratio,
+            ratio: card_aspect,
             layout: 'cover',
-            alt: hover_alt
+            decorative: true
           %}
         </div>
       {% endif %}
@@ -215,10 +221,10 @@
         type="button"
         data-quick-view-trigger
         data-product-handle="{{ product.handle }}"
-        aria-label="Quick view {{ card_title }}"
+        aria-label="{{ 'products.product.quick_view' | t }} {{ card_title }}"
         class="button small absolute bottom-(--card-action-padding) left-1/2 -translate-x-1/2 z-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
       >
-        Quick view
+        {{ 'products.product.quick_view' | t }}
       </button>
     {% endif %}
 
@@ -240,12 +246,6 @@
         %}
       </div>
     </add-to-cart-form>
-
-    {%- if text_over_image -%}
-      <div class="product-card__text-overlay absolute bottom-0 left-0 w-full z-3 flex justify-between gap-gutter p-(--card-badge-padding)">
-        {{ card_text }}
-      </div>
-    {%- endif -%}
   </div>
 
 

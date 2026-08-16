@@ -5,7 +5,7 @@
   <cart-quantity-adjust class="flex items-center">
     <button
       class="button unpadd transparent circle tiny quantity-change quantity-down"
-      title="{%- if item.quantity > 1 -%}Decrease quantity{%- else -%}Remove item{%- endif -%}"
+      title="{%- if item.quantity > 1 -%}{{ 'sections.cart.decrease_quantity' | t }}{%- else -%}{{ 'sections.cart.remove_item' | t }}{%- endif -%}"
       data-product-id="{{ item.id }}"
       data-new-quantity="{{ new_quantity_down }}"
       style="--button-color: var(--light-text-color); --button-hover-color: {%- if item.quantity > 1 -%}var(--text-color){%- else -%}var(--error){%- endif -%};"
@@ -21,7 +21,7 @@
     </div>
     <button
       class="button unpadd transparent circle tiny quantity-change quantity-up"
-      title="Increase quantity"
+      title="{{ 'sections.cart.increase_quantity' | t }}"
       data-product-id="{{ item.id }}"
       data-new-quantity="{{ new_quantity_up }}"
       style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"

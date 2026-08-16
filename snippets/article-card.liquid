@@ -24,7 +24,7 @@
     {% if has_media %}
       {% render 'image',
         src: article_image,
-        sizes: '800px',
+        sizes: '(min-width: 1024px) 50vw, (min-width: 640px) 33vw, 50vw',
         layout: 'cover',
         alt: product.title | append: ' - alternate view'
       %}

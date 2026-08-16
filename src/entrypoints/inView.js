@@ -2,23 +2,33 @@ if (!customElements.get("in-view")) {
   customElements.define(
     "in-view",
     class inView extends HTMLElement {
-      constructor() {
-        super();
-        //
-        const observer = new IntersectionObserver(item => {
-          const inViewItem = item[0]
-          if (inViewItem.isIntersecting) {
-            this.classList.add('in-view');
-          }
-        }, {
-          threshold: .1
-        });
+      connectedCallback() {
+        // Anything already on screen at load is shown immediately with the animation
+        // switched off. Sliding the first viewport in would delay the largest contentful
+        // paint for no benefit — the shopper never sees an "entrance" for content that
+        // was there when the page opened.
+        if (this.getBoundingClientRect().top < window.innerHeight) {
+          this.dataset.entrance = 'off';
+          this.classList.add('in-view');
+          return;
+        }
 
-        observer.observe(this)
-        
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              this.classList.add('in-view');
+              this.observer.disconnect();
+            }
+          },
+          { threshold: 0.1 }
+        );
+
+        this.observer.observe(this);
       }
 
-      
+      disconnectedCallback() {
+        this.observer?.disconnect();
+      }
     }
   );
 }

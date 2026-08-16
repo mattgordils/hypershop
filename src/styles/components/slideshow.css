@@ -189,7 +189,7 @@ slide-show:not(.inactive) {
             * 100%
           )
         );
-        transition: transform 150ms linear;
+        transition: transform 50ms linear;
       }
     }
   }

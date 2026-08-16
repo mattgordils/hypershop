@@ -75,7 +75,7 @@
           {% render 'cart-upsell', product_list: section.settings.upsell_collection.products %}
 
           {%- if section.settings.show_cart_note and cart.item_count > 0 -%}
-            {% render 'cart-note' %}
+            {% render 'cart-note', classname: 'mb-(--cart-padding)' %}
           {%- endif -%}
 
         </div>

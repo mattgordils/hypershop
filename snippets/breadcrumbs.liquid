@@ -16,10 +16,13 @@
 
   @param {string} [format] - 'html' (default) or 'json'.
   @param {string} [class] - Extra classes for the wrapping <nav> (html only).
+  @param {string} [align] - 'center' centers the trail. The <ol> is a flex row,
+    so text-align on an ancestor can't reach it (html only).
 
   @example
   {% render 'breadcrumbs' %}
   {% render 'breadcrumbs', class: 'px-margin' %}
+  {% render 'breadcrumbs', align: 'center' %}
   {% render 'breadcrumbs', format: 'json' %}
 {% enddoc %}
 
@@ -81,8 +84,14 @@
 }
 </script>
   {%- else -%}
+{%- liquid
+  assign crumb_justify = ''
+  if align == 'center'
+    assign crumb_justify = 'justify-center'
+  endif
+-%}
 <nav class="breadcrumbs body-small text-light-text-color {{ class }}" aria-label="Breadcrumb">
-  <ol class="flex flex-wrap items-center gap-1" role="list">
+  <ol class="flex flex-wrap items-center gap-1 {{ crumb_justify }}" role="list">
     {%- for crumb in crumb_list -%}
       {%- assign parts = crumb | split: sep -%}
       {%- assign crumb_title = parts.first | strip -%}

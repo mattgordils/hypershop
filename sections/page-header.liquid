@@ -110,16 +110,32 @@
   .logo-stack.has-inverted .logo-layer {
     transition: opacity var(--md-speed) ease;
   }
+
+  /* Custom header icons crossfade on the same trigger as the logo. */
+  .icon-stack {
+    display: grid;
+  }
+  .icon-stack > .icon-layer {
+    grid-area: 1 / 1;
+  }
+  .icon-stack.has-inverted .icon-layer {
+    transition: opacity var(--md-speed) ease;
+  }
+  .icon-stack.has-inverted .icon-layer--inverted {
+    opacity: 0;
+  }
   /* Solid header (default) shows the default logo; inverted layer hidden */
   .logo-stack.has-inverted .logo-layer--inverted {
     opacity: 0;
   }
   /* Transparent header (overlap present, not scrolled, no dropdown open)
      crossfades to the inverted logo */
-  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--default {
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--default,
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .icon-stack.has-inverted .icon-layer--default {
     opacity: 0;
   }
-  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--inverted {
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .logo-stack.has-inverted .logo-layer--inverted,
+  :root:has(.page-sections .header-overlap) .section-header:not(.scrolled):not(:has(menu-item[data-open="true"])) .icon-stack.has-inverted .icon-layer--inverted {
     opacity: 1;
   }
 {% endstylesheet %}
@@ -190,6 +206,35 @@
 
   assign lw_mobile = section.settings.logo_width_mobile
   assign lw_desktop = section.settings.logo_width_desktop
+
+  comment
+    The logo renders at a known CSS width, so the candidates are just that width at 1x, 2x
+    and 3x — nothing larger is ever displayed. Without a `sizes` the browser assumes 100vw
+    and takes the biggest file in the list, which is how a 156px logo pulled 624px.
+
+    `sizes` declares the widest the clamp can reach for any viewport at or above the point
+    it starts interpolating. Reporting the mobile width there would under-report at mid
+    viewports and pick a candidate too small to stay crisp — over-reporting is the safe
+    direction, and costs at most ~1.3x on a narrow tablet.
+  endcomment
+  assign lw_max = lw_desktop
+  if lw_mobile > lw_desktop
+    assign lw_max = lw_mobile
+  endif
+
+  comment
+    Pre-computed: filters chain left to right, so a `times: 2` after an append would
+    multiply the whole accumulated string rather than the number before it.
+  endcomment
+  assign lw_max_2x = lw_max | times: 2
+  assign lw_max_3x = lw_max | times: 3
+  assign lw_mobile_2x = lw_mobile | times: 2
+  assign lw_mobile_3x = lw_mobile | times: 3
+
+  assign logo_widths = lw_mobile | append: ',' | append: lw_mobile_2x | append: ',' | append: lw_mobile_3x | append: ',' | append: lw_max | append: ',' | append: lw_max_2x | append: ',' | append: lw_max_3x
+  assign logo_widths = logo_widths | split: ',' | uniq | join: ', '
+
+  assign logo_sizes = '(min-width: 400px) ' | append: lw_max | append: 'px, ' | append: lw_mobile | append: 'px'
 -%}
 
 {%- capture logo_html -%}
@@ -202,14 +247,14 @@
     >
       <span class="logo-layer logo-layer--default">
         {%- if logo != blank -%}
-          {{ logo | image_url: width: 624 | image_tag: widths: '104, 156, 208, 312, 468, 624', alt: shop.name, class: 'w-full h-auto block' }}
+          {{ logo | image_url: width: lw_max_2x | image_tag: widths: logo_widths, sizes: logo_sizes, loading: 'eager', alt: shop.name, class: 'w-full h-auto block' }}
         {%- else -%}
           {{ shop.name }}
         {%- endif -%}
       </span>
       {%- if logo_inverted != blank -%}
         <span class="logo-layer logo-layer--inverted relative" aria-hidden="true">
-          {{ logo_inverted | image_url: width: 624 | image_tag: widths: '104, 156, 208, 312, 468, 624', alt: '', class: 'absolute w-full h-full block object-contain' }}
+          {{ logo_inverted | image_url: width: lw_max_2x | image_tag: widths: logo_widths, sizes: logo_sizes, loading: 'eager', alt: '', class: 'absolute w-full h-full block object-contain' }}
         </span>
       {%- endif -%}
     </a>

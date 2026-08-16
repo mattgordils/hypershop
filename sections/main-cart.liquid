@@ -59,9 +59,9 @@
 
           {% comment %} Order summary — reuses the drawer footer + shipping meter {% endcomment %}
           <div class="lg:col-span-5 xl:col-span-4">
-            <div class="lg:sticky lg:top-[calc(var(--header-height)+var(--site-gutters))] theme-light-grey rounded">
+            <div class="pt-(--cart-padding) lg:sticky lg:top-[calc(var(--header-height)+var(--site-gutters))] theme-light-grey rounded">
               {% if section.settings.free_shipping %}
-                <div id="cartUpdate" class="p-(--cart-padding) pb-0">
+                <div id="cartUpdate" class="px-(--cart-padding) pb-0 mb-(--cart-padding)">
                   {% if shipping_level == 1 %}
                     <p class="body bold pb-1">
                       {{ section.settings.free_shipping_met_text }}

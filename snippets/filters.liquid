@@ -54,7 +54,7 @@
         data-clear-all-filters
         class='h6 border-b border-dashed transition border-hr-color hover:border-current hover:text-error'
       >
-        Clear All
+        {{ 'products.facets.clear_all' | t }}
       </button>
       {%- for filter in filter_list -%}
         {%- if filter.type == 'price_range' -%}
@@ -74,7 +74,7 @@
             <a
               href='{{ filter_value.url_to_remove }}'
               class='remove-filter flex gap-1 items-center justify-start body-small leading-none text-light-text-color hover:text-error transition'
-              title='Remove {{ filter.label }} filter'
+              title='{{ 'products.facets.remove_filter' | t: label: filter.label }}'
             >
               {{ filter_value.label }}
               <div class='h6 text-center pointer-events-none'>{% render 'icon-material', size: '1em', class: 'block' %}</div>
@@ -94,21 +94,27 @@
   <form class="{{ filters_classname }} {% if has_active_filters %} mb-4{% endif %}">
     {%- if show_sort -%}
       <collapsible-item class='border-b border-hr-color' data-filter-key='sort-by'>
-        <summary
-          {% if filters_collapsible %}data-collapsible='trigger'{% endif %}
-          class='{% if filters_collapsible %}cursor-pointer {% endif %}block body font-medium pb-4'
+        {%- assign sort_panel_id = 'FilterPanel-' | append: uid | append: '-sort' -%}
+        <button
+          type='button'
+          {% if filters_collapsible %}
+            data-collapsible='trigger'
+            aria-expanded='false'
+            aria-controls='{{ sort_panel_id }}'
+          {% endif %}
+          class='{% if filters_collapsible %}cursor-pointer {% endif %}block w-full text-left body font-medium pb-4'
         >
           <div class='flex gap-3 items-center justify-between'>
-            <span>Sort By</span>
+            <span>{{ 'products.facets.sort_by' | t }}</span>
             {% if filters_collapsible %}
               <div data-collapsible='icon' class='w-[10px] rotate-180'>
                 {% render 'icon-material', icon: 'keyboard_arrow_down', class: 'arrow transition rotate-180' %}
               </div>
             {% endif %}
           </div>
-        </summary>
+        </button>
 
-        <div data-collapsible='content' aria-hidden='{{ group_open_state }}'>
+        <div id='{{ sort_panel_id }}' data-collapsible='content' aria-hidden='{{ group_open_state }}'>
           <div>
             <div class='pb-5'>
               <ul>
@@ -162,23 +168,32 @@
         -%}
         {% if is_availability and in_stock_value %}
           {%- comment -%} Availability rendered as a single "Hide out of stock" toggle (applies in-stock only) {%- endcomment -%}
-          {%- assign oos_id = 'Filter-' | append: uid | append: '-hide-oos' -%}
+          {%- liquid
+            assign oos_id = 'Filter-' | append: uid | append: '-hide-oos'
+            assign oos_label = 'products.facets.hide_out_of_stock' | t
+          -%}
           <div class='border-b border-hr-color py-4'>
             {% render 'filter-option',
               type: 'checkbox',
               id: oos_id,
               name: in_stock_value.param_name,
               value: in_stock_value.value,
-              label: 'Hide out of stock',
+              label: oos_label,
               checked: in_stock_value.active,
               class: 'body font-medium'
             %}
           </div>
         {% elsif filter.type != 'boolean' %}
           <collapsible-item class='border-b border-hr-color' data-filter-key='{{ filter_key }}'>
-            <summary
-              {% if filters_collapsible %}data-collapsible='trigger'{% endif %}
-              class='{% if filters_collapsible %}cursor-pointer {% endif %}block body font-medium {% if forloop.index == 1 and show_sort == false %}pb-4{% else %}py-4{% endif %}'
+            {%- assign filter_panel_id = 'FilterPanel-' | append: uid | append: '-' | append: filter_key -%}
+            <button
+              type='button'
+              {% if filters_collapsible %}
+                data-collapsible='trigger'
+                aria-expanded='false'
+                aria-controls='{{ filter_panel_id }}'
+              {% endif %}
+              class='{% if filters_collapsible %}cursor-pointer {% endif %}block w-full text-left body font-medium {% if forloop.index == 1 and show_sort == false %}pb-4{% else %}py-4{% endif %}'
             >
               <div class='flex gap-3 items-center justify-between'>
                 <span>{{ filter.label }}</span>
@@ -192,9 +207,10 @@
                   <span class='hidden'>({{ filter.active_values.size }})</span>
                 {%- endif -%}
               </div>
-            </summary>
+            </button>
 
             <div
+              id='{{ filter_panel_id }}'
               data-collapsible='content'
               aria-hidden='{{ group_open_state }}'
             >
@@ -217,6 +233,7 @@
                           if filter.active_values.size < 1
                             assign all_checked = true
                           endif
+                          assign all_label = 'products.facets.all' | t
                         -%}
                         <li class='filter-item body {% if filter.label == 'Color' %}w-[40%] grow min-w-[100px]{% endif %}'>
                           {% render 'filter-option',
@@ -224,7 +241,7 @@
                             id: all_id,
                             name: filter.param_name,
                             value: 'all',
-                            label: 'All',
+                            label: all_label,
                             checked: all_checked
                           %}
                         </li>

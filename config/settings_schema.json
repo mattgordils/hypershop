@@ -398,14 +398,42 @@
       "type": "select",
       "id": "card_aspect_ratio",
       "label": "Image shape",
-      "default": "4/5",
+      "default": "portrait_4_5",
       "options": [
-        { "value": "2/3", "label": "Tall (2:3)" },
-        { "value": "4/5", "label": "Portrait (4:5)" },
-        { "value": "1/1", "label": "Square" },
-        { "value": "5/4", "label": "Landscape (5:4)" },
-        { "value": "3/2", "label": "Wide (3:2)" }
+        { "value": "portrait_2_3", "label": "Portrait (2:3)" },
+        { "value": "portrait_3_4", "label": "Portrait (3:4)" },
+        { "value": "portrait_4_5", "label": "Portrait (4:5)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "landscape_5_4", "label": "Landscape (5:4)" },
+        { "value": "landscape_4_3", "label": "Landscape (4:3)" },
+        { "value": "landscape_3_2", "label": "Landscape (3:2)" }
       ]
+    },
+    { "type": "header", "content": "Badges" },
+    {
+      "type": "checkbox",
+      "id": "card_show_low_stock",
+      "label": "Show low stock badge",
+      "info": "Only for variants with inventory tracking turned on, and never when sold out.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "card_low_stock_label",
+      "label": "Low stock badge text",
+      "default": "Selling Fast",
+      "visible_if": "{{ settings.card_show_low_stock }}"
+    },
+    {
+      "type": "range",
+      "id": "card_low_stock_threshold",
+      "label": "Low stock threshold",
+      "info": "Shows once remaining stock is at or below this number.",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 10,
+      "visible_if": "{{ settings.card_show_low_stock }}"
     },
     { "type": "header", "content": "Hover" },
     {

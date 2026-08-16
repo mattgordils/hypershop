@@ -154,7 +154,7 @@
                 class="body inline-flex items-center gap-1 group align-top{% if show_sidebar %} lg:hidden{% endif %}"
               >
                 <span class="animate-underline pb-[.1em]">
-                  Filter & Sort{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
+                  {{ 'products.facets.filter_and_sort' | t }}{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
                 </span>
                 <span class="icon block -mt-[2px]">
                   {% render 'icon-material', icon: 'tune', class: 'block' %}
@@ -167,18 +167,18 @@
 
       {% if products.size == 0 %}
         <div class="py-v-space-sm text-center flex flex-col items-center gap-3{% if show_sidebar %} lg:col-span-3{% endif %}">
-          <h3 class="h3">Nothing matches those filters</h3>
+          <h3 class="h3">{{ 'products.facets.empty_title' | t }}</h3>
           <p class="body text-light-text-color max-w-narrow">
-            Try adjusting or removing a few of them, or start a new search.
+            {{ 'products.facets.empty_text' | t }}
           </p>
           {% if active_filter_count > 0 %}
-            <button type="button" data-clear-all-filters class="button mt-2">Clear all filters</button>
+            <button type="button" data-clear-all-filters class="button mt-2">{{ 'products.facets.clear_all_filters' | t }}</button>
           {% endif %}
         </div>
       {% else %}
       {%- comment -%} {% paginate %} runs in the section (paginatable objects can't be passed through {% render %}); we receive the current page + the paginate object {%- endcomment -%}
       <in-view
-        class="product-grid__grid gap-x-gutter gap-y-v-space-sm"
+        class="product-grid__grid gap-x-gutter {% if settings.card_text_over_image %}gap-y-gutter{% else %}gap-y-v-space-sm{% endif %}"
         style="--grid-cols-mobile: {{ mobile_columns }}; --grid-cols-tablet: {{ tablet_columns }}; --grid-cols-desktop: {{ columns }};"
       >
         {% for product in products %}
@@ -202,7 +202,7 @@
           {%- when 'load_more' -%}
             {%- if paginate.next -%}
               <load-more data-section-id="{{ section_id }}" data-grid-next="{{ paginate.next.url }}" class="flex justify-center pt-v-space-sm">
-                <button type="button" class="button">Load more</button>
+                <button type="button" class="button">{{ 'products.pagination.load_more' | t }}</button>
               </load-more>
             {%- endif -%}
           {%- when 'infinite' -%}
@@ -228,7 +228,7 @@
     <div class="modal-content w-full md:w-[30vw] max-w-full md:min-w-[600px] {{ default_scheme }} bg-bg z-1{% if show_sidebar %} lg:hidden!{% endif %}">
       <div class="flex flex-col h-full">
         <div class="shrink-0 h-header-height px-margin md:px-gutter w-full flex justify-between items-center border-hr-color">
-          <p class="h5">Filter</p>
+          <p class="h5">{{ 'products.facets.filter' | t }}</p>
           <modal-trigger
             class="filter-close button circle transparent -mr-[18px]"
             role="button"

@@ -1,0 +1,69 @@
+{%- comment -%}
+  Newsletter signup as a block, so it can sit inside a Text Lockup — which means any
+  section that accepts one (media with text, columns, text section, 404, accordion, promo
+  cards, media slides) can have a signup without its own implementation.
+
+  id_prefix is block.id, so several signups can coexist on a page — a footer one plus one
+  in a section, say — without their labels and error regions colliding.
+{%- endcomment -%}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+<div class="w-full {{ space_below | strip }}" {{ block.shopify_attributes }}>
+  {% render 'newsletter-form',
+    id_prefix: block.id,
+    confirm_text: block.settings.text_confirm,
+    placeholder: block.settings.placeholder
+  %}
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "block-newsletter",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Signups create a customer tagged \"newsletter\", subscribed to email marketing. Email apps such as Klaviyo sync them automatically; to use an app's own form instead, add its app block."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Field Placeholder",
+      "default": "Enter email"
+    },
+    {
+      "type": "text",
+      "id": "text_confirm",
+      "label": "Confirmation Text",
+      "info": "Shown in the field for a few seconds after a successful signup.",
+      "default": "Thank you"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "none",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
+    }
+  ],
+  "blocks": [
+
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

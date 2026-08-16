@@ -1,0 +1,264 @@
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+{%- liquid
+  # The radios have to share a name to behave as one set, and the name has to be
+  # unique per Tabs block so two on the same page don't fight. Captured before the
+  # loop below shadows `block` with each child.
+  assign group = 'Tabs-' | append: block.id
+
+  # Tab titles are rendered by the child (see below), so the parent can't put a
+  # typography class on them. It passes the chosen style down as custom properties
+  # instead — same --{style}-* vars the h4/body/... utilities in typography.css read.
+  assign title_style = block.settings.title_size
+  assign title_font = '--main-font'
+  if title_style == 'h4' or title_style == 'h5'
+    assign title_font = '--secondary-font'
+  endif
+-%}
+
+{% if block.blocks.size > 0 %}
+  {%- comment -%}
+    No JavaScript: a radio per tab, `checked` marking the open one, and CSS showing
+    the panel that follows the checked input.
+
+    The split of markup is forced by Shopify — a parent block can't read a child
+    block's settings, so the title only exists inside the child. Each Tab therefore
+    renders its own <label> and panel, and the parent renders only the <input>, which
+    is the part that needs to know about the set as a whole (the shared name, and
+    which one starts open). Flex `order` lifts every label into a row above the
+    panels — see the display:contents note in the stylesheet for how they get out of
+    the wrapper Shopify puts around each block.
+  {%- endcomment -%}
+  <div
+    class="tabs relative flex flex-wrap items-start gap-x-gutter text-left w-full {{ block.settings.text_size }} {{ space_below | strip }}"
+    style="
+      --tabs-tab-font-family: var({{ title_font }});
+      --tabs-tab-font-size: var(--{{ title_style }}-size);
+      --tabs-tab-line-height: var(--{{ title_style }}-line-height);
+      --tabs-tab-letter-spacing: var(--{{ title_style }}-letter-spacing);
+      --tabs-tab-font-weight: var(--{{ title_style }}-weight);
+      --tabs-tab-font-style: var(--{{ title_style }}-style);
+      --tabs-tab-text-transform: var(--{{ title_style }}-transform);
+    "
+  >
+    {%- comment -%}
+      Children go through {% content_for 'blocks' %}, not a {% render block %} loop.
+      `render` is the section-blocks API; for nested theme blocks content_for is the
+      supported path, and it's the platform — not the template — that resolves a
+      setting bound to a dynamic source. Rendered the other way, a bound setting comes
+      back empty while a literal one is fine, which is exactly what a description tab
+      hit: `{{ product.description }}` written by hand rendered, the bound setting
+      didn't.
+
+      That means the inputs can't be interleaved with the panels any more, so they all
+      come first and the stylesheet pairs the nth input with the nth panel.
+    {%- endcomment -%}
+    {% for block in block.blocks %}
+      <input
+        type="radio"
+        class="tabs__input"
+        name="{{ group }}"
+        id="Tab-{{ block.id }}"
+        {% if forloop.first %}
+          checked
+        {% endif %}
+      >
+    {% endfor %}
+
+    {% content_for 'blocks' %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  /* Shopify wraps every block in its own element, which would trap each tab's label
+     and panel in one box and make the row impossible. display:contents drops the box
+     but keeps the element — so it still carries the editor's block attributes, and
+     the :checked selectors below can still reach through it. */
+  .tabs .block-tabs-panel {
+    display: contents;
+  }
+
+  .tabs {
+    --tabs-tab-opacity: 0.5;
+    --tabs-tab-hover-opacity: 0.75;
+    --tabs-tab-active-opacity: 1;
+    --tabs-tab-underline-width: 0px;
+    --tabs-tab-underline-color: currentColor;
+  }
+
+  /* Off-screen rather than display:none — a hidden input can't be focused, and the
+     radios are what makes arrow-key navigation between tabs work for free. */
+  .tabs__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* order:1 pulls every label ahead of every panel, so the labels form the row at
+     the top no matter where their panel sits in the source. */
+  .tabs__tab {
+    order: 1;
+    cursor: pointer;
+    font-family: var(--tabs-tab-font-family);
+    font-size: var(--tabs-tab-font-size);
+    line-height: var(--tabs-tab-line-height);
+    letter-spacing: var(--tabs-tab-letter-spacing);
+    font-weight: var(--tabs-tab-font-weight);
+    font-style: var(--tabs-tab-font-style);
+    text-transform: var(--tabs-tab-text-transform);
+    opacity: var(--tabs-tab-opacity);
+    /* Every tab carries the underline in a transparent colour, so activating one
+       doesn't change its height and shuffle the row. */
+    border-block-end: var(--tabs-tab-underline-width) solid transparent;
+    transition:
+      opacity var(--md-speed) ease-in-out,
+      border-color var(--md-speed) ease-in-out;
+  }
+
+  .tabs__tab:hover {
+    opacity: var(--tabs-tab-hover-opacity);
+  }
+
+  /* Active treatment comes from the tokens above, so restyling is a value change
+     rather than an override — set --tabs-tab-underline-width for an underline, or
+     drop the opacity difference and use only the border. */
+  .tabs__input:checked + .block-tabs-panel .tabs__tab {
+    opacity: var(--tabs-tab-active-opacity);
+    border-block-end-color: var(--tabs-tab-underline-color);
+  }
+
+  .tabs__input:focus-visible + .block-tabs-panel .tabs__tab {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* Panels take the full row so the labels can't sit beside them. */
+  .tabs__panel {
+    order: 2;
+    width: 100%;
+    display: none;
+  }
+
+  /* The inputs are all rendered ahead of the panels, so the pairing is positional: the
+     nth input controls the nth panel. `~` rather than `+` because they're no longer
+     adjacent, and nth-of-type counts inputs and block wrappers separately — the wrappers
+     are the only divs directly inside .tabs, so the indexes line up.
+
+     Written out to a fixed ceiling because CSS can't count; twelve tabs is far past what
+     a product page should carry. */
+  .tabs__input:nth-of-type(1):checked ~ .block-tabs-panel:nth-of-type(1) .tabs__panel,
+  .tabs__input:nth-of-type(2):checked ~ .block-tabs-panel:nth-of-type(2) .tabs__panel,
+  .tabs__input:nth-of-type(3):checked ~ .block-tabs-panel:nth-of-type(3) .tabs__panel,
+  .tabs__input:nth-of-type(4):checked ~ .block-tabs-panel:nth-of-type(4) .tabs__panel,
+  .tabs__input:nth-of-type(5):checked ~ .block-tabs-panel:nth-of-type(5) .tabs__panel,
+  .tabs__input:nth-of-type(6):checked ~ .block-tabs-panel:nth-of-type(6) .tabs__panel,
+  .tabs__input:nth-of-type(7):checked ~ .block-tabs-panel:nth-of-type(7) .tabs__panel,
+  .tabs__input:nth-of-type(8):checked ~ .block-tabs-panel:nth-of-type(8) .tabs__panel,
+  .tabs__input:nth-of-type(9):checked ~ .block-tabs-panel:nth-of-type(9) .tabs__panel,
+  .tabs__input:nth-of-type(10):checked ~ .block-tabs-panel:nth-of-type(10) .tabs__panel,
+  .tabs__input:nth-of-type(11):checked ~ .block-tabs-panel:nth-of-type(11) .tabs__panel,
+  .tabs__input:nth-of-type(12):checked ~ .block-tabs-panel:nth-of-type(12) .tabs__panel {
+    display: block;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Tabs",
+  "class": "block-tabs",
+  "settings": [
+    {
+      "type": "select",
+      "id": "title_size",
+      "default": "body",
+      "label": "Tab Title Size",
+      "options": [
+        {
+          "label": "Large",
+          "value": "h4"
+        },
+        {
+          "label": "Medium",
+          "value": "h5"
+        },
+        {
+          "label": "Regular",
+          "value": "body"
+        },
+        {
+          "label": "Small",
+          "value": "body-small"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "default": "body-small",
+      "label": "Text Size",
+      "options": [
+        {
+          "label": "Large",
+          "value": "body-large"
+        },
+        {
+          "label": "Medium",
+          "value": "body"
+        },
+        {
+          "label": "Small",
+          "value": "body-small"
+        },
+        {
+          "label": "Tiny",
+          "value": "body-tiny"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "none",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "XL",
+          "value": "xl"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_tabs-panel"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabs"
+    }
+  ]
+}
+{% endschema %}

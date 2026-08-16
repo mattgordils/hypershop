@@ -5,24 +5,14 @@
   endif
 
   comment
-    Aspect ratio: the class has to be a literal for Tailwind's scanner to emit it, so
-    the setting maps to a fixed class here rather than being interpolated. `card_ratio`
-    is the same shape passed to the image snippet, which crops the srcset to match.
+    Thumbnails follow the product card's ratio setting, resolved through the same util
+    as everywhere else. The number is both the --card-aspect value below and the crop
+    the image snippet applies to the srcset.
   endcomment
-  assign card_ratio = settings.card_aspect_ratio | default: '4/5'
-  case card_ratio
-    when '2/3'
-      assign card_aspect_class = 'aspect-2/3'
-    when '1/1'
-      assign card_aspect_class = 'aspect-square'
-    when '5/4'
-      assign card_aspect_class = 'aspect-5/4'
-    when '3/2'
-      assign card_aspect_class = 'aspect-3/2'
-    else
-      assign card_ratio = '4/5'
-      assign card_aspect_class = 'aspect-4/5'
-  endcase
+  capture card_aspect
+    render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+  endcapture
+  assign card_aspect = card_aspect | strip
 -%}
 
 {%- comment -%}
@@ -35,13 +25,13 @@
 {%- endcomment -%}
 <div id="cartLineItem" data-line-key="{{ item.key }}" class="flex gap-x-gutter">
   <div class="w-24">
-    <div class="{{ card_aspect_class }} relative w-full rounded overflow-hidden">
+    <div class="aspect-(--card-aspect) relative w-full rounded overflow-hidden" style="--card-aspect: {{ card_aspect }};">
       {%- comment -%} sizes: the thumbnail column is w-24, i.e. 96px; srcset covers the DPR. {%- endcomment -%}
       {% render 'image',
         src: image,
         layout: 'cover',
         loading: 'eager',
-        ratio: card_ratio,
+        ratio: card_aspect,
         sizes: '96px',
         width: 100
       %}

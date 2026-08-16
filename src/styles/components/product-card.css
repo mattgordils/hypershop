@@ -49,16 +49,6 @@
   opacity: var(--card-tint-opacity);
 }
 
-/* Text over the image. Colour is left to the scheme in scope — pair it with a hover
-   tint or a gradient of your own if your imagery needs the contrast. */
-.product-card__text-overlay {
-  pointer-events: none;
-}
-
-.product-card__text-overlay a {
-  pointer-events: auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .product-card__media--scale picture,
   .product-card__tint {

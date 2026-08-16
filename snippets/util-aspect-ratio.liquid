@@ -1,0 +1,35 @@
+{% doc %}
+  Maps an aspect-ratio setting value to the width/height number CSS
+  `aspect-ratio` wants. Kept in one place so a section offering the choice per
+  viewport doesn't repeat the same case block once per breakpoint.
+
+  Unknown or blank values fall through to portrait 4:5, which is the default
+  every ratio setting in the theme ships with.
+
+  @param {string} [ratio] - one of: portrait_2_3, portrait_3_4, portrait_4_5, square,
+                            landscape_5_4, landscape_4_3, landscape_3_2
+
+  @example
+  {% capture media_aspect %}{% render 'util-aspect-ratio', ratio: section.settings.desktop_media_aspect_ratio %}{% endcapture %}
+  <div style="--aspect: {{ media_aspect | strip }};">
+{% enddoc %}
+{%- liquid
+  case ratio
+    when 'square'
+      assign aspect_value = 1
+    when 'portrait_3_4'
+      assign aspect_value = 0.75
+    when 'portrait_2_3'
+      assign aspect_value = 0.6666
+    when 'landscape_4_3'
+      assign aspect_value = 1.3333
+    when 'landscape_3_2'
+      assign aspect_value = 1.5
+    when 'landscape_5_4'
+      assign aspect_value = 1.25
+    else
+      assign aspect_value = 0.8
+  endcase
+
+  echo aspect_value
+-%}

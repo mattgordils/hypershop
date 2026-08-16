@@ -49,14 +49,18 @@
   {%- elsif symbol == 'icon' or symbol == 'custom' -%}
     <span class="shrink-0 relative flex items-center">
       {%- if symbol == 'custom' and custom_icon != blank -%}
-        {{ custom_icon | image_url: width: 72 | image_tag:
-          widths: '24, 48, 72',
-          alt: '',
-          class: 'shrink-0 block h-[18px] w-auto object-contain',
-          loading: 'lazy'
-        }}
+        {% render 'header-icon',
+          icon: custom_icon,
+          icon_inverted: block.settings.custom_icon_inverted,
+          size: block.settings.icon_width,
+          alt: ''
+        %}
       {%- else -%}
-        <span class="shrink-0 material-icon text-[18px] block" aria-hidden="true">{{ default_icon }}</span>
+        <span
+        class="shrink-0 material-icon block"
+        style="font-size: {{ block.settings.icon_width | default: 18 }}px;"
+        aria-hidden="true"
+      >{{ default_icon }}</span>
       {%- endif -%}
       {%- if count_appearance == 'bubble' -%}
         <span
@@ -102,10 +106,22 @@
       "label": "Symbol",
       "default": "circle",
       "options": [
-        { "label": "None", "value": "none" },
-        { "label": "Circle (count only)", "value": "circle" },
-        { "label": "Icon", "value": "icon" },
-        { "label": "Custom Icon", "value": "custom" }
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Circle (count only)",
+          "value": "circle"
+        },
+        {
+          "label": "Icon",
+          "value": "icon"
+        },
+        {
+          "label": "Custom Icon",
+          "value": "custom"
+        }
       ]
     },
     {
@@ -124,10 +140,29 @@
       "visible_if": "{{ block.settings.symbol == 'custom' }}"
     },
     {
+      "type": "image_picker",
+      "id": "custom_icon_inverted",
+      "label": "Custom icon \u2014 inverted",
+      "info": "Optional. Crossfades in over a transparent header, matching the logo.",
+      "visible_if": "{{ block.settings.symbol == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "icon_width",
+      "label": "Icon size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18,
+      "visible_if": "{{ block.settings.symbol != 'none' and block.settings.symbol != 'circle' }}",
+      "info": "Applies to both the built-in and uploaded icons."
+    },
+    {
       "type": "text",
       "id": "label",
       "label": "Label",
-      "info": "Leave blank to hide. Override the default \"Cart\" wording — accessibility text always uses the translated default."
+      "info": "Leave blank to hide. Override the default \"Cart\" wording \u2014 accessibility text always uses the translated default."
     },
     {
       "type": "header",
@@ -141,10 +176,22 @@
       "default": "bubble",
       "visible_if": "{{ block.settings.symbol != 'circle' }}",
       "options": [
-        { "label": "None", "value": "none" },
-        { "label": "Superscript", "value": "superscript" },
-        { "label": "Bubble", "value": "bubble" },
-        { "label": "Text — Cart (2)", "value": "text" }
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Superscript",
+          "value": "superscript"
+        },
+        {
+          "label": "Bubble",
+          "value": "bubble"
+        },
+        {
+          "label": "Text \u2014 Cart (2)",
+          "value": "text"
+        }
       ]
     }
   ]

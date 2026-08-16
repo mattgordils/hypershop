@@ -1,3 +1,13 @@
+// Keeps the trigger's aria-expanded in step with the panel it controls. Screen readers
+// announce collapsed/expanded from the trigger, so toggling only aria-hidden on the panel
+// leaves them reading a button with no state.
+const syncTriggerState = (content, expanded) => {
+  if (!content?.id) return
+  document
+    .querySelectorAll(`[aria-controls="${CSS.escape(content.id)}"]`)
+    .forEach((trigger) => trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false'))
+}
+
 export const toggleCollapsibleItem = (content, icon, expand) => {
   // Use areaHidden to toggle visibility
   if (expand === 'inherit') {
@@ -15,6 +25,8 @@ export const toggleCollapsibleItem = (content, icon, expand) => {
       icon.dataset.icon = 'plus'
     }
   }
+
+  syncTriggerState(content, expand)
 }
 
 if (!customElements.get("collapsible-item")) {
@@ -43,6 +55,8 @@ if (!customElements.get("collapsible-item")) {
             this.icon.dataset.icon = 'minus'
           }
 
+          syncTriggerState(this.content, this.content.ariaHidden === 'false')
+
           this.trigger.forEach(item => {
             item.addEventListener('click', event => {
               toggleCollapsibleItem(this.content, this.icon, 'inherit')
@@ -63,6 +77,17 @@ if (!customElements.get("collapsible-trigger")) {
       }
 
       connectedCallback() {
+        // A custom element with a click handler is invisible to keyboards without this.
+        if (!this.hasAttribute('role')) this.setAttribute('role', 'button')
+        if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0')
+
+        this.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            this.click()
+          }
+        })
+
         this.addEventListener('click', () => {
           const targetId = this.dataset.id
           if (!targetId) {

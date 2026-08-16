@@ -6,10 +6,11 @@ import { refreshCart } from "./cart";
 import './modal';
 import './collapsible';
 import './inView';
-import './slideshow';
 import './sort-filter';
 import './price-slider';
 import './mini-cart';
+import './localization';
+import './newsletter-form';
 
 // Utils
 function isMobileOrTablet() {
@@ -43,9 +44,50 @@ docReady(() => {
   }
 })
 
+// Lazy images render at opacity-0 and fade in once decoded (see snippets/image.liquid).
+// One delegated listener covers every image on the page — the alternative, an inline
+// handler per <img>, meant the snippet emitted a duplicate <script> on every render.
+//
+// `load` doesn't bubble, hence the capture phase. Images already complete before this
+// runs (cache hits, or anything decoded during HTML parse) never fire it at all, so
+// they're swept once on ready. Eager images never get opacity-0 in the first place.
+const revealImage = (image) => image.classList.remove('opacity-0')
+
+const sweepDecodedImages = (root) => {
+  if (root.nodeType !== Node.ELEMENT_NODE) return
+  if (root.matches('img.opacity-0') && root.complete) revealImage(root)
+  root.querySelectorAll('img.opacity-0').forEach((image) => {
+    if (image.complete) revealImage(image)
+  })
+}
+
+document.addEventListener(
+  'load',
+  (event) => {
+    if (event.target.tagName === 'IMG') revealImage(event.target)
+  },
+  true
+)
+
+// Markup injected after load — theme editor section re-renders, variant swaps
+// replacing [data-dynamic-content], infinite scroll, the mini cart — re-inserts
+// images the browser has already decoded. Those are `complete` the moment they
+// land, so `load` never fires and the delegated listener above can't reach
+// them: they'd sit at opacity-0 forever, i.e. an invisible product gallery.
+// The one-shot sweep on ready only ever covered the initial document.
+const decodedImageSweeper = new MutationObserver((records) => {
+  for (const record of records) {
+    for (const node of record.addedNodes) sweepDecodedImages(node)
+  }
+})
+
+docReady(() => {
+  sweepDecodedImages(document.body)
+  decodedImageSweeper.observe(document.body, { childList: true, subtree: true })
+})
+
 const arraysEqual = (a, b) => {
   if (a === b) return true;
-  // console.log('arry eq', a, b)
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
 

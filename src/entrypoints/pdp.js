@@ -68,6 +68,5 @@ if (!customElements.get("pdp-qty-input")) {
 
 // if (subscriptionOptions) {
 //   subscriptionOptions.forEach(option => {
-//     console.log('OPTION')
 //   })
 // }

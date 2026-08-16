@@ -48,7 +48,7 @@
               <a href="{{ article.url }}" class="flex gap-x-3 py-3 hover:bg-light-grey transition-colors">
                 {%- if article.image -%}
                   <div class="w-15 h-15 bg-light-grey shrink-0 relative overflow-hidden">
-                    {{ article.image | image_url: width: 120, height: 120, crop: 'center' | image_tag: widths: '60, 120', alt: article.title, class: 'absolute inset-0 w-full h-full object-cover', loading: 'lazy' }}
+                    {{ article.image | image_url: width: 120, height: 120, crop: 'center' | image_tag: widths: '60, 120', sizes: '60px', alt: article.title, class: 'absolute inset-0 w-full h-full object-cover', loading: 'lazy' }}
                   </div>
                 {%- endif -%}
                 <div class="flex flex-col justify-center min-w-0">

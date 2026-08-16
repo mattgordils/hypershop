@@ -1,12 +1,12 @@
 {% if block.settings.text != blank and block.settings.title != blank %}
   <collapsible-item class="border-t border-hr-color" id="{{ block.id }}">
-    <button data-collapsible="trigger" class="{{ block.settings.title_size }} text-left flex justify-between items-center gap-x-gutter w-full py-[.75em]">
+    <button data-collapsible="trigger" aria-expanded="false" aria-controls="AccordionPanel-{{ block.id }}" class="{{ block.settings.title_size }} text-left flex justify-between items-center gap-x-gutter w-full py-[.75em]">
       <div class="pt-[.1em]">{{ block.settings.title }}</div>
       <div class="h-[1em] shrink-0 grow-0 flex items-center justify-center pb-[1px]">
         <div data-collapsible="icon">{% render 'icon-animated', icon: 'plus', class: 'block' %}</div>
       </div>
     </button>
-    <div data-collapsible="content">
+    <div id="AccordionPanel-{{ block.id }}" data-collapsible="content">
       <div>
         <div class="rich-text pb-6 {{ block.settings.text_size }}">{{ block.settings.text }}</div>
       </div>
@@ -31,11 +31,11 @@
       "label": "Headline Size",
       "options": [
         {
-          "label": "Large",
+          "label": "XL",
           "value": "h4"
         },
         {
-          "label": "Medium",
+          "label": "Large",
           "value": "h5"
         },
         {

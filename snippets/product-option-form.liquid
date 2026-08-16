@@ -182,6 +182,7 @@ variant will update imagery and url
                       src: color_variant.image,
                       ratio: 1,
                       width: 120,
+                      sizes: '120px',
                       class: 'w-full',
                       alt: value,
                       loading: 'eager'
@@ -235,7 +236,7 @@ variant will update imagery and url
         class="{% if option.values.size < 2 %}!hidden{% endif %}"
       >
         <fieldset class="flex gap-1 flex-wrap">
-          <legend class="h6 {{ label_class }}">{{ option.name }}</legend>
+          <legend class="h6 mb-1 {{ label_class }}">{{ option.name }}</legend>
           {%- for value in option.values -%}
             {%- liquid
               # Look up availability from map

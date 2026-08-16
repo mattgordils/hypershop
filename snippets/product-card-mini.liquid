@@ -10,9 +10,8 @@
           <div href="{{ product.url }}" class="aspect-square relative w-[80px] lg:w-[100px] shrink-0 grow-0">
             {% render 'image',
               src: product.featured_image,
-              id: 'cardImage',
               layout: 'cover',
-              sizes: '300px',
+              sizes: '(min-width: 1024px) 100px, 80px',
               notlazy: notlazy,
               alt: product.title
             %}

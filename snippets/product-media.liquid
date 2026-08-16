@@ -1,44 +1,252 @@
+{% doc %}
+  Product media gallery for the product section.
+
+  Every layout shares one DOM — a `<slide-show>` track, a dots pager nested
+  inside it, and a thumbnail rail beside it. What each viewport actually gets is
+  decided in two places:
+
+  - Whether the track behaves as a slideshow is Embla's call, via `data-active`
+    (the mobile answer) plus a `(min-width: 768px)` breakpoint override (the
+    desktop answer). When it's inactive the track lays out as a plain grid or a
+    single scrolling column.
+  - Where the pager lives — under, left, overlaid, or nowhere — is pure CSS
+    hanging off `data-mobile-layout` / `data-desktop-layout`. See the
+    `.pdp-media` block in src/styles/main-product.css.
+
+  Nothing is rendered twice, so a merchant can pair any desktop layout with any
+  mobile layout without doubling the markup or the image requests.
+
+  Layout values are the section's select values, e.g. `grid`, `scrolling`,
+  `scrolling_thumbnails_left`, `slideshow`, `slideshow_dots`,
+  `slideshow_thumbnails_under`, `slideshow_thumbnails_left`,
+  `slideshow_thumbnails_overlaid`.
+
+  @param {object} product - Product whose media to render
+  @param {string} section_id - Section id, used to keep the slide-show id unique
+  @param {string} [desktop_layout] - Layout at >= 768px. Defaults to 'grid'
+  @param {string} [mobile_layout] - Layout at < 768px. Defaults to 'slideshow_dots'
+  @param {number} [desktop_aspect_ratio] - Width / height of every media frame at >= 768px. Defaults to 0.8
+  @param {number} [mobile_aspect_ratio] - Same below 768px. Defaults to the desktop ratio
+  @param {boolean} [badges_over_media] - overlay product badges on the first slide
+  @param {string} [media_width] - 'full' bleeds the stage past the page margins on mobile. Defaults to 'margins'
+  @param {string} [sizes] - Responsive `sizes` attribute for the full-size media
+
+  @example
+  {% render 'product-media',
+    product: product,
+    section_id: section.id,
+    desktop_layout: section.settings.desktop_media_layout,
+    mobile_layout: section.settings.mobile_media_layout,
+    desktop_aspect_ratio: 0.8,
+    mobile_aspect_ratio: 1,
+    sizes: '(min-width: 768px) 50vw, 100vw'
+  %}
+{% enddoc %}
+
 {% liquid
-  assign aspect_ratio = 0.8
-  assign playing = video_playing | default: true
+  assign gallery_id = 'pdp-media-' | append: section_id
+  assign gallery_desktop_layout = desktop_layout | default: 'grid'
+  assign gallery_mobile_layout = mobile_layout | default: 'slideshow_dots'
+  assign gallery_aspect_desktop = desktop_aspect_ratio | default: 0.8
+  assign gallery_aspect_mobile = mobile_aspect_ratio | default: gallery_aspect_desktop
+  assign gallery_media_width = media_width | default: 'margins'
+  assign gallery_sizes = sizes | default: '(min-width: 768px) 50vw, 100vw'
+
+  comment
+    Booleans the markup needs. `contains` is doing the parsing here — the option
+    values are built so each family and each pager style reads as a substring.
+  endcomment
+  assign desktop_is_slideshow = false
+  if gallery_desktop_layout contains 'slideshow'
+    assign desktop_is_slideshow = true
+  endif
+
+  assign mobile_is_slideshow = false
+  if gallery_mobile_layout contains 'slideshow'
+    assign mobile_is_slideshow = true
+  endif
+
+  assign show_dots = false
+  if gallery_desktop_layout contains 'dots' or gallery_mobile_layout contains 'dots'
+    assign show_dots = true
+  endif
+
+  assign show_thumbnails = false
+  if gallery_desktop_layout contains 'thumbnails' or gallery_mobile_layout contains 'thumbnails'
+    assign show_thumbnails = true
+  endif
+
+  comment
+    Depends on the flags above, so it has to come after them — Liquid runs top-down and a
+    forward reference is silently nil, not an error.
+
+    Badges over the media only make sense on a slideshow: a grid has no single frame to
+    sit them on. Rendered when either breakpoint is a slideshow; CSS hides them at the
+    breakpoint that isn't.
+  endcomment
+  assign any_slideshow = false
+  if desktop_is_slideshow or mobile_is_slideshow
+    assign any_slideshow = true
+  endif
+
+  assign overlay_badges = false
+  if badges_over_media and any_slideshow
+    assign overlay_badges = true
+  endif
+
+  comment
+    The click zones are the only pager when there's no dots rail and no thumbnails, so
+    they're keyboard-reachable in that case and decorative otherwise.
+  endcomment
+  assign zones_are_only_pager = true
+  if show_dots or show_thumbnails
+    assign zones_are_only_pager = false
+  endif
+
+  comment
+    Lead with the selected variant's media so every layout opens on the image
+    the shopper just picked. The section re-renders this whole block on variant
+    change, so a re-order is all the "jump to the variant image" behaviour that
+    a slideshow needs.
+  endcomment
+  assign featured_media = product.selected_or_first_available_variant.featured_media
+  if featured_media != blank
+    assign trailing_media = product.media | reject: 'id', featured_media.id
+    assign ordered_media = product.media | where: 'id', featured_media.id | concat: trailing_media
+  else
+    assign ordered_media = product.media
+  endif
 %}
 
-{%- for media_item in product.media -%}
-  {% if media_item.image.src != product.selected_or_first_available_variant.image.src or product.selected_or_first_available_variant.image.src == blank %}
-    <div
-      class="{{ class }}"
-      data-index="{{ forloop.index }}"
+{%- if ordered_media.size > 0 -%}
+  {%- comment -%}
+    Identifies the gallery's contents for the variant-change diff: the media are reordered
+    so the selected variant's image leads, so the leading id pins the whole order. When it
+    matches, the gallery is left alone rather than being torn down and rebuilt.
+  {%- endcomment -%}
+  <div
+    class="pdp-media"
+    data-media-key="{{ ordered_media.first.id }}"
+    data-desktop-layout="{{ gallery_desktop_layout }}"
+    data-mobile-layout="{{ gallery_mobile_layout }}"
+    data-media-width="{{ gallery_media_width }}"
+    style="--pdp-media-aspect-mobile: {{ gallery_aspect_mobile }}; --pdp-media-aspect-desktop: {{ gallery_aspect_desktop }};"
+  >
+    <slide-show
+      id="{{ gallery_id }}"
+      class="pdp-media__stage{% if gallery_media_width == 'full' %} -mx-margin md:mx-0{% endif %}"
+      data-slides-to-show="1"
+      data-align="start"
+      data-active="{{ mobile_is_slideshow }}"
+      data-breakpoints='{"(min-width: 768px)": {"active": {{ desktop_is_slideshow }}}}'
+      style="--slide-gap: 0px;"
     >
-      <div
-        style="--aspect: {{ aspect_ratio }};"
-        class="aspect-(--aspect) relative bg-light-color"
-      >
-        {% if media_item.media_type == 'video' %}
-          {% if playing %}
-            {% render 'video',
-              src: media_item,
-              layout: 'cover'
-            %}
-          {% else %}
-            {% render 'image',
-              src: media_item.preview_image,
-              layout: 'cover',
-              sizes: sizes
-            %}
-            <div class="z-2 absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none text-yellow">
-              {% render 'icon-material', icon: 'play_arrow', size: 36 %}
+      <div class="slider-container">
+        {%- for media_item in ordered_media -%}
+          {%- liquid
+            comment
+              The lead media is the LCP candidate in every layout — it is either
+              the only visible slide or the top of the grid.
+            endcomment
+            if forloop.first
+              assign media_loading = 'eager'
+              assign media_priority = 'high'
+            else
+              assign media_loading = 'lazy'
+              assign media_priority = nil
+            endif
+          -%}
+          <div class="slider-slide pdp-media__slide" data-index="{{ forloop.index0 }}">
+            <div class="pdp-media__frame">
+              {%- if media_item.media_type == 'video' -%}
+                {% render 'video', src: media_item, layout: 'cover' %}
+              {%- elsif media_item.image != blank -%}
+                {% render 'image',
+                  src: media_item.image,
+                  layout: 'cover',
+                  sizes: gallery_sizes,
+                  loading: media_loading,
+                  fetchpriority: media_priority
+                %}
+              {%- endif -%}
             </div>
-          {% endif %}
-        {% else %}
-          {% if media_item.image != blank %}
-            {% render 'image',
-              src: media_item.image,
-              layout: 'cover',
-              sizes: sizes
-            %}
-          {% endif %}
-        {% endif %}
+          </div>
+        {%- endfor -%}
       </div>
-    </div>
-  {% endif %}
-{%- endfor -%}
+
+      {%- comment -%}
+        Half-width click targets for advancing on desktop. They sit inside <slide-show>,
+        so a drag that starts on one still reaches Embla's pointer handlers and swiping
+        keeps working; slideshow.js ignores the click that ends a drag via clickAllowed().
+      {%- endcomment -%}
+      {%- if any_slideshow -%}
+        <div class="pdp-media__zones">
+          <button
+            type="button"
+            class="slider-prev pdp-media__zone pdp-media__zone--prev"
+            {% if zones_are_only_pager %}
+              aria-label="{{ 'general.slider.previous' | t }}"
+            {% else %}
+              aria-hidden="true" tabindex="-1"
+            {% endif %}
+          ></button>
+          <button
+            type="button"
+            class="slider-next pdp-media__zone pdp-media__zone--next"
+            {% if zones_are_only_pager %}
+              aria-label="{{ 'general.slider.next' | t }}"
+            {% else %}
+              aria-hidden="true" tabindex="-1"
+            {% endif %}
+          ></button>
+        </div>
+      {%- endif -%}
+
+      {%- if show_dots -%}
+        {% assign dots_class = "pdp-media__dots" %}
+        {% if media_width == 'full' %}
+          {% assign dots_class = dots_class | append: ' px-margin' %}
+        {% endif %}
+        {% render 'slider-dots', class: dots_class %}
+      {%- endif -%}
+    </slide-show>
+
+    {%- if overlay_badges -%}
+      <div class="pdp-media__badges p-gutter pointer-events-none">
+        {% render 'product-badges', product: product %}
+      </div>
+    {%- endif -%}
+
+    {%- if show_thumbnails -%}
+      {%- comment -%}
+        Outside the slide-show so the "left" and "under" placements can take part
+        in the wrapper's flex flow, and so the rail survives grid/scrolling
+        layouts where Embla is inactive (slideshow.css hides nested controls
+        there). data-slider wires it back to this slide-show.
+      {%- endcomment -%}
+      <div class="slider-nav thumbnails pdp-media__thumbs" data-slider="{{ gallery_id }}">
+        {%- for media_item in ordered_media -%}
+          <button
+            type="button"
+            class="pdp-media__thumb"
+            aria-label="Show media {{ forloop.index }} of {{ ordered_media.size }}"
+          >
+            <span class="pdp-media__thumb-frame">
+              {% render 'image',
+                src: media_item.preview_image,
+                layout: 'cover',
+                sizes: '120px',
+                decorative: true
+              %}
+              {%- if media_item.media_type == 'video' -%}
+                <span class="pdp-media__thumb-badge">
+                  {% render 'icon-material', icon: 'play_arrow', size: 18 %}
+                </span>
+              {%- endif -%}
+            </span>
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

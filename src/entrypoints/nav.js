@@ -13,7 +13,6 @@ class StickyHeader extends HTMLElement {
     this.headerBounds = {};
     this.onScrollHandler = this.onScroll.bind(this);
 
-    console.log('scrollThreshold', this.scrollThreshold)
 
     // Use passive listener for better performance
     window.addEventListener('scroll', this.onScrollHandler, { passive: true });

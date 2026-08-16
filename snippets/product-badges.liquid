@@ -1,10 +1,18 @@
 {%- comment -%}
   @param {object} product
   @param {string} [class]
-  @param {string} [badges]   - comma-separated labels, for previews built from sample
-                               data where there's no product to read tags from
-  @param {boolean} [sold_out] - render the sold-out badge visible (sample data)
-  @param {boolean} [on_sale]  - render the sale badge visible (sample data)
+  @param {string} [badges]     - comma-separated labels, for previews built from sample
+                                 data where there's no product to read tags from
+  @param {boolean} [sold_out]  - force the sold-out badge on (sample data)
+  @param {boolean} [on_sale]   - force the sale badge on (sample data)
+  @param {boolean} [low_stock] - force the low-stock badge on (sample data)
+
+  Each state is worked out once and drives both `has_badges` and the badge's own initial
+  visibility. Those used to be separate: `has_badges` read the product, while every badge
+  rendered `hidden` and waited for variantSelects.js to reveal it — which only runs when
+  a card renders a variant selector, so on a plain collection grid the sale badge never
+  appeared at all. Rendering the real state server-side means it's correct before any JS
+  runs; the JS still keeps it current on variant change.
 {%- endcomment -%}
 
 {% liquid
@@ -12,14 +20,48 @@
   assign wrapper_class = class | default: "flex flex-wrap gap-1"
 
   assign static_badges = badges | split: ','
+  assign variant = product.selected_or_first_available_variant
+
+  assign show_sold_out = false
+  if sold_out or variant.available == false
+    assign show_sold_out = true
+  endif
+
+  comment
+    Compare against the variant's own price. This previously compared the variant's
+    compare-at price against `product.price` — the product's *lowest* price — so on a
+    multi-price product a discounted variant could read as not on sale, and vice versa.
+  endcomment
+  assign show_sale = false
+  if on_sale
+    assign show_sale = true
+  elsif variant.compare_at_price != blank and variant.compare_at_price > variant.price
+    assign show_sale = true
+  endif
+
+  comment
+    Low stock, matching the Stock Counter block's rules: inventory tracked, and stock
+    above zero but at or below the threshold. A sold-out variant says "Sold Out", not
+    "Selling Fast", so the two can't both appear.
+  endcomment
+  assign low_stock_label = settings.card_low_stock_label | default: 'Selling Fast'
+  assign low_stock_threshold = settings.card_low_stock_threshold | default: 10
+
+  assign show_low_stock = false
+  if low_stock
+    assign show_low_stock = true
+  elsif settings.card_show_low_stock and show_sold_out == false
+    if variant.inventory_management != blank and variant.inventory_quantity > 0 and variant.inventory_quantity <= low_stock_threshold
+      assign show_low_stock = true
+    endif
+  endif
 
   assign has_badges = false
-
-  if product.selected_or_first_available_variant.available == false
+  if show_sold_out or show_sale or show_low_stock
     assign has_badges = true
   endif
-  
-  if product.selected_or_first_available_variant.compare_at_price != blank and product.selected_or_first_available_variant.compare_at_price > product.price
+
+  if static_badges.size > 0
     assign has_badges = true
   endif
 
@@ -29,12 +71,16 @@
     endif
   endfor
 
+  comment
+    `.empty` reads backwards but is load-bearing: main-product.css hides the PDP badge
+    block unless this class is present, i.e. it marks "this one has badges".
+  endcomment
   if has_badges
     assign wrapper_class = wrapper_class | append: ' empty'
   endif
 %}
 
-<div class="product-badges {{ wrapper_class }}" data-dynamic-content data-badges>
+<div class="product-badges {{ classname }} {{ wrapper_class }}" data-dynamic-content data-badges>
   {% for tag in product.tags %}
     {% if tag contains 'badge-' or tag contains 'Badge-' %}
       <div class="{{ badge_class }} badge-static">
@@ -48,12 +94,22 @@
     <div class="{{ badge_class }} badge-static">{{ badge | strip }}</div>
   {% endfor %}
 
-  {%- comment -%} Toggled by JS on variant change; sample data can force them on {%- endcomment -%}
-  <div class="{% unless sold_out %}hidden {% endunless %}{{ badge_class }}" data-badge="sold-out">
-    Sold Out
+  {%- comment -%} Server-rendered state, then kept current by variantSelects.js {%- endcomment -%}
+  <div class="{% unless show_sold_out %}hidden {% endunless %}{{ badge_class }}" data-badge="sold-out">
+    {{ 'products.product.sold_out' | t }}
   </div>
 
-  <div class="{% unless on_sale %}hidden {% endunless %}{{ badge_class }}" data-badge="sale">
-    On Sale
+  <div class="{% unless show_sale %}hidden {% endunless %}{{ badge_class }}" data-badge="sale">
+    {{ 'products.product.on_sale' | t }}
   </div>
+
+  {%- if settings.card_show_low_stock or low_stock -%}
+    <div
+      class="{% unless show_low_stock %}hidden {% endunless %}{{ badge_class }}"
+      data-badge="low-stock"
+      data-threshold="{{ low_stock_threshold }}"
+    >
+      {{ low_stock_label }}
+    </div>
+  {%- endif -%}
 </div>

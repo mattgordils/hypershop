@@ -2,7 +2,7 @@
 	assign columns = section.blocks | where: 'type', 'menu'
 %}
 
-<div id="footer" class="p-margin" role="contentinfo">
+<div id="footer" class="p-margin {{ section.settings.color_scheme }}" role="contentinfo">
 	{% comment %} tiny links {% endcomment %}
 	<div class="mb-v-space grid grid-cols-2 lg:grid-cols-12 gap-x-gutter gap-y-v-space">
 
@@ -11,24 +11,10 @@
 				<div class="h6">
 					{{ section.settings.text }}
 				</div>
-				{% form 'customer', class: 'w-full' %}
-					<div class="border-b border-solid bg-transparent font-expanded w-full flex">
-						<input 
-								type="email" 
-								id="email-footer-input" 
-								name="w-full" 
-								class="underlined grow" 
-								placeholder="Enter email" />
-						<input class="shrink-0" type="submit" value="Submit" />
-					</div>
-					{% if form.posted_successfully? %}
-						<div class="font-expanded w-full items-center justify-center mt-3 transition-all opacity-50">
-							{{ section.settings.text-confirm }}
-						</div>
-					{% else  %}
-						{{ form.errors | default_errors }}
-					{% endif %}
-				{% endform %}
+				{% render 'newsletter-form',
+					id_prefix: 'footer',
+					confirm_text: section.settings.text_confirm
+				%}
 			</div>
 		</div>
 
@@ -52,6 +38,23 @@
 		</div>
 
 	</div>
+
+	{%- comment -%} Renders nothing unless Markets offers more than one country or language {%- endcomment -%}
+	{% comment %} {% render 'localization-form', class: 'pb-gutter' %} {% endcomment %}
+
+	{%- comment -%}
+		App blocks — where a Klaviyo/Mailchimp/Omnisend embed goes. Keeping this here means a
+		merchant can swap the native form for their provider's own, or run both, without the
+		theme hardcoding any integration.
+	{%- endcomment -%}
+	{%- assign app_blocks = section.blocks | where: 'type', '@app' -%}
+	{%- if app_blocks.size > 0 -%}
+		<div class="mb-v-space flex flex-col gap-gutter">
+			{%- for block in app_blocks -%}
+				{% render block %}
+			{%- endfor -%}
+		</div>
+	{%- endif -%}
 
 	<div class="flex justify-between items-center border-t pt-2 border-hr-color">
 		<div>
@@ -91,7 +94,9 @@
   "tag": "footer",
   "class": "section-footer",
   "enabled_on": {
-    "groups": ["footer"]
+    "groups": [
+      "footer"
+    ]
   },
   "blocks": [
     {
@@ -104,9 +109,18 @@
           "label": "Menu"
         }
       ]
+    },
+    {
+      "type": "@app"
     }
   ],
   "settings": [
+		{
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
     {
       "type": "header",
       "content": "Content"
@@ -118,9 +132,10 @@
     },
     {
       "type": "text",
-      "id": "text-confirm",
+      "id": "text_confirm",
       "label": "Confirmation Text",
-      "info": "Text that appears after a successful subscription"
+      "info": "Text that appears after a successful subscription",
+      "default": "Thank you"
     }
   ]
 }

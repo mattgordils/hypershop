@@ -35,6 +35,14 @@
     assign image_sizes = sizes_string | append: 'px'
   endif
   assign image_alt = alt | default: image.alt | default: ''
+  comment
+    Decorative: the image adds nothing a screen reader hasn't already heard, e.g. a
+    product card whose link and heading both carry the title. `alt: ''` can't say this —
+    `default` treats an empty string as absent and falls back to image.alt.
+  endcomment
+  if decorative
+    assign image_alt = ''
+  endif
 
   comment
     Determine if this is an asset or schema image
@@ -73,7 +81,7 @@
     200–500 CSS px, where the old 320 → 640 jump meant downloading roughly twice the
     pixels needed.
   endcomment
-  assign widths = '180,240,320,400,480,640,768,1024,1280,1536,1920,2048,2560'
+  assign widths = '40,80,120,180,240,320,400,480,640,768,1024,1280,1536,1920,2048,2560'
   assign widths_array = widths | split: ','
 
   if layout != blank
@@ -111,12 +119,6 @@
   endif
 %}
 
-<script type="text/javascript">
-  function revealImage(event) {
-    event.target.classList.remove('opacity-0');
-  }
-</script>
-
 {% if image != blank %}
   <picture style="--hotspot-x: {{ hotspot_x }}; --hotspot-y: {{ hotspot_y }}">
     {% if is_asset %}
@@ -141,9 +143,6 @@
           class="{{ image_class }}"
         {% endif %}
         decoding="async"
-        {% if image_loading == 'lazy' %}
-          onLoad="revealImage(event)"
-        {% endif %}
       >
     {% else %}
       {%- comment -%} Schema/CDN image with srcset {%- endcomment -%}
@@ -195,9 +194,6 @@
           class="{{ image_class }}"
         {% endif %}
         decoding="async"
-        {% if image_loading == 'lazy' %}
-          onLoad="revealImage(event)"
-        {% endif %}
       >
     {% endif %}
   </picture>

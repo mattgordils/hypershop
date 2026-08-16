@@ -12,6 +12,73 @@
       "search": "Search",
       "placeholder": "Search for anything",
       "close": "Close"
+    },
+    "continue_shopping": "Continue Shopping",
+    "close": "Close",
+    "collections": "Collections",
+    "localization": {
+      "country_label": "Country / region",
+      "language_label": "Language",
+      "update": "Update"
+    },
+    "newsletter": {
+      "email_label": "Email",
+      "placeholder": "Enter email",
+      "submit": "Subscribe",
+      "error": "Sorry, that didn't work. Please try again."
+    },
+    "slider": {
+      "previous": "Previous slide",
+      "next": "Next slide"
+    },
+    "tabs": {
+      "untitled": "Tab"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "on_sale": "On Sale",
+      "quick_view": "Quick view"
+    },
+    "facets": {
+      "filter": "Filter",
+      "sort_by": "Sort By",
+      "clear_all": "Clear All",
+      "clear_all_filters": "Clear all filters",
+      "all": "All",
+      "all_prices": "All prices",
+      "hide_out_of_stock": "Hide out of stock",
+      "price_from": "From",
+      "price_to": "To",
+      "min_price": "Minimum price",
+      "max_price": "Maximum price",
+      "remove_filter": "Remove {{ label }} filter",
+      "empty_title": "Nothing matches those filters",
+      "empty_text": "Try adjusting or removing a few of them, or start a new search.",
+      "filter_and_sort": "Filter & Sort"
+    },
+    "pagination": {
+      "load_more": "Load more"
+    }
+  },
+  "sections": {
+    "cart": {
+      "title": "Your Bag",
+      "empty": "Your cart is empty",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "shipping_free": "FREE",
+      "shipping_calculated": "Calculated at checkout",
+      "discount": "Discount",
+      "note_placeholder": "Special instructions, gift message, delivery notes…",
+      "note_saved": "Note saved",
+      "note_error": "Couldn't save your note",
+      "decrease_quantity": "Decrease quantity",
+      "increase_quantity": "Increase quantity",
+      "remove_item": "Remove item"
     }
   }
 }

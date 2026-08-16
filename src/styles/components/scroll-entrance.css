@@ -1,6 +1,6 @@
-body:not([data-shopify-editor]) {
-  & in-view > *,
-  & .scroll-entrance > * {
+html:not(.no-js) body:not([data-shopify-editor]) {
+  & in-view:not([data-entrance='off']) > *,
+  & .scroll-entrance:not([data-entrance='off']) > * {
     --timing: cubic-bezier(0.44, 0.24, 0.16, 1.00);
     --transform: translate3d(0, 40px, 0);
     --speed: 650ms;
@@ -14,7 +14,7 @@ body:not([data-shopify-editor]) {
                 transform var(--speed) var(--timing);
   }
 
-  & in-view.in-view > *,
+  & in-view.in-view:not([data-entrance='off']) > *,
   & .scroll-entrance[data-in-view='true'] > *,
   & menu-item[data-open="true"] ul.sublinks.scroll-entrance > * {
     transform: none;
@@ -54,4 +54,20 @@ parallax-view .parallax-item {
     rotate(
       calc(1deg * var(--percentage, 0) * (var(--end-rotate, 0) - var(--start-rotate, 0)) + var(--start-rotate, 0))
     );
+}
+
+/* Reduced motion: land in the final state immediately rather than sliding in. Kept as a
+   transition-duration override (not `transition: none`) so the reveal still happens for
+   anything that depends on the transition firing. */
+@media (prefers-reduced-motion: reduce) {
+  body:not([data-shopify-editor]) {
+    & in-view > *,
+    & .scroll-entrance > * {
+      --speed: 0.01ms;
+      --delay: 0ms;
+      --added-delay: 0ms;
+      transform: none;
+      will-change: auto;
+    }
+  }
 }

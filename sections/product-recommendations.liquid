@@ -5,10 +5,15 @@
 {% endcapture %}
 
 {%-liquid
-  assign section_product = product
-  if section.settings.product
-    assign section_product = section.settings.product
-  endif
+  comment
+    `default` rather than `if section.settings.product`: an unset product picker
+    hands back an EmptyDrop, not nil, and only nil and false are falsy in Liquid
+    — so the `if` always fired and overwrote the page's product with the empty
+    one, leaving the element with no id to fetch against. The filter treats the
+    EmptyDrop as empty and falls through, which is why main-product's identical
+    line has always worked.
+  endcomment
+  assign section_product = section.settings.product | default: product
 -%}
 
 <div class="px-margin overflow-hidden {{ spacing_class }}">

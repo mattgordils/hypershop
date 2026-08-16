@@ -195,6 +195,28 @@ class VariantSelects extends HTMLElement {
       }
     }
 
+    // Update low stock badge. The threshold is stamped on the element by Liquid, since
+    // it's a theme setting the JS has no other way to read. `inventory_quantity` is only
+    // present when the variant is tracked, which is exactly when the badge applies —
+    // and it never shows alongside "Sold Out".
+    const lowStockBadge = containerElement.querySelector('[data-badge="low-stock"]');
+    if (lowStockBadge) {
+      const threshold = Number(lowStockBadge.dataset.threshold) || 0;
+      const remaining = variant.inventory_quantity;
+      const isLow =
+        variant.available &&
+        typeof remaining === 'number' &&
+        remaining > 0 &&
+        remaining <= threshold;
+
+      if (isLow) {
+        lowStockBadge.classList.remove('hidden');
+        hasVisibleBadges = true;
+      } else {
+        lowStockBadge.classList.add('hidden');
+      }
+    }
+
     // Check if there are any other visible badges (like tag badges)
     if (badgesWrapper && !otherBadges) {
       const allBadges = badgesWrapper.querySelectorAll('.badge, [class*="badge"]');
@@ -590,18 +612,24 @@ class VariantSelects extends HTMLElement {
     oldDynamicElements.forEach((oldElement, index) => {
       const newElement = newDynamicElements[index];
       if (newElement && oldElement.parentNode) {
-        // Only skip updates for actual image galleries (aspect-square class)
-        // Don't skip for product info sections that happen to contain images
-        const isImageGallery = oldElement.classList.contains('aspect-square');
+        // Leave the gallery alone when the variant maps to the same media in the same
+        // order. Replacing it tears down the live <slide-show> and rebuilds it at slide
+        // one, so a shopper picking a size — which usually shares the colour's photos —
+        // would be thrown back to the first image mid-browse.
+        //
+        // Keyed on the leading media id rather than an <img> src: srcset means the two
+        // documents can pick different candidates for the same photo, and the old check
+        // (a class the PDP gallery never had) never ran at all.
+        const oldMedia = oldElement.querySelector('[data-media-key]');
+        const newMedia = newElement.querySelector('[data-media-key]');
 
-        if (isImageGallery) {
-          // Compare image sources to see if variant image changed
-          const oldImg = oldElement.querySelector('img');
-          const newImg = newElement.querySelector('img');
-
-          if (oldImg && newImg && oldImg.src === newImg.src) {
-            return;
-          }
+        if (
+          oldMedia &&
+          newMedia &&
+          oldMedia.dataset.mediaKey &&
+          oldMedia.dataset.mediaKey === newMedia.dataset.mediaKey
+        ) {
+          return;
         }
 
         oldElement.parentNode.replaceChild(

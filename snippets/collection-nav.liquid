@@ -11,7 +11,7 @@
 -%}
 
 {%- if collections != blank -%}
-  <nav class="collection-nav {{ class }}" aria-label="Collections">
+  <nav class="collection-nav {{ class }}" aria-label="{{ 'general.collections' | t }}">
     {%- comment -%}
       Scrolls sideways rather than wrapping, so a long list stays one row. The negative
       margin lets items bleed to the screen edge while keeping the first one aligned.
