@@ -99,6 +99,7 @@
     "desktop_margin": 40,
     "site_max_width": "100%",
     "border_radius": 0,
+    "header_height_mobile": 48,
     "header_height": 68,
     "checkout_logo_image": "shopify://shop_images/test-logo.png",
     "checkout_accent_color": "#b19981",

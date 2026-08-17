@@ -25,8 +25,10 @@
           "type": "_header-search",
           "static": true,
           "settings": {
-            "symbol": "icon",
+            "symbol": "custom",
             "icon": "search",
+            "custom_icon": "shopify://shop_images/icon-search.png",
+            "custom_icon_inverted": "shopify://shop_images/icon-search-inverted.png",
             "icon_width": 18,
             "label": ""
           },
@@ -36,8 +38,10 @@
           "type": "_header-account",
           "static": true,
           "settings": {
-            "symbol": "icon",
+            "symbol": "custom",
             "icon": "person_outline",
+            "custom_icon": "shopify://shop_images/icon-account.png",
+            "custom_icon_inverted": "shopify://shop_images/icon-account-inverted.png",
             "icon_width": 18,
             "label": ""
           },
@@ -47,8 +51,10 @@
           "type": "_header-cart",
           "static": true,
           "settings": {
-            "symbol": "circle",
+            "symbol": "custom",
             "icon": "shopping_bag",
+            "custom_icon": "shopify://shop_images/icon-cart.png",
+            "custom_icon_inverted": "shopify://shop_images/icon-cart-inverted.png",
             "icon_width": 18,
             "label": "",
             "count_appearance": "bubble"
