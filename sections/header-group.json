@@ -13,7 +13,9 @@
   "sections": {
     "notification-banner": {
       "type": "page-notification-banner",
-      "settings": {}
+      "settings": {
+        "text": "Deals, Deals, Deals!"
+      }
     },
     "header": {
       "type": "page-header",
@@ -21,21 +23,60 @@
         "header-search": {
           "type": "_header-search",
           "static": true,
-          "settings": {}
+          "settings": {
+            "symbol": "icon",
+            "icon": "search",
+            "icon_width": 18,
+            "label": ""
+          },
+          "blocks": {}
         },
         "header-account": {
           "type": "_header-account",
           "static": true,
-          "settings": {}
+          "settings": {
+            "symbol": "icon",
+            "icon": "person_outline",
+            "icon_width": 18,
+            "label": ""
+          },
+          "blocks": {}
         },
         "header-cart": {
           "type": "_header-cart",
           "static": true,
-          "settings": {}
+          "settings": {
+            "symbol": "circle",
+            "icon": "shopping_bag",
+            "icon_width": 18,
+            "label": "",
+            "count_appearance": "bubble"
+          },
+          "blocks": {}
+        },
+        "mini-cart": {
+          "type": "_mini-cart",
+          "static": true,
+          "settings": {
+            "header_text": "Added to your basket",
+            "text_checkout": "Go to Checkout",
+            "view_cart_text": "View your basket"
+          },
+          "blocks": {}
         }
       },
-      "settings": {}
+      "settings": {
+        "logo": "shopify://shop_images/logo_b308f871-1056-49bb-aa53-3eba4667bf61.png",
+        "logo_inverted": "shopify://shop_images/logo-inverted.png",
+        "logo_width_mobile": 180,
+        "logo_width_desktop": 340,
+        "menu": "main-menu",
+        "secondary_menu": "header-secondary"
+      }
     }
   },
-  "order": ["notification-banner", "header"]
+  "order": [
+    "notification-banner",
+    "header"
+  ]
 }
