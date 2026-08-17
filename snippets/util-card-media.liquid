@@ -1,0 +1,40 @@
+{%- comment -%}
+  The product card's media box — aspect ratio, corner radius and matte background — as
+  ready-made attributes, so every place a product image appears in that shape (the card,
+  cart lines) follows Theme settings → Product Card without repeating the logic.
+
+  Emits the class and style attributes, so it goes inside the opening tag:
+
+    <div {% render 'util-card-media', extra_class: 'w-full' %}>
+      {% render 'image', layout: settings.card_image_layout, ... %}
+    </div>
+
+  Image fit stays with the caller because it belongs to the image snippet, not the box.
+
+  @param {string} [extra_class] - appended to the box's classes
+  @param {string} [ratio]       - override the aspect ratio; defaults to the card setting
+{%- endcomment -%}
+{%- liquid
+  assign media_ratio = ratio
+  if media_ratio == blank
+    capture media_ratio
+      render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+    endcapture
+    assign media_ratio = media_ratio | strip
+  endif
+
+  assign media_radius = ''
+  if settings.card_border_radius
+    assign media_radius = ' overflow-hidden rounded-[var(--base-border-radius)]'
+  endif
+
+  comment
+    Only emitted when a colour is actually picked — an untouched picker returns a fully
+    transparent colour, and painting that would still cover the section's own background.
+  endcomment
+  assign media_background = ''
+  if settings.card_media_background != blank and settings.card_media_background.alpha > 0
+    assign media_background = ' --card-media-bg: ' | append: settings.card_media_background | append: ';'
+  endif
+-%}
+class="aspect-(--card-aspect) relative card-media{{ media_radius }} {{ extra_class }}" style="--card-aspect: {{ media_ratio }};{{ media_background }}"

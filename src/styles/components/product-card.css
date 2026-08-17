@@ -14,6 +14,16 @@
   }
 }
 
+/* Matte behind the image (Theme settings → Product Card → Media background).
+   Set by util-card-media, so it covers product cards and cart line items alike. Only
+   painted when that snippet emits the variable, leaving an untouched theme with whatever
+   the section's background is. It sits on the media box itself, so it takes the corner
+   radius for free and shows through transparent PNGs and "Fit" letterboxing alike —
+   both images stack above it. */
+.card-media {
+  background-color: var(--card-media-bg, transparent);
+}
+
 /* Hover effects (Theme settings → Product Card → Hover).
    Scale targets <picture> rather than <img>: the image snippet wraps every image, and
    both the main and hover images are covered by the one rule. */

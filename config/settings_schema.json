@@ -420,6 +420,13 @@
         { "value": "contain", "label": "Fit" }
       ]
     },
+    {
+      "type": "color",
+      "id": "card_media_background",
+      "label": "Media background",
+      "info": "Sits behind the image — a matte for transparent product shots, and the letterbox colour when Image fit is set to Fit. Leave transparent to use the section's own background.",
+      "default": "rgba(0,0,0,0)"
+    },
     { "type": "header", "content": "Badges" },
     {
       "type": "checkbox",

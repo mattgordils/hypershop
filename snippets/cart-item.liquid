@@ -6,13 +6,20 @@
 
   comment
     Thumbnails follow the product card's ratio setting, resolved through the same util
-    as everywhere else. The number is both the --card-aspect value below and the crop
-    the image snippet applies to the srcset.
+    as everywhere else. The number is what the image snippet crops the srcset to; the
+    box itself (ratio, radius, matte) comes from util-card-media, so a line item and a
+    card can't end up looking like two different components.
   endcomment
   capture card_aspect
     render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
   endcapture
   assign card_aspect = card_aspect | strip
+
+  comment
+    Defaulted, not passed straight through: the setting reads as nil until the theme is
+    saved once, and a blank `layout` drops the image out of its box entirely.
+  endcomment
+  assign card_layout = settings.card_image_layout | default: 'cover'
 -%}
 
 {%- comment -%}
@@ -25,11 +32,11 @@
 {%- endcomment -%}
 <div id="cartLineItem" data-line-key="{{ item.key }}" class="flex gap-x-gutter">
   <div class="w-24">
-    <div class="aspect-(--card-aspect) relative w-full rounded overflow-hidden" style="--card-aspect: {{ card_aspect }};">
+    <div {% render 'util-card-media', extra_class: 'w-full relative', ratio: card_aspect %}>
       {%- comment -%} sizes: the thumbnail column is w-24, i.e. 96px; srcset covers the DPR. {%- endcomment -%}
       {% render 'image',
         src: image,
-        layout: 'cover',
+        layout: card_layout,
         loading: 'eager',
         ratio: card_aspect,
         sizes: '96px',

@@ -42,11 +42,6 @@
     assign card_hover_image_asset = mock_hover_image
   endif
 
-  assign media_radius = ''
-  if settings.card_border_radius
-    assign media_radius = ' overflow-hidden rounded-[var(--base-border-radius)]'
-  endif
-
   comment
     Aspect ratio comes through the same util the PDP gallery uses, so the two ratio
     settings can't drift apart. It resolves to a plain number, which is what the
@@ -84,9 +79,11 @@
   endif
 
   comment
-    Scale has to clip, or the growing image escapes the card's box.
+    Shape, radius and matte come from util-card-media so the cart's line-item thumbnails
+    match. Only the card's own modifiers are added here — scale has to clip, or the
+    growing image escapes the card's box.
   endcomment
-  assign media_class = 'aspect-(--card-aspect) relative block product-card__media' | append: media_radius
+  assign media_class = 'block product-card__media'
   if hover_effect == 'scale'
     assign media_class = media_class | append: ' product-card__media--scale overflow-hidden'
   endif
@@ -171,8 +168,7 @@
   <div class="relative">
     <a
       href="{{ card_url }}"
-      class="{{ media_class }}"
-      style="--card-aspect: {{ card_aspect }};"
+      {% render 'util-card-media', extra_class: media_class, ratio: card_aspect %}
       aria-label="View {{ card_title }}"
     >
       <div class="absolute top-0 left-0 flex items-start w-full p-(--card-badge-padding) z-3 gap-gutter">
