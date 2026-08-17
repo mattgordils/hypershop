@@ -10,24 +10,22 @@
 
   <div class="px-margin relative">
 
-    <div class="text-center mx-auto max-w-site-max-w mb-v-space-sm">
-      <h3 class="h2">
+    <div class="text-center mx-auto {% if section.settings.layout == 'two_col' %}max-w-site-max-w space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-x-gutter{% else %}md:max-w-narrow space-y-v-space-sm{% endif %}">
+      <div class="h2{% if section.settings.layout == 'two_col' %} md:col-span-5 2xl:col-span-4{% endif %}">
         {% content_for 'block',
           type: '_text-lockup',
           id: 'text-lockup',
           classname: 'max-w-narrow text-balance'
         %}
-      </h3>
-    </div>
+      </div>
 
-    <in-view class="grid sm:grid-cols-12 gap-gutter mx-auto max-w-site-max-w">
-      <div class="sm:col-span-10 sm:col-start-2 lg:col-span-8 lg:col-start-3 2xl:col-span-6 2xl:col-start-4">
+      <in-view class="{% if section.settings.layout == 'two_col' %} md:col-span-6 md:col-start-7{% endif %}">
         {% content_for 'block',
           type: '_accordion',
           id: 'accordion'
         %}
-      </div>
-    </in-view>
+      </in-view>
+    </div>
 
   </div>
 
@@ -51,6 +49,22 @@
       "id": "color_scheme",
       "label": "Section Color",
       "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "default": "center",
+      "label": "Layout",
+      "options": [
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Two Columns",
+          "value": "two_col"
+        }
+      ]
     },
     {
       "type": "select",
