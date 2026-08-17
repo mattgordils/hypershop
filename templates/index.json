@@ -268,7 +268,7 @@
       "name": "Media With Text",
       "settings": {
         "media_placement": "right",
-        "v_alignment": "items-center",
+        "v_alignment": "items-start",
         "edge_to_edge": false,
         "media_placement_mobile": "top",
         "color_scheme": "",
