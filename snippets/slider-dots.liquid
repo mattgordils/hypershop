@@ -28,8 +28,8 @@
 {%- endif -%}
 {%- assign type_class = '' -%}
 {%- if type != blank -%}
+  {%- assign type_class = 'type-dots' -%}
   {%- assign type_class = 'type-' | append: type -%}
-
   {% comment %} For testing progress_strip {% endcomment %}
 {%- endif -%}
 <div class="slider-dots {{ type_class }} {{ color_scheme }} {{ class }}"{{ target_attr }}></div>

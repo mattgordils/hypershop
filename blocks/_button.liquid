@@ -3,12 +3,14 @@
   if block.settings.new_tab == true
     assign target = '_blank'
   endif
+
+  assign classname = block.settings.style | append: ' ' | append: block.settings.size
 %}
 
 {% render 'button',
   label: block.settings.label,
   target: target,
-  class: block.settings.style,
+  class: classname,
   to: block.settings.link
 %}
 
@@ -46,6 +48,26 @@
         {
           "label": "Secondary",
           "value": "secondary"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "default": "",
+      "label": "Size",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": ""
+        },
+        {
+          "label": "Large",
+          "value": "large"
         }
       ]
     }
