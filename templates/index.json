@@ -50,16 +50,6 @@
               },
               "blocks": {}
             },
-            "newsletter_AMakr6": {
-              "type": "_newsletter",
-              "name": "Newsletter",
-              "settings": {
-                "placeholder": "Enter email",
-                "text_confirm": "Thank you",
-                "space_below": "none"
-              },
-              "blocks": {}
-            },
             "actions_r3mJWe": {
               "type": "_actions",
               "name": "Links",
@@ -71,10 +61,10 @@
                   "type": "_button",
                   "name": "Button",
                   "settings": {
-                    "label": "Button Text",
-                    "link": "",
+                    "label": "Get directions",
+                    "link": "https://www.google.com/maps/dir//Youngs+Farm,+91+Hegemans+Ln,+Glen+Head,+NY+11545/@40.7568384,-73.924608,14z/data=!4m8!4m7!1m0!1m5!1m1!1s0x89c284399c831161:0xfc91ba0d3db82989!2m2!1d-73.5923682!2d40.8328046?entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D",
                     "new_tab": false,
-                    "style": "primary"
+                    "style": "secondary"
                   },
                   "blocks": {}
                 }
@@ -87,7 +77,6 @@
           "block_order": [
             "headline_36KTPh",
             "rich_text_jx3art",
-            "newsletter_AMakr6",
             "actions_r3mJWe"
           ]
         }
@@ -102,9 +91,28 @@
         "section_padding": "none",
         "section_spacing": "medium"
       }
+    },
+    "product_carousel_JMjBVx": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "heading": "Shop Featured Today",
+        "collection": "featured-today",
+        "products": [],
+        "desktop_columns": 4,
+        "tablet_columns": 2.5,
+        "mobile_columns": 1.5,
+        "show_arrows": true,
+        "show_pager": false,
+        "pager_style": "dots",
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
     }
   },
   "order": [
-    "media_w_text_rQ7qfg"
+    "media_w_text_rQ7qfg",
+    "product_carousel_JMjBVx"
   ]
 }
