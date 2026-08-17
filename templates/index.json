@@ -9,7 +9,102 @@
  */
 {
   "sections": {
+    "media_w_text_rQ7qfg": {
+      "type": "media-w-text",
+      "blocks": {
+        "media": {
+          "type": "_media",
+          "static": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/Rectangle.png"
+          },
+          "blocks": {}
+        },
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "left",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "headline_36KTPh": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Family Run <span style=\"text-decoration:underline\">Since </span><strong>1893</strong>",
+                "style": "h2",
+                "element": "h1",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_jx3art": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Founded in 1893, Youngs Farm is a certified organic, family-run farm, kitchen and market, currently managed by the 4th and 5th generation of the family. </p>",
+                "size": "",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "newsletter_AMakr6": {
+              "type": "_newsletter",
+              "name": "Newsletter",
+              "settings": {
+                "placeholder": "Enter email",
+                "text_confirm": "Thank you",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "actions_r3mJWe": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {
+                "space_below": "none"
+              },
+              "blocks": {
+                "button_KdVEtp": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Button Text",
+                    "link": "",
+                    "new_tab": false,
+                    "style": "primary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_KdVEtp"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_36KTPh",
+            "rich_text_jx3art",
+            "newsletter_AMakr6",
+            "actions_r3mJWe"
+          ]
+        }
+      },
+      "name": "Media With Text",
+      "settings": {
+        "media_placement": "right",
+        "v_alignment": "items-center",
+        "edge_to_edge": false,
+        "media_placement_mobile": "top",
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    }
   },
   "order": [
+    "media_w_text_rQ7qfg"
   ]
 }
