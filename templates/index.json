@@ -84,6 +84,7 @@
       "name": "Media With Text",
       "settings": {
         "media_placement": "right",
+        "desktop_media_columns": 8,
         "v_alignment": "items-center",
         "edge_to_edge": false,
         "media_placement_mobile": "top",
@@ -185,6 +186,7 @@
       "name": "Media With Text",
       "settings": {
         "media_placement": "right",
+        "desktop_media_columns": 8,
         "v_alignment": "items-center",
         "edge_to_edge": false,
         "media_placement_mobile": "top",
@@ -268,6 +270,7 @@
       "name": "Media With Text",
       "settings": {
         "media_placement": "right",
+        "desktop_media_columns": 6,
         "v_alignment": "items-start",
         "edge_to_edge": false,
         "media_placement_mobile": "top",
