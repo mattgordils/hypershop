@@ -59,7 +59,6 @@ function strip() {
   if (liquidAfter === liquidBefore) {
     console.warn(`WARNING: no ${START}…${END} region found in ${rel(liquidFile)}`);
   }
-  fs.writeFileSync(liquidFile, liquidAfter);
 
   // settings_schema.json — drop the setting DEFINITION lines whose "id" starts
   // with a custom-font prefix (custom_font_… URL fields and the use_uploaded_font_…
@@ -79,8 +78,15 @@ function strip() {
     .filter((l) => !stripIdPattern.test(l))
     .map((l) => l.replace(stripVisibleIfPattern, ''));
   const removed = lines.length - kept.length;
-  const schemaAfter = kept.join('\n');
+  // The custom-font fields are the LAST entries in the Typography group, so removing
+  // them leaves the previous line's trailing comma dangling before the closing bracket.
+  // (The README describes a leading-comma style that the file doesn't actually use.)
+  const schemaAfter = kept.join('\n').replace(/,(\s*[}\]])/g, '$1');
   JSON.parse(schemaAfter); // fail loudly if we produced invalid JSON
+
+  // Both files are written together, after validation, so a failure leaves the working
+  // tree untouched rather than stripped in Liquid but not in the schema.
+  fs.writeFileSync(liquidFile, liquidAfter);
   fs.writeFileSync(schemaFile, schemaAfter);
 
   console.log(`Stripped ${START}…${END} region from ${rel(liquidFile)}`);

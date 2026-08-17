@@ -25,6 +25,21 @@
     echo ds.light_grey
   endcapture
   assign ds_lg_set = ds_lg_raw | strip
+
+  # Header height ends. The mobile end falls back to the desktop value so the setting is
+  # additive — an existing theme keeps one flat height until the two are set apart.
+  assign header_height_mobile = settings.header_height_mobile | default: settings.header_height
+  assign header_height_desktop = settings.header_height
+
+  # clamp() returns its minimum whenever min > max, so a header that is taller on mobile
+  # than on desktop would pin to the mobile height at every width and quietly ignore the
+  # desktop setting. Order the bounds by value and let the interpolation run either way.
+  assign header_height_min = header_height_mobile
+  assign header_height_max = header_height_desktop
+  if header_height_mobile > header_height_desktop
+    assign header_height_min = header_height_desktop
+    assign header_height_max = header_height_mobile
+  endif
 -%}
 
 {%- unless heading_font.system? -%}
@@ -63,10 +78,13 @@
     --error: {{ settings.color_error }};
     --success: {{ settings.color_success }};
 
-    /* Fonts */
-    --main-font: {{ body_font.family }}, {{ body_font.fallback_families }};
-    --secondary-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
-    --button-font: {{ button_font.family }}, {{ button_font.fallback_families }};
+    /* Fonts — three typefaces by role, not by where they're used. Every text level
+       below picks one of these by name, so any level can carry any face. The setting
+       ids stay font_heading / font_body / font_button so no merchant's saved picker
+       value is lost; only the labels changed. */
+    --font-primary: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+    --font-secondary: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --font-tertiary: {{ button_font.family }}, {{ button_font.fallback_families }};
 
     /* Layout */
     --site-max-width: {{ settings.site_max_width }};
@@ -76,7 +94,19 @@
     --button-height-small: {{ settings.button_height_small }}px;
     --button-height: {{ settings.button_height }}px;
     --button-height-large: {{ settings.button_height_large }}px;
-    --header-height: {{ settings.header_height }}px;
+    {%- comment -%}
+      Header height interpolates like the type scale and the grid — same 400px → 1440px
+      viewport range, same formula. `header_height` stays the desktop end so existing
+      values keep working. The bounds are ordered by value rather than assumed, so a
+      header that is taller on mobile still interpolates instead of pinning flat.
+    {%- endcomment -%}
+    --header-height-mobile: {{ header_height_mobile }};
+    --header-height-desktop: {{ header_height_desktop }};
+    --header-height: clamp(
+      {{ header_height_min }}px,
+      calc(var(--header-height-mobile) * 1px + (var(--header-height-desktop) - var(--header-height-mobile)) * ((100vw - 400px) / 1040)),
+      {{ header_height_max }}px
+    );
 
     /* Grid — fluid clamp from 400px → 1440px viewport */
     --site-margins-mobile: {{ settings.mobile_margin }};
@@ -103,6 +133,7 @@
     --h1-transform: {{ settings.h1_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h1-letter-spacing: {{ settings.h1_letter_spacing | times: 0.01 }}em;
     --h1-line-height: {{ settings.h1_line_height | times: 0.01 }}em;
+    --h1-family: var(--font-{{ settings.h1_family | default: 'primary' }});
 
     --h2-size-mobile: {{ settings.h2_size_mobile }};
     --h2-size-desktop: {{ settings.h2_size_desktop }};
@@ -112,6 +143,7 @@
     --h2-transform: {{ settings.h2_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h2-letter-spacing: {{ settings.h2_letter_spacing | times: 0.01 }}em;
     --h2-line-height: {{ settings.h2_line_height | times: 0.01 }}em;
+    --h2-family: var(--font-{{ settings.h2_family | default: 'primary' }});
 
     --h3-size-mobile: {{ settings.h3_size_mobile }};
     --h3-size-desktop: {{ settings.h3_size_desktop }};
@@ -121,6 +153,7 @@
     --h3-transform: {{ settings.h3_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h3-letter-spacing: {{ settings.h3_letter_spacing | times: 0.01 }}em;
     --h3-line-height: {{ settings.h3_line_height | times: 0.01 }}em;
+    --h3-family: var(--font-{{ settings.h3_family | default: 'primary' }});
 
     --h4-size-mobile: {{ settings.h4_size_mobile }};
     --h4-size-desktop: {{ settings.h4_size_desktop }};
@@ -130,6 +163,7 @@
     --h4-transform: {{ settings.h4_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h4-letter-spacing: {{ settings.h4_letter_spacing | times: 0.01 }}em;
     --h4-line-height: {{ settings.h4_line_height | times: 0.01 }}em;
+    --h4-family: var(--font-{{ settings.h4_family | default: 'primary' }});
 
     --h5-size-mobile: {{ settings.h5_size_mobile }};
     --h5-size-desktop: {{ settings.h5_size_desktop }};
@@ -139,6 +173,7 @@
     --h5-transform: {{ settings.h5_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h5-letter-spacing: {{ settings.h5_letter_spacing | times: 0.01 }}em;
     --h5-line-height: {{ settings.h5_line_height | times: 0.01 }}em;
+    --h5-family: var(--font-{{ settings.h5_family | default: 'primary' }});
 
     --h6-size-mobile: {{ settings.h6_size_mobile }};
     --h6-size-desktop: {{ settings.h6_size_desktop }};
@@ -148,6 +183,7 @@
     --h6-transform: {{ settings.h6_uppercase | default: true | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --h6-letter-spacing: {{ settings.h6_letter_spacing | times: 0.01 }}em;
     --h6-line-height: {{ settings.h6_line_height | times: 0.01 }}em;
+    --h6-family: var(--font-{{ settings.h6_family | default: 'secondary' }});
 
     /* Body styles — fluid clamp from 400px → 1440px viewport */
     --body-tiny-size-mobile: {{ settings.tiny_size_mobile }};
@@ -158,6 +194,9 @@
     --body-tiny-transform: {{ settings.tiny_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --body-tiny-letter-spacing: {{ settings.tiny_letter_spacing | times: 0.01 }}em;
     --body-tiny-line-height: {{ settings.tiny_line_height | times: 0.01 }}em;
+    /* The size variants follow whatever face `body` is set to — they @apply body for
+       everything else, and this keeps `--<level>-family` resolvable for every level name. */
+    --body-tiny-family: var(--body-family);
 
     --body-small-size-mobile: {{ settings.small_size_mobile }};
     --body-small-size-desktop: {{ settings.small_size_desktop }};
@@ -167,6 +206,7 @@
     --body-small-transform: {{ settings.small_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --body-small-letter-spacing: {{ settings.small_letter_spacing | times: 0.01 }}em;
     --body-small-line-height: {{ settings.small_line_height | times: 0.01 }}em;
+    --body-small-family: var(--body-family);
 
     --body-size-mobile: {{ settings.body_size_mobile }};
     --body-size-desktop: {{ settings.body_size_desktop }};
@@ -176,6 +216,7 @@
     --body-transform: {{ settings.body_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --body-letter-spacing: {{ settings.body_letter_spacing | times: 0.01 }}em;
     --body-line-height: {{ settings.body_line_height | times: 0.01 }}em;
+    --body-family: var(--font-{{ settings.body_family | default: 'secondary' }});
 
     --body-medium-size-mobile: {{ settings.medium_size_mobile }};
     --body-medium-size-desktop: {{ settings.medium_size_desktop }};
@@ -185,6 +226,7 @@
     --body-medium-transform: {{ settings.medium_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --body-medium-letter-spacing: {{ settings.medium_letter_spacing | times: 0.01 }}em;
     --body-medium-line-height: {{ settings.medium_line_height | times: 0.01 }}em;
+    --body-medium-family: var(--body-family);
 
     --body-large-size-mobile: {{ settings.large_size_mobile }};
     --body-large-size-desktop: {{ settings.large_size_desktop }};
@@ -194,6 +236,7 @@
     --body-large-transform: {{ settings.large_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --body-large-letter-spacing: {{ settings.large_letter_spacing | times: 0.01 }}em;
     --body-large-line-height: {{ settings.large_line_height | times: 0.01 }}em;
+    --body-large-family: var(--body-family);
 
     --blockquote-size-mobile: {{ settings.blockquote_size_mobile }};
     --blockquote-size-desktop: {{ settings.blockquote_size_desktop }};
@@ -203,6 +246,7 @@
     --blockquote-transform: {{ settings.blockquote_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --blockquote-letter-spacing: {{ settings.blockquote_letter_spacing | times: 0.01 }}em;
     --blockquote-line-height: {{ settings.blockquote_line_height | times: 0.01 }}em;
+    --blockquote-family: var(--font-{{ settings.blockquote_family | default: 'secondary' }});
 
     /* Buttons — fluid clamp from 400px → 1440px viewport */
     --button-size-mobile: {{ settings.button_size_mobile }};
@@ -213,6 +257,7 @@
     --button-transform: {{ settings.button_uppercase | default: false | json | replace: 'true', 'uppercase' | replace: 'false', 'none' }};
     --button-letter-spacing: {{ settings.button_letter_spacing | times: 0.01 }}em;
     --button-line-height: {{ settings.button_line_height | times: 0.01 }}em;
+    --button-family: var(--font-{{ settings.button_family | default: 'tertiary' }});
   }
 
   {%- comment -%} CUSTOM_FONTS_START — merchant-uploaded fonts. Strip for Theme Store builds (npm run prep:store). See README-custom-fonts.md {%- endcomment -%}
@@ -278,13 +323,13 @@
   {%- if use_custom_heading or use_custom_body or use_custom_button -%}
     :root {
       {%- if use_custom_heading %}
-      --secondary-font: 'custom-heading', {{ heading_font.fallback_families }};
+      --font-primary: 'custom-heading', {{ heading_font.fallback_families }};
       {%- endif %}
       {%- if use_custom_body %}
-      --main-font: 'custom-body', {{ body_font.fallback_families }};
+      --font-secondary: 'custom-body', {{ body_font.fallback_families }};
       {%- endif %}
       {%- if use_custom_button %}
-      --button-font: 'custom-button', {{ button_font.fallback_families }};
+      --font-tertiary: 'custom-button', {{ button_font.fallback_families }};
       {%- endif %}
     }
   {%- endif -%}

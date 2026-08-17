@@ -1,7 +1,7 @@
 {% if section.settings.text != blank %}
   <div
     id="notification-banner"
-    class="theme-dark body-small flex items-center justify-center notification-banner px-margin text-center relative z-5"
+    class="{{ section.settings.color_scheme }} body-small flex items-center justify-center notification-banner px-margin text-center relative z-5"
   >
     <div class="py-1 min-h-[30px] flex items-center">
       <p class="pb-[.05em] text-balance justify-center">{{ section.settings.text }}</p>
@@ -45,6 +45,12 @@
       "id": "text",
       "default": "Deals, Deals, Deals!",
       "label": "Banner Text"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-dark"
     }
   ],
   "blocks": [

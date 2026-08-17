@@ -151,7 +151,7 @@
       </div>
 
       <div class="md:col-span-(--pdp-info-span) md:col-start-(--pdp-info-start) md:row-start-1">
-        <add-to-cart-form class="pdp-info pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:transition-[padding] {{ info_align_class }}">
+        <add-to-cart-form class="h-full pdp-info pdp-blocks flex flex-col max-w-[600px] mx-auto md:sticky max-h-[calc(100svh-var(--spacing-full-header-height)-var(--spacing-margin))] md:top-[calc(var(--spacing-sticky-top)-var(--spacing-gutter))] md:transition-[padding] {{ info_align_class }}">
           {%- if section.settings.show_breadcrumbs -%}
             {%- comment -%} Only ever visible at md and up, so it follows the desktop alignment. {%- endcomment -%}
             <div class="hidden md:block w-full">

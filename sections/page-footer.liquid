@@ -1,6 +1,17 @@
 {% liquid
 	assign columns = section.blocks | where: 'type', 'menu'
+
+	# Type sizes for the menu columns come from Theme editor settings, so the classes
+	# arrive as plain strings.
+	assign list_title_class = section.settings.list_title_class | default: 'h6'
+	assign list_item_class = section.settings.list_item_class | default: 'body-small'
 %}
+
+{%- comment -%}
+	Tailwind safelist. The two classes above are chosen in the editor, so the scanner
+	can't see them at the point of use — listing them here keeps the utilities in the
+	build: h1 h2 h3 h4 h5 h6 body-tiny body-small body body-medium body-large
+{%- endcomment -%}
 
 <div id="footer" class="p-margin {{ section.settings.color_scheme }}" role="contentinfo">
 	{% comment %} tiny links {% endcomment %}
@@ -8,7 +19,15 @@
 
 		<div class="col-span-2 lg:col-span-6 lg:grid lg:grid-cols-6 lg:gap-x-gutter">
 			<div class="flex flex-col gap-y-3 lg:col-span-4">
-				<div class="h6">
+				{%- comment -%}
+					Matches the menu column headings below — same tag and classes — so the
+					newsletter reads as one more footer column rather than its own thing.
+					The parent's gap handles the spacing, hence no margin here.
+				{%- endcomment -%}
+				{% if section.settings.text_title != blank %}
+					<h6 class="h6">{{ section.settings.text_title }}</h6>
+				{% endif %}
+				<div class="body">
 					{{ section.settings.text }}
 				</div>
 				{% render 'newsletter-form',
@@ -22,12 +41,12 @@
 			{% for column in columns %}
 				<div class="w-1 grow">
 					{% if column.settings.list_title != blank %}
-						<h6 class="smallcaps mb-4">{{ column.settings.list_title }}</h6>
+						<h6 class="{{ list_title_class }} mb-4">{{ column.settings.list_title }}</h6>
 					{% endif %}
 					{% for link in column.settings.link_list.links %}
 						<ul class="leading-none">
 							<li>
-								<a href="{{ link.url }}" class="inline-block align-top body-small">
+								<a href="{{ link.url }}" class="inline-block align-top {{ list_item_class }}">
 									<span class="animate-underline">
 										{{ link.title }}
 									</span>
@@ -150,7 +169,54 @@
 		},
     {
       "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "select",
+      "id": "list_title_class",
+      "label": "List title size",
+      "default": "h6",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "body-tiny", "label": "Body tiny" },
+        { "value": "body-small", "label": "Body small" },
+        { "value": "body", "label": "Body" },
+        { "value": "body-medium", "label": "Body medium" },
+        { "value": "body-large", "label": "Body large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "list_item_class",
+      "label": "List item size",
+      "default": "body-small",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "body-tiny", "label": "Body tiny" },
+        { "value": "body-small", "label": "Body small" },
+        { "value": "body", "label": "Body" },
+        { "value": "body-medium", "label": "Body medium" },
+        { "value": "body-large", "label": "Body large" }
+      ]
+    },
+    {
+      "type": "header",
       "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "text_title",
+      "label": "Sign Up Title"
     },
     {
       "type": "text",

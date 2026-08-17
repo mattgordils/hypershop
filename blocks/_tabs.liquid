@@ -10,10 +10,9 @@
   # typography class on them. It passes the chosen style down as custom properties
   # instead — same --{style}-* vars the h4/body/... utilities in typography.css read.
   assign title_style = block.settings.title_size
-  assign title_font = '--main-font'
-  if title_style == 'h4' or title_style == 'h5'
-    assign title_font = '--secondary-font'
-  endif
+  # The chosen level already carries its own typeface — whichever of the three the
+  # merchant assigned it in Typography — so follow that rather than re-deciding here.
+  assign title_font = '--' | append: title_style | append: '-family'
 -%}
 
 {% if block.blocks.size > 0 %}

@@ -177,7 +177,7 @@
 html {
   background: var(--bg-color);
   color: var(--text-color);
-  font-family: var(--main-font);
+  font-family: var(--body-family, var(--font-secondary));
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
   -webkit-font-smoothing: antialiased;

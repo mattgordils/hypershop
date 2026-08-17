@@ -36,6 +36,22 @@
     assign media_col_class = 'md:order-1'
   endif
 
+  comment
+    Desktop media width, mirroring main-product. Spans are passed as CSS custom properties
+    rather than baked into class names: Tailwind only emits classes it can see in the
+    source, so md:col-span-{{ n }} would produce nothing, while col-span-(--var) is one
+    literal class that reads any value. Mobile stays a single stacked column.
+  endcomment
+  assign media_span = section.settings.desktop_media_columns | default: 6
+  assign text_span = 12 | minus: media_span
+
+  comment
+    Keep `sizes` honest about the column share, or a narrow media column still downloads a
+    half-viewport image.
+  endcomment
+  assign media_vw = media_span | times: 100 | divided_by: 12
+  assign media_sizes = '(min-width: 768px) ' | append: media_vw | append: 'vw, 100vw'
+
   assign wrapper_class = 'px-margin'
   assign grid_class = 'gap-x-gutter'
   if section.settings.edge_to_edge
@@ -46,18 +62,22 @@
 -%}
 
 <div class="{{ spacing_class }} {{ padding_class }} {{ wrapper_class }} {{ section.settings.color_scheme }} section-inner">
-  <in-view class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm max-w-site-max-w mx-auto {{ section.settings.v_alignment }}">
+  <in-view
+    class="{{ grid_class }} grid md:grid-cols-12 gap-y-v-space-sm max-w-site-max-w mx-auto {{ section.settings.v_alignment }}"
+    style="--mwt-media-span: {{ media_span }}; --mwt-text-span: {{ text_span }};"
+  >
     {% if section.settings.media_placement_mobile != 'bottom' %}
-      <div class="md:col-span-6 {{ media_col_class }}">
+      <div class="md:col-span-(--mwt-media-span) {{ media_col_class }}">
         {% content_for 'block',
           type: '_media',
           id: 'media',
           loading: image_loading,
-          fetchpriority: image_fetch_priority
+          fetchpriority: image_fetch_priority,
+          sizes: media_sizes
         %}
       </div>
     {% endif %}
-    <div class="md:col-span-6 z-2 flex {{ text_col_class }}">
+    <div class="md:col-span-(--mwt-text-span) z-2 flex {{ text_col_class }}">
       <div class="w-full">
         {% content_for 'block',
           type: '_text-lockup',
@@ -67,12 +87,13 @@
       </div>
     </div>
     {% if section.settings.media_placement_mobile == 'bottom' %}
-      <div class="md:col-span-6 {{ media_col_class }}">
+      <div class="md:col-span-(--mwt-media-span) {{ media_col_class }}">
         {% content_for 'block',
           type: '_media',
           id: 'media',
           loading: image_loading,
-          fetchpriority: image_fetch_priority
+          fetchpriority: image_fetch_priority,
+          sizes: media_sizes
         %}
       </div>
     {% endif %}
@@ -104,6 +125,16 @@
           "value": "right"
         }
       ]
+    },
+    {
+      "type": "range",
+      "id": "desktop_media_columns",
+      "label": "Media width",
+      "info": "Columns out of 12. The text fills the rest. Desktop only — mobile always stacks.",
+      "min": 4,
+      "max": 8,
+      "step": 1,
+      "default": 6
     },
     {
       "type": "select",

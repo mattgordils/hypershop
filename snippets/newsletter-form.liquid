@@ -20,7 +20,14 @@
 {%- liquid
   assign uid = id_prefix | default: 'footer'
   assign confirm = confirm_text | default: 'Thank you'
-  assign field_placeholder = placeholder | default: 'general.newsletter.placeholder' | t
+  comment
+    Translate the fallback first, then default to it. Chained the other way round
+    (`placeholder | default: 'key' | t`) Liquid applies `t` to whatever survives the
+    default — so a merchant-supplied placeholder gets looked up as a translation key and
+    renders "Translation missing".
+  endcomment
+  assign default_placeholder = 'general.newsletter.placeholder' | t
+  assign field_placeholder = placeholder | default: default_placeholder
   assign row_class = class | default: 'border-b border-solid bg-transparent font-expanded w-full flex'
 
   assign form_id = 'Newsletter-' | append: uid
