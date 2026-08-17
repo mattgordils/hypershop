@@ -42,6 +42,9 @@
     },
     "tabs": {
       "untitled": "Tab"
+    },
+    "contact": {
+      "error": "Sorry, that didn't send. Please try again."
     }
   },
   "products": {

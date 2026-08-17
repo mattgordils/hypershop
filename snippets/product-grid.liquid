@@ -93,77 +93,79 @@
       to filter at all.
     {%- endcomment -%}
     <div class="{% if show_sidebar %}col-span-3{% endif %}">
-      <div class="relative z-4 flex gap-gutter justify-between align-baseline mb-gutter">
-        {% if result_count %}
-          <span class="body inline-block align-top text-light-text-color">{{ result_count }} Items</span>
-        {% endif %}
+      {% if filterable %}
+        <div class="relative z-4 flex gap-gutter justify-between align-baseline mb-gutter">
+          {% if result_count and section.settings.show_result_count %}
+            <span class="body inline-block align-top text-light-text-color">{{ result_count }} Items</span>
+          {% endif %}
 
-        {% if sort_options.size > 0 %}
-          <div class="flex align-baseline justify-between">
-            {% if show_sidebar %}
-              <div id="sortItems" class="relative z-2 align-top {% if filterable %} hidden lg:inline-block{% else %} inline-block{% endif %}">
-                <button id="sortTrigger" class="body flex items-center justify-end gap-1 group">
-                  <span class="animate-underline pb-[.1em]">
-                    Sort By
+          {% if sort_options.size > 0 %}
+            <div class="flex align-baseline justify-between">
+              {% if show_sidebar %}
+                <div id="sortItems" class="relative z-2 align-top {% if filterable %} hidden lg:inline-block{% else %} inline-block{% endif %}">
+                  <button id="sortTrigger" class="body flex items-center justify-end gap-1 group">
+                    <span class="animate-underline pb-[.1em]">
+                      Sort By
+                      {% for option in sort_options %}
+                        {% if option.value == sort_by %}
+                          {{ option.name }}
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                    <span class="icon block -mt-[2px] transition">
+                      {% render 'icon-material', icon: 'keyboard_arrow_down', class: 'block' %}
+                    </span>
+                  </button>
+                  <ul
+                    id="sortList"
+                    class="hidden absolute top-[calc(100%+10px)] right-0 bg-bg flex flex-col items-start justify-start border rounded border-hr-color pl-4 pr-8 py-3"
+                  >
                     {% for option in sort_options %}
-                      {% if option.value == sort_by %}
-                        {{ option.name }}
-                      {% endif %}
+                      {%- liquid
+                        assign bar_sort_id = 'Sort-' | append: section_id | append: '-' | append: forloop.index
+                        assign bar_sort_checked = false
+                        if option.value == sort_by
+                          assign bar_sort_checked = true
+                        endif
+                      -%}
+                      <li class="filter-item">
+                        {%- comment -%} marker: 'dot' keeps this dropdown looking as it does today {%- endcomment -%}
+                        {% render 'filter-option',
+                          type: 'radio',
+                          id: bar_sort_id,
+                          name: 'sort_by',
+                          value: option.value,
+                          label: option.name,
+                          checked: bar_sort_checked,
+                          marker: 'dot',
+                          class: 'body whitespace-nowrap'
+                        %}
+                      </li>
                     {% endfor %}
-                  </span>
-                  <span class="icon block -mt-[2px] transition">
-                    {% render 'icon-material', icon: 'keyboard_arrow_down', class: 'block' %}
-                  </span>
-                </button>
-                <ul
-                  id="sortList"
-                  class="hidden absolute top-[calc(100%+10px)] right-0 bg-bg flex flex-col items-start justify-start border rounded border-hr-color pl-4 pr-8 py-3"
-                >
-                  {% for option in sort_options %}
-                    {%- liquid
-                      assign bar_sort_id = 'Sort-' | append: section_id | append: '-' | append: forloop.index
-                      assign bar_sort_checked = false
-                      if option.value == sort_by
-                        assign bar_sort_checked = true
-                      endif
-                    -%}
-                    <li class="filter-item">
-                      {%- comment -%} marker: 'dot' keeps this dropdown looking as it does today {%- endcomment -%}
-                      {% render 'filter-option',
-                        type: 'radio',
-                        id: bar_sort_id,
-                        name: 'sort_by',
-                        value: option.value,
-                        label: option.name,
-                        checked: bar_sort_checked,
-                        marker: 'dot',
-                        class: 'body whitespace-nowrap'
-                      %}
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            {% endif %}
+                  </ul>
+                </div>
+              {% endif %}
 
-            {% if filterable %}
-              <modal-trigger
-                data-modal-id="{{ filter_drawer_id }}"
-                role="button"
-                tabindex="0"
-                aria-haspopup="dialog"
-                class="body inline-flex items-center gap-1 group align-top{% if show_sidebar %} lg:hidden{% endif %}"
-              >
-                <span class="animate-underline pb-[.1em]">
-                  {{ 'products.facets.filter_and_sort' | t }}{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
-                </span>
-                <span class="icon block -mt-[2px]">
-                  {% render 'icon-material', icon: 'tune', class: 'block' %}
-                </span>
-              </modal-trigger>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
+              {% if filterable %}
+                <modal-trigger
+                  data-modal-id="{{ filter_drawer_id }}"
+                  role="button"
+                  tabindex="0"
+                  aria-haspopup="dialog"
+                  class="body inline-flex items-center gap-1 group align-top{% if show_sidebar %} lg:hidden{% endif %}"
+                >
+                  <span class="animate-underline pb-[.1em]">
+                    {{ 'products.facets.filter_and_sort' | t }}{% if active_filter_count > 0 %} ({{ active_filter_count }}){% endif %}
+                  </span>
+                  <span class="icon block -mt-[2px]">
+                    {% render 'icon-material', icon: 'tune', class: 'block' %}
+                  </span>
+                </modal-trigger>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
 
       {% if products.size == 0 %}
         <div class="py-v-space-sm text-center flex flex-col items-center gap-3{% if show_sidebar %} lg:col-span-3{% endif %}">

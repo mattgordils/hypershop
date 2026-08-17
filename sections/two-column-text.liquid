@@ -8,21 +8,31 @@
 
 <div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }}">
 	<div class="px-margin">
-    <div class="max-w-site-max-w mx-auto">
-      {% content_for 'block',
-        type: '_text-lockup',
-        id: 'text-lockup',
-        classname: 'max-w-narrow text-balance'
-      %}
-    </div>
+    <in-view class="max-w-site-max-w mx-auto space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-x-gutter">
+      <div class="md:col-span-5 2xl:col-span-4">
+        {% content_for 'block',
+          type: '_text-lockup',
+          id: 'left-column',
+          classname: 'text-balance max-w-[650px]'
+        %}
+      </div>
+
+      <div class="md:col-span-6 md:col-start-7">
+        {% content_for 'block',
+          type: '_text-lockup',
+          id: 'right-column',
+          classname: 'max-w-[650px]'
+        %}
+      </div>
+    </in-view>
 	</div>
 </div>
 
 {% schema %}
 {
-	"name": "Text Section",
+	"name": "Two Column Text",
   "tag": "section",
-  "class": "section-text-section",
+  "class": "section-two-column-text",
 	"settings": [
     // Section Spacing
     {
@@ -89,7 +99,7 @@
           "value": "large"
         }
       ]
-    },
+    }
 	],
 	"blocks": [
 		{
@@ -98,15 +108,26 @@
 	],
 	"presets": [
     {
-      "name": "Text Section",
+      "name": "Two Column Text",
       "category": "Text",
-      "blocks": [
-        {
-          "id": "text-lockup",
+      "blocks": {
+        "left-column": {
           "type": "_text-lockup",
-          "static": true
+          "name": "Left column",
+          "static": true,
+          "settings": {
+            "alignment": "left"
+          }
+        },
+        "right-column": {
+          "type": "_text-lockup",
+          "name": "Right column",
+          "static": true,
+          "settings": {
+            "alignment": "left"
+          }
         }
-      ]
+      }
 	  }
   ]
 }

@@ -1084,33 +1084,8 @@
     },
     "main_contact_PdUKiV": {
       "type": "main-contact",
-      "blocks": {
-        "headline_JtKkWN": {
-          "type": "_headline",
-          "name": "Headline",
-          "settings": {
-            "text": "Headline",
-            "style": "h2",
-            "element": "h2",
-            "space_below": "none"
-          },
-          "blocks": {}
-        },
-        "rich_text_9prbxM": {
-          "type": "_rich-text",
-          "name": "Text",
-          "settings": {
-            "text": "<p>Some text to go with the form</p>",
-            "size": "",
-            "space_below": "none"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "headline_JtKkWN",
-        "rich_text_9prbxM"
-      ],
+      "blocks": {},
+      "block_order": [],
       "name": "Contact Form",
       "settings": {
         "button_label": "Send",

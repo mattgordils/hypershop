@@ -10,9 +10,13 @@
 
 {% liquid
   assign overlay = block.settings.overlay_opacity | times: 0.01
+  capture card_aspect
+    render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+  endcapture
+  assign card_aspect = card_aspect | strip
 %}
 
-<div class="block-promo-card relative h-full w-full overflow-clipp {{ block.settings.color_scheme }}{% if settings.card_border_radius %} rounded-[var(--base-border-radius)]{% endif %}">
+<div style="--card-aspect: {{ card_aspect }};" class="block-promo-card relative aspect-(--card-aspect) sm:aspect-[unset] h-full w-full {{ block.settings.color_scheme }}{% if settings.card_border_radius %} rounded-[var(--base-border-radius)]{% endif %}">
   <div class="promo-card__media absolute inset-0 z-0">
     {% content_for 'block', type: '_media', id: 'media' %}
   </div>

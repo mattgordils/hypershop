@@ -1,35 +1,65 @@
 {% comment %}
-  contact form ({% form 'contact' %}). Inputs use the theme's global input styling.
+  Contact form. Shopify's native contact form: it POSTs to /contact and emails the
+  submission to the store's sender email address (Settings → Notifications). Nothing is
+  stored in the admin, so the email IS the record.
+
+  contact-form.js posts it in place and reads the outcome from the response, so there's no
+  page reload — but the form works untouched with JavaScript off, which is why nothing here
+  depends on it. Both paths land on the same server-rendered status markup.
 {% endcomment %}
+
+<script src="{{ 'contact-form.js' | asset_url }}" defer></script>
 
 {% capture spacing_class %}
   {% render 'util-section-spacing', space: section.settings.section_spacing %}
 {% endcapture %}
 
+{%- liquid
+  assign status_id = 'ContactStatus-' | append: section.id
+  assign errors_id = 'ContactErrors-' | append: section.id
+  assign form_id = 'ContactForm-' | append: section.id
+  assign success_text = section.settings.success_message | default: 'Thanks for reaching out — we will be in touch soon.'
+-%}
+
 <div class="{{ section.settings.color_scheme }} {{ spacing_class }} px-margin">
-  <div class="max-w-narrow mx-auto py-v-space-sm">
-    <header class="text-center pb-v-space-sm">
-      <h1 class="h2">{{ page.title }}</h1>
-    </header>
+  <div class="max-w-narrow mx-auto space-y-v-space-sm">
+    {% content_for 'block',
+      type: '_text-lockup',
+      id: 'text-lockup',
+      classname: 'text-balance'
+    %}
 
-    {%- if section.blocks.size > 0 -%}
-      <div class="flex flex-col gap-gutter pb-v-space-sm">
-        {%- for block in section.blocks -%}
-          {% render block %}
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-
-    {% form 'contact', id: 'contactForm', class: 'flex flex-col gap-gutter' %}
-      {% if form.posted_successfully? %}
-        <p class="theme-light-grey rounded p-gutter body" role="status">
-          {{ section.settings.success_message | default: 'Thanks for reaching out — we will be in touch soon.' }}
-        </p>
-      {% elsif form.errors %}
-        <div class="text-error body-small" role="alert">
-          {{ form.errors | default_errors }}
+    {%- comment -%} No `| escape` after `| t` — the t filter already escapes, and the pair double-encodes. {%- endcomment -%}
+    <contact-form data-error-text="{{ 'general.contact.error' | t }}">
+    {% form 'contact', id: form_id, class: 'flex flex-col gap-gutter' %}
+      {%- comment -%}
+        Both states are always rendered so JS has somewhere to write and the transition has
+        something to animate — a node toggled with `hidden` jumps. Collapsed to 0fr rather
+        than display:none, which is the part that can actually animate. Empty when closed,
+        so the live regions announce nothing until there is something to say.
+      {%- endcomment -%}
+      <div
+        id="{{ status_id }}"
+        class="contact-form__status"
+        data-contact-success
+        data-open="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
+      >
+        <div>
+          <p class="theme-light-grey rounded p-gutter body" role="status">{{ success_text }}</p>
         </div>
-      {% endif %}
+      </div>
+
+      <div
+        class="contact-form__status"
+        data-contact-error-wrap
+        data-open="{% if form.errors %}true{% else %}false{% endif %}"
+      >
+        <div>
+          <div id="{{ errors_id }}" class="text-error body-small" role="alert">
+            {%- if form.errors -%}{{ form.errors | default_errors }}{%- endif -%}
+          </div>
+        </div>
+      </div>
 
       <div class="flex flex-col gap-1">
         <label for="ContactName">Name</label>
@@ -91,8 +121,38 @@
         </button>
       </div>
     {% endform %}
+    </contact-form>
   </div>
 </div>
+
+{% stylesheet %}
+  /* 0fr → 1fr is the collapse that can actually be transitioned; display:none and the
+     hidden attribute both jump. The inner wrapper is what clips during the animation. */
+  .contact-form__status {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--md-speed) ease-in-out,
+      opacity var(--md-speed) ease-in-out;
+  }
+
+  .contact-form__status > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .contact-form__status[data-open='true'] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form__status {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -101,9 +161,7 @@
   "class": "section-main-contact",
   "blocks": [
     { "type": "@app" },
-    { "type": "_headline" },
-    { "type": "_rich-text" },
-    { "type": "_spacer" }
+    { "type": "_text-lockup" }
   ],
   "settings": [
     {
@@ -145,7 +203,14 @@
   ],
   "presets": [
     {
-      "name": "Contact Form"
+      "name": "Contact Form",
+      "blocks": [
+        {
+          "id": "text-lockup",
+          "type": "_text-lockup",
+          "static": true
+        }
+      ]
     }
   ]
 }

@@ -36,7 +36,8 @@
   data-success="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
   data-success-text="{{ confirm | escape }}"
   data-placeholder="{{ field_placeholder | escape }}"
-  data-error-text="{{ 'general.newsletter.error' | t | escape }}"
+  {%- comment -%} No `| escape` after `| t` — the t filter already escapes, and the pair double-encodes. {%- endcomment -%}
+  data-error-text="{{ 'general.newsletter.error' | t }}"
   data-reset-delay="3000"
 >
   {% form 'customer', id: form_id, class: 'w-full' %}
