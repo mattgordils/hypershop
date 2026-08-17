@@ -60,7 +60,10 @@
       "settings": {
         "color_scheme": "",
         "small_links": "legal-footer",
-        "text": "Stay In touch",
+        "list_title_class": "h6",
+        "list_item_class": "body-small",
+        "text_title": "Stay In touch",
+        "text": "Sign up to stay in the loop with updates on the farm, holiday ordering and more!",
         "text_confirm": "Thank you"
       }
     }

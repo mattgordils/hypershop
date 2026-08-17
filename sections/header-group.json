@@ -14,7 +14,8 @@
     "notification-banner": {
       "type": "page-notification-banner",
       "settings": {
-        "text": "Deals, Deals, Deals!"
+        "text": "Deals, Deals, Deals!",
+        "color_scheme": "scheme-43ee1f60-da64-4c76-9cd4-6e9e6ca6b7c0"
       }
     },
     "header": {
