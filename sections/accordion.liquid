@@ -16,8 +16,7 @@
 <div class="{{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} w-full">
 
   <div class="px-margin relative">
-
-    <div class="text-center mx-auto space-y-v-space-sm {% if section.settings.layout == 'two_col' %}max-w-site-max-w md:space-y-0 md:grid md:grid-cols-12 md:gap-x-gutter{% else %}md:max-w-narrow{% endif %}">
+    <div class="mx-auto space-y-v-space-sm {% if section.settings.layout == 'two_col' %}max-w-site-max-w md:space-y-0 md:grid md:grid-cols-12 md:gap-x-gutter{% else %}md:max-w-narrow{% endif %}">
       <div class="h2{% if section.settings.layout == 'two_col' %} md:col-span-5 2xl:col-span-4{% endif %}">
         {% content_for 'block',
           type: '_text-lockup',
