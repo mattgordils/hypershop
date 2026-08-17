@@ -44,6 +44,8 @@
   assign sizes_desktop = 100.0 | divided_by: cols_desktop | round
   assign sizes_tablet = 100.0 | divided_by: cols_tablet | round
   assign sizes_mobile = 100.0 | divided_by: cols_mobile | round
+
+  assign arrows_position = arrows_position | default: 'top' 
 -%}
 
 {%- capture card_sizes -%}
@@ -55,21 +57,27 @@
     <div class="mb-v-space-sm flex items-end justify-between gap-gutter">
       {%- comment -%} An empty <h2> is a heading with nothing under it as far as a screen reader is concerned, so the spacer takes its place when there's no heading to show. {%- endcomment -%}
       {%- if heading != blank -%}
-        <h2 class="h3 grow text-balance">{{ heading }}</h2>
+        <h2 class="{{ heading_size | default: 'h3' }} grow text-balance">{{ heading }}</h2>
       {%- else -%}
         <div class="grow"></div>
       {%- endif -%}
-      {%- if carousel_arrows -%}
-        <div class="hidden md:block shrink-0">
+
+      {% if actions != blank and arrows_position != 'top' %}
+        <div class="hidden md:block shrink-0 grow-0">
+          {{ actions }}
+        </div>
+      {% endif %}
+      {% if carousel_arrows and arrows_position == 'top' %}
+        <div class="hidden md:block shrink-0 grow-0">
           {% render 'slider-arrows', for: id %}
         </div>
-      {%- endif -%}
+      {% endif %}
     </div>
   {%- endif -%}
 
   <slide-show
     id="{{ id }}"
-    class="block overflow-visible"
+    class="block overflow-visible relative"
     data-slides-to-show="{{ cols_mobile }},{{ cols_tablet }},{{ cols_tablet }},{{ cols_desktop }}"
     data-align="start"
   >
@@ -93,17 +101,45 @@
       {%- endif -%}
     </div>
 
-    {%- if carousel_pager or carousel_arrows -%}
-      <div class="flex justify-between items-center">
-        {%- if carousel_pager -%}
-          {% render 'slider-dots', class: 'mt-v-space-sm', type: pager_style %}
-        {%- endif -%}
-        {%- if carousel_arrows -%}
-          <div class="block md:hidden shrink-0 mt-v-space-sm">
-            {% render 'slider-arrows', for: id %}
-          </div>
-        {%- endif -%}
+    {%- if carousel_arrows and arrows_position == 'over_slides' -%}
+      <div class="hidden md:flex absolute inset-0 justify-between px-gutter pointer-events-none">
+        {% render 'slider-arrows', for: id, class: 'justify-between w-full' %}
       </div>
     {%- endif -%}
   </slide-show>
+
+  {%- if carousel_pager or carousel_arrows or actions -%}
+    <div class="flex justify-between items-center flex-wrap gap-gutter mt-v-space-sm">
+      {%- if carousel_pager -%}
+        {%- comment -%}
+          `for:` — the pager sits outside the <slide-show>, so it has to opt in by id the
+          same way the arrows below it do.
+        {%- endcomment -%}
+        {% render 'slider-dots', type: pager_style, for: id %}
+      {%- endif -%}
+      {%- if carousel_arrows -%}
+        <div class="
+          {% if arrows_position == 'top' or arrows_position == 'over_slides' %}md:hidden{% endif %}
+          shrink-0
+        ">
+          {% render 'slider-arrows', for: id %}
+        </div>
+      {%- endif -%}
+
+      {% if actions != blank %}
+        <div
+          class="
+            {% if arrows_position == 'bottom' or arrows_position == 'over_slides' %}md:hidden{% endif %}
+            {% if carousel_pager and carousel_arrows %}
+              w-full
+              {% if arrows_position == 'top' %}
+              md:w-auto
+              {% endif %}
+            {% endif %}
+        ">
+          {{ actions }}
+        </div>
+      {% endif %}
+    </div>
+  {%- endif -%}
 </div>

@@ -23,18 +23,28 @@
 
 {%- assign carousel_id = 'product-carousel-' | append: section.id -%}
 
+{%- capture section_actions -%}
+  {% content_for 'block',
+    type: '_actions',
+    id: 'actions'
+  %}
+{%- endcapture -%}
+
 {%- if carousel_products != blank and carousel_products.size > 0 -%}
   <div class="w-full {{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} overflow-hidden">
     {% render 'product-carousel',
       id: carousel_id,
       products: carousel_products,
       heading: section.settings.heading,
+      heading_size: section.settings.heading_size,
       desktop_columns: section.settings.desktop_columns,
       tablet_columns: section.settings.tablet_columns,
       mobile_columns: section.settings.mobile_columns,
       show_arrows: section.settings.show_arrows,
+      arrows_position: section.settings.arrows_position,
       show_pager: section.settings.show_pager,
-      pager_style: section.settings.pager_style
+      pager_style: section.settings.pager_style,
+      actions: section_actions
     %}
   </div>
 {%- endif -%}
@@ -50,6 +60,20 @@
       "id": "heading",
       "label": "Heading",
       "info": "Leave blank to hide."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "default": "h3",
+      "label": "Headline Style",
+      "options": [
+        { "label": "H1", "value": "h1" },
+        { "label": "H2", "value": "h2" },
+        { "label": "H3", "value": "h3" },
+        { "label": "H4", "value": "h4" },
+        { "label": "H5", "value": "h5" },
+        { "label": "H6", "value": "h6" }
+      ]
     },
     {
       "type": "collection",
@@ -103,6 +127,18 @@
       "id": "show_arrows",
       "label": "Show arrows",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrows_position",
+      "default": "top",
+      "label": "Arrows Position",
+      "visible_if": "{{ section.settings.show_arrows }}",
+      "options": [
+        { "label": "Top (Bottom on mobile)", "value": "top" },
+        { "label": "Bottom", "value": "bottom" },
+        { "label": "Over Slides", "value": "over_slides" },
+      ]
     },
     {
       "type": "checkbox",
@@ -163,7 +199,14 @@
   ],
   "presets": [
     {
-      "name": "Product Carousel"
+      "name": "Product Carousel",
+      "blocks": [
+        {
+          "id": "actions",
+          "type": "_actions",
+          "static": true
+        }
+      ]
     }
   ]
 }

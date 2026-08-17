@@ -183,8 +183,8 @@ body:has(.section-header.scrolled) .pdp-media {
 
 /* Hidden by default at both viewports; the placement rules below opt each one
    back in. Scoped through [data-mobile-layout] (always present) rather than
-   written bare, so this out-weighs `slide-show:not(.inactive) .slider-dots`
-   in components/slideshow.css, which would otherwise force the dots visible in
+   written bare, so this out-weighs the `.slider-dots { display: flex }` in
+   components/slideshow.css, which would otherwise force the dots visible in
    any layout whose pager is thumbnails or none. */
 .pdp-media[data-mobile-layout] .pdp-media__dots,
 .pdp-media[data-mobile-layout] .pdp-media__thumbs {
