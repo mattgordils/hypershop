@@ -19,6 +19,10 @@
   assign mock_image = 'tee-shirt-mock.png'
   assign mock_hover_image = 'tee-shirt-mock-2.png'
   assign mock_badges = 'New'
+  assign mock_low_stock = false
+  if settings.card_show_low_stock
+    assign mock_low_stock = true
+  endif
 -%}
 
 {%- case component -%}
@@ -32,7 +36,7 @@
       mock_hover_image: mock_hover_image,
       mock_badges: mock_badges,
       mock_on_sale: true,
-      mock_low_stock: true,
+      mock_low_stock: mock_low_stock,
       sizes: sizes
     %}
 

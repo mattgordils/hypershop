@@ -1,0 +1,27 @@
+{%- comment -%}
+  Placeholder in the shape of a product card, for tracks filled after load (product
+  recommendations). It mirrors product-card's box exactly — same aspect ratio setting,
+  same corner radius, same pt-3 rhythm under the image — so nothing shifts when the real
+  cards arrive.
+
+  aria-hidden + no text: a screen reader gets nothing to announce until there is
+  something real to announce.
+{%- endcomment -%}
+
+{%- liquid
+  capture card_aspect
+    render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
+  endcapture
+  assign card_aspect = card_aspect | strip
+
+  assign media_radius = ''
+  if settings.card_border_radius
+    assign media_radius = ' rounded-[var(--base-border-radius)]'
+  endif
+-%}
+
+<div class="flex flex-col" aria-hidden="true">
+  <div class="skeleton aspect-(--card-aspect) w-full{{ media_radius }}" style="--card-aspect: {{ card_aspect }};"></div>
+  <div class="skeleton mt-3 h-[1em] w-3/5 rounded"></div>
+  <div class="skeleton mt-3 h-[1em] w-1/4 rounded"></div>
+</div>

@@ -1,0 +1,33 @@
+/* Loading placeholder. Used by product-card-skeleton while an async track fills, and
+   safe on any box that already has a size — it paints, it doesn't lay out.
+
+   The sweep is a background-position animation on a gradient rather than a moving
+   pseudo-element, so it composites without touching layout and needs no overflow
+   containment on the parent. Colours are mixed from the active scheme's own tokens, so
+   the placeholder reads correctly on a dark section too. */
+.skeleton {
+  background-color: var(--light-grey);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--bg-color) 60%, var(--text-color) 6%) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-sweep {
+  from { background-position: -100% 0; }
+  to { background-position: 100% 0; }
+}
+
+/* A pulsing rectangle is exactly the kind of motion this setting is meant to stop; the
+   flat tone still reads as "not content yet". */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    background-image: none;
+    animation: none;
+  }
+}

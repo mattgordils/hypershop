@@ -400,9 +400,16 @@ class VariantSelects extends HTMLElement {
             targetHeight = Math.round(targetWidth / 0.75); // 853
           }
 
-          // Use Shopify's image sizing with both width and height to crop/scale properly
+          // Use Shopify's image sizing with both width and height to crop/scale properly.
+          // Unless the card is set to fit rather than fill — object-contain is there to
+          // show the whole image, and a center crop would cut off exactly what the
+          // setting asked to keep. Width alone scales and leaves the shape intact.
           const imageUrl = selectedVariant.featured_image.src;
-          const sizedImageUrl = imageUrl.replace(/\.(jpg|jpeg|png|gif|webp)/i, `_${targetWidth}x${targetHeight}_crop_center.$1`);
+          const isContain = imgElement.classList.contains('object-contain');
+          const sizeSuffix = isContain
+            ? `_${targetWidth}x`
+            : `_${targetWidth}x${targetHeight}_crop_center`;
+          const sizedImageUrl = imageUrl.replace(/\.(jpg|jpeg|png|gif|webp)/i, `${sizeSuffix}.$1`);
           imgElement.src = sizedImageUrl;
           // Clear srcset so browser uses our sized src
           imgElement.srcset = '';

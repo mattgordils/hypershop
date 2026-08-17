@@ -69,6 +69,14 @@
     assign show_hover_image = false
   endif
 
+  comment
+    Fill (cover) crops to the card's shape; fit (contain) letterboxes the whole image
+    inside it. The two are separate settings because a shop can have square packshots
+    that need fitting and a lifestyle second shot that should still fill the frame.
+  endcomment
+  assign image_layout = settings.card_image_layout | default: 'cover'
+  assign hover_image_layout = settings.card_hover_image_layout | default: 'cover'
+
   assign hover_effect = settings.card_hover_effect | default: 'none'
   assign text_over_image = false
   if settings.card_text_over_image
@@ -188,7 +196,7 @@
         image: card_image_asset,
         sizes: card_sizes,
         ratio: card_aspect,
-        layout: 'cover',
+        layout: image_layout,
         loading: card_loading,
         decorative: true,
         class: 'z-1 relative'
@@ -200,7 +208,7 @@
             image: card_hover_image_asset,
             sizes: card_sizes,
             ratio: card_aspect,
-            layout: 'cover',
+            layout: hover_image_layout,
             decorative: true
           %}
         </div>

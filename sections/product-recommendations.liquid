@@ -1,7 +1,13 @@
+{%- comment -%} The cards land in a carousel, so it needs the same Embla bundle. {%- endcomment -%}
+<script src="{{ 'slideshow.js' | asset_url }}" defer></script>
 <script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
 
 {% capture spacing_class %}
   {% render 'util-section-spacing', space: section.settings.section_spacing %}
+{% endcapture %}
+
+{% capture padding_class %}
+  {% render 'util-section-padding', space: section.settings.section_padding %}
 {% endcapture %}
 
 {%-liquid
@@ -16,15 +22,11 @@
   assign section_product = section.settings.product | default: product
 -%}
 
-<div class="px-margin overflow-hidden {{ spacing_class }}">
-  {%- if section.settings.heading != blank -%}
-    <div class="mx-auto max-w-site-max-w">
-      <h2 class="h3 mb-v-space-sm">{{ section.settings.heading }}</h2>
-    </div>
-  {%- endif -%}
+{%- assign carousel_id = 'product-recommendations-' | append: section.id -%}
 
+<div class="w-full overflow-hidden {{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }}">
   <product-recommendations
-    class="product-recommendations block mx-auto max-w-site-max-w"
+    class="product-recommendations block"
     data-product-handle="{{ section_product.handle }}"
     data-product-id="{{ section_product.id }}"
     {% if section_product.collections.size > 0 %}
@@ -36,12 +38,21 @@
     data-hide-sold-out="{{ section.settings.hide_sold_out }}"
     data-section-id="{{ section.id }}"
   >
-
-    <div data-loading class="text-center py-8">
-      <p>Loading recommendations...</p>
-    </div>
-
-    <div data-product-container class="grid grid-cols-2 lg:grid-cols-4 gap-x-gutter gap-y-v-space"></div>
+    {%- comment -%}
+      Rendered empty with skeleton slides: the recommendations are fetched client-side,
+      so the carousel is built at its final size first and the cards drop into it.
+    {%- endcomment -%}
+    {% render 'product-carousel',
+      id: carousel_id,
+      heading: section.settings.heading,
+      skeleton_count: section.settings.min_products,
+      desktop_columns: section.settings.desktop_columns,
+      tablet_columns: section.settings.tablet_columns,
+      mobile_columns: section.settings.mobile_columns,
+      show_arrows: section.settings.show_arrows,
+      show_pager: section.settings.show_pager,
+      pager_style: section.settings.pager_style
+    %}
   </product-recommendations>
 </div>
 
@@ -94,32 +105,101 @@
       "info": "When enabled, sold out products will be excluded and replaced with other available products to meet the minimum"
     },
     {
+      "type": "header",
+      "content": "Columns",
+      "info": "Fractional values (e.g. 2.5) will show a partial slide on the edge to hint at more content."
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 6,
+      "step": 0.5,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "default": 2.5
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "min": 1,
+      "max": 4,
+      "step": 0.5,
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pager",
+      "label": "Show pager",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "pager_style",
+      "label": "Pager style",
+      "options": [
+        { "label": "Dots", "value": "dots" },
+        { "label": "Dots with pill", "value": "dots_pill" },
+        { "label": "Progress Strip", "value": "progress_strip" }
+      ],
+      "visible_if": "{{ section.settings.show_pager }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Sizing"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section Color",
+      "default": "theme-default"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "default": "none",
+      "label": "Section Padding",
+      "info": "Equal space added above and below the section",
+      "visible_if": "{{ section.settings.color_scheme != 'theme-default' }}",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
+      ]
+    },
+    {
       "type": "select",
       "id": "section_spacing",
       "default": "medium",
       "label": "Section Spacing",
       "info": "This can be used to adjust or remove the space below this section",
       "options": [
-        {
-          "label": "None",
-          "value": "none"
-        },
-        {
-          "label": "Slim",
-          "value": "slim"
-        },
-        {
-          "label": "Small",
-          "value": "small"
-        },
-        {
-          "label": "Medium",
-          "value": "medium"
-        },
-        {
-          "label": "Large",
-          "value": "large"
-        }
+        { "label": "None", "value": "none" },
+        { "label": "Slim", "value": "slim" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" }
       ]
     }
   ]

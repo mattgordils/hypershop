@@ -25,46 +25,17 @@
 
 {%- if carousel_products != blank and carousel_products.size > 0 -%}
   <div class="w-full {{ spacing_class }} {{ padding_class }} {{ section.settings.color_scheme }} overflow-hidden">
-    <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
-      {%- if section.settings.heading != blank or section.settings.show_arrows -%}
-        <div class="mb-v-space-sm flex items-end justify-between gap-gutter">
-          <h2 class="h3 grow text-balance">{{ section.settings.heading }}</h2>
-          {%- if section.settings.show_arrows -%}
-            <div class="hidden md:block shrink-0">
-              {% render 'slider-arrows', for: carousel_id %}
-            </div>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
-
-      <slide-show
-        id="{{ carousel_id }}"
-        class="block overflow-visible"
-        data-slides-to-show="{{ section.settings.mobile_columns }},{{ section.settings.tablet_columns }},{{ section.settings.tablet_columns }},{{ section.settings.desktop_columns }}"
-        data-align="start"
-      >
-        <div class="slider-container">
-          {%- for product in carousel_products -%}
-            <div class="slider-slide">
-              {% render 'product-card', product: product %}
-            </div>
-          {%- endfor -%}
-        </div>
-
-        {%- if section.settings.show_pager or section.settings.show_arrows -%}
-          <div class="flex justify-between items-center">
-            {%- if section.settings.show_pager -%}
-              {% render 'slider-dots', class: 'mt-v-space-sm', type: section.settings.pager_style %}
-            {%- endif -%}
-            {%- if section.settings.show_arrows -%}
-              <div class="block md:hidden shrink-0 mt-v-space-sm">
-                {% render 'slider-arrows', for: carousel_id %}
-              </div>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </slide-show>
-    </div>
+    {% render 'product-carousel',
+      id: carousel_id,
+      products: carousel_products,
+      heading: section.settings.heading,
+      desktop_columns: section.settings.desktop_columns,
+      tablet_columns: section.settings.tablet_columns,
+      mobile_columns: section.settings.mobile_columns,
+      show_arrows: section.settings.show_arrows,
+      show_pager: section.settings.show_pager,
+      pager_style: section.settings.pager_style
+    %}
   </div>
 {%- endif -%}
 

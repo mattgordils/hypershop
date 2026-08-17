@@ -24,11 +24,13 @@ if (!customElements.get('product-recommendations')) {
         this.maxProducts = parseInt(this.dataset.maxProducts) || 8
         this.hideSoldOut = this.dataset.hideSoldOut === 'true'
         this.sectionId = this.dataset.sectionId
-        this.container = this.querySelector('[data-product-container]')
-        this.loading = this.querySelector('[data-loading]')
       }
 
       async connectedCallback() {
+        // Read the markup on connect, not in the constructor — the element can be built
+        // by importNode (section re-render), whose constructor runs before the children.
+        this.container = this.querySelector('[data-carousel-track]')
+        this.slideshow = this.querySelector('slide-show')
 
         if (!this.productId || !this.container) {
           console.error('product-recommendations: Missing required elements or data attributes', {
@@ -43,7 +45,9 @@ if (!customElements.get('product-recommendations')) {
           await this.renderProducts(products)
         } catch (error) {
           console.error('product-recommendations: Error fetching products', error)
-          this.hideLoading()
+          // Don't leave skeletons pulsing forever over a fetch that failed.
+          this.closest('.shopify-section')?.style.setProperty('display', 'none')
+          this.style.display = 'none'
         }
       }
 
@@ -253,14 +257,13 @@ if (!customElements.get('product-recommendations')) {
       }
 
       async renderProducts(products) {
-
+        // Nothing to recommend: the whole section goes, skeletons and all, rather than
+        // leaving a heading over an empty track.
         if (products.length === 0) {
-          this.hideLoading()
+          this.closest('.shopify-section')?.style.setProperty('display', 'none')
           this.style.display = 'none'
           return
         }
-
-        this.container.innerHTML = ''
 
         try {
           // Fetch all product cards in parallel
@@ -278,20 +281,25 @@ if (!customElements.get('product-recommendations')) {
           )
 
           const cards = await Promise.all(cardPromises)
+          const slides = cards.filter(card => card.trim())
 
-          // Insert all cards
-          this.container.innerHTML = cards.filter(card => card).join('')
+          if (!slides.length) {
+            this.closest('.shopify-section')?.style.setProperty('display', 'none')
+            this.style.display = 'none'
+            return
+          }
 
+          // The track is a carousel, so each card has to arrive as a slide — this is
+          // what replaces the skeletons that held the layout open.
+          this.container.innerHTML = slides
+            .map(card => `<div class="slider-slide">${card}</div>`)
+            .join('')
+
+          // Embla measured the skeletons. Rebuild against the real slides so the snap
+          // points, arrows and dots match what is actually in the track now.
+          this.slideshow?.refresh()
         } catch (error) {
           console.error('product-recommendations: Failed to render cards', error)
-        }
-
-        this.hideLoading()
-      }
-
-      hideLoading() {
-        if (this.loading) {
-          this.loading.style.display = 'none'
         }
       }
     }

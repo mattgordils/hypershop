@@ -1,0 +1,109 @@
+{%- comment -%}
+  The product carousel, shared by every section that shows a horizontal run of product
+  cards — the Product Carousel section and Product Recommendations today. Sections own
+  their outer wrapper (colour scheme, section spacing); everything from the max-width
+  container inwards lives here, so the two can't drift apart.
+
+  @param {string} id                 - unique per instance; arrows and dots bind to it
+  @param {object} [products]         - omit and pass skeleton_count for a JS-filled track
+  @param {string} [heading]
+  @param {number} [desktop_columns]  - slides in view; fractional peeks the next slide
+  @param {number} [tablet_columns]
+  @param {number} [mobile_columns]
+  @param {boolean} [show_arrows]     - defaults true
+  @param {boolean} [show_pager]      - defaults false
+  @param {string} [pager_style]      - dots | dots_pill | progress_strip
+  @param {number} [skeleton_count]   - placeholder cards rendered until JS fills the track
+
+  The track carries data-carousel-track so async sections can find it, and the
+  <slide-show> exposes refresh() to rebuild once their slides land.
+{%- endcomment -%}
+
+{%- liquid
+  assign cols_desktop = desktop_columns | default: 4
+  assign cols_tablet = tablet_columns | default: 2.5
+  assign cols_mobile = mobile_columns | default: 1.5
+
+  comment
+    Booleans can't use `default` — it treats false as absent and would force them on.
+  endcomment
+  assign carousel_arrows = true
+  if show_arrows == false
+    assign carousel_arrows = false
+  endif
+  assign carousel_pager = false
+  if show_pager
+    assign carousel_pager = true
+  endif
+
+  comment
+    Cards are as wide as one slide, so derive `sizes` from the column counts instead of
+    letting product-card fall back to its grid assumption — at 1.5 mobile columns that
+    default asks for a 50vw image to fill a 66vw slot.
+  endcomment
+  assign sizes_desktop = 100.0 | divided_by: cols_desktop | round
+  assign sizes_tablet = 100.0 | divided_by: cols_tablet | round
+  assign sizes_mobile = 100.0 | divided_by: cols_mobile | round
+-%}
+
+{%- capture card_sizes -%}
+  (min-width: 1024px) {{ sizes_desktop }}vw, (min-width: 640px) {{ sizes_tablet }}vw, {{ sizes_mobile }}vw
+{%- endcapture -%}
+
+<div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
+  {%- if heading != blank or carousel_arrows -%}
+    <div class="mb-v-space-sm flex items-end justify-between gap-gutter">
+      {%- comment -%} An empty <h2> is a heading with nothing under it as far as a screen reader is concerned, so the spacer takes its place when there's no heading to show. {%- endcomment -%}
+      {%- if heading != blank -%}
+        <h2 class="h3 grow text-balance">{{ heading }}</h2>
+      {%- else -%}
+        <div class="grow"></div>
+      {%- endif -%}
+      {%- if carousel_arrows -%}
+        <div class="hidden md:block shrink-0">
+          {% render 'slider-arrows', for: id %}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <slide-show
+    id="{{ id }}"
+    class="block overflow-visible"
+    data-slides-to-show="{{ cols_mobile }},{{ cols_tablet }},{{ cols_tablet }},{{ cols_desktop }}"
+    data-align="start"
+  >
+    <div class="slider-container" data-carousel-track>
+      {%- if products != blank -%}
+        {%- for product in products -%}
+          <div class="slider-slide">
+            {% render 'product-card', product: product, sizes: card_sizes %}
+          </div>
+        {%- endfor -%}
+      {%- elsif skeleton_count > 0 -%}
+        {%- comment -%}
+          Skeletons are real slides, so the track measures and lays out at its final size
+          — the cards drop in without moving anything.
+        {%- endcomment -%}
+        {%- for i in (1..skeleton_count) -%}
+          <div class="slider-slide">
+            {% render 'product-card-skeleton' %}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if carousel_pager or carousel_arrows -%}
+      <div class="flex justify-between items-center">
+        {%- if carousel_pager -%}
+          {% render 'slider-dots', class: 'mt-v-space-sm', type: pager_style %}
+        {%- endif -%}
+        {%- if carousel_arrows -%}
+          <div class="block md:hidden shrink-0 mt-v-space-sm">
+            {% render 'slider-arrows', for: id %}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </slide-show>
+</div>

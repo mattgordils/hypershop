@@ -72,6 +72,20 @@ if (!customElements.get('slide-show')) {
         return [...new Set([...nested, ...external])]
       }
 
+      /**
+       * Rebuild against the slides that are in the track now.
+       *
+       * Sections that fetch their cards (product recommendations) connect with a track of
+       * skeletons, so Embla measured those and nothing else. Every listener this class
+       * adds is tied to an AbortController that destroySlideshow() fires, so a rebuild
+       * can't leave a second click handler on an arrow that survived the swap.
+       */
+      refresh() {
+        this.destroySlideshow()
+        this.initialized = false
+        this.connectedCallback()
+      }
+
       editorActions(embla) {
         if (document.body.dataset.shopifyEditor === 'true' && this.slides?.length > 1) {
           const blockEditor = (ev) => {
@@ -90,7 +104,7 @@ if (!customElements.get('slide-show')) {
             embla.scrollTo(selectedIndex)
           }
 
-          document.addEventListener('shopify:block:select', blockEditor)
+          document.addEventListener('shopify:block:select', blockEditor, { signal: this.signal })
         }
       }
 
@@ -166,6 +180,12 @@ if (!customElements.get('slide-show')) {
         this.embla = embla
         this.mediaQueryHandlers = []
 
+        // One controller per build. Arrows and thumbnail rails outlive a rebuild — they
+        // can sit outside the slide-show entirely — so without this a refresh() would
+        // bind them twice and one click would scroll two slides.
+        this.controller = new AbortController()
+        this.signal = this.controller.signal
+
         const setControlsHidden = (hidden) => {
           const controls = [...this.arrowNexts, ...this.arrowPrevs, ...this.dotsContainers]
           controls.forEach((el) => {
@@ -194,7 +214,7 @@ if (!customElements.get('slide-show')) {
               setInactive()
               toggleActiveWhenScrollable()
             }
-            mql.addEventListener('change', handler)
+            mql.addEventListener('change', handler, { signal: this.signal })
             this.mediaQueryHandlers.push({ mql, handler })
           })
         }
@@ -213,14 +233,14 @@ if (!customElements.get('slide-show')) {
             if (embla.clickAllowed && !embla.clickAllowed()) return
             embla.scrollNext()
             updateSlide()
-          })
+          }, { signal: this.signal })
         })
         this.arrowPrevs.forEach((btn) => {
           btn.addEventListener('click', () => {
             if (embla.clickAllowed && !embla.clickAllowed()) return
             embla.scrollPrev()
             updateSlide()
-          })
+          }, { signal: this.signal })
         })
 
         const setTheme = () => {
@@ -362,7 +382,7 @@ if (!customElements.get('slide-show')) {
             container.querySelectorAll('.slider-dot').forEach((button, index) => {
               if (index === 0) button.classList.add('active')
               button.dataset.active = index === 0 ? 'true' : 'false'
-              button.addEventListener('click', () => { embla.scrollTo(index) })
+              button.addEventListener('click', () => { embla.scrollTo(index) }, { signal: this.signal })
               this.dotItems.push({ button, index })
             })
           })
@@ -396,7 +416,7 @@ if (!customElements.get('slide-show')) {
                 }
 
                 this.slides[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              })
+              }, { signal: this.signal })
             })
           })
 
@@ -477,6 +497,15 @@ if (!customElements.get('slide-show')) {
       }
 
       destroySlideshow() {
+        // Drop every listener this build added — arrow clicks, dot clicks, thumbnail
+        // clicks, breakpoint changes and the editor's block:select hook on `document`,
+        // which is the one that outlives the element itself.
+        if (this.controller) {
+          this.controller.abort()
+          this.controller = null
+          this.signal = null
+        }
+
         // Destroy Embla instance
         if (this.embla) {
           this.embla.destroy()

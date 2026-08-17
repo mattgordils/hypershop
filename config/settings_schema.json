@@ -409,6 +409,17 @@
         { "value": "landscape_3_2", "label": "Landscape (3:2)" }
       ]
     },
+    {
+      "type": "select",
+      "id": "card_image_layout",
+      "label": "Image fit",
+      "default": "cover",
+      "info": "Fill crops to the image shape above. Fit shows the whole image, leaving space around it where its shape differs.",
+      "options": [
+        { "value": "cover", "label": "Fill" },
+        { "value": "contain", "label": "Fit" }
+      ]
+    },
     { "type": "header", "content": "Badges" },
     {
       "type": "checkbox",
@@ -442,6 +453,17 @@
       "label": "Show second image on hover",
       "info": "Uses the product's second image, where it has one.",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_hover_image_layout",
+      "label": "Hover image fit",
+      "default": "cover",
+      "visible_if": "{{ settings.card_show_hover_image }}",
+      "options": [
+        { "value": "cover", "label": "Fill" },
+        { "value": "contain", "label": "Fit" }
+      ]
     },
     {
       "type": "select",

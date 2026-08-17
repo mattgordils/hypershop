@@ -21,11 +21,13 @@
 		<div class="lg:col-span-6 flex gap-gutter">
 			{% for column in columns %}
 				<div class="w-1 grow">
-					<h6 class="smallcaps mb-4">{{ column.settings.link_list.title }}</h6>
+					{% if column.settings.list_title != blank %}
+						<h6 class="smallcaps mb-4">{{ column.settings.list_title }}</h6>
+					{% endif %}
 					{% for link in column.settings.link_list.links %}
 						<ul class="leading-none">
 							<li>
-								<a href="{{ link.url }}" class="inline-block align-top body-small bold">
+								<a href="{{ link.url }}" class="inline-block align-top body-small">
 									<span class="animate-underline">
 										{{ link.title }}
 									</span>
@@ -59,6 +61,19 @@
 	<div class="flex justify-between items-center border-t pt-2 border-hr-color">
 		<div>
 			<p class="body-tiny">©{{ "now" | date: "%Y" }}. {{ shop.name }}</p>
+		</div>
+		<div>
+			{% for link in section.settings.small_links %}
+				<ul class="leading-none flex gap-gutter">
+					<li>
+						<a href="{{ link.url }}" class="inline-block align-top body-small">
+							<span class="animate-underline">
+								{{ link.title }}
+							</span>
+						</a>
+					</li>
+				</ul>
+			{% endfor %}
 		</div>
 		<div>
 			<collapsible-trigger
@@ -103,6 +118,12 @@
       "type": "menu",
       "name": "Column",
       "settings": [
+				{
+          "type": "text",
+          "id": "list_title",
+          "label": "List Title",
+					"info": "Optional"
+        },
         {
           "type": "link_list",
           "id": "link_list",
@@ -121,9 +142,15 @@
       "label": "Section Color",
       "default": "theme-default"
     },
+		{
+			"type": "link_list",
+			"id": "small_links",
+			"label": "Small Links",
+			"info": "For links to pages like privacy policy and terms"
+		},
     {
       "type": "header",
-      "content": "Content"
+      "content": "Newsletter"
     },
     {
       "type": "text",
