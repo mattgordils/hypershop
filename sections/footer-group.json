@@ -13,6 +13,50 @@
   "sections": {
     "footer": {
       "type": "page-footer",
+      "blocks": {
+        "menu_QJiH37": {
+          "type": "menu",
+          "settings": {
+            "list_title": "Fresh Today",
+            "link_list": "fresh-today"
+          }
+        },
+        "menu_YdTjDP": {
+          "type": "menu",
+          "settings": {
+            "list_title": "Shop",
+            "link_list": "footer-shop"
+          }
+        },
+        "menu_j89exm": {
+          "type": "menu",
+          "settings": {
+            "list_title": "About Us",
+            "link_list": "footer-about"
+          }
+        },
+        "menu_zmRxNV": {
+          "type": "menu",
+          "settings": {
+            "list_title": "Visit",
+            "link_list": "footer-visit"
+          }
+        },
+        "menu_dm7RK4": {
+          "type": "menu",
+          "settings": {
+            "list_title": "Connect",
+            "link_list": "footer-connect"
+          }
+        }
+      },
+      "block_order": [
+        "menu_QJiH37",
+        "menu_YdTjDP",
+        "menu_j89exm",
+        "menu_zmRxNV",
+        "menu_dm7RK4"
+      ],
       "settings": {
         "color_scheme": "",
         "small_links": "legal-footer",
