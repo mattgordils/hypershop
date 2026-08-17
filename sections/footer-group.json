@@ -13,8 +13,15 @@
   "sections": {
     "footer": {
       "type": "page-footer",
-      "settings": {}
+      "settings": {
+        "color_scheme": "",
+        "small_links": "legal-footer",
+        "text": "Stay In touch",
+        "text_confirm": "Thank you"
+      }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }
