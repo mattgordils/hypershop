@@ -84,6 +84,7 @@
     "blockquote_size_desktop": 22,
     "blockquote_weight": "500",
     "blockquote_line_height": 130,
+    "button_family": "secondary",
     "button_height_tiny": 32,
     "button_height_small": 38,
     "button_height": 51,
