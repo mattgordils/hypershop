@@ -1,23 +1,40 @@
 {%-liquid
   assign product = section.settings.product | default: product
+  assign variant = product.selected_or_first_available_variant
+
+  comment
+    The percentage tracks the strikethrough exactly — same variant, same test as
+    product-price's show_compare_price — so it can never appear beside a price with no
+    compare-at struck through it. product.compare_at_price is a product-wide figure, and
+    on a product where only one variant is discounted it claimed a saving next to the
+    full-price variant's price.
+  endcomment
   assign show_percentage_off = false
-  if product.compare_at_price != blank and product.compare_at_price > product.price and block.settings.percentage_off == true
+  if block.settings.percentage_off == true and variant.compare_at_price != blank and variant.compare_at_price > variant.price
     assign show_percentage_off = true
-    assign price_diff = product.compare_at_price | minus: product.price
+    assign price_diff = variant.compare_at_price | minus: variant.price
   endif
 -%}
 
 {% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 
-<div class="flex items-baseline {{ space_below | strip }}">
+{%- comment -%}
+  data-dynamic-content: the PDP re-renders the section per variant and swaps only these
+  wrappers, so without it the price stays on whatever variant the page loaded with.
+{%- endcomment -%}
+<div data-dynamic-content class="flex items-baseline {{ space_below | strip }}">
   {% render 'product-price',
-    item: product.selected_or_first_available_variant,
+    item: variant,
     classname: block.settings.size
   %}
 
+  {%- comment -%}
+    Off the compare-at price, which is what a discount is measured against. Prices are
+    integer cents, so this floors — a 16.6% saving reads as 16%, never 17%.
+  {%- endcomment -%}
   {% if show_percentage_off %}
     <span class="text-success ml-[.5em] {{ block.settings.size }}">
-      {{ price_diff | times: 1.00 | divided_by: product.price | times: 100 | remove: '.0' }}% off
+      {{ price_diff | times: 100 | divided_by: variant.compare_at_price }}% off
     </span>
   {% endif %}
 </div>

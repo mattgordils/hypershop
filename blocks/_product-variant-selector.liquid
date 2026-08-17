@@ -1,12 +1,19 @@
 {%- liquid
+  assign page_product = product
   assign product = section.settings.product | default: product
+
   comment
-    Off a product template (a featured product) run the variant component in
-    client-side mode so it updates from productJson without writing the URL.
+    PDP mode writes ?variant= to the URL and re-renders the section; featured mode
+    updates client-side from productJson only.
+
+    Test identity, not whether the setting is filled: main-product's product setting is
+    bound to the {{ product }} dynamic source on the product template, so it is never
+    blank there. A featured-product section is one showing a *different* product, or the
+    same product off a product page.
   endcomment
-  assign variant_context = 'PDP'
-  if section.settings.product != blank
-    assign variant_context = 'featured'
+  assign variant_context = 'featured'
+  if request.page_type == 'product' and product.id == page_product.id
+    assign variant_context = 'PDP'
   endif
 -%}
 

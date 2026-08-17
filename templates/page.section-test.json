@@ -932,7 +932,7 @@
               "name": "Row",
               "settings": {
                 "title": "What is your return policy?",
-                "title_size": "body bold",
+                "title_size": "body",
                 "text": "<p>We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in their original packaging.</p>",
                 "text_size": "body-small"
               },
@@ -943,7 +943,7 @@
               "name": "Row",
               "settings": {
                 "title": "How long does shipping take?",
-                "title_size": "body bold",
+                "title_size": "body",
                 "text": "<p>Standard shipping takes 3–5 business days. Expedited and express options are available at checkout.</p>",
                 "text_size": "body-small"
               },
@@ -954,7 +954,7 @@
               "name": "Row",
               "settings": {
                 "title": "Do you ship internationally?",
-                "title_size": "body bold",
+                "title_size": "body",
                 "text": "<p>Yes, we ship to most countries worldwide. Any applicable duties and taxes are calculated at checkout.</p>",
                 "text_size": "body-small"
               },

@@ -1,6 +1,6 @@
 {% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
 {% if block.settings.text != blank %}
-  <div class="rich-text {{ block.settings.size }} {{ space_below | strip }}">
+  <div class="rich-text {{ block.settings.size | default: 'body' }} {{ space_below | strip }}">
     {{ block.settings.text }}
   </div>
 {% endif %}
@@ -22,7 +22,7 @@
       "label": "Text Size",
       "options": [
         { "label": "Small", "value": "body-small" },
-        { "label": "Normal", "value": "body" },
+        { "label": "Normal", "value": "" },
         { "label": "Medium", "value": "body-medium" },
         { "label": "Large", "value": "body-large" }
       ]

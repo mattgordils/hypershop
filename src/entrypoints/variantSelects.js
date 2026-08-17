@@ -28,6 +28,20 @@ class VariantSelects extends HTMLElement {
   constructor() {
     super();
     this.addEventListener('change', this.onVariantChange);
+  }
+
+  /**
+   * Set up once the element is in the document.
+   *
+   * Not the constructor: the PDP rebuilds this element with importNode, which runs the
+   * constructor on a detached fragment. Every lookup here walks up the tree — the
+   * <add-to-cart-form> holding productJson, the [data-product-update] container — and
+   * all of them come back null off-document, so the restored selection and badges would
+   * silently do nothing after the first variant change.
+   */
+  connectedCallback() {
+    if (this.initialized) return;
+    this.initialized = true;
 
     // Determine context: PDP vs Cards
     this.isPDP = this.dataset.context === 'PDP';
