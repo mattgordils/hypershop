@@ -33,7 +33,7 @@
               "type": "_headline",
               "name": "Headline",
               "settings": {
-                "text": "Family Run <span style=\"text-decoration:underline\">Since </span><strong>1893</strong>",
+                "text": "Family Run <span style=\"text-decoration:underline\">Since</span> <strong>1893</strong>",
                 "style": "h2",
                 "element": "h1",
                 "space_below": "none"
@@ -64,7 +64,8 @@
                     "label": "Get directions",
                     "link": "https://www.google.com/maps/dir//Youngs+Farm,+91+Hegemans+Ln,+Glen+Head,+NY+11545/@40.7568384,-73.924608,14z/data=!4m8!4m7!1m0!1m5!1m1!1s0x89c284399c831161:0xfc91ba0d3db82989!2m2!1d-73.5923682!2d40.8328046?entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D",
                     "new_tab": false,
-                    "style": "secondary"
+                    "style": "secondary",
+                    "size": ""
                   },
                   "blocks": {}
                 }
@@ -95,15 +96,27 @@
     },
     "product_carousel_JMjBVx": {
       "type": "product-carousel",
+      "blocks": {
+        "actions": {
+          "type": "_actions",
+          "static": true,
+          "settings": {
+            "space_below": "none"
+          },
+          "blocks": {}
+        }
+      },
       "name": "Product Carousel",
       "settings": {
         "heading": "Shop Featured Today",
+        "heading_size": "h5",
         "collection": "featured-today",
         "products": [],
         "desktop_columns": 4,
         "tablet_columns": 2.5,
         "mobile_columns": 1.5,
         "show_arrows": true,
+        "arrows_position": "over_slides",
         "show_pager": false,
         "pager_style": "dots",
         "color_scheme": "",
@@ -166,7 +179,8 @@
                     "label": "Learn more",
                     "link": "shopify://pages/about",
                     "new_tab": false,
-                    "style": "secondary"
+                    "style": "secondary",
+                    "size": ""
                   },
                   "blocks": {}
                 }
@@ -250,7 +264,8 @@
                     "label": "Learn more",
                     "link": "shopify://pages/cafe",
                     "new_tab": false,
-                    "style": "secondary"
+                    "style": "secondary",
+                    "size": ""
                   },
                   "blocks": {}
                 }
