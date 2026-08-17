@@ -191,7 +191,7 @@ input, textarea, select, button {
   -moz-osx-font-smoothing: grayscale;
 }
 
-img, video { display: block; }
+img, video { display: block; min-width: 100%; }
 
 body {
   color: var(--text-color);
