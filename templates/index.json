@@ -109,10 +109,178 @@
         "section_padding": "none",
         "section_spacing": "medium"
       }
+    },
+    "media_w_text_KyEFip": {
+      "type": "media-w-text",
+      "blocks": {
+        "media": {
+          "type": "_media",
+          "static": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/image_1542.png"
+          },
+          "blocks": {}
+        },
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "left",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "headline_BAwMTD": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "<span style=\"text-decoration:underline\">Our</span> Story",
+                "style": "h1",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_n3fgnd": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Youngs Farm is a family-run sustainable and regenerative farm with an on-site bakery, kitchen and market. We pride ourselves on customer service, cleanliness and high quality products.</p>",
+                "size": "body-medium",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "actions_YRHJ4B": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {
+                "space_below": "none"
+              },
+              "blocks": {
+                "button_WEEYrR": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Learn more",
+                    "link": "shopify://pages/about",
+                    "new_tab": false,
+                    "style": "secondary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_WEEYrR"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_BAwMTD",
+            "rich_text_n3fgnd",
+            "actions_YRHJ4B"
+          ]
+        }
+      },
+      "name": "Media With Text",
+      "settings": {
+        "media_placement": "right",
+        "v_alignment": "items-center",
+        "edge_to_edge": false,
+        "media_placement_mobile": "top",
+        "color_scheme": "scheme-33e9a7ec-557b-4dfe-99e1-c428115bb692",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
+    },
+    "media_w_text_GVy8Jq": {
+      "type": "media-w-text",
+      "blocks": {
+        "media": {
+          "type": "_media",
+          "static": true,
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/image_1599.png"
+          },
+          "blocks": {}
+        },
+        "text-lockup": {
+          "type": "_text-lockup",
+          "static": true,
+          "settings": {
+            "alignment": "left",
+            "media_max_width": 2000
+          },
+          "blocks": {
+            "headline_qzRt8A": {
+              "type": "_headline",
+              "name": "Headline",
+              "settings": {
+                "text": "Visit our Cafe!",
+                "style": "h2",
+                "element": "h2",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "rich_text_Q8qQt6": {
+              "type": "_rich-text",
+              "name": "Text",
+              "settings": {
+                "text": "<p>Seasonal meals, fresh pastries, and locally roasted coffee served daily at the farm. Located inside Hirshleifers at the Americana Manhasset.</p><p>LOCATION:<br/>2080 Northern Boulevard<br/>Manhasset NY 11030</p><p>PHONE:<br/>(516) 357-4008</p><p>HOURS:<br/>Monday—Wednesday 10am-6pm<br/>Thursday—Saturday 10am-7pm<br/>Sunday 11am-6pm</p>",
+                "size": "body-medium",
+                "space_below": "none"
+              },
+              "blocks": {}
+            },
+            "actions_rz3PVC": {
+              "type": "_actions",
+              "name": "Links",
+              "settings": {
+                "space_below": "none"
+              },
+              "blocks": {
+                "button_KG3t3Y": {
+                  "type": "_button",
+                  "name": "Button",
+                  "settings": {
+                    "label": "Learn more",
+                    "link": "shopify://pages/cafe",
+                    "new_tab": false,
+                    "style": "secondary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_KG3t3Y"
+              ]
+            }
+          },
+          "block_order": [
+            "headline_qzRt8A",
+            "rich_text_Q8qQt6",
+            "actions_rz3PVC"
+          ]
+        }
+      },
+      "name": "Media With Text",
+      "settings": {
+        "media_placement": "right",
+        "v_alignment": "items-center",
+        "edge_to_edge": false,
+        "media_placement_mobile": "top",
+        "color_scheme": "",
+        "section_padding": "none",
+        "section_spacing": "medium"
+      }
     }
   },
   "order": [
     "media_w_text_rQ7qfg",
-    "product_carousel_JMjBVx"
+    "product_carousel_JMjBVx",
+    "media_w_text_KyEFip",
+    "media_w_text_GVy8Jq"
   ]
 }
