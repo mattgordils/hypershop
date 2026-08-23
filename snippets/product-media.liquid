@@ -116,6 +116,25 @@
   else
     assign ordered_media = product.media
   endif
+
+  comment
+    A single slide has nothing to page between, so the whole slideshow apparatus comes off
+    regardless of what the layout settings ask for: no thumbnails, no dots, no click zones,
+    and embla stays inactive at both breakpoints so there is nothing to swipe.
+
+    This sits after ordered_media because it depends on the count, and after any_slideshow
+    on purpose — badges over the media still make sense on a single image, so overlay_badges
+    keeps whatever it resolved to.
+  endcomment
+  assign has_multiple_media = true
+  if ordered_media.size < 2
+    assign has_multiple_media = false
+    assign show_thumbnails = false
+    assign show_dots = false
+    assign desktop_is_slideshow = false
+    assign mobile_is_slideshow = false
+    assign zones_are_only_pager = false
+  endif
 %}
 
 {%- if ordered_media.size > 0 -%}
@@ -126,7 +145,7 @@
   {%- endcomment -%}
   <div
     class="pdp-media"
-    data-media-key="{{ ordered_media.first.id }}"
+    data-media-key="{{ ordered_media | map: 'id' | join: '-' }}"
     data-desktop-layout="{{ gallery_desktop_layout }}"
     data-mobile-layout="{{ gallery_mobile_layout }}"
     data-media-width="{{ gallery_media_width }}"
@@ -179,7 +198,7 @@
         so a drag that starts on one still reaches Embla's pointer handlers and swiping
         keeps working; slideshow.js ignores the click that ends a drag via clickAllowed().
       {%- endcomment -%}
-      {%- if any_slideshow -%}
+      {%- if any_slideshow and has_multiple_media -%}
         <div class="pdp-media__zones">
           <button
             type="button"

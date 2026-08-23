@@ -2,11 +2,6 @@
   assign wrapper_class = 'items-start'
   assign alignment = block.settings.alignment | default: 'center'
   
-  assign max_width = 'var(--lockup-max-width, 100%)'
-  if block.settings.media_max_width != blank
-    assign max_width = block.settings.media_max_width | append: 'px'
-  endif
-
   if alignment == 'center'
     assign wrapper_class = 'text-center items-center mx-auto'
   endif
@@ -20,16 +15,9 @@
   endif
 %}
 
-{% stylesheet %}
-  .block-text-lockup .block-media {
-    max-width: var(--media-max-width, 100%);
-  }
-{% endstylesheet %}
-
 {% if block.blocks.size > 0 %}
   <in-view
     class="flex flex-col gap-4 {{ wrapper_class }} max-w-(--lockup-max-width)"
-    style="--media-max-width: {{ block.settings.media_max_width }}px;"
   >
     {% for block in block.blocks %}
       {% render block %}
@@ -47,21 +35,11 @@
       "id": "alignment",
       "default": "center",
       "label": "Text Alignment"
-    },
-    {
-      "type": "range",
-      "id": "media_max_width",
-      "min": 20,
-      "max": 2000,
-      "step": 20,
-      "label": "Media Max Width",
-      "info": "Sets the max width in pixels of the media block. For icon usage.",
-      "default": 2000
     }
   ],
   "blocks": [
     {
-      "type": "_media"
+      "type": "_media-with-settings"
     },
     {
       "type": "_headline"

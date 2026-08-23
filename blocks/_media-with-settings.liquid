@@ -1,0 +1,401 @@
+{%- comment -%}
+  Media with a max width.
+
+  @param {number} [container_vw]        - the share of the viewport this block's CONTAINER
+                                          occupies on desktop, as a plain number (a 6-of-12
+                                          column slot = 50). Defaults to 100.
+  @param {number} [container_vw_mobile] - same, below 768px. Defaults to 100.
+  @param {string} [sizes]               - escape hatch, used verbatim, but ONLY when no max
+                                          width is set. A pre-composed string can't be
+                                          combined with this block's cap, so pass
+                                          container_vw instead and let the block do the
+                                          arithmetic.
+  @param {string} [layout]
+  @param {string} [loading]
+  @param {string} [fetchpriority]
+
+  Note: rendered inside _text-lockup via `{% render block %}`, none of these params are
+  passed — the defaults below are what actually runs there.
+{%- endcomment -%}
+{% stylesheet %}
+  /* Ratio mode only. With a ratio set, the image/video snippet positions the media
+     `absolute`, so this box has NO in-flow content and nothing to derive a width from.
+     Every _text-lockup alignment sets align-items to center/start/end — never stretch —
+     so the block's own flex wrapper would shrink to fit that zero and the media collapses
+     to a correctly-shaped sliver.
+
+     Stretching the wrapper gives `w-full` on the box something real to resolve against.
+     Scoped through :has() so it touches only ratio'd instances: .block-media is shared
+     with the _media block, whose in-flow image still sizes itself the old way. Inert
+     wherever the wrapper is not a flex item. */
+  .block-media:has(> .has-aspect) {
+    align-self: stretch;
+  }
+{% endstylesheet %}
+
+{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+{%-liquid
+  comment
+    Aspect ratio. `nil`, not '' — an empty string is TRUTHY in Liquid, so passing one as
+    `ratio` would send the image snippet down its ratio branch and divide by a zero aspect.
+    nil is falsy there and leaves the image at its natural shape, which is what auto means.
+
+    A chosen ratio also implies a fit: the media has to fill the box it is now cropped to,
+    so layout defaults to cover — unless a caller passed its own, which still wins.
+  endcomment
+  assign media_aspect = nil
+  unless block.settings.aspect_ratio == 'auto' or block.settings.aspect_ratio == blank
+    capture media_aspect
+      render 'util-aspect-ratio', ratio: block.settings.aspect_ratio
+    endcapture
+    assign media_aspect = media_aspect | strip
+  endunless
+
+  assign media_layout = layout
+  if media_aspect != blank and media_layout == blank
+    assign media_layout = 'cover'
+  endif
+
+  comment
+    Max width is resolved per breakpoint, and each breakpoint carries its OWN unit,
+    so a block can cap at a percentage on desktop and a fixed pixel width on mobile.
+    The value is emitted WITH its unit — a bare number is not a valid max-width, so
+    the px/% has to be appended here rather than in the CSS.
+
+    The percent fields are sliders, so they always carry a value (100 = no cap).
+    The pixel fields can be left blank: blank on desktop means "no cap" and falls
+    through to 100%, and blank on mobile means "same as desktop", matching how
+    header height and the grid margins already work.
+  endcomment
+  assign max_width = '100%'
+  assign capped_desktop = false
+  if block.settings.unit == 'pixel'
+    if block.settings.max_pixels != blank
+      assign max_width = block.settings.max_pixels | append: 'px'
+      assign capped_desktop = true
+    endif
+  else
+    if block.settings.max_percent != blank
+      assign max_width = block.settings.max_percent | append: '%'
+      if block.settings.max_percent < 100
+        assign capped_desktop = true
+      endif
+    endif
+  endif
+
+  assign max_width_mobile = max_width
+  assign capped_mobile = capped_desktop
+  if block.settings.unit_mobile == 'pixel'
+    if block.settings.max_pixels_mobile != blank
+      assign max_width_mobile = block.settings.max_pixels_mobile | append: 'px'
+      assign capped_mobile = true
+    endif
+  else
+    if block.settings.max_percent_mobile != blank
+      assign max_width_mobile = block.settings.max_percent_mobile | append: '%'
+      assign capped_mobile = false
+      if block.settings.max_percent_mobile < 100
+        assign capped_mobile = true
+      endif
+    endif
+  endif
+
+  comment
+    `sizes` has to describe the width the image will actually OCCUPY, which is the smaller
+    of two things: the share of the viewport its container gets, and this block's own cap.
+    Deriving it is the whole point of knowing the cap — left alone, a block capped at 400px
+    still tells the browser to fetch a full-viewport image, and on a wide display that is
+    several times the pixels needed.
+
+    The container share is found in this order:
+      1. a `container_vw` param, when a section renders this block directly and knows its
+         own column share (media-w-text computes exactly this as media_vw);
+      2. the COLUMNS section's own settings, read straight off `section` — this block is a
+         grandchild there (columns → _text-lockup → here) and neither render passes params,
+         so `section` is the only route to the divisor. Other blocks in this theme already
+         read section this way (_media-slide, the PDP blocks);
+      3. 100 — full width, the safe over-estimate.
+  endcomment
+  assign is_columns = false
+  assign vw_desktop = container_vw | default: 100
+  assign vw_tablet = vw_desktop
+  assign vw_mobile = container_vw_mobile | default: 100
+
+  comment
+    100.0, not 100 — Liquid's divided_by does INTEGER division on two integers, so
+    100 / 3 would floor to 33 and 100 / 6 to 16, quietly rounding the wrong way. Float
+    division then ceil keeps every tier on the over-estimating side.
+  endcomment
+  if container_vw == blank and section.settings.columns != blank
+    assign vw_desktop = 100.0 | divided_by: section.settings.columns | ceil
+    assign vw_tablet = 100.0 | divided_by: section.settings.tablet_columns | ceil
+    assign vw_mobile = 100.0 | divided_by: section.settings.mobile_columns | ceil
+    assign is_columns = true
+  endif
+
+  comment
+    Gutters and the page margin both make the real column NARROWER than 100/n, so ignoring
+    them over-estimates — the safe direction. Under-estimating is what looks broken.
+  endcomment
+-%}
+
+{%- liquid
+  comment
+    A percent cap resolves against the container, so it multiplies out to a plain vw and
+    stays exact at every width. A pixel cap is an absolute length that neither dominates nor
+    is dominated by the container share — 600px is the smaller of the two at 2560px wide and
+    the larger at 800px — so it needs min() to stay correct at both ends.
+
+    Rounding always goes UP: over-estimating costs a slightly larger file, under-estimating
+    is visibly soft. They are not symmetric mistakes.
+  endcomment
+  assign pct_desktop = block.settings.max_percent | default: 100
+  assign pct_mobile = block.settings.max_percent_mobile | default: 100
+  assign px_desktop = block.settings.max_pixels
+  assign px_mobile = block.settings.max_pixels_mobile
+  assign use_px_desktop = false
+  assign use_px_mobile = false
+  if block.settings.unit == 'pixel' and px_desktop != blank
+    assign use_px_desktop = true
+    assign srcset_cap = px_desktop
+  endif
+  if block.settings.unit_mobile == 'pixel' and px_mobile != blank
+    assign use_px_mobile = true
+  endif
+
+  comment
+    Four entries, not two, because the two things being combined change at DIFFERENT
+    breakpoints: the column count steps at 640 and 1024 (slideshow.js maps
+    data-slides-to-show to --slides-xs/sm/md/lg), while this block's own cap steps at 768
+    with its `md:` max-width. Merged, that is desktop-cap+desktop-cols above 1024,
+    desktop-cap+tablet-cols from 768, mobile-cap+tablet-cols from 640, and
+    mobile-cap+mobile-cols below. Outside the columns section the tiers collapse to the
+    same value and the extra entries are harmless.
+  endcomment
+  if use_px_desktop
+    assign size_lg = 'min(' | append: vw_desktop | append: 'vw, ' | append: px_desktop | append: 'px)'
+    assign size_md = 'min(' | append: vw_tablet | append: 'vw, ' | append: px_desktop | append: 'px)'
+  else
+    assign size_lg = pct_desktop | times: vw_desktop | divided_by: 100.0 | ceil | append: 'vw'
+    assign size_md = pct_desktop | times: vw_tablet | divided_by: 100.0 | ceil | append: 'vw'
+  endif
+
+  if use_px_mobile
+    assign size_sm = 'min(' | append: vw_tablet | append: 'vw, ' | append: px_mobile | append: 'px)'
+    assign size_xs = 'min(' | append: vw_mobile | append: 'vw, ' | append: px_mobile | append: 'px)'
+  else
+    assign size_sm = pct_mobile | times: vw_tablet | divided_by: 100.0 | ceil | append: 'vw'
+    assign size_xs = pct_mobile | times: vw_mobile | divided_by: 100.0 | ceil | append: 'vw'
+  endif
+
+  if is_columns
+    assign media_sizes = '(min-width: 1024px) ' | append: size_lg | append: ', (min-width: 768px) ' | append: size_md | append: ', (min-width: 640px) ' | append: size_sm | append: ', ' | append: size_xs
+  else
+    assign media_sizes = '(min-width: 768px) ' | append: size_lg | append: ', ' | append: size_xs
+  endif
+
+  comment
+    Uncapped AND with no container knowledge, this block is a plain _media — a `sizes`
+    string from the caller is then the most accurate thing available, so prefer it.
+  endcomment
+  unless capped_desktop or capped_mobile or is_columns
+    if sizes != blank
+      assign media_sizes = sizes
+    endif
+  endunless
+
+  comment
+    A pixel cap is also a hard ceiling on how many pixels can ever be USED, so the srcset
+    can stop there. 3x covers the densest displays; candidates past that are dead weight in
+    the HTML and a trap if `sizes` is ever wrong. A percent cap has no such ceiling — it
+    grows with the viewport — so it deliberately leaves srcset_cap unset.
+  endcomment
+  if srcset_cap != blank
+    assign srcset_cap = srcset_cap | times: 3
+  endif
+-%}
+
+{%- comment -%}
+  capped-desktop / capped-mobile are styling hooks for "a cap is actually in effect at this
+  breakpoint" — not merely "a value is set". A percent cap of 100 and a blank pixel field
+  both leave the media full width, so neither adds its class.
+{%- endcomment -%}
+<div
+  class="media-wrapper max-w-(--media-max-mobile) md:max-w-(--media-max) {{ space_below | strip }}{% if capped_desktop %} capped-desktop{% endif %}{% if capped_mobile %} capped-mobile{% endif %}{% if media_aspect != blank %} relative w-full has-aspect aspect-(--media-aspect){% endif %}"
+  style="--media-max: {{ max_width }}; --media-max-mobile: {{ max_width_mobile }};{% if media_aspect != blank %} --media-aspect: {{ media_aspect }};{% endif %}"
+>
+  {% if block.settings.media_type == 'video' %}
+    {% if block.settings.video != blank %}
+      {% render 'video',
+        src: block.settings.video,
+        layout: media_layout
+      %}
+    {% endif %}
+  {% else %}
+    {% if block.settings.image != blank %}
+      {% render 'image',
+        src: block.settings.image,
+        ratio: media_aspect,
+        layout: media_layout,
+        loading: loading,
+        fetchpriority: fetchpriority,
+        sizes: media_sizes,
+        max_width: srcset_cap
+      %}
+    {% endif %}
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Media",
+  "class": "block-media relative",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "default": "image",
+      "label": "Media Type",
+      "options": [
+        {
+          "label": "Image",
+          "value": "image"
+        },
+        {
+          "label": "Video",
+          "value": "video"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "visible_if": "{{ block.settings.media_type == 'image' }}"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "visible_if": "{{ block.settings.media_type == 'video' }}"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "default": "auto",
+      "label": "Aspect Ratio",
+      "info": "Auto keeps the media's own shape. Any other value crops it to that shape.",
+      "options": [
+        { "label": "Auto", "value": "auto" },
+        { "label": "Portrait (2:3)", "value": "portrait_2_3" },
+        { "label": "Portrait (3:4)", "value": "portrait_3_4" },
+        { "label": "Portrait (4:5)", "value": "portrait_4_5" },
+        { "label": "Square (1:1)", "value": "square" },
+        { "label": "Landscape (5:4)", "value": "landscape_5_4" },
+        { "label": "Landscape (4:3)", "value": "landscape_4_3" },
+        { "label": "Landscape (3:2)", "value": "landscape_3_2" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Max Width — Desktop"
+    },
+    {
+      "type": "select",
+      "id": "unit",
+      "default": "percent",
+      "label": "Unit",
+      "options": [
+        {
+          "label": "Percent",
+          "value": "percent"
+        },
+        {
+          "label": "Pixels",
+          "value": "pixel"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "max_percent",
+      "label": "Max width",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.unit == 'percent' }}"
+    },
+    {
+      "type": "number",
+      "id": "max_pixels",
+      "label": "Max width (px)",
+      "info": "Leave blank for no limit.",
+      "visible_if": "{{ block.settings.unit == 'pixel' }}"
+    },
+    {
+      "type": "header",
+      "content": "Max Width — Mobile"
+    },
+    {
+      "type": "select",
+      "id": "unit_mobile",
+      "default": "percent",
+      "label": "Unit",
+      "options": [
+        {
+          "label": "Percent",
+          "value": "percent"
+        },
+        {
+          "label": "Pixels",
+          "value": "pixel"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "max_percent_mobile",
+      "label": "Max width",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.unit_mobile == 'percent' }}"
+    },
+    {
+      "type": "number",
+      "id": "max_pixels_mobile",
+      "label": "Max width (px)",
+      "info": "Leave blank to use the desktop value.",
+      "visible_if": "{{ block.settings.unit_mobile == 'pixel' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "space_below",
+      "label": "Space Below",
+      "default": "none",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Small", "value": "small" },
+        { "label": "Medium", "value": "medium" },
+        { "label": "Large", "value": "large" },
+        { "label": "XL", "value": "xl" }
+      ]
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Media"
+    }
+  ]
+}
+{% endschema %}

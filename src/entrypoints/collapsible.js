@@ -8,6 +8,44 @@ const syncTriggerState = (content, expanded) => {
     .forEach((trigger) => trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false'))
 }
 
+// `data-expanded-style` holds inline CSS applied to an element only while its row is open
+// — a chevron rotation, say. Inline rather than a class so a block can declare it in Liquid
+// without also shipping a stylesheet rule to match.
+//
+// Read per element carrying the attribute, anywhere in the row, rather than from one known
+// icon element. Accordion rows need that: all three icon variants are rendered and CSS
+// picks one, so the chevron and arrow each declare a rotation while the animated plus
+// declares none — animated-icon.css already turns that one into a minus, and an inline
+// transform would override it.
+const baseStyle = new WeakMap()
+
+const applyExpandedStyles = (content, expanded) => {
+  const row = content?.closest('collapsible-item')
+  if (!row) return
+
+  // The row itself can carry the attribute too, not just elements inside it.
+  const targets = [...row.querySelectorAll('[data-expanded-style]')]
+  if (row.dataset.expandedStyle) targets.unshift(row)
+
+  targets.forEach((el) => {
+    // A nested accordion's elements belong to its own row, not this one.
+    if (el !== row && el.closest('collapsible-item') !== row) return
+
+    // Remember any inline style the markup shipped with, so collapsing restores it rather
+    // than wiping it. A WeakMap keeps that bookkeeping out of the DOM.
+    if (!baseStyle.has(el)) baseStyle.set(el, el.getAttribute('style') ?? '')
+    const base = baseStyle.get(el)
+
+    if (expanded) {
+      el.setAttribute('style', base ? `${base.replace(/;\s*$/, '')}; ${el.dataset.expandedStyle}` : el.dataset.expandedStyle)
+    } else if (base) {
+      el.setAttribute('style', base)
+    } else {
+      el.removeAttribute('style')
+    }
+  })
+}
+
 export const toggleCollapsibleItem = (content, icon, expand) => {
   // Use areaHidden to toggle visibility
   if (expand === 'inherit') {
@@ -26,6 +64,7 @@ export const toggleCollapsibleItem = (content, icon, expand) => {
     }
   }
 
+  applyExpandedStyles(content, expand)
   syncTriggerState(content, expand)
 }
 
@@ -55,7 +94,9 @@ if (!customElements.get("collapsible-item")) {
             this.icon.dataset.icon = 'minus'
           }
 
-          syncTriggerState(this.content, this.content.ariaHidden === 'false')
+          const startsExpanded = this.content.ariaHidden === 'false'
+          applyExpandedStyles(this.content, startsExpanded)
+          syncTriggerState(this.content, startsExpanded)
 
           this.trigger.forEach(item => {
             item.addEventListener('click', event => {

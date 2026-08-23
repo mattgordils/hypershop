@@ -33,3 +33,39 @@ collapsible-item {
     }
   }
 }
+
+accordion-list {
+  /* Title Size */
+  &[data-title-size="h1"] [data-collapsible='trigger'] { @apply h1; }
+  &[data-title-size="h2"] [data-collapsible='trigger'] { @apply h2; }
+  &[data-title-size="h3"] [data-collapsible='trigger'] { @apply h3; }
+  &[data-title-size="h4"] [data-collapsible='trigger'] { @apply h4; }
+  &[data-title-size="h5"] [data-collapsible='trigger'] { @apply h5; }
+  &[data-title-size="h6"] [data-collapsible='trigger'] { @apply h6; }
+  &[data-title-size="body-small"] [data-collapsible='trigger'] { @apply body-small; }
+  &[data-title-size=""] [data-collapsible='trigger'] { @apply body; }
+  &[data-title-size="body-medium"] [data-collapsible='trigger'] { @apply body-medium; }
+  &[data-title-size="body-large"] [data-collapsible='trigger'] { @apply body-large; }
+
+  /* Text Size */
+  &[data-text-size="h1"] [data-collapsible='content'] .rich-text { @apply h1; p, ol, ul { @apply h1; } }
+  &[data-text-size="h2"] [data-collapsible='content'] .rich-text { @apply h2; p, ol, ul { @apply h2; } }
+  &[data-text-size="h3"] [data-collapsible='content'] .rich-text { @apply h3; p, ol, ul { @apply h3; } }
+  &[data-text-size="h4"] [data-collapsible='content'] .rich-text { @apply h4; p, ol, ul { @apply h4; } }
+  &[data-text-size="h5"] [data-collapsible='content'] .rich-text { @apply h5; p, ol, ul { @apply h5; } }
+  &[data-text-size="h6"] [data-collapsible='content'] .rich-text { @apply h6; p, ol, ul { @apply h6; } }
+  &[data-text-size="body-small"] [data-collapsible='content'] .rich-text { @apply body-small; p, ol, ul { @apply body-small; } }
+  &[data-text-size=""] [data-collapsible='content'] .rich-text { @apply body; p, ol, ul { @apply body; } }
+  &[data-text-size="body-medium"] [data-collapsible='content'] .rich-text { @apply body-medium; p, ol, ul { @apply body-medium; } }
+  &[data-text-size="body-large"] [data-collapsible='content'] .rich-text { @apply body-large; p, ol, ul { @apply body-large; } }
+
+  /* Show Selected Icon*/
+  [data-icon-variant] {
+    display: none;
+  }
+  &[data-icon-type='plus'] [data-icon-variant='plus'],
+  &[data-icon-type='chevron'] [data-icon-variant='chevron'],
+  &[data-icon-type='arrow'] [data-icon-variant='arrow'] {
+    display: block;
+  }
+}

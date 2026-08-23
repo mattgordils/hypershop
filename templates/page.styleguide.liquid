@@ -10,13 +10,13 @@
 
 <div class="py-v-space px-margin">
   <div class="max-w-site-max-w mx-auto">
-    <div class="max-w-[750px] text-balance space-y-6 mb-v-space">
-      <h1>Site Styleguide</h1>
-      <p class="h5">Everything below — type scales, colors, color schemes, buttons, inputs, and the grid — is defined once in your <strong>Theme settings</strong> and cascades across every page of your store. This page is only a live preview: change a value in Theme settings and it updates here and everywhere it's used.</p>
+    <div class="text-balance space-y-6 mb-v-space">
+      <h1 class="max-w-[20em]">Site Styleguide</h1>
+      <p class="h5 max-w-[26em]">Everything below — type scales, colors, color schemes, buttons, inputs, and the grid — is defined once in your <strong>Theme settings</strong> and cascades across every page of your store. This page is only a live preview: change a value in Theme settings and it updates here and everywhere it's used.</p>
       {%- if request.design_mode -%}
-        <p class="body">To edit any of it, open <strong>Theme settings</strong> — the gear icon at the bottom of the editor sidebar.</p>
+        <p class="body max-w-[32em]">To edit any of it, open <strong>Theme settings</strong> — the gear icon at the bottom of the editor sidebar.</p>
       {%- else -%}
-        <p class="body">To edit any of it, open <a href="https://{{ shop.permanent_domain }}/admin/themes/current/editor" class="animate-underline underlined">Theme settings</a> (Shopify admin → Online Store → Themes → Customize → Theme settings).</p>
+        <p class="body max-w-[32em]">To edit any of it, open <a href="https://{{ shop.permanent_domain }}/admin/themes/current/editor" class="animate-underline underlined">Theme settings</a> (Shopify admin → Online Store → Themes → Customize → Theme settings).</p>
       {%- endif -%}
     </div>
 
@@ -26,25 +26,25 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-v-space-sm mb-v-space-lg">
-      <div>
-        <h1 class="text-balance mb-v-space-sm">Header Style Number 1</h1>
-        <h2 class="text-balance mb-v-space-sm">Header Style Number 2</h2>
-        <h3 class="text-balance mb-v-space-sm">Header Style Number 3</h3>
-        <h4 class="text-balance mb-v-space-sm">Header Style Number 4</h4>
-        <p class="text-balance h5 mb-v-space-sm"><strong>Header Style<br>Number 5</strong></p>
+      <div class="space-y-v-space-sm">
+        <h1 class="text-balance">Header Style Number 1</h1>
+        <h2 class="text-balance">Header Style Number 2</h2>
+        <h3 class="text-balance">Header Style Number 3</h3>
+        <h4 class="text-balance">Header Style Number 4</h4>
+        <p class="text-balance h5"><strong>Header Style<br>Number 5</strong></p>
         <p class="text-balance h6">Header Style Number 6</p>
       </div>
 
-      <div>
-        <div class="mb-v-space-sm">
+      <div class="space-y-v-space-sm">
+        <div>
           <p class="eyebrow text-light-text-color mb-gutter">Body Tiny</p>
           <p class="body-tiny">{{ lorem_long }}</p>
         </div>
-        <div class="mb-v-space-sm">
+        <div>
           <p class="eyebrow text-light-text-color mb-gutter">Body Small</p>
           <p class="body-small">{{ lorem_long }}</p>
         </div>
-        <div class="mb-v-space-sm">
+        <div>
           <p class="eyebrow text-light-text-color mb-gutter">Body (Default)</p>
           <p>{{ lorem_long }}</p>
         </div>
@@ -54,8 +54,8 @@
         </div>
       </div>
 
-      <div>
-        <div class="mb-v-space-sm">
+      <div class="space-y-v-space-sm">
+        <div>
           <p class="eyebrow text-light-text-color mb-gutter">Body Large</p>
           <p class="body-large">{{ lorem_long }}</p>
         </div>

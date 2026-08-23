@@ -209,6 +209,16 @@
     --input-border-weight: 1px;
     --input-border-color: var(--input-bg);
     --input-height: var(--button-height);
+    &.large { --input-height: var(--button-height-large); }
+    &.small { --input-height: var(--button-height-small); }
+    &.tiny  { --input-height: var(--button-height-tiny); }
+    &:not(.small),
+    &:not(.tiny) {
+      @apply body;
+    }
+    &.small, &.tiny {
+      @apply body-small;
+    }
     appearance: none;
     cursor: pointer;
     height: var(--input-height);

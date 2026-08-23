@@ -28,7 +28,7 @@
   endcomment
   assign default_placeholder = 'general.newsletter.placeholder' | t
   assign field_placeholder = placeholder | default: default_placeholder
-  assign row_class = class | default: 'border-b border-solid bg-transparent font-expanded w-full flex'
+  assign row_class = class | default: 'border-b border-solid w-full flex'
 
   assign form_id = 'Newsletter-' | append: uid
   assign input_id = form_id | append: '-input'
@@ -59,7 +59,7 @@
         type="email"
         id="{{ input_id }}"
         name="contact[email]"
-        class="underlined grow"
+        class="underlined grow {{ size }}"
         data-newsletter-input
         value=""
         placeholder="{% if form.posted_successfully? %}{{ confirm | escape }}{% else %}{{ field_placeholder | escape }}{% endif %}"
@@ -73,7 +73,7 @@
           aria-describedby="{{ error_id }}"
         {% endif %}
       >
-      <button type="submit" title="{{ 'general.newsletter.submit' | t }}" class="button circle transparent shrink-0 grow-0">
+      <button type="submit" title="{{ 'general.newsletter.submit' | t }}" class="button circle transparent shrink-0 grow-0 {{ size }}">
         <span data-newsletter-icon="default"{% if form.posted_successfully? %} hidden{% endif %}>
           {% render 'icon-material', icon: 'arrow_forward' %}
         </span>

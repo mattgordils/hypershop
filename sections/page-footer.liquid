@@ -24,15 +24,17 @@
 					newsletter reads as one more footer column rather than its own thing.
 					The parent's gap handles the spacing, hence no margin here.
 				{%- endcomment -%}
-				{% if section.settings.text_title != blank %}
-					<h6 class="h6">{{ section.settings.text_title }}</h6>
+				{% if section.settings.newsletter_text_title != blank %}
+					<h6 class="h6">{{ section.settings.newsletter_text_title }}</h6>
 				{% endif %}
-				<div class="body">
-					{{ section.settings.text }}
-				</div>
+				{% if section.settings.newsletter_text != blank %}
+					<div class="body">
+						{{ section.settings.newsletter_text }}
+					</div>
+				{% endif %}
 				{% render 'newsletter-form',
 					id_prefix: 'footer',
-					confirm_text: section.settings.text_confirm
+					confirm_text: section.settings.newsletter_text_confirm
 				%}
 			</div>
 		</div>
@@ -43,8 +45,8 @@
 					{% if column.settings.list_title != blank %}
 						<h6 class="{{ list_title_class }} mb-4">{{ column.settings.list_title }}</h6>
 					{% endif %}
-					{% for link in column.settings.link_list.links %}
-						<ul class="leading-none">
+					<ul class="leading-none">
+						{% for link in column.settings.link_list.links %}
 							<li>
 								<a href="{{ link.url }}" class="inline-block align-top {{ list_item_class }}">
 									<span class="animate-underline">
@@ -52,8 +54,8 @@
 									</span>
 								</a>
 							</li>
-						</ul>
-					{% endfor %}
+						{% endfor %}
+					</ul>
 				</div>
 			{% endfor %}
 		</div>
@@ -81,19 +83,23 @@
 		<div>
 			<p class="body-tiny">©{{ "now" | date: "%Y" }}. {{ shop.name }}</p>
 		</div>
-		<div>
-			{% for link in section.settings.small_links %}
+		
+		{% if section.settings.small_links.links.size > 0 %}
+			<div>
 				<ul class="leading-none flex gap-gutter">
-					<li>
-						<a href="{{ link.url }}" class="inline-block align-top body-small">
-							<span class="animate-underline">
-								{{ link.title }}
-							</span>
-						</a>
-					</li>
+					{% for link in section.settings.small_links.links %}
+						<li>
+							<a href="{{ link.url }}" class="inline-block align-top body-small">
+								<span class="animate-underline">
+									{{ link.title }}
+								</span>
+							</a>
+						</li>
+					{% endfor %}
 				</ul>
-			{% endfor %}
-		</div>
+			</div>
+		{% endif %}
+
 		<div>
 			<collapsible-trigger
 				class="cursor-pointer body-tiny animate-underline"
@@ -215,17 +221,17 @@
     },
     {
       "type": "text",
-      "id": "text_title",
+      "id": "newsletter_text_title",
       "label": "Sign Up Title"
     },
     {
-      "type": "text",
+      "type": "newsletter_text",
       "id": "text",
       "label": "Sign Up Text"
     },
     {
       "type": "text",
-      "id": "text_confirm",
+      "id": "newsletter_text_confirm",
       "label": "Confirmation Text",
       "info": "Text that appears after a successful subscription",
       "default": "Thank you"

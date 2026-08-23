@@ -12,6 +12,8 @@
   and is driven by :has(menu-item[data-open="true"]).
 {%- endcomment -%}
 
+{%- assign link_style_class = 'body-small md:body' -%}
+
 {%- if menu.links.size > 0 -%}
   <ul class="h-full hidden md:flex items-center">
     {%- for link in menu.links -%}
@@ -22,7 +24,7 @@
           <menu-item class="group/menu h-full flex items-center" data-open="false">
             <button
               type="button"
-              class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center bg-transparent border-0"
+              class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full {{ link_style_class }} group flex gap-1 items-center bg-transparent border-0"
               aria-expanded="false"
               aria-haspopup="true"
               data-menu-trigger
@@ -87,7 +89,7 @@
         {%- else -%}
           <a
             href="{{ link.url }}"
-            class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full body-small md:body group flex gap-1 items-center"
+            class="cursor-pointer px-[calc(var(--site-gutters)/2)] h-full {{ link_style_class }} group flex gap-1 items-center"
             {% if link.active %}aria-current="page"{% endif %}
           >
             <span class="animate-underline grow-0 shrink-0 leading-none">{{ link.title }}</span>

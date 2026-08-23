@@ -7,6 +7,7 @@
   @param {boolean} [mock]   - render from sample data (see mock-product) instead of a
                               product, so component previews work with an empty store
   @param {string} [mock_title]
+  @param {string} [mock_vendor]
   @param {number} [mock_price]
   @param {number} [mock_compare_at_price]
   @param {string} [mock_image]        - filename in assets
@@ -25,6 +26,7 @@
   endif
 
   assign card_title = product.title
+  assign card_vendor = product.vendor
   assign card_sizes = sizes | default: '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw'
   assign card_loading = loading | default: 'lazy'
 
@@ -36,6 +38,7 @@
   assign card_hover_image_asset = null
   if mock
     assign card_title = mock_title
+    assign card_vendor = mock_vendor
     assign card_image = null
     assign card_hover_image = null
     assign card_image_asset = mock_image
@@ -55,6 +58,17 @@
 
   assign card_title_class = settings.card_title_class | default: 'body'
   assign card_price_class = settings.card_price_class | default: 'body'
+  assign card_vendor_class = settings.card_vendor_class | default: 'body-small'
+
+  comment
+    Vendor is opt-in, and stays out of the markup when the product has none —
+    an empty line would otherwise push the title down on some cards and not others.
+  endcomment
+  assign show_vendor = false
+  if settings.card_show_vendor and card_vendor != blank
+    assign show_vendor = true
+  endif
+
 
   comment
     Checkbox settings read as nil until saved once, so default-on has to be explicit.
@@ -144,6 +158,11 @@
       </a>
     {% endif %}
   </h3>
+  {%- if show_vendor -%}
+    <div class="{{ card_vendor_class }}{% unless text_over_image %} pt-3{% endunless %}" itemprop="brand">
+      {{ card_vendor }}
+    </div>
+  {%- endif -%}
   <div class="{{ card_price_class }}{% unless text_over_image %} pt-3{% endunless %}" id="cardPrice-{{ product.id }}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
     <meta itemprop="price" content="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}">
     <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">

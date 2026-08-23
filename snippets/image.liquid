@@ -8,6 +8,7 @@
     width: 1200,
     ratio: '16/9',
     sizes: '(min-width: 1024px) 50vw, 100vw',
+    max_width: 1200,
     loading: 'lazy',
     class: 'custom-class',
     fetchpriority: 'high'
@@ -83,6 +84,32 @@
   endcomment
   assign widths = '40,80,120,180,240,320,400,480,640,768,1024,1280,1536,1920,2048,2560'
   assign widths_array = widths | split: ','
+
+  comment
+    `max_width` (optional): the largest width in DEVICE pixels this image can ever be
+    asked to paint, when the caller happens to know it — e.g. a block capped at a fixed
+    pixel width. Candidates above it can never be chosen, so they are only weight in the
+    HTML and a fallback trap if `sizes` is ever wrong. One candidate is kept at or above
+    the cap so the top of the range is still reachable, and callers that pass nothing keep
+    the full ladder unchanged.
+  endcomment
+  if max_width != blank
+    assign capped_widths = ''
+    assign cap_reached = false
+    for width_item in widths_array
+      unless cap_reached
+        if capped_widths != ''
+          assign capped_widths = capped_widths | append: ','
+        endif
+        assign capped_widths = capped_widths | append: width_item
+        assign current_width = width_item | times: 1
+        if current_width >= max_width
+          assign cap_reached = true
+        endif
+      endunless
+    endfor
+    assign widths_array = capped_widths | split: ','
+  endif
 
   if layout != blank
     if layout == 'cover'

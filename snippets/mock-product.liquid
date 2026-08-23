@@ -14,6 +14,7 @@
 
 {%- liquid
   assign mock_title = 'Camp Collar Shirt'
+  assign mock_vendor = shop.name
   assign mock_price = 8800
   assign mock_compare_at_price = 12000
   assign mock_image = 'tee-shirt-mock.png'
@@ -30,6 +31,7 @@
     {% render 'product-card',
       mock: true,
       mock_title: mock_title,
+      mock_vendor: mock_vendor,
       mock_price: mock_price,
       mock_compare_at_price: mock_compare_at_price,
       mock_image: mock_image,
@@ -45,6 +47,7 @@
     {% render 'product-card',
       mock: true,
       mock_title: mock_title,
+      mock_vendor: mock_vendor,
       mock_price: mock_price,
       mock_image: mock_image,
       mock_hover_image: mock_hover_image,

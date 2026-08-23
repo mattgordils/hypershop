@@ -1,0 +1,88 @@
+{%- comment -%}
+  One media slot — an image or a video — rendered from a pair of settings.
+
+  blocks/_media.liquid is a thin wrapper around this. Anything that wants "image or video"
+  without nesting a block renders it directly from its own flat settings:
+
+    {% render 'media',
+      media_type: section.settings.media_type,
+      image: section.settings.image,
+      video: section.settings.video,
+      layout: 'cover',
+      sizes: '50vw'
+    %}
+
+  @param {string} [media_type]    - 'image' | 'video'. Omit it and the snippet follows
+                                    whichever source is set, so a caller offering only one
+                                    needs no media_type setting at all.
+  @param {object} [image]         - an image_picker / image object
+  @param {object} [video]         - a video setting
+  @param {string} [layout]        - 'cover' | 'contain'; positions the media absolutely
+  @param {string} [class]
+  @param {number} [width]
+
+  Images only:
+  @param {string} [ratio]         - crops the srcset; a video carries its own aspect ratio
+  @param {string} [sizes]
+  @param {number} [max_width]     - caps the largest srcset candidate
+  @param {string} [loading]
+  @param {string} [fetchpriority]
+  @param {string} [alt]
+  @param {boolean} [decorative]
+
+  Videos only — each defaults inside snippets/video.liquid:
+  @param {boolean} [autoplay]
+  @param {boolean} [loop]
+  @param {boolean} [muted]
+  @param {boolean} [controls]
+
+  Renders nothing when the chosen source is empty, so a merchant who selects Video before
+  uploading one gets an empty slot rather than a broken element.
+{%- endcomment -%}
+
+{%- liquid
+  comment
+    Inferred rather than defaulted to 'image': a caller may offer only a video setting.
+    Anything that does have a media_type always passes it, so the inference only decides
+    the case where there is a single candidate anyway.
+  endcomment
+  assign media_kind = media_type
+  if media_kind == blank
+    if video != blank
+      assign media_kind = 'video'
+    else
+      assign media_kind = 'image'
+    endif
+  endif
+-%}
+
+{%- if media_kind == 'video' -%}
+  {%- if video != blank -%}
+    {% render 'video',
+      src: video,
+      layout: layout,
+      class: class,
+      width: width,
+      autoplay: autoplay,
+      loop: loop,
+      muted: muted,
+      controls: controls
+    %}
+  {%- endif -%}
+{%- else -%}
+  {%- if image != blank -%}
+    {% render 'image',
+      src: image,
+      layout: layout,
+      class: class,
+      width: width,
+      ratio: ratio,
+      sizes: sizes,
+      max_width: max_width,
+      loading: loading,
+      fetchpriority: fetchpriority,
+      alt: alt,
+      decorative: decorative
+    %}
+  {%- endif -%}
+{%- endif -%}

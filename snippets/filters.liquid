@@ -66,7 +66,7 @@
               {%- assign min_value = filter.min_value.value | default: 0 -%}
               {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
               {{ min_value | money }}—{{ max_value | money }}
-              <div class='h6 text-center'>{% render 'icon-material', size: '1em', class: 'block' %}</div>
+              <div class='text-center'>{% render 'icon-material', size: '1em', class: 'block' %}</div>
             </a>
           {%- endif -%}
         {%- else -%}
@@ -77,7 +77,7 @@
               title='{{ 'products.facets.remove_filter' | t: label: filter.label }}'
             >
               {{ filter_value.label }}
-              <div class='h6 text-center pointer-events-none'>{% render 'icon-material', size: '1em', class: 'block' %}</div>
+              <div class='text-center pointer-events-none'>{% render 'icon-material', size: '1em', class: 'block' %}</div>
             </a>
           {%- endfor -%}
         {%- endif -%}

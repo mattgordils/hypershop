@@ -1,3 +1,25 @@
+/* Gap resolution. --slide-gap is the base (mobile) value; --slide-gap-sm …
+   --slide-gap-2xl override it from their breakpoint up, mobile-first — a
+   breakpoint that's left unset keeps whatever the last set one resolved to.
+   Every rule below consumes --slide-gap-resolved rather than --slide-gap, so
+   both grid and slideshow modes pick the overrides up. */
+slide-show {
+  --slide-gap-xs-value:  var(--slide-gap, var(--site-gutters));
+  --slide-gap-sm-value:  var(--slide-gap-sm,  var(--slide-gap-xs-value));
+  --slide-gap-md-value:  var(--slide-gap-md,  var(--slide-gap-sm-value));
+  --slide-gap-lg-value:  var(--slide-gap-lg,  var(--slide-gap-md-value));
+  --slide-gap-xl-value:  var(--slide-gap-xl,  var(--slide-gap-lg-value));
+  --slide-gap-2xl-value: var(--slide-gap-2xl, var(--slide-gap-xl-value));
+
+  --slide-gap-resolved: var(--slide-gap-xs-value);
+
+  @media (min-width: 640px)  { --slide-gap-resolved: var(--slide-gap-sm-value); }
+  @media (min-width: 768px)  { --slide-gap-resolved: var(--slide-gap-md-value); }
+  @media (min-width: 1024px) { --slide-gap-resolved: var(--slide-gap-lg-value); }
+  @media (min-width: 1280px) { --slide-gap-resolved: var(--slide-gap-xl-value); }
+  @media (min-width: 1536px) { --slide-gap-resolved: var(--slide-gap-2xl-value); }
+}
+
 /* Inactive mode — the slide-show is a plain responsive grid. Column counts
    flow from the same --slides-xs / --slides-sm / --slides-lg custom properties
    that the JS sets from data-slides-to-show, so a section can flip between
@@ -8,24 +30,24 @@ slide-show.inactive {
   & .slider-container {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-v-space-sm) var(--slide-gap, var(--site-gutters));
+    gap: var(--spacing-v-space-sm) var(--slide-gap-resolved);
   }
 
   & .slider-slide {
     width: calc(
-      (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-xs, 1) - 1))
+      (100% - var(--slide-gap-resolved) * (var(--slides-xs, 1) - 1))
       / var(--slides-xs, 1)
     );
 
     @media (min-width: 640px) {
       width: calc(
-        (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-sm, 1) - 1))
+        (100% - var(--slide-gap-resolved) * (var(--slides-sm, 1) - 1))
         / var(--slides-sm, 1)
       );
     }
     @media (min-width: 1024px) {
       width: calc(
-        (100% - var(--slide-gap, var(--site-gutters)) * (var(--slides-lg, 1) - 1))
+        (100% - var(--slide-gap-resolved) * (var(--slides-lg, 1) - 1))
         / var(--slides-lg, 1)
       );
     }
@@ -41,7 +63,6 @@ slide-show.inactive {
 
 slide-show:not(.inactive) {
   display: block;
-  --slide-gap: var(--site-gutters);
   --slides-to-show: var(--slides-xs, 1);
 
   @media (min-width: 640px)  { --slides-to-show: var(--slides-sm, 1); }
@@ -59,7 +80,7 @@ slide-show:not(.inactive) {
   & .slider-container {
     display: flex;
     justify-content: flex-start;
-    column-gap: var(--slide-gap);
+    column-gap: var(--slide-gap-resolved);
   }
 
   &[data-axis='y'] .slider-container {
@@ -74,7 +95,7 @@ slide-show:not(.inactive) {
   & .slider-slide {
     &:not(.auto-width) {
       --slide-width: calc(
-        (100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)
+        (100% - var(--slide-gap-resolved) * (var(--slides-to-show) - 1)) / var(--slides-to-show)
       );
       flex: 0 0 var(--slide-width);
     }
@@ -90,20 +111,20 @@ slide-show:not(.inactive) {
       column-gap: 0;
       & .slider-slide {
         --slide-width: calc(
-          ((100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
-            var(--slide-gap)
+          ((100% - var(--slide-gap-resolved) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
+            var(--slide-gap-resolved)
         );
-        padding: 0 calc(var(--slide-gap) / 2);
+        padding: 0 calc(var(--slide-gap-resolved) / 2);
       }
     }
     &[data-align='start'] .slider-container {
       column-gap: 0;
       & .slider-slide {
         --slide-width: calc(
-          ((100% - var(--slide-gap) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
-            var(--slide-gap)
+          ((100% - var(--slide-gap-resolved) * (var(--slides-to-show) - 1)) / var(--slides-to-show)) +
+            var(--slide-gap-resolved)
         );
-        padding: 0 var(--slide-gap) 0 0;
+        padding: 0 var(--slide-gap-resolved) 0 0;
       }
     }
   }
@@ -111,35 +132,36 @@ slide-show:not(.inactive) {
   & .slider-dots {
     display: flex;
     justify-content: center;
+    --dot-size: 6px;
     & button {
-      padding: 2px;
+      padding: calc(var(--dot-size, 6px) / 2);
       & > span {
         display: block;
-        width: 6px;
-        height: 6px;
+        width: var(--dot-size, 6px);
+        height: var(--dot-size, 6px);
         text-indent: -200px;
         overflow: hidden;
         border: 1px solid currentColor;
-        border-radius: 50%;
+        border-radius: var(--radius-base);
         transition: all var(--md-speed) ease-in-out;
       }
       &.active > span { background-color: currentColor; }
     }
     &.type-dots_pill {
       & button {
-        padding: 3px;
+        padding: calc(var(--dot-size, 6px) / 2);
         & > span {
           display: block;
-          width: 6px;
-          height: 6px;
+          width: var(--dot-size, 6px);
+          height: var(--dot-size, 6px);
           text-indent: -200px;
           overflow: hidden;
           background-color: currentColor;
           opacity: .3;
-          border-radius: 100px;
+          border-radius: var(--radius-base);
           transition: all var(--md-speed) ease-in-out;
         }
-        &.active > span { opacity: 1; width: 15px; }
+        &.active > span { opacity: 1; width: calc(var(--dot-size, 6px) * 2); }
       }
     }
     &.type-progress_strip {

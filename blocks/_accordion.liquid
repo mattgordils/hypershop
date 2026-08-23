@@ -1,7 +1,16 @@
 {% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+
+{%- liquid
+  assign title_style = block.settings.title_size | default: 'body'
+  assign text_style = block.settings.text_size | default: 'body-small'
+-%}
+
 {% if block.blocks.size > 0 %}
   <accordion-list
     class="block border-b border-hr-color text-left {{ space_below | strip }}"
+    data-icon-type="{{ block.settings.icon_type | default: 'chevron' }}"
+    data-title-size="{{ title_style }}"
+    data-text-size="{{ text_style }}"
     {% if block.settings.first_open %}
       data-initial-open="0"
     {% endif %}
@@ -20,6 +29,44 @@
       "id": "first_open",
       "default": true,
       "label": "First Item Open Initially"
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "default": "chevron",
+      "label": "Icon Type",
+      "info": "Applies to every row in this accordion.",
+      "options": [
+        { "label": "Plus", "value": "plus" },
+        { "label": "Chevron", "value": "chevron" },
+        { "label": "Arrow", "value": "arrow" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "default": "body",
+      "label": "Headline Size",
+      "info": "Applies to every row in this accordion.",
+      "options": [
+        { "label": "XL", "value": "h4" },
+        { "label": "Large", "value": "h5" },
+        { "label": "Medium", "value": "body" },
+        { "label": "Small", "value": "body-small" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "default": "body-small",
+      "label": "Text Size",
+      "info": "Applies to every row in this accordion.",
+      "options": [
+        { "label": "Large", "value": "body-large" },
+        { "label": "Medium", "value": "body" },
+        { "label": "Small", "value": "body-small" },
+        { "label": "Tiny", "value": "body-tiny" }
+      ]
     },
     {
       "type": "header",

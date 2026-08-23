@@ -187,7 +187,7 @@ if (!customElements.get('slide-show')) {
         this.signal = this.controller.signal
 
         const setControlsHidden = (hidden) => {
-          const controls = [...this.arrowNexts, ...this.arrowPrevs, ...this.dotsContainers]
+          const controls = [...this.arrowNexts, ...this.arrowPrevs, ...this.dotsContainers, ...this.navs]
           controls.forEach((el) => {
             hidden ? el.classList.add('!hidden') : el.classList.remove('!hidden')
           })

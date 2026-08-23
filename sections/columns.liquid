@@ -62,7 +62,7 @@
 {% endstylesheet %}
 
 <div
-  class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}{% if section.settings.limit_media_width %} columns--limit-media{% endif %}"
+  class="{{ spacing_class }} {{ padding_class }} w-full {{ section.settings.color_scheme }}{% if section.settings.contain_square %} columns--media-square{% endif %}"
 >
   <div class="overflow-hidden">
     <div class="mx-auto max-w-[calc(var(--spacing-site-max-w)+var(--spacing-margin)*2)] w-full px-margin">
@@ -96,7 +96,7 @@
     {
       "type": "text_alignment",
       "id": "alignment",
-      "default": "center",
+      "default": "left",
       "label": "Text Alignment"
     },
     {
@@ -113,7 +113,7 @@
       "type": "range",
       "id": "columns",
       "label": "Desktop Columns",
-      "default": 1,
+      "default": 3,
       "min": 1,
       "max": 6,
       "step": 1
@@ -163,23 +163,6 @@
       "label": "Contain media to a square",
       "info": "Fits each column's image or video inside a square (object-fit: contain).",
       "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "limit_media_width",
-      "label": "Limit media width",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "media_max_width",
-      "min": 40,
-      "max": 1000,
-      "step": 10,
-      "unit": "px",
-      "label": "Media Max Width",
-      "default": 400,
-      "visible_if": "{{ section.settings.limit_media_width }}"
     },
     {
       "type": "header",

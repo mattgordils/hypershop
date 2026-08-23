@@ -14,11 +14,39 @@
     render 'util-aspect-ratio', ratio: settings.card_aspect_ratio
   endcapture
   assign card_aspect = card_aspect | strip
+
+  comment
+    The media fills the card, so its width is the card's SPAN across the grid — not the
+    full viewport, which is what it would otherwise declare. The spans and the grid's own
+    column counts are both readable here (the section renders this block, so `section` is
+    in scope), and the breakpoints below mirror the placement CSS at the bottom of this
+    file exactly: full width under 640, tablet span from 640, desktop span from 1024.
+
+    100.0, not 100 — Liquid's divided_by floors on two integers, which would round toward
+    an image too small rather than too large.
+  endcomment
+  assign grid_cols_d = section.settings.columns | default: 4
+  assign grid_cols_t = section.settings.tablet_columns | default: 3
+  assign span_d = block.settings.col_span_d | default: 1
+  assign span_t = block.settings.col_span_t | default: 1
+  comment
+    A span wider than the grid is clamped by CSS Grid itself, so clamp it here too or the
+    arithmetic would claim more than 100vw.
+  endcomment
+  if span_d > grid_cols_d
+    assign span_d = grid_cols_d
+  endif
+  if span_t > grid_cols_t
+    assign span_t = grid_cols_t
+  endif
+  assign promo_vw_d = span_d | times: 100.0 | divided_by: grid_cols_d | ceil
+  assign promo_vw_t = span_t | times: 100.0 | divided_by: grid_cols_t | ceil
+  assign promo_sizes = '(min-width: 1024px) ' | append: promo_vw_d | append: 'vw, (min-width: 640px) ' | append: promo_vw_t | append: 'vw, 100vw'
 %}
 
 <div style="--card-aspect: {{ card_aspect }};" class="block-promo-card relative aspect-(--card-aspect) sm:aspect-[unset] h-full w-full {{ block.settings.color_scheme }}{% if settings.card_border_radius %} rounded-[var(--base-border-radius)]{% endif %}">
   <div class="promo-card__media absolute inset-0 z-0">
-    {% content_for 'block', type: '_media', id: 'media' %}
+    {% content_for 'block', type: '_media', id: 'media', sizes: promo_sizes %}
   </div>
 
   {% if overlay > 0 %}

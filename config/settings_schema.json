@@ -539,6 +539,33 @@
       ]
     },
     {
+      "type": "checkbox",
+      "id": "card_show_vendor",
+      "label": "Show vendor",
+      "info": "Shows the product's vendor below the title, on products that have one.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "card_vendor_class",
+      "label": "Vendor size",
+      "default": "body-small",
+      "visible_if": "{{ settings.card_show_vendor }}",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "body-tiny", "label": "Body tiny" },
+        { "value": "body-small", "label": "Body small" },
+        { "value": "body", "label": "Body" },
+        { "value": "body-medium", "label": "Body medium" },
+        { "value": "body-large", "label": "Body large" }
+      ]
+    },
+    {
       "type": "select",
       "id": "card_price_class",
       "label": "Price size",

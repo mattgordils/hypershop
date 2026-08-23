@@ -62,9 +62,9 @@
         "small_links": "legal-footer",
         "list_title_class": "h6",
         "list_item_class": "body-small",
-        "text_title": "Stay In touch",
-        "text": "Sign up to stay in the loop with updates on the farm, holiday ordering and more!",
-        "text_confirm": "Thank you"
+        "newsletter_text_title": "Stay In touch",
+        "newsletter_text": "Sign up to stay in the loop with updates on the farm, holiday ordering and more!",
+        "newsletter_text_confirm": "Thank you"
       }
     }
   },

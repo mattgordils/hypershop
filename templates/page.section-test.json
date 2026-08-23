@@ -229,7 +229,7 @@
           },
           "blocks": {
             "media_3Rfq4J": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -271,7 +271,7 @@
           },
           "blocks": {
             "media_HaCBEd": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -313,7 +313,7 @@
           },
           "blocks": {
             "media_ecpbHL": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -355,7 +355,7 @@
           },
           "blocks": {
             "media_dU3NVN": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -397,7 +397,7 @@
           },
           "blocks": {
             "media_QPD9Qc": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -439,7 +439,7 @@
           },
           "blocks": {
             "media_HLLMkE": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -510,7 +510,7 @@
           },
           "blocks": {
             "media_i9Ypra": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -555,7 +555,7 @@
           },
           "blocks": {
             "media_LVjFb7": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -623,7 +623,7 @@
           },
           "blocks": {
             "media_3Rfq4J": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -665,7 +665,7 @@
           },
           "blocks": {
             "media_HaCBEd": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -707,7 +707,7 @@
           },
           "blocks": {
             "media_ecpbHL": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -749,7 +749,7 @@
           },
           "blocks": {
             "media_dU3NVN": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -791,7 +791,7 @@
           },
           "blocks": {
             "media_QPD9Qc": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",
@@ -833,7 +833,7 @@
           },
           "blocks": {
             "media_HLLMkE": {
-              "type": "_media",
+              "type": "_media-with-settings",
               "name": "Media",
               "settings": {
                 "media_type": "image",

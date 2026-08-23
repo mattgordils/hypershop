@@ -1,21 +1,21 @@
-{% if block.settings.media_type == 'video' %}
-  {% if block.settings.video != blank %}
-    {% render 'video',
-      src: block.settings.video,
-      layout: layout
-    %}
-  {% endif %}
-{% else %}
-  {% if block.settings.image != blank %}
-    {% render 'image',
-      src: block.settings.image,
-      layout: layout,
-      loading: loading,
-      fetchpriority: fetchpriority,
-      sizes: sizes
-    %}
-  {% endif %}
-{% endif %}
+{%- comment -%}
+  Nothing but settings plumbing — the markup lives in snippets/media.liquid so a section
+  can render the same image-or-video slot from flat settings, without a nested block.
+
+  @param {string} [layout]
+  @param {string} [loading]
+  @param {string} [fetchpriority]
+  @param {string} [sizes]
+{%- endcomment -%}
+{% render 'media',
+  media_type: block.settings.media_type,
+  image: block.settings.image,
+  video: block.settings.video,
+  layout: layout,
+  loading: loading,
+  fetchpriority: fetchpriority,
+  sizes: sizes
+%}
 
 {% schema %}
 {

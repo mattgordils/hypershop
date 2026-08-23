@@ -10,10 +10,27 @@
 
 	assign video_width = width | default: 1200
 	assign video_poster_width = video_width | append: 'x'
-	assign video_autoplay = autoplay | default: true
-	assign video_loop = loop | default: true
-	assign video_muted = muted | default: true
-	assign video_controls = controls | default: false
+	comment
+		`default` treats false as absent, so `autoplay | default: true` forced autoplay back
+		on for any caller that explicitly asked to turn it off. Test for false instead —
+		nil still falls through to the default.
+	endcomment
+	assign video_autoplay = true
+	if autoplay == false
+		assign video_autoplay = false
+	endif
+	assign video_loop = true
+	if loop == false
+		assign video_loop = false
+	endif
+	assign video_muted = true
+	if muted == false
+		assign video_muted = false
+	endif
+	assign video_controls = false
+	if controls
+		assign video_controls = true
+	endif
 
 	assign video_class = class
 	if layout == 'cover' or layout == 'contain'
