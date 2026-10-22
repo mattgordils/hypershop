@@ -37,13 +37,7 @@
             >
               <div class="aspect-4/5 relative overflow-hidden rounded-base bg-light-grey">
                 {%- if nav_image != blank -%}
-                  {% render 'image',
-                    src: nav_image,
-                    ratio: .8,
-                    layout: 'cover',
-                    sizes: '150px',
-                    alt: nav_collection.title
-                  %}
+                  {% render 'image', src: nav_image, ratio: renamed_variable_8, layout: 'cover', sizes: '150px', alt: nav_collection.title %}
                 {%- endif -%}
               </div>
               <div>
@@ -68,3 +62,21 @@
     </ul>
   </nav>
 {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image',
+                        src: nav_image,
+                        ratio: .8,
+                        layout: 'cover',
+                        sizes: '150px',
+                        alt: nav_collection.title
+                      %}
+  to: "{% render 'image', src: nav_image, ratio: renamed_variable_8, layout: 'cover',
+    sizes: '150px', alt: nav_collection.title %}"
+  position: 1679..1802
+{% endcomment %}

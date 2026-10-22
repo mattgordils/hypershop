@@ -37,14 +37,7 @@
 
   {% if section.settings.show_featured_image and article.image %}
     <div class="max-w-site-max-w mx-auto pb-v-space-sm">
-      {% render 'image',
-        src: article.image,
-        sizes: '(min-width: 1200px) 1100px, 100vw',
-        loading: 'eager',
-        fetchpriority: 'high',
-        class: 'w-full',
-        alt: article.image.alt | default: article.title
-      %}
+      {% render 'image', src: article.image, sizes: '(min-width: 1200px) 1100px, 100vw', loading: 'eager', fetchpriority: 'high', class: 'w-full', alt: article.image.alt, default: article.title %}
     </div>
   {% endif %}
 
@@ -191,3 +184,23 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image',
+            src: article.image,
+            sizes: '(min-width: 1200px) 1100px, 100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'w-full',
+            alt: article.image.alt | default: article.title
+          %}
+  to: "{% render 'image', src: article.image, sizes: '(min-width: 1200px) 1100px,
+    100vw', loading: 'eager', fetchpriority: 'high', class: 'w-full', alt: article.image.alt,
+    default: article.title %}"
+  position: 1689..1879
+{% endcomment %}
