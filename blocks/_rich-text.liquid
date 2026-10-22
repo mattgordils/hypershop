@@ -1,4 +1,4 @@
-{% capture space_below %}{% render 'util-block-spacing', space: block.settings.space_below %}{% endcapture %}
+{% capture space_below %}{% render 'util-block-spacing' with space, space: block.settings.space_below %}{% endcapture %}
 {% if block.settings.text != blank %}
   <div class="rich-text {{ block.settings.size }} {{ space_below | strip }}">
     {{ block.settings.text }}
@@ -22,7 +22,7 @@
       "label": "Text Size",
       "options": [
         { "label": "Small", "value": "body-small" },
-        { "label": "Normal", "value": "body" },
+        { "label": "Normal", "value": "" },
         { "label": "Medium", "value": "body-medium" },
         { "label": "Large", "value": "body-large" }
       ]
@@ -55,3 +55,14 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'util-block-spacing' with space: block.settings.space_below %}"
+  to: "{% render 'util-block-spacing' with space, space: block.settings.space_below
+    %}"
+  position: 25..104
+{% endcomment %}

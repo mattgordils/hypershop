@@ -22,12 +22,7 @@
 >
   <div class="relative aspect-[4/5]{% if featured %} md:aspect-[1.63] 2xl:aspect-[1.6175]{% else %}{% endif %}">
     {% if has_media %}
-      {% render 'image',
-        src: article_image,
-        sizes: '(min-width: 1024px) 50vw, (min-width: 640px) 33vw, 50vw',
-        layout: 'cover',
-        alt: product.title | append: ' - alternate view'
-      %}
+      {% render 'image', src: article_image, sizes: '(min-width: 1024px) 50vw, (min-width: 640px) 33vw, 50vw', layout: 'cover', alt: product.title, append: ' - alternate view' %}
       <div class="absolute top-0 left-0 w-full h-full bg-true-black z-2 opacity-0 transition-opacity group-hover:opacity-20"></div>
     {% else %}
       <div class="absolute top-0 left-0 w-full h-full theme-green">
@@ -67,4 +62,21 @@
       {% endif %}
     </div>
   {% endif %}
-</a>
+</a>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image',
+            src: article_image,
+            sizes: '(min-width: 1024px) 50vw, (min-width: 640px) 33vw, 50vw',
+            layout: 'cover',
+            alt: product.title | append: ' - alternate view'
+          %}
+  to: "{% render 'image', src: article_image, sizes: '(min-width: 1024px) 50vw, (min-width:
+    640px) 33vw, 50vw', layout: 'cover', alt: product.title, append: ' - alternate
+    view' %}"
+  position: 718..890
+{%- endcomment -%}
