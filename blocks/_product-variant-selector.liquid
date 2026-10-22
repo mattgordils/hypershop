@@ -1,8 +1,5 @@
 <div data-dynamic-content>
-  {% render 'product_option_form' with
-    product: product,
-    context: 'PDP'
-  %}
+  {% render 'product_option_form' with product, product: product, context: 'PDP' %}
 </div>
 
 {% schema %}
@@ -17,4 +14,18 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'product_option_form' with
+        product: product,
+        context: 'PDP'
+      %}
+  to: "{% render 'product_option_form' with product, product: product, context: 'PDP'
+    %}"
+  position: 29..110
+{%- endcomment -%}

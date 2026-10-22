@@ -3,7 +3,7 @@
 %}
 
 {% if block_product != blank %}
-  {% render 'product-badges' with product: block_product %}
+  {% render 'product-badges' with product, product: block_product %}
 {% endif %}
 
 {% schema %}
@@ -24,4 +24,13 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'product-badges' with product: block_product %}"
+  to: "{% render 'product-badges' with product, product: block_product %}"
+  position: 115..181
+{%- endcomment -%}

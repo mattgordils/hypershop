@@ -1,5 +1,5 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing' with space, space: section.settings.section_spacing %}
 {% endcapture %}
 
 {%-liquid
@@ -16,7 +16,7 @@
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
         {% for product in section_collection.products %}
           <div>
-            {% render 'product_card' with product: product %}
+            {% render 'product_card' with product, product: product %}
           </div>
         {% endfor %}
       </div>
@@ -75,3 +75,18 @@
 }
 {% endschema %}
 
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'util-section-spacing' with space: section.settings.section_spacing
+    %}"
+  to: "{% render 'util-section-spacing' with space, space: section.settings.section_spacing
+    %}"
+  position: 30..117
+- from: "{% render 'product_card' with product: product %}"
+  to: "{% render 'product_card' with product, product: product %}"
+  position: 646..704
+{% endcomment %}

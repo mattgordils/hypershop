@@ -5,9 +5,20 @@
   endif
 %}
 
-{% render 'link' with
-  label: label,
-  target: target,
-  class: button_class,
-  to: to
-%}
+{% render 'link' with label, label: label, target: target, class: button_class, to: to %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'link' with
+      label: label,
+      target: target,
+      class: button_class,
+      to: to
+    %}
+  to: "{% render 'link' with label, label: label, target: target, class: button_class,
+    to: to %}"
+  position: 144..233
+{%- endcomment -%}

@@ -1,6 +1,4 @@
-{% render 'quantity_adjust' with
-  item: product.selected_or_first_available_variant
-%}
+{% render 'quantity_adjust' with item, item: product.selected_or_first_available_variant %}
 
 {% schema %}
 {
@@ -14,4 +12,17 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'quantity_adjust' with
+      item: product.selected_or_first_available_variant
+    %}
+  to: "{% render 'quantity_adjust' with item, item: product.selected_or_first_available_variant
+    %}"
+  position: 0..91
+{%- endcomment -%}

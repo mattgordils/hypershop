@@ -8,14 +8,7 @@
 <div id="cartLineItem" class="flex gap-x-gutter pb-gutter pt-gutter">  
   <div class="w-24">
     <div class="aspect-square relative w-full">
-      {% render 'image' with 
-        src: image,
-        layout: 'cover',
-        loading: 'eager',
-        sizes: 200,
-        width: 100,
-        height: 100
-      %}
+      {% render 'image' with src, src: image, layout: 'cover', loading: 'eager', sizes: 200, width: 100, height: 100 %}
     </div>
   </div>
   <div id="cartUpdate" class="grow basis-0 col-span-4 flex flex-col">
@@ -32,10 +25,7 @@
       </a>
       <div class="shrink-0">
         <div>
-          {% render 'product_price' with
-            item: item.variant,
-            times: item.quantity
-          %}
+          {% render 'product_price' with item, item: item.variant, times: item.quantity %}
         </div>
         {% if qty == false %}
           <cart-remove-item>
@@ -47,7 +37,7 @@
     {% if qty != false %}
       <div class="flex justify-between items-center">
         <div>
-          {% render 'cart_item_quantity_adjust' with item: item %}
+          {% render 'cart_item_quantity_adjust' with item, item: item %}
         </div>
         <cart-remove-item>
           <button class="cart-remove-item body-small hover:!text-error !h-auto button transparent unpadd" data-item-id="{{ item.id }}">Remove</button>
@@ -56,3 +46,27 @@
     {% endif %}
   </div>
 </div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'image' with \n        src: image,\n        layout: 'cover',\n
+    \       loading: 'eager',\n        sizes: 200,\n        width: 100,\n        height:
+    100\n      %}"
+  to: "{% render 'image' with src, src: image, layout: 'cover', loading: 'eager',
+    sizes: 200, width: 100, height: 100 %}"
+  position: 261..374
+- from: |-
+    {% render 'product_price' with
+                item: item.variant,
+                times: item.quantity
+              %}
+  to: "{% render 'product_price' with item, item: item.variant, times: item.quantity
+    %}"
+  position: 920..1000
+- from: "{% render 'cart_item_quantity_adjust' with item: item %}"
+  to: "{% render 'cart_item_quantity_adjust' with item, item: item %}"
+  position: 1406..1468
+{% endcomment %}

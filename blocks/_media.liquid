@@ -1,17 +1,10 @@
 {% if block.settings.media_type == 'video' %}
   {% if block.settings.video != blank %}
-    {% render 'video' with
-      src: block.settings.video,
-      layout: layout %}
+    {% render 'video' with src, src: block.settings.video, layout: layout %}
   {% endif %}
 {% else %}
   {% if block.settings.image != blank %}
-    {% render 'image' with
-      src: block.settings.image,
-      layout: layout,
-      loading: loading,
-      fetchpriority: fetchpriority
-    %}
+    {% render 'image' with src, src: block.settings.image, layout: layout, loading: loading, fetchpriority: fetchpriority %}
   {% endif %}
 {% endif %}
 
@@ -56,4 +49,26 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'video' with
+          src: block.settings.video,
+          layout: layout %}
+  to: "{% render 'video' with src, src: block.settings.video, layout: layout %}"
+  position: 91..163
+- from: |-
+    {% render 'image' with
+          src: block.settings.image,
+          layout: layout,
+          loading: loading,
+          fetchpriority: fetchpriority
+        %}
+  to: "{% render 'image' with src, src: block.settings.image, layout: layout, loading:
+    loading, fetchpriority: fetchpriority %}"
+  position: 234..354
+{%- endcomment -%}

@@ -179,14 +179,7 @@ variant will update imagery and url
               >
                 {%- if color_variant.image -%}
                   <div class="aspect-square w-full rounded-[calc(var(--base-border-radius)-2px)] overflow-hidden">
-                    {% render 'image' with
-                      src: color_variant.image,
-                      ratio: 1,
-                      width: 120,
-                      class: 'w-full',
-                      alt: value,
-                      loading: 'eager'
-                    %}
+                    {% render 'image' with src, src: color_variant.image, ratio: 1, width: 120, class: 'w-full', alt: value, loading: 'eager' %}
                   </div>
                 {%- else -%}
                   {{ value }}
@@ -309,4 +302,22 @@ variant will update imagery and url
     {{ product.variants | json }}
   </script>
     
-</div>
+</div>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image' with
+                          src: color_variant.image,
+                          ratio: 1,
+                          width: 120,
+                          class: 'w-full',
+                          alt: value,
+                          loading: 'eager'
+                        %}
+  to: "{% render 'image' with src, src: color_variant.image, ratio: 1, width: 120,
+    class: 'w-full', alt: value, loading: 'eager' %}"
+  position: 6686..6810
+{%- endcomment -%}

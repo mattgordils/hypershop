@@ -10,13 +10,29 @@
 -%}
 <div class="pointer-events-none flex gap-2 items-center justify-center {{ class }}">
   {% if show_prev != false %}
-    {% render 'button' with
-      icon: 'arrow_forward',
-      class: button_classname_prev
-    %}
+    {% render 'button' with icon, icon: 'arrow_forward', class: button_classname_prev %}
   {% endif %}
-  {% render 'button' with
-    icon: 'arrow_back',
-    class: button_classname_next
-  %}
-</div>
+  {% render 'button' with icon, icon: 'arrow_back', class: button_classname_next %}
+</div>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'button' with
+          icon: 'arrow_forward',
+          class: button_classname_prev
+        %}
+  to: "{% render 'button' with icon, icon: 'arrow_forward', class: button_classname_prev
+    %}"
+  position: 553..637
+- from: |-
+    {% render 'button' with
+        icon: 'arrow_back',
+        class: button_classname_next
+      %}
+  to: "{% render 'button' with icon, icon: 'arrow_back', class: button_classname_next
+    %}"
+  position: 654..735
+{%- endcomment -%}

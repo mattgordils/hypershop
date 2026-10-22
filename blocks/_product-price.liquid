@@ -1,7 +1,5 @@
 <p class="{{ block.settings.size }}">
-  {% render 'product_price' with
-    item: product.selected_or_first_available_variant
-  %}
+  {% render 'product_price' with item, item: product.selected_or_first_available_variant %}
 </p>
 
 {% schema %}
@@ -41,4 +39,17 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'product_price' with
+        item: product.selected_or_first_available_variant
+      %}
+  to: "{% render 'product_price' with item, item: product.selected_or_first_available_variant
+    %}"
+  position: 40..129
+{%- endcomment -%}

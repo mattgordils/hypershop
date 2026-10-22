@@ -1,9 +1,9 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing' with space, space: section.settings.section_spacing %}
 {% endcapture %}
 
 {% capture padding_class %}
-  {% render 'util-section-padding' with space: section.settings.section_padding %}
+  {% render 'util-section-padding' with space, space: section.settings.section_padding %}
 {% endcapture %}
 
 {%-liquid
@@ -238,4 +238,20 @@
 	  }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'util-section-spacing' with space: section.settings.section_spacing
+    %}"
+  to: "{% render 'util-section-spacing' with space, space: section.settings.section_spacing
+    %}"
+  position: 30..117
+- from: "{% render 'util-section-padding' with space: section.settings.section_padding
+    %}"
+  to: "{% render 'util-section-padding' with space, space: section.settings.section_padding
+    %}"
+  position: 166..253
+{%- endcomment -%}

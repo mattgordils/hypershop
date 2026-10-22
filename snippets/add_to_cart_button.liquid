@@ -31,18 +31,35 @@
     "
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon_material' with icon: icon %}
+      {% render 'icon_material' with icon, icon: icon %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon_material' with icon: icon %}
+        {% render 'icon_material' with icon, icon: icon %}
       {% endif %}
       {{ button_text }}
     {% endif %}
     {% if show_price %}
-      {% render 'product_price' with
-        item: product.selected_or_first_available_variant,
-        compare_price_class: 'opacity-50'
-      %}
+      {% render 'product_price' with item, item: product.selected_or_first_available_variant, compare_price_class: 'opacity-50' %}
     {% endif %}
   </span>
-</button>
+</button>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'icon_material' with icon: icon %}"
+  to: "{% render 'icon_material' with icon, icon: icon %}"
+  position: 635..685
+- from: "{% render 'icon_material' with icon: icon %}"
+  to: "{% render 'icon_material' with icon, icon: icon %}"
+  position: 738..788
+- from: |-
+    {% render 'product_price' with
+            item: product.selected_or_first_available_variant,
+            compare_price_class: 'opacity-50'
+          %}
+  to: "{% render 'product_price' with item, item: product.selected_or_first_available_variant,
+    compare_price_class: 'opacity-50' %}"
+  position: 877..1001
+{%- endcomment -%}

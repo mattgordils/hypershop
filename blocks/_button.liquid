@@ -5,12 +5,7 @@
   endif
 %}
 
-{% render 'button' with
-  label: block.settings.label,
-  target: target,
-  class: block.settings.style,
-  to: block.settings.link
-%}
+{% render 'button' with label, label: block.settings.label, target: target, class: block.settings.style, to: block.settings.link %}
 
 {% schema %}
 {
@@ -57,4 +52,20 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'button' with
+      label: block.settings.label,
+      target: target,
+      class: block.settings.style,
+      to: block.settings.link
+    %}
+  to: "{% render 'button' with label, label: block.settings.label, target: target,
+    class: block.settings.style, to: block.settings.link %}"
+  position: 111..242
+{%- endcomment -%}

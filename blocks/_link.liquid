@@ -5,12 +5,7 @@
   endif
 %}
 
-{% render 'link' with
-  label: block.settings.label,
-  target: target,
-  class: 'animate-underline',
-  to: block.settings.link
-%}
+{% render 'link' with label, label: block.settings.label, target: target, class: 'animate-underline', to: block.settings.link %}
 
 {% schema %}
 {
@@ -36,4 +31,20 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'link' with
+      label: block.settings.label,
+      target: target,
+      class: 'animate-underline',
+      to: block.settings.link
+    %}
+  to: "{% render 'link' with label, label: block.settings.label, target: target, class:
+    'animate-underline', to: block.settings.link %}"
+  position: 111..239
+{%- endcomment -%}

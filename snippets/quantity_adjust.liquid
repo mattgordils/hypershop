@@ -15,7 +15,7 @@
       title="Decrease quantity"
       style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
     >
-      {% render 'icon_material' with icon: 'remove' %}
+      {% render 'icon_material' with icon, icon: 'remove' %}
     </button>
     <input
       type="number"
@@ -29,7 +29,20 @@
       title="Increase quantity"
       style="--button-color: var(--light-text-color); --button-hover-color: var(--text-color);"
     >
-      {% render 'icon_material' with icon: 'add' %}
+      {% render 'icon_material' with icon, icon: 'add' %}
     </button>
   </pdp-qty-input>
 </div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'icon_material' with icon: 'remove' %}"
+  to: "{% render 'icon_material' with icon, icon: 'remove' %}"
+  position: 561..615
+- from: "{% render 'icon_material' with icon: 'add' %}"
+  to: "{% render 'icon_material' with icon, icon: 'add' %}"
+  position: 1061..1112
+{% endcomment %}

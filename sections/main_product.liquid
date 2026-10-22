@@ -1,5 +1,5 @@
 {% capture spacing_class %}
-  {% render 'util-section-spacing' with space: section.settings.section_spacing %}
+  {% render 'util-section-spacing' with space, space: section.settings.section_spacing %}
 {% endcapture %}
 
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
@@ -17,24 +17,12 @@
   <div class="w-full flex flex-col gap-gutter" data-dynamic-content>
 		{% if product.selected_or_first_available_variant.image != blank %}
 			<div class="md:col-span-2">
-				{% render 'image' with
-					src: product.selected_or_first_available_variant.image,
-					loading: 'eager',
-					sizes: media_sizes,
-					ratio: 1,
-					class: 'w-full',
-					fetchpriority: 'high'
-				%}
+				{% render 'image' with src, src: product.selected_or_first_available_variant.image, loading: 'eager', sizes: media_sizes, ratio: 1, class: 'w-full', fetchpriority: 'high' %}
 			</div>
 		{% endif %}
 		<div class="hidden md:grid md:grid-cols-2 gap-gutter">
 			{%- for image in product.images -%}
-				{% render 'image' with
-					src: image,
-					sizes: media_sizes,
-					ratio: 1,
-					class: 'w-full'
-				%}
+				{% render 'image' with src, src: image, sizes: media_sizes, ratio: 1, class: 'w-full' %}
 			{%- endfor -%}
 		</div>
   </div>
@@ -124,3 +112,27 @@
 }
 {% endschema %}
 
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'util-section-spacing' with space: section.settings.section_spacing
+    %}"
+  to: "{% render 'util-section-spacing' with space, space: section.settings.section_spacing
+    %}"
+  position: 30..117
+- from: "{% render 'image' with\n\t\t\t\t\tsrc: product.selected_or_first_available_variant.image,\n\t\t\t\t\tloading:
+    'eager',\n\t\t\t\t\tsizes: media_sizes,\n\t\t\t\t\tratio: 1,\n\t\t\t\t\tclass:
+    'w-full',\n\t\t\t\t\tfetchpriority: 'high'\n\t\t\t\t%}"
+  to: "{% render 'image' with src, src: product.selected_or_first_available_variant.image,
+    loading: 'eager', sizes: media_sizes, ratio: 1, class: 'w-full', fetchpriority:
+    'high' %}"
+  position: 629..802
+- from: "{% render 'image' with\n\t\t\t\t\tsrc: image,\n\t\t\t\t\tsizes: media_sizes,\n\t\t\t\t\tratio:
+    1,\n\t\t\t\t\tclass: 'w-full'\n\t\t\t\t%}"
+  to: "{% render 'image' with src, src: image, sizes: media_sizes, ratio: 1, class:
+    'w-full' %}"
+  position: 927..1015
+{% endcomment %}

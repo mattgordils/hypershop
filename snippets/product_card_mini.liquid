@@ -8,14 +8,7 @@
       <div class="flex gap-x-gutter">
         <div>
           <div href="{{ product.url }}" class="aspect-square relative w-[80px] lg:w-[100px] shrink-0 grow-0">
-            {% render 'image' with
-              src: product.featured_image,
-              id: 'cardImage',
-              layout: 'cover',
-              sizes: '300px',
-              notlazy: notlazy,
-              alt: product.title
-            %}
+            {% render 'image' with src, src: product.featured_image, id: 'cardImage', layout: 'cover', sizes: '300px', notlazy: notlazy, alt: product.title %}
           </div>
         </div>
         <div class="text-left grow">
@@ -23,7 +16,7 @@
             {{ product.title }}
           </div>
           <div class="body-small" id="cardPrice">
-            {% render 'product_price' with item: product.first_available_variant %}
+            {% render 'product_price' with item, item: product.first_available_variant %}
           </div>
 
           <div id="add-to-cart-form" class="add-to-cart-form" data-url="{{ product.url }}">
@@ -78,12 +71,7 @@
 
         </div>
         <div class="flex flex-col items-center justify-start gap-y-2">
-          {% render 'add_to_cart_button' with
-            text: "Add to Cart",
-            icon: 'add',
-            class: "circle",
-            product: product
-          %}
+          {% render 'add_to_cart_button' with text, text: "Add to Cart", icon: 'add', class: "circle", product: product %}
           <a
             href="{{ product.url }}"
             title="View {{ product.title }} details"
@@ -95,4 +83,36 @@
       {% comment %} {%- render 'product_option_form' with product: product, section_context: 'cart-upsell' -%} {% endcomment %}
     </div>
   </add-to-cart-form>
-</div>
+</div>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image' with
+                  src: product.featured_image,
+                  id: 'cardImage',
+                  layout: 'cover',
+                  sizes: '300px',
+                  notlazy: notlazy,
+                  alt: product.title
+                %}
+  to: "{% render 'image' with src, src: product.featured_image, id: 'cardImage', layout:
+    'cover', sizes: '300px', notlazy: notlazy, alt: product.title %}"
+  position: 386..532
+- from: "{% render 'product_price' with item: product.first_available_variant %}"
+  to: "{% render 'product_price' with item, item: product.first_available_variant
+    %}"
+  position: 742..819
+- from: |-
+    {% render 'add_to_cart_button' with
+                text: "Add to Cart",
+                icon: 'add',
+                class: "circle",
+                product: product
+              %}
+  to: '{% render ''add_to_cart_button'' with text, text: "Add to Cart", icon: ''add'',
+    class: "circle", product: product %}'
+  position: 3258..3370
+{%- endcomment -%}

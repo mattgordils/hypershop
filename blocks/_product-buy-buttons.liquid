@@ -1,9 +1,5 @@
 <div data-dynamic-content>
-  {% render 'add_to_cart_button' with
-    class: "w-full large",
-    product: product,
-    show_price: block.settings.show_price
-  %}
+  {% render 'add_to_cart_button' with class, class: "w-full large", product: product, show_price: block.settings.show_price %}
 </div>
 
 {% schema %}
@@ -25,4 +21,19 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'add_to_cart_button' with
+        class: "w-full large",
+        product: product,
+        show_price: block.settings.show_price
+      %}
+  to: '{% render ''add_to_cart_button'' with class, class: "w-full large", product:
+    product, show_price: block.settings.show_price %}'
+  position: 29..153
+{%- endcomment -%}
