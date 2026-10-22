@@ -1,13 +1,6 @@
 <div class="product-card flex flex-col gap-y-gutter cursor-pointer">
   <a href="{{ product.url }}" class="aspect-3/4 relative">
-    {% render 'image' with
-      src: product.featured_image,
-      id: 'cardImage',
-      image_position: 'cover',
-      sizes: '600px',
-      notlazy: notlazy,
-      alt: product.title
-    %}
+    {% render 'image' with src, src: product.featured_image, id: 'cardImage', image_position: 'cover', sizes: '600px', notlazy: notlazy, alt: product.title %}
   </a>
   <a href="{{ product.url }}">
     <div class="text-center">
@@ -19,5 +12,27 @@
       </div>
     </div>
   </a>
-  {% render 'product_option_form' with product: product %}
+  {% render 'product_option_form' with product, product: product %}
 </div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image' with
+          src: product.featured_image,
+          id: 'cardImage',
+          image_position: 'cover',
+          sizes: '600px',
+          notlazy: notlazy,
+          alt: product.title
+        %}
+  to: "{% render 'image' with src, src: product.featured_image, id: 'cardImage', image_position:
+    'cover', sizes: '600px', notlazy: notlazy, alt: product.title %}"
+  position: 132..286
+- from: "{% render 'product_option_form' with product: product %}"
+  to: "{% render 'product_option_form' with product, product: product %}"
+  position: 521..586
+{% endcomment %}

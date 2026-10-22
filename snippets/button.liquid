@@ -6,12 +6,24 @@
     title="{{ label }}"
   >
     {% if class contains 'circle' or class contains 'sqaure' %}
-      {% render 'icon-material' with icon: icon %}
+      {% render 'icon-material' with icon, icon: icon %}
     {% else %}
       {% if icon != blank %}
-        {% render 'icon-material' with icon: icon %}
+        {% render 'icon-material' with icon, icon: icon %}
       {% endif %}
       {{ label }}
     {% endif %}
   </a>
-{% endif %}
+{% endif %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'icon-material' with icon: icon %}"
+  to: "{% render 'icon-material' with icon, icon: icon %}"
+  position: 204..254
+- from: "{% render 'icon-material' with icon: icon %}"
+  to: "{% render 'icon-material' with icon, icon: icon %}"
+  position: 307..357
+{%- endcomment -%}

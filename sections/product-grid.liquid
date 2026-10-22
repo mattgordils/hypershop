@@ -15,10 +15,7 @@
   {% if section_collection.featured_image %}
     <div>
       <div class="aspect-3/2 relative">
-        {% render 'image' with
-          src: section_collection.featured_image,
-          image_position: 'cover'
-        %}
+        {% render 'image' with src, src: section_collection.featured_image, image_position: 'cover' %}
       </div>
     </div>
   {% endif %}
@@ -29,7 +26,7 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-gutter gap-y-v-space-sm">
       {% for product in section_collection.products %}
         <div>
-          {% render 'product_card' with product: product %}
+          {% render 'product_card' with product, product: product %}
         </div>
       {% endfor %}
     </div>
@@ -74,3 +71,21 @@
 }
 {% endschema %}
 
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image' with
+              src: section_collection.featured_image,
+              image_position: 'cover'
+            %}
+  to: "{% render 'image' with src, src: section_collection.featured_image, image_position:
+    'cover' %}"
+  position: 653..747
+- from: "{% render 'product_card' with product: product %}"
+  to: "{% render 'product_card' with product, product: product %}"
+  position: 1071..1129
+{% endcomment %}

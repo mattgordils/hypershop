@@ -21,22 +21,38 @@
           <div class="flex flex-wrap gap-gutter pt-3 {{ section_alignment }}" {{ block.shopify_attributes }}>
             {% if block.settings.button_label_1 != blank %}
               <div>
-                {% render 'button' with
-                  label: block.settings.button_label_1,
-                  to: block.settings.button_link_1
-                %}
+                {% render 'button' with label, label: block.settings.button_label_1, to: block.settings.button_link_1 %}
               </div>
             {% endif %}
             {% if block.settings.button_label_2 != blank %}
               <div>
-                {% render 'button' with
-                  label: block.settings.button_label_2,
-                  to: block.settings.button_link_2
-                %}
+                {% render 'button' with label, label: block.settings.button_label_2, to: block.settings.button_link_2 %}
               </div>
             {% endif %}
           </div>
       {%- endcase -%}
     {%- endfor -%}
   </div>
-{%- endif -%}
+{%- endif -%}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'button' with
+                      label: block.settings.button_label_1,
+                      to: block.settings.button_link_1
+                    %}
+  to: "{% render 'button' with label, label: block.settings.button_label_1, to: block.settings.button_link_1
+    %}"
+  position: 834..938
+- from: |-
+    {% render 'button' with
+                      label: block.settings.button_label_2,
+                      to: block.settings.button_link_2
+                    %}
+  to: "{% render 'button' with label, label: block.settings.button_label_2, to: block.settings.button_link_2
+    %}"
+  position: 1080..1184
+{%- endcomment -%}

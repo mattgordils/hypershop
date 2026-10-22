@@ -18,7 +18,7 @@
           {% else %}
             <div class="flex flex-col max-h-[100%]">
               {% for item in cart.items %}
-                {% render 'cart_item' with item: item, index: forloop.index0 %}
+                {% render 'cart_item' with item, item: item, index: forloop.index0 %}
               {% endfor %}
             </div>
           {% endif %}
@@ -32,7 +32,7 @@
             {%- endfor -%}
           {%- endif -%}
 
-          {% render 'cart_upsell' with product_list: section.settings.upsell_collection.products %}
+          {% render 'cart_upsell' with product_list, product_list: section.settings.upsell_collection.products %}
 
         </div>
         {% if cart.item_count > 0 %}
@@ -78,3 +78,18 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'cart_item' with item: item, index: forloop.index0 %}"
+  to: "{% render 'cart_item' with item, item: item, index: forloop.index0 %}"
+  position: 997..1066
+- from: "{% render 'cart_upsell' with product_list: section.settings.upsell_collection.products
+    %}"
+  to: "{% render 'cart_upsell' with product_list, product_list: section.settings.upsell_collection.products
+    %}"
+  position: 1432..1535
+{% endcomment %}

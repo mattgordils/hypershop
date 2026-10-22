@@ -1,7 +1,7 @@
 <div class="grid md:grid-cols-2 gap-y-margin {{ section.settings.section_margin }}">
   <div class="aspect-square bg-light-grey">
     {%- for image in product.images -%}
-      {% render 'image' with src: image %}
+      {% render 'image' with src, src: image %}
     {%- endfor -%}
   </div>
 
@@ -33,7 +33,7 @@
 								</div>
 							{%- when 'variant_picker' -%}
 								<div {{ block.shopify_attributes }}>
-									{% liquid render 'product_option_form' with product: product, showBuyNow: true, context: 'PDP' %}
+									{% liquid render 'product_option_form' with product, product: product, showBuyNow: true, context: 'PDP'%}
 								</div>
 							{%- when 'buy_buttons' -%}
 								<div {{ block.shopify_attributes }}>
@@ -251,3 +251,18 @@
 }
 {% endschema %}
 
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'image' with src: image %}"
+  to: "{% render 'image' with src, src: image %}"
+  position: 175..216
+- from: 'render ''product_option_form'' with product: product, showBuyNow: true, context:
+    ''PDP'' '
+  to: 'render ''product_option_form'' with product, product: product, showBuyNow:
+    true, context: ''PDP'''
+  position: 1247..1340
+{% endcomment %}

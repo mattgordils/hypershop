@@ -8,12 +8,12 @@
 <div>
   <div class="relative bg-light-grey">
     <div class="media relative z-1">
-      {% render 'image' with src: section.settings.image %}
+      {% render 'image' with src, src: section.settings.image %}
     </div>
     <div class="{% if hasMedia %}absolute{% else %}static{% endif %} text-bg overlay-content z-2 top-0 left-0 w-full h-full flex items-center justify-stretch px-margin pb-margin pt-margin">
       <div class="grid gap-gutter w-full">
         <div>
-          {% render 'text_lockup' with blocks: section.blocks, alignment: 'center' %}
+          {% render 'text_lockup' with blocks, blocks: section.blocks, alignment: 'center' %}
         </div>
       </div>
     </div>
@@ -110,4 +110,18 @@
     }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'image' with src: section.settings.image %}"
+  to: "{% render 'image' with src, src: section.settings.image %}"
+  position: 201..259
+- from: "{% render 'text_lockup' with blocks: section.blocks, alignment: 'center'
+    %}"
+  to: "{% render 'text_lockup' with blocks, blocks: section.blocks, alignment: 'center'
+    %}"
+  position: 528..611
+{%- endcomment -%}
